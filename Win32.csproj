@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <Using Include="System.UInt32">
+		  <Alias>DWORD</Alias>
+	  </Using>
+	  <Using Include="System.UInt16">
+		  <Alias>ATOM</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HBRUSH</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HCURSOR</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HDC</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HICON</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HINSTANCE</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HMENU</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HWND</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>LPARAM</Alias>
+	  </Using>
+	  <Using Include="System.UIntPtr">
+		  <Alias>WPARAM</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>LRESULT</Alias>
+	  </Using>
+	  <Using Include="System.IntPtr">
+		  <Alias>HANDLE</Alias>
+	  </Using>
+	  <Using Include="System.UInt16">
+		  <Alias>WORD</Alias>
+	  </Using>
+  </ItemGroup>
+
+</Project>
