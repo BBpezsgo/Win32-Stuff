@@ -28,8 +28,8 @@ namespace Win32
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern HWND CreateWindowExW(
               [In] DWORD dwExStyle,
-              [In, Optional] ushort* lpClassName,
-              [In, Optional] ushort* lpWindowName,
+              [In, Optional] char* lpClassName,
+              [In, Optional] char* lpWindowName,
               [In] DWORD dwStyle,
               [In] int X,
               [In] int Y,

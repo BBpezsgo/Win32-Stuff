@@ -81,8 +81,8 @@ namespace Win32
         public HICON hIcon;
         public HCURSOR hCursor;
         public HBRUSH hbrBackground;
-        unsafe public ushort* lpszMenuName;
-        unsafe public ushort* lpszClassName;
+        unsafe public char* lpszMenuName;
+        unsafe public char* lpszClassName;
         public HICON hIconSm;
     }
 
@@ -113,33 +113,33 @@ namespace Win32
 
     public static class WS
     {
-        public const uint WS_BORDER = 0x00800000;
-        public const uint WS_CAPTION = 0x00C00000;
-        public const uint WS_CHILD = 0x40000000;
-        public const uint WS_CHILDWINDOW = 0x40000000;
-        public const uint WS_CLIPCHILDREN = 0x02000000;
-        public const uint WS_CLIPSIBLINGS = 0x04000000;
-        public const uint WS_DISABLED = 0x08000000;
-        public const uint WS_DLGFRAME = 0x00400000;
-        public const uint WS_GROUP = 0x00020000;
-        public const uint WS_HSCROLL = 0x00100000;
-        public const uint WS_ICONIC = 0x20000000;
-        public const uint WS_MAXIMIZE = 0x01000000;
-        public const uint WS_MAXIMIZEBOX = 0x00010000;
-        public const uint WS_MINIMIZE = 0x20000000;
-        public const uint WS_MINIMIZEBOX = 0x00020000;
-        public const uint WS_OVERLAPPED = 0x00000000;
-        public const uint WS_OVERLAPPEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-        public const uint WS_POPUP = 0x80000000;
-        public const uint WS_POPUPWINDOW = (WS_POPUP | WS_BORDER | WS_SYSMENU);
-        public const uint WS_SIZEBOX = 0x00040000;
-        public const uint WS_SYSMENU = 0x00080000;
-        public const uint WS_TABSTOP = 0x00010000;
-        public const uint WS_THICKFRAME = 0x00040000;
-        public const uint WS_TILED = 0x00000000;
-        public const uint WS_TILEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-        public const uint WS_VISIBLE = 0x10000000;
-        public const uint WS_VSCROLL = 0x00200000;
+        public const uint BORDER = 0x00800000;
+        public const uint CAPTION = 0x00C00000;
+        public const uint CHILD = 0x40000000;
+        public const uint CHILDWINDOW = 0x40000000;
+        public const uint CLIPCHILDREN = 0x02000000;
+        public const uint CLIPSIBLINGS = 0x04000000;
+        public const uint DISABLED = 0x08000000;
+        public const uint DLGFRAME = 0x00400000;
+        public const uint GROUP = 0x00020000;
+        public const uint HSCROLL = 0x00100000;
+        public const uint ICONIC = 0x20000000;
+        public const uint MAXIMIZE = 0x01000000;
+        public const uint MAXIMIZEBOX = 0x00010000;
+        public const uint MINIMIZE = 0x20000000;
+        public const uint MINIMIZEBOX = 0x00020000;
+        public const uint OVERLAPPED = 0x00000000;
+        public const uint OVERLAPPEDWINDOW = (OVERLAPPED | CAPTION | SYSMENU | THICKFRAME | MINIMIZEBOX | MAXIMIZEBOX);
+        public const uint POPUP = 0x80000000;
+        public const uint POPUPWINDOW = (POPUP | BORDER | SYSMENU);
+        public const uint SIZEBOX = 0x00040000;
+        public const uint SYSMENU = 0x00080000;
+        public const uint TABSTOP = 0x00010000;
+        public const uint THICKFRAME = 0x00040000;
+        public const uint TILED = 0x00000000;
+        public const uint TILEDWINDOW = (OVERLAPPED | CAPTION | SYSMENU | THICKFRAME | MINIMIZEBOX | MAXIMIZEBOX);
+        public const uint VISIBLE = 0x10000000;
+        public const uint VSCROLL = 0x00200000;
     }
 
     public enum ForegroundColor : WORD
