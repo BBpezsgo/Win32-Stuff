@@ -11,7 +11,7 @@ namespace Win32
             Code = code;
         }
 
-        public static WindowsException GetException()
+        public static WindowsException Get()
         {
             uint errorCode = Kernel32.GetLastError();
 

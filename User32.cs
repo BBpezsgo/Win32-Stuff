@@ -5,10 +5,52 @@ namespace Win32
     public static class User32
     {
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern bool InvalidateRect(
+        public static extern BOOL DestroyWindow(
+          [In] HWND hWnd
+        );
+
+        /// <summary>
+        /// Displays a modal dialog box that contains a system icon, a set of buttons, and a brief application-specific message, such as status or error information. The message box returns an integer value that indicates which button the user clicked.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the owner window of the message box to be created. If this parameter is NULL, the message box has no owner window.
+        /// </param>
+        /// <param name="text">
+        /// The message to be displayed. If the string consists of more than one line, you can separate the lines using a carriage return and/or linefeed character between each line.
+        /// </param>
+        /// <param name="caption">
+        /// The dialog box title. If this parameter is NULL, the default title is Error.
+        /// </param>
+        /// <param name="type">
+        /// The contents and behavior of the dialog box. This parameter can be a combination of flags from the following groups of flags.
+        /// </param>
+        /// <returns></returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern MessageBoxResult MessageBox(
+          [In, Optional] HWND hWnd,
+          [In, Optional] char* lpText,
+          [In, Optional] char* lpCaption,
+          [In] uint uType
+        );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL PostMessageW(
+          [In, Optional] HWND hWnd,
+          [In] uint Msg,
+          [In] WPARAM wParam,
+          [In] LPARAM lParam
+        );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        public static extern void PostQuitMessage(
+          [In] int nExitCode
+        );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL InvalidateRect(
           [In] HWND hWnd,
           [In] Rect* lpRect,
-          [In] bool bErase
+          [In] BOOL bErase
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
@@ -18,11 +60,20 @@ namespace Win32
 
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern bool GetMessageW(
+        unsafe public static extern BOOL GetMessageW(
               [Out] Message* lpMsg,
               [In, Optional] HWND hWnd,
               [In] uint wMsgFilterMin,
               [In] uint wMsgFilterMax
+        );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL PeekMessageW(
+              [Out] Message* lpMsg,
+              [In, Optional] HWND hWnd,
+              [In] uint wMsgFilterMin,
+              [In] uint wMsgFilterMax,
+              [In] uint wRemoveMsg
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
@@ -42,7 +93,7 @@ namespace Win32
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern bool EndPaint(
+        unsafe public static extern BOOL EndPaint(
               [In] HWND hWnd,
               [In] PaintStruct* lpPaint
         );

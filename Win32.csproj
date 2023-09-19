@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <Using Include="System.Boolean">
+		  <Alias>BOOLEAN</Alias>
+	  </Using>
+	  <Using Include="System.Int32">
+		  <Alias>BOOL</Alias>
+	  </Using>
 	  <Using Include="System.UInt32">
 		  <Alias>DWORD</Alias>
 	  </Using>
