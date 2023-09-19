@@ -5,6 +5,12 @@ namespace Win32
     public static class User32
     {
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr GetWindowLongPtrW(
+          [In] HWND hWnd,
+          [In] int nIndex
+        );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL DestroyWindow(
           [In] HWND hWnd
         );
@@ -32,6 +38,21 @@ namespace Win32
           [In, Optional] char* lpCaption,
           [In] uint uType
         );
+
+        unsafe public static MessageBoxResult MessageBox(
+           HWND hWnd,
+           string lbText,
+           string lpCaption,
+           uint uType)
+        {
+            fixed (char* _lbText = lbText)
+            {
+                fixed (char* _lpCaption = lpCaption)
+                {
+                    return User32.MessageBox(hWnd, _lbText, _lpCaption, uType);
+                }
+            }
+        }
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL PostMessageW(
