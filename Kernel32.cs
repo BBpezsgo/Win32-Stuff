@@ -4,11 +4,6 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Win32
 {
-    public struct Utils
-    {
-        public
-    }
-
     public static class Kernel32
     {
         public const uint STD_INPUT_HANDLE = unchecked((uint)-10);

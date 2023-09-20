@@ -174,6 +174,46 @@
         public const uint WM_IME_COMPOSITION = 0x010f;
         public const uint WM_IME_KEYLAST = 0x010f;
         public const uint WM_INITDIALOG = 0x0110;
+
+        /// <summary>
+        /// Sent when the user selects a command item from a menu, when a control sends a notification message to its parent window, or when an accelerator keystroke is translated.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Use of the <c>wParam</c> and <c>lParam</c> parameters are summarized here.
+        /// <list type="bullet">
+        /// 
+        /// <item>
+        /// <term>Menu</term>
+        /// <description><br/>
+        /// <c>wParam (high word)</c>: 0<br/>
+        /// <c>wParam (low word)</c>: Menu identifier(IDM_*)<br/>
+        /// <c>lParam</c>: 0<br/>
+        /// </description>
+        /// </item>
+        /// 
+        /// <item>
+        /// <term>Accelerator</term>
+        /// <description><br/>
+        /// <c>wParam (high word)</c>: 1<br/>
+        /// <c>wParam (low word)</c>: Accelerator identifier(IDM_*)<br/>
+        /// <c>lParam</c>: 0<br/>
+        /// </description>
+        /// </item>
+        /// 
+        /// <item>
+        /// <term>Control</term>
+        /// <description><br/>
+        /// <c>wParam (high word)</c>: Control-defined notification code<br/>
+        /// <c>wParam (low word)</c>: Control identifier<br/>
+        /// <c>lParam</c>: Handle to the control window<br/>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// 
+        /// </para>
+        /// 
+        /// </remarks>
         public const uint WM_COMMAND = 0x0111;
         public const uint WM_SYSCOMMAND = 0x0112;
         public const uint WM_TIMER = 0x0113;

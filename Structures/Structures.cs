@@ -3,6 +3,224 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    public static class CBN
+    {
+        public const ushort CBN_ERRSPACE = ushort.MaxValue;
+        public const ushort CBN_SELCHANGE = 1;
+        public const ushort CBN_DBLCLK = 2;
+        public const ushort CBN_SETFOCUS = 3;
+        public const ushort CBN_KILLFOCUS = 4;
+        public const ushort CBN_EDITCHANGE = 5;
+        public const ushort CBN_EDITUPDATE = 6;
+        public const ushort CBN_DROPDOWN = 7;
+        public const ushort CBN_CLOSEUP = 8;
+        public const ushort CBN_SELENDOK = 9;
+        public const ushort CBN_SELENDCANCEL = 10;
+    }
+
+    public static class CB
+    {
+        public const int CB_OKAY = 0;
+        public const int CB_ERR = -1;
+        public const int CB_ERRSPACE = -2;
+
+        public const uint CB_GETEDITSEL = 0x0140;
+        public const uint CB_LIMITTEXT = 0x0141;
+        public const uint CB_SETEDITSEL = 0x0142;
+        public const uint CB_ADDSTRING = 0x0143;
+        public const uint CB_DELETESTRING = 0x0144;
+        public const uint CB_DIR = 0x0145;
+        public const uint CB_GETCOUNT = 0x0146;
+        public const uint CB_GETCURSEL = 0x0147;
+        public const uint CB_GETLBTEXT = 0x0148;
+        public const uint CB_GETLBTEXTLEN = 0x0149;
+        public const uint CB_INSERTSTRING = 0x014A;
+        public const uint CB_RESETCONTENT = 0x014B;
+        public const uint CB_FINDSTRING = 0x014C;
+        public const uint CB_SELECTSTRING = 0x014D;
+        public const uint CB_SETCURSEL = 0x014E;
+        public const uint CB_SHOWDROPDOWN = 0x014F;
+        public const uint CB_GETITEMDATA = 0x0150;
+        public const uint CB_SETITEMDATA = 0x0151;
+        public const uint CB_GETDROPPEDCONTROLRECT = 0x0152;
+        public const uint CB_SETITEMHEIGHT = 0x0153;
+        public const uint CB_GETITEMHEIGHT = 0x0154;
+        public const uint CB_SETEXTENDEDUI = 0x0155;
+        public const uint CB_GETEXTENDEDUI = 0x0156;
+        public const uint CB_GETDROPPEDSTATE = 0x0157;
+        public const uint CB_FINDSTRINGEXACT = 0x0158;
+        public const uint CB_SETLOCALE = 0x0159;
+        public const uint CB_GETLOCALE = 0x015A;
+
+        public const uint CB_GETTOPINDEX = 0x015b;
+        public const uint CB_SETTOPINDEX = 0x015c;
+        public const uint CB_GETHORIZONTALEXTENT = 0x015d;
+        public const uint CB_SETHORIZONTALEXTENT = 0x015e;
+        public const uint CB_GETDROPPEDWIDTH = 0x015f;
+        public const uint CB_SETDROPPEDWIDTH = 0x0160;
+        public const uint CB_INITSTORAGE = 0x0161;
+
+        public const uint CB_MULTIPLEADDSTRING = 0x0163;
+    }
+
+    public static class ClassName
+    {
+        /// <summary>
+        /// <para>
+        /// Designates a small rectangular child window that represents a button the
+        /// user can click to turn it on or off. Button controls can be used alone or
+        /// in groups, and they can either be labeled or appear without text. Button
+        /// controls typically change appearance when the user clicks them. For more information,
+        /// see Buttons.
+        /// </para>
+        /// <para>
+        /// For a table of the button styles you can specify in the <c>dwStyle</c> parameter,
+        /// see Button Styles.
+        /// </para>
+        /// </summary>
+        public const string BUTTON = "BUTTON";
+
+        /// <summary>
+        /// <para>
+        /// Designates a control consisting of a list box and a selection
+        /// field similar to an edit control. When using this style, an application
+        /// should either display the list box at all times or enable a drop-down
+        /// list box. If the list box is visible, typing characters into the selection
+        /// field highlights the first list box entry that matches the characters typed. Conversely,
+        /// selecting an item in the list box displays the selected text in the selection field.
+        /// For more information, see Combo Boxes.
+        /// </para>
+        /// <para>
+        /// For a table of the combo box styles you can specify in the
+        /// <c>dwStyle</c> parameter, see Combo Box Styles.
+        /// </para>
+        /// </summary>
+        public const string COMBOBOX = "COMBOBOX";
+
+        /// <summary>
+        /// <para>
+        /// Designates a rectangular child window into which the user can
+        /// type text from the keyboard. The user selects the control and gives it
+        /// the keyboard focus by clicking it or moving to it by pressing the TAB key.
+        /// The user can type text when the edit control displays a flashing caret;
+        /// use the mouse to move the cursor, select characters to be replaced,
+        /// or position the cursor for inserting characters; or use the key to
+        /// delete characters. For more information, see Edit Controls.
+        /// </para>
+        /// <para>
+        /// For a table of the edit control styles you can specify in the
+        /// <c>dwStyle</c> parameter, see Edit Control Styles.
+        /// </para>
+        /// </summary>
+        public const string EDIT = "EDIT";
+
+        /// <summary>
+        /// <para>
+        /// Designates a list of character strings. Specify this control
+        /// whenever an application must present a list of names, such as filenames,
+        /// from which the user can choose. The user can select a string by clicking it.
+        /// A selected string is highlighted, and a notification message is passed
+        /// to the parent window. For more information, see List Boxes.
+        /// </para>
+        /// <para>
+        /// For a table of the list box styles you can specify in the
+        /// <c>dwStyle</c> parameter, see List Box Styles.
+        /// </para>
+        /// </summary>
+        public const string LISTBOX = "LISTBOX";
+
+        /// <summary>
+        /// <para>
+        /// Designates an MDI client window. This window receives messages
+        /// that control the MDI application's child windows. The recommended style
+        /// bits are <c>WS_CLIPCHILDREN</c> and <c>WS_CHILD</c>.
+        /// Specify the <c>WS_HSCROLL</c> and <c>WS_VSCROLL</c>
+        /// styles to create an MDI client window that allows the user to scroll
+        /// MDI child windows into view. For more information, see Multiple Document
+        /// Interface.
+        /// </para>
+        /// <para>
+        /// RichEdit Designates a Microsoft Rich Edit 1.0 control.
+        /// This window lets the user view and edit text with character and paragraph
+        /// formatting, and can include embedded Component Object Model (COM) objects.
+        /// For more information, see Rich Edit Controls.
+        /// </para>
+        /// <para>
+        /// For a table of the rich edit control styles you can specify
+        /// in the <c>dwStyle</c> parameter, see Rich Edit Control Styles.
+        /// </para>
+        /// </summary>
+        public const string MDICLIENT = "MDICLIENT";
+
+        /// <summary>
+        /// <para>
+        /// Designates a Microsoft Rich Edit 2.0 control. This controls
+        /// let the user view and edit text with character and paragraph formatting,
+        /// and can include embedded COM objects. For more information, see Rich Edit Controls.
+        /// </para>
+        /// <para>
+        /// For a table of the rich edit control styles you can specify
+        /// in the dwStyle parameter, see Rich Edit Control Styles.
+        /// </para>
+        /// </summary>
+        public const string RICHEDIT_CLASS = "RICHEDIT_CLASS";
+
+        /// <summary>
+        /// <para>
+        /// Designates a rectangle that contains a scroll box and has direction
+        /// arrows at both ends. The scroll bar sends a notification message to its parent window whenever the user clicks the control. The parent window is responsible for updating the position of the scroll box, if necessary. For more information, see Scroll Bars.</para>
+        /// <para>
+        /// For a table of the scroll bar control styles you can specify
+        /// in the dwStyle parameter, see Scroll Bar Control Styles.
+        /// </para>
+        /// </summary>
+        public const string SCROLLBAR = "SCROLLBAR";
+
+        /// <summary>
+        /// <para>
+        /// Designates a simple text field, box, or rectangle used to label,
+        /// box, or separate other controls. Static controls take no input and provide no output.
+        /// For more information, see Static Controls.
+        /// <para>For a table of the static control styles you can specify in the dwStyle parameter,
+        /// see Static Control Styles.
+        /// </para>
+        /// </summary>
+        public const string STATIC = "STATIC";
+    }
+
+    public static class CBS
+    {
+        public const DWORD CBS_SIMPLE = 0x0001;
+        public const DWORD CBS_DROPDOWN = 0x0002;
+        public const DWORD CBS_DROPDOWNLIST = 0x0003;
+        public const DWORD CBS_OWNERDRAWFIXED = 0x0010;
+        public const DWORD CBS_OWNERDRAWVARIABLE = 0x0020;
+        public const DWORD CBS_AUTOHSCROLL = 0x0040;
+        public const DWORD CBS_OEMCONVERT = 0x0080;
+        public const DWORD CBS_SORT = 0x0100;
+        public const DWORD CBS_HASSTRINGS = 0x0200;
+        public const DWORD CBS_NOINTEGRALHEIGHT = 0x0400;
+        public const DWORD CBS_DISABLENOSCROLL = 0x0800;
+        public const DWORD CBS_UPPERCASE = 0x2000;
+        public const DWORD CBS_LOWERCASE = 0x4000;
+    }
+
+    public static class BN
+    {
+        public const ushort BN_CLICKED = 0;
+        public const ushort BN_PAINT = 1;
+        public const ushort BN_HILITE = 2;
+        public const ushort BN_UNHILITE = 3;
+        public const ushort BN_DISABLE = 4;
+        public const ushort BN_DOUBLECLICKED = 5;
+
+        public const ushort BN_PUSHED = BN_HILITE;
+        public const ushort BN_UNPUSHED = BN_UNHILITE;
+        public const ushort BN_DBLCLK = BN_DOUBLECLICKED;
+        public const ushort BN_SETFOCUS = 6;
+        public const ushort BN_KILLFOCUS = 7;
+    }
+
     public static class PM
     {
         /// <summary>
@@ -22,6 +240,71 @@ namespace Win32
         /// </para>
         /// </summary>
         public const uint PM_NOYIELD = 0x0002;
+    }
+
+    public static class BS
+    {
+        public const DWORD BS_PUSHBUTTON = 0x00000000;
+        public const DWORD BS_DEFPUSHBUTTON = 0x00000001;
+        public const DWORD BS_CHECKBOX = 0x00000002;
+        public const DWORD BS_AUTOCHECKBOX = 0x00000003;
+        public const DWORD BS_RADIOBUTTON = 0x00000004;
+        public const DWORD BS_3STATE = 0x00000005;
+        public const DWORD BS_AUTO3STATE = 0x00000006;
+        public const DWORD BS_GROUPBOX = 0x00000007;
+        public const DWORD BS_USERBUTTON = 0x00000008;
+        public const DWORD BS_AUTORADIOBUTTON = 0x00000009;
+        public const DWORD BS_PUSHBOX = 0x0000000A;
+        public const DWORD BS_OWNERDRAW = 0x0000000B;
+        public const DWORD BS_TYPEMASK = 0x0000000F;
+        public const DWORD BS_LEFTTEXT = 0x00000020;
+
+        public const DWORD BS_TEXT = 0x00000000;
+        public const DWORD BS_ICON = 0x00000040;
+        public const DWORD BS_BITMAP = 0x00000080;
+        public const DWORD BS_LEFT = 0x00000100;
+        public const DWORD BS_RIGHT = 0x00000200;
+        public const DWORD BS_CENTER = 0x00000300;
+        public const DWORD BS_TOP = 0x00000400;
+        public const DWORD BS_BOTTOM = 0x00000800;
+        public const DWORD BS_VCENTER = 0x00000C00;
+        public const DWORD BS_PUSHLIKE = 0x00001000;
+        public const DWORD BS_MULTILINE = 0x00002000;
+        public const DWORD BS_NOTIFY = 0x00004000;
+        public const DWORD BS_FLAT = 0x00008000;
+        public const DWORD BS_RIGHTBUTTON = BS_LEFTTEXT;
+    }
+
+    public static class GWL
+    {
+        /// <summary>
+        /// Retrieves the extended window styles.
+        /// </summary>
+        public const int GWL_EXSTYLE = -20;
+        /// <summary>
+        /// Retrieves a handle to the application instance.
+        /// </summary>
+        public const int GWL_HINSTANCE = -6;
+        /// <summary>
+        /// Retrieves a handle to the parent window, if any.
+        /// </summary>
+        public const int GWL_HWNDPARENT = -8;
+        /// <summary>
+        /// Retrieves the identifier of the window.
+        /// </summary>
+        public const int GWL_ID = -12;
+        /// <summary>
+        /// Retrieves the window styles.
+        /// </summary>
+        public const int GWL_STYLE = -16;
+        /// <summary>
+        /// Retrieves the user data associated with the window. This data is intended for use by the application that created the window. Its value is initially zero.
+        /// </summary>
+        public const int GWL_USERDATA = -21;
+        /// <summary>
+        /// Retrieves the address of the window procedure, or a handle representing the address of the window procedure. You must use the CallWindowProc function to call the window procedure.
+        /// </summary>
+        public const int GWL_WNDPROC = -4;
     }
 
     public enum MessageBoxButton : uint

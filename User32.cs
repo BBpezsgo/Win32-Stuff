@@ -4,13 +4,21 @@ namespace Win32
 {
     public static class User32
     {
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern LRESULT SendMessage(
+              [In] HWND hWnd,
+              [In] uint Msg,
+              [In] WPARAM wParam,
+              [In] LPARAM lParam
+            );
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern IntPtr GetWindowLongPtrW(
           [In] HWND hWnd,
           [In] int nIndex
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern BOOL DestroyWindow(
           [In] HWND hWnd
         );
@@ -31,7 +39,7 @@ namespace Win32
         /// The contents and behavior of the dialog box. This parameter can be a combination of flags from the following groups of flags.
         /// </param>
         /// <returns></returns>
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern MessageBoxResult MessageBox(
           [In, Optional] HWND hWnd,
           [In, Optional] char* lpText,
@@ -54,7 +62,7 @@ namespace Win32
             }
         }
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern BOOL PostMessageW(
           [In, Optional] HWND hWnd,
           [In] uint Msg,
@@ -62,25 +70,25 @@ namespace Win32
           [In] LPARAM lParam
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern void PostQuitMessage(
           [In] int nExitCode
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern BOOL InvalidateRect(
           [In] HWND hWnd,
           [In] Rect* lpRect,
           [In] BOOL bErase
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern LRESULT DispatchMessageW(
             [In] Message* lpMsg
         );
 
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern BOOL GetMessageW(
               [Out] Message* lpMsg,
               [In, Optional] HWND hWnd,
@@ -88,7 +96,7 @@ namespace Win32
               [In] uint wMsgFilterMax
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern BOOL PeekMessageW(
               [Out] Message* lpMsg,
               [In, Optional] HWND hWnd,
@@ -97,7 +105,7 @@ namespace Win32
               [In] uint wRemoveMsg
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern HWND CreateWindowExW(
               [In] DWORD dwExStyle,
               [In, Optional] char* lpClassName,
@@ -113,20 +121,20 @@ namespace Win32
               [In, Optional] void* lpParam
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern BOOL EndPaint(
               [In] HWND hWnd,
               [In] PaintStruct* lpPaint
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern HDC BeginPaint(
               [In] HWND hWnd,
               [Out] PaintStruct* lpPaint
         );
 
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT DefWindowProcW(
             [In] HWND hWnd,
             [In] uint Msg,
@@ -134,15 +142,16 @@ namespace Win32
             [In] LPARAM lParam
         );
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern LRESULT RegisterClassExW(
             [In] HWND hWnd,
             [In] uint Msg,
             [In] WPARAM wParam,
             [In] LPARAM lParam);
 
-        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern ATOM RegisterClassExW([In] WNDCLASSEXW* unnamedParam1);
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        unsafe public static extern ATOM RegisterClassExW(
+            [In] WNDCLASSEXW* unnamedParam1);
 
     }
 }
