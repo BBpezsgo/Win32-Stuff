@@ -15,7 +15,7 @@
                         parent,
                         label,
                         ClassName.BUTTON,
-                        WS.TABSTOP | WS.VISIBLE | WS.CHILD | BS.BS_DEFPUSHBUTTON,
+                        WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD | BS.BS_DEFPUSHBUTTON,
                         x,
                         y,
                         width,

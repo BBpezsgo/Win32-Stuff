@@ -7,13 +7,13 @@ namespace Win32
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT SendMessage(
               [In] HWND hWnd,
-              [In] uint Msg,
+              [In] UINT Msg,
               [In] WPARAM wParam,
               [In] LPARAM lParam
             );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern IntPtr GetWindowLongPtrW(
+        public static extern LONG_PTR GetWindowLongPtrW(
           [In] HWND hWnd,
           [In] int nIndex
         );
@@ -44,14 +44,14 @@ namespace Win32
           [In, Optional] HWND hWnd,
           [In, Optional] char* lpText,
           [In, Optional] char* lpCaption,
-          [In] uint uType
+          [In] UINT uType
         );
 
         unsafe public static MessageBoxResult MessageBox(
            HWND hWnd,
            string lbText,
            string lpCaption,
-           uint uType)
+           UINT uType)
         {
             fixed (char* _lbText = lbText)
             {
@@ -65,7 +65,7 @@ namespace Win32
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern BOOL PostMessageW(
           [In, Optional] HWND hWnd,
-          [In] uint Msg,
+          [In] UINT Msg,
           [In] WPARAM wParam,
           [In] LPARAM lParam
         );
@@ -92,8 +92,8 @@ namespace Win32
         unsafe public static extern BOOL GetMessageW(
               [Out] Message* lpMsg,
               [In, Optional] HWND hWnd,
-              [In] uint wMsgFilterMin,
-              [In] uint wMsgFilterMax
+              [In] UINT wMsgFilterMin,
+              [In] UINT wMsgFilterMax
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -137,17 +137,10 @@ namespace Win32
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT DefWindowProcW(
             [In] HWND hWnd,
-            [In] uint Msg,
+            [In] UINT Msg,
             [In] WPARAM wParam,
             [In] LPARAM lParam
         );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern LRESULT RegisterClassExW(
-            [In] HWND hWnd,
-            [In] uint Msg,
-            [In] WPARAM wParam,
-            [In] LPARAM lParam);
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern ATOM RegisterClassExW(

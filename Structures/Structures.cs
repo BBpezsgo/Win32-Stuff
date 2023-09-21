@@ -3,19 +3,20 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
-    public static class CBN
+    unsafe public struct CREATESTRUCT
     {
-        public const ushort CBN_ERRSPACE = ushort.MaxValue;
-        public const ushort CBN_SELCHANGE = 1;
-        public const ushort CBN_DBLCLK = 2;
-        public const ushort CBN_SETFOCUS = 3;
-        public const ushort CBN_KILLFOCUS = 4;
-        public const ushort CBN_EDITCHANGE = 5;
-        public const ushort CBN_EDITUPDATE = 6;
-        public const ushort CBN_DROPDOWN = 7;
-        public const ushort CBN_CLOSEUP = 8;
-        public const ushort CBN_SELENDOK = 9;
-        public const ushort CBN_SELENDCANCEL = 10;
+        public void* lpCreateParams;
+        public HINSTANCE hInstance;
+        public HMENU hMenu;
+        public HWND hwndParent;
+        public int cy;
+        public int cx;
+        public int y;
+        public int x;
+        public LONG style;
+        public char* lpszName;
+        public char* lpszClass;
+        public DWORD dwExStyle;
     }
 
     public static class CB
@@ -63,131 +64,6 @@ namespace Win32
         public const uint CB_MULTIPLEADDSTRING = 0x0163;
     }
 
-    public static class ClassName
-    {
-        /// <summary>
-        /// <para>
-        /// Designates a small rectangular child window that represents a button the
-        /// user can click to turn it on or off. Button controls can be used alone or
-        /// in groups, and they can either be labeled or appear without text. Button
-        /// controls typically change appearance when the user clicks them. For more information,
-        /// see Buttons.
-        /// </para>
-        /// <para>
-        /// For a table of the button styles you can specify in the <c>dwStyle</c> parameter,
-        /// see Button Styles.
-        /// </para>
-        /// </summary>
-        public const string BUTTON = "BUTTON";
-
-        /// <summary>
-        /// <para>
-        /// Designates a control consisting of a list box and a selection
-        /// field similar to an edit control. When using this style, an application
-        /// should either display the list box at all times or enable a drop-down
-        /// list box. If the list box is visible, typing characters into the selection
-        /// field highlights the first list box entry that matches the characters typed. Conversely,
-        /// selecting an item in the list box displays the selected text in the selection field.
-        /// For more information, see Combo Boxes.
-        /// </para>
-        /// <para>
-        /// For a table of the combo box styles you can specify in the
-        /// <c>dwStyle</c> parameter, see Combo Box Styles.
-        /// </para>
-        /// </summary>
-        public const string COMBOBOX = "COMBOBOX";
-
-        /// <summary>
-        /// <para>
-        /// Designates a rectangular child window into which the user can
-        /// type text from the keyboard. The user selects the control and gives it
-        /// the keyboard focus by clicking it or moving to it by pressing the TAB key.
-        /// The user can type text when the edit control displays a flashing caret;
-        /// use the mouse to move the cursor, select characters to be replaced,
-        /// or position the cursor for inserting characters; or use the key to
-        /// delete characters. For more information, see Edit Controls.
-        /// </para>
-        /// <para>
-        /// For a table of the edit control styles you can specify in the
-        /// <c>dwStyle</c> parameter, see Edit Control Styles.
-        /// </para>
-        /// </summary>
-        public const string EDIT = "EDIT";
-
-        /// <summary>
-        /// <para>
-        /// Designates a list of character strings. Specify this control
-        /// whenever an application must present a list of names, such as filenames,
-        /// from which the user can choose. The user can select a string by clicking it.
-        /// A selected string is highlighted, and a notification message is passed
-        /// to the parent window. For more information, see List Boxes.
-        /// </para>
-        /// <para>
-        /// For a table of the list box styles you can specify in the
-        /// <c>dwStyle</c> parameter, see List Box Styles.
-        /// </para>
-        /// </summary>
-        public const string LISTBOX = "LISTBOX";
-
-        /// <summary>
-        /// <para>
-        /// Designates an MDI client window. This window receives messages
-        /// that control the MDI application's child windows. The recommended style
-        /// bits are <c>WS_CLIPCHILDREN</c> and <c>WS_CHILD</c>.
-        /// Specify the <c>WS_HSCROLL</c> and <c>WS_VSCROLL</c>
-        /// styles to create an MDI client window that allows the user to scroll
-        /// MDI child windows into view. For more information, see Multiple Document
-        /// Interface.
-        /// </para>
-        /// <para>
-        /// RichEdit Designates a Microsoft Rich Edit 1.0 control.
-        /// This window lets the user view and edit text with character and paragraph
-        /// formatting, and can include embedded Component Object Model (COM) objects.
-        /// For more information, see Rich Edit Controls.
-        /// </para>
-        /// <para>
-        /// For a table of the rich edit control styles you can specify
-        /// in the <c>dwStyle</c> parameter, see Rich Edit Control Styles.
-        /// </para>
-        /// </summary>
-        public const string MDICLIENT = "MDICLIENT";
-
-        /// <summary>
-        /// <para>
-        /// Designates a Microsoft Rich Edit 2.0 control. This controls
-        /// let the user view and edit text with character and paragraph formatting,
-        /// and can include embedded COM objects. For more information, see Rich Edit Controls.
-        /// </para>
-        /// <para>
-        /// For a table of the rich edit control styles you can specify
-        /// in the dwStyle parameter, see Rich Edit Control Styles.
-        /// </para>
-        /// </summary>
-        public const string RICHEDIT_CLASS = "RICHEDIT_CLASS";
-
-        /// <summary>
-        /// <para>
-        /// Designates a rectangle that contains a scroll box and has direction
-        /// arrows at both ends. The scroll bar sends a notification message to its parent window whenever the user clicks the control. The parent window is responsible for updating the position of the scroll box, if necessary. For more information, see Scroll Bars.</para>
-        /// <para>
-        /// For a table of the scroll bar control styles you can specify
-        /// in the dwStyle parameter, see Scroll Bar Control Styles.
-        /// </para>
-        /// </summary>
-        public const string SCROLLBAR = "SCROLLBAR";
-
-        /// <summary>
-        /// <para>
-        /// Designates a simple text field, box, or rectangle used to label,
-        /// box, or separate other controls. Static controls take no input and provide no output.
-        /// For more information, see Static Controls.
-        /// <para>For a table of the static control styles you can specify in the dwStyle parameter,
-        /// see Static Control Styles.
-        /// </para>
-        /// </summary>
-        public const string STATIC = "STATIC";
-    }
-
     public static class CBS
     {
         public const DWORD CBS_SIMPLE = 0x0001;
@@ -203,22 +79,6 @@ namespace Win32
         public const DWORD CBS_DISABLENOSCROLL = 0x0800;
         public const DWORD CBS_UPPERCASE = 0x2000;
         public const DWORD CBS_LOWERCASE = 0x4000;
-    }
-
-    public static class BN
-    {
-        public const ushort BN_CLICKED = 0;
-        public const ushort BN_PAINT = 1;
-        public const ushort BN_HILITE = 2;
-        public const ushort BN_UNHILITE = 3;
-        public const ushort BN_DISABLE = 4;
-        public const ushort BN_DOUBLECLICKED = 5;
-
-        public const ushort BN_PUSHED = BN_HILITE;
-        public const ushort BN_UNPUSHED = BN_UNHILITE;
-        public const ushort BN_DBLCLK = BN_DOUBLECLICKED;
-        public const ushort BN_SETFOCUS = 6;
-        public const ushort BN_KILLFOCUS = 7;
     }
 
     public static class PM
@@ -307,187 +167,35 @@ namespace Win32
         public const int GWL_WNDPROC = -4;
     }
 
-    public enum MessageBoxButton : uint
+    public static class WS
     {
-        /// <summary>
-        /// The message box contains three push buttons: Abort, Retry, and Ignore.
-        /// </summary>
-        MB_ABORTRETRYIGNORE = 0x00000002,
-
-        /// <summary>
-        /// The message box contains three push buttons: Cancel, Try Again, Continue. Use this message box type instead of MB_ABORTRETRYIGNORE.
-        /// </summary>
-        MB_CANCELTRYCONTINUE = 0x00000006,
-
-        /// <summary>
-        /// Adds a Help button to the message box. When the user clicks the Help button or presses F1, the system sends a WM_HELP message to the owner.
-        /// </summary>
-        MB_HELP = 0x00004000,
-
-        /// <summary>
-        /// The message box contains one push button: OK. This is the default.
-        /// </summary>
-        MB_OK = 0x00000000,
-
-        /// <summary>
-        /// The message box contains two push buttons: OK and Cancel.
-        /// </summary>
-        MB_OKCANCEL = 0x00000001,
-
-        /// <summary>
-        /// The message box contains two push buttons: Retry and Cancel.
-        /// </summary>
-        MB_RETRYCANCEL = 0x00000005,
-
-        /// <summary>
-        /// The message box contains two push buttons: Yes and No.
-        /// </summary>
-        MB_YESNO = 0x00000004,
-
-        /// <summary>
-        /// The message box contains three push buttons: Yes, No, and Cancel.
-        /// </summary>
-        MB_YESNOCANCEL = 0x00000003,
-    }
-
-    public enum MessageBoxIcon : uint
-    {
-        /// <summary>
-        /// An exclamation-point icon appears in the message box.
-        /// </summary>
-        MB_ICONEXCLAMATION = 0x00000030,
-
-        /// <summary>
-        /// An exclamation-point icon appears in the message box.
-        /// </summary>
-        MB_ICONWARNING = 0x00000030,
-
-        /// <summary>
-        /// An icon consisting of a lowercase letter i in a circle appears in the message box.
-        /// </summary>
-        MB_ICONINFORMATION = 0x00000040,
-
-        /// <summary>
-        /// An icon consisting of a lowercase letter i in a circle appears in the message box.
-        /// </summary>
-        MB_ICONASTERISK = 0x00000040,
-
-        /// <summary>
-        /// A question-mark icon appears in the message box. The question-mark message icon is no longer recommended because it does not clearly represent a specific type of message and because the phrasing of a message as a question could apply to any message type. In addition, users can confuse the message symbol question mark with Help information. Therefore, do not use this question mark message symbol in your message boxes. The system continues to support its inclusion only for backward compatibility.
-        /// </summary>
-        MB_ICONQUESTION = 0x00000020,
-
-        /// <summary>
-        /// A stop-sign icon appears in the message box.
-        /// </summary>
-        MB_ICONSTOP = 0x00000010,
-
-        /// <summary>
-        /// A stop-sign icon appears in the message box.
-        /// </summary>
-        MB_ICONERROR = 0x00000010,
-
-        /// <summary>
-        /// A stop-sign icon appears in the message box.
-        /// </summary>
-        MB_ICONHAND = 0x00000010,
-    }
-
-    public enum MessageBoxDefaultButton : uint
-    {
-        /// <summary>
-        /// The first button is the default button.
-        /// MB_DEFBUTTON1 is the default unless MB_DEFBUTTON2, MB_DEFBUTTON3, or MB_DEFBUTTON4 is specified.
-        /// </summary>
-        MB_DEFBUTTON1 = 0x00000000,
-
-        /// <summary>
-        /// The second button is the default button.
-        /// </summary>
-        MB_DEFBUTTON2 = 0x00000100,
-
-        /// <summary>
-        /// The third button is the default button.
-        /// </summary>
-        MB_DEFBUTTON3 = 0x00000200,
-
-        /// <summary>
-        /// The fourth button is the default button.
-        /// </summary>
-        MB_DEFBUTTON4 = 0x00000300,
-    }
-
-    public enum MessageBoxModality : uint
-    {
-        /// <summary>
-        /// <para>
-        /// The user must respond to the message box before continuing work in the window identified by the hWnd parameter. However, the user can move to the windows of other threads and work in those windows.
-        /// </para>
-        /// <para>
-        /// Depending on the hierarchy of windows in the application, the user may be able to move to other windows within the thread. All child windows of the parent of the message box are automatically disabled, but pop-up windows are not.
-        /// </para>
-        /// <para>
-        /// MB_APPLMODAL is the default if neither MB_SYSTEMMODAL nor MB_TASKMODAL is specified.
-        /// </para>
-        /// </summary>
-        MB_APPLMODAL = 0x00000000,
-
-        /// <summary>
-        /// Same as MB_APPLMODAL except that the message box has the WS_EX_TOPMOST style. Use system-modal message boxes to notify the user of serious, potentially damaging errors that require immediate attention (for example, running out of memory). This flag has no effect on the user's ability to interact with windows other than those associated with hWnd.
-        /// </summary>
-        MB_SYSTEMMODAL = 0x00001000,
-        /// <summary>
-        /// Same as MB_APPLMODAL except that all the top-level windows belonging to the current thread are disabled if the hWnd parameter is NULL.Use this flag when the calling application or library does not have a window handle available but still needs to prevent input to other windows in the calling thread without suspending other threads.
-        /// </summary>
-        MB_TASKMODAL = 0x00002000,
-    }
-
-    public enum MessageBoxResult : int
-    {
-        /// <summary>
-        /// The Abort button was selected.
-        /// </summary>
-        IDABORT = 3,
-
-        /// <summary>
-        /// The Cancel button was selected.
-        /// </summary>
-        IDCANCEL = 2,
-
-        /// <summary>
-        /// The Continue button was selected.
-        /// </summary>
-        IDCONTINUE = 11,
-
-        /// <summary>
-        /// The Ignore button was selected.
-        /// </summary>
-        IDIGNORE = 5,
-
-        /// <summary>
-        /// The No button was selected.
-        /// </summary>
-        IDNO = 7,
-
-        /// <summary>
-        /// The OK button was selected.
-        /// </summary>
-        IDOK = 1,
-
-        /// <summary>
-        /// The Retry button was selected.
-        /// </summary>
-        IDRETRY = 4,
-
-        /// <summary>
-        /// The Try Again button was selected.
-        /// </summary>
-        IDTRYAGAIN = 10,
-
-        /// <summary>
-        /// The Yes button was selected.
-        /// </summary>
-        IDYES = 6,
+        public const uint WS_BORDER = 0x00800000;
+        public const uint WS_CAPTION = 0x00C00000;
+        public const uint WS_CHILD = 0x40000000;
+        public const uint WS_CHILDWINDOW = 0x40000000;
+        public const uint WS_CLIPCHILDREN = 0x02000000;
+        public const uint WS_CLIPSIBLINGS = 0x04000000;
+        public const uint WS_DISABLED = 0x08000000;
+        public const uint WS_DLGFRAME = 0x00400000;
+        public const uint WS_GROUP = 0x00020000;
+        public const uint WS_HSCROLL = 0x00100000;
+        public const uint WS_ICONIC = 0x20000000;
+        public const uint WS_MAXIMIZE = 0x01000000;
+        public const uint WS_MAXIMIZEBOX = 0x00010000;
+        public const uint WS_MINIMIZE = 0x20000000;
+        public const uint WS_MINIMIZEBOX = 0x00020000;
+        public const uint WS_OVERLAPPED = 0x00000000;
+        public const uint WS_OVERLAPPEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+        public const uint WS_POPUP = 0x80000000;
+        public const uint WS_POPUPWINDOW = (WS_POPUP | WS_BORDER | WS_SYSMENU);
+        public const uint WS_SIZEBOX = 0x00040000;
+        public const uint WS_SYSMENU = 0x00080000;
+        public const uint WS_TABSTOP = 0x00010000;
+        public const uint WS_THICKFRAME = 0x00040000;
+        public const uint WS_TILED = 0x00000000;
+        public const uint WS_TILEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+        public const uint WS_VISIBLE = 0x10000000;
+        public const uint WS_VSCROLL = 0x00200000;
     }
 
     public struct FormatMessageAttributes
@@ -552,9 +260,7 @@ namespace Win32
         public Rect rcPaint;
         public bool fRestore;
         public bool fIncUpdate;
-#pragma warning disable IDE0051 // Remove unused private members
-        readonly int rgbReserved;
-#pragma warning restore IDE0051 // Remove unused private members
+        public readonly int rgbReserved;
     }
 
     public struct WNDCLASSEXW
@@ -596,37 +302,6 @@ namespace Win32
         public int Top;
         public int Right;
         public int Bottom;
-    }
-
-    public static class WS
-    {
-        public const uint BORDER = 0x00800000;
-        public const uint CAPTION = 0x00C00000;
-        public const uint CHILD = 0x40000000;
-        public const uint CHILDWINDOW = 0x40000000;
-        public const uint CLIPCHILDREN = 0x02000000;
-        public const uint CLIPSIBLINGS = 0x04000000;
-        public const uint DISABLED = 0x08000000;
-        public const uint DLGFRAME = 0x00400000;
-        public const uint GROUP = 0x00020000;
-        public const uint HSCROLL = 0x00100000;
-        public const uint ICONIC = 0x20000000;
-        public const uint MAXIMIZE = 0x01000000;
-        public const uint MAXIMIZEBOX = 0x00010000;
-        public const uint MINIMIZE = 0x20000000;
-        public const uint MINIMIZEBOX = 0x00020000;
-        public const uint OVERLAPPED = 0x00000000;
-        public const uint OVERLAPPEDWINDOW = (OVERLAPPED | CAPTION | SYSMENU | THICKFRAME | MINIMIZEBOX | MAXIMIZEBOX);
-        public const uint POPUP = 0x80000000;
-        public const uint POPUPWINDOW = (POPUP | BORDER | SYSMENU);
-        public const uint SIZEBOX = 0x00040000;
-        public const uint SYSMENU = 0x00080000;
-        public const uint TABSTOP = 0x00010000;
-        public const uint THICKFRAME = 0x00040000;
-        public const uint TILED = 0x00000000;
-        public const uint TILEDWINDOW = (OVERLAPPED | CAPTION | SYSMENU | THICKFRAME | MINIMIZEBOX | MAXIMIZEBOX);
-        public const uint VISIBLE = 0x10000000;
-        public const uint VSCROLL = 0x00200000;
     }
 
     public enum ForegroundColor : WORD
@@ -701,32 +376,30 @@ namespace Win32
     /// Defines the coordinates of a character cell in a console screen buffer. The origin of the coordinate system (0,0) is at the top, left cell of the buffer.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Coord
+    public struct Coord : IEquatable<Coord>
     {
         /// <summary>
         /// The horizontal coordinate or column value. The units depend on the function call.
         /// </summary>
-        public short X;
+        public SHORT X;
         /// <summary>
         /// The vertical coordinate or row value. The units depend on the function call.
         /// </summary>
-        public short Y;
+        public SHORT Y;
 
-        public Coord(short x, short y)
+        public Coord(SHORT x, SHORT y)
         {
             this.X = x;
             this.Y = y;
         }
-        public Coord(int x, int y) : this((short)x, (short)y)
-        { }
-        public Coord(System.Drawing.Point p) : this((short)p.X, (short)p.Y)
-        { }
-        public Coord(System.Drawing.PointF p) : this((short)p.X, (short)p.Y)
-        { }
+        public Coord(int x, int y) : this((SHORT)x, (SHORT)y) { }
+        public Coord(System.Drawing.Point p) : this((SHORT)p.X, (SHORT)p.Y) { }
+        public Coord(System.Drawing.PointF p) : this((SHORT)p.X, (SHORT)p.Y) { }
 
         public override readonly bool Equals(object? obj) =>
             obj is Coord coord &&
             Equals(coord);
+
         public readonly bool Equals(Coord other) =>
             this.X == other.X &&
             this.Y == other.Y;
@@ -740,53 +413,22 @@ namespace Win32
             => $"{{ {X} ; {Y} }}";
     }
 
-    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
-    public struct CharUnion
-    {
-        [FieldOffset(0)] public char UnicodeChar;
-        // [FieldOffset(0)] public byte AsciiChar;
-
-        public CharUnion(char @char)
-        {
-            UnicodeChar = @char;
-            // AsciiChar = 0;
-        }
-
-        public override readonly bool Equals(object? obj) => obj is CharUnion charUnion && Equals(charUnion);
-        public readonly bool Equals(CharUnion other) =>
-            this.UnicodeChar == other.UnicodeChar;
-
-        public override readonly int GetHashCode() => HashCode.Combine(UnicodeChar);
-
-        public static bool operator ==(CharUnion a, CharUnion b) => a.Equals(b);
-        public static bool operator !=(CharUnion a, CharUnion b) => !(a == b);
-
-        public override readonly string ToString()
-            => $"{{ UnicodeChar: '{UnicodeChar}' }}";
-    }
-
     [StructLayout(LayoutKind.Explicit)]
     public struct CharInfo
     {
-        [FieldOffset(0)] public CharUnion Char;
+        [FieldOffset(0)] public char Char;
         [FieldOffset(2)] public WORD Attributes;
 
-        public CharInfo(CharUnion @char, WORD attributes)
+        public CharInfo(char @char, WORD attributes)
         {
             this.Char = @char;
             this.Attributes = attributes;
         }
-        public CharInfo(char @char, WORD attributes) : this(new CharUnion(@char), attributes)
+
+        public CharInfo(char @char) : this(@char, 0)
         { }
 
-        public CharInfo(CharUnion @char) : this(@char, 0)
-        { }
-        public CharInfo(char @char) : this(new CharUnion(@char), 0)
-        { }
-
-        public CharInfo(CharUnion @char, ForegroundColor fg, BackgroundColor bg) : this(@char, (WORD)((int)fg | (int)bg))
-        { }
-        public CharInfo(char @char, ForegroundColor fg, BackgroundColor bg) : this(new CharUnion(@char), fg, bg)
+        public CharInfo(char @char, ForegroundColor fg, BackgroundColor bg) : this(@char, (WORD)((int)fg | (int)bg))
         { }
 
         public ForegroundColor ForegroundColor

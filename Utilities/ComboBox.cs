@@ -19,7 +19,7 @@
                 parent,
                 label,
                 ClassName.COMBOBOX,
-                WS.CHILD | WS.OVERLAPPED | WS.VISIBLE | CBS.CBS_DROPDOWN | CBS.CBS_HASSTRINGS,
+                WS.WS_CHILD | WS.WS_OVERLAPPED | WS.WS_VISIBLE | CBS.CBS_DROPDOWN | CBS.CBS_HASSTRINGS,
                 x,
                 y,
                 width,

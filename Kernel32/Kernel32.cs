@@ -51,7 +51,7 @@ namespace Win32
         /// For an example, see <see href="https://learn.microsoft.com/en-us/windows/console/reading-input-buffer-events">Reading Input Buffer Events</see>.
         /// </example>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool ReadConsoleInput(
+        public static extern BOOL ReadConsoleInput(
             [In] HANDLE hConsoleInput,
             [Out] InputEvent[] lpBuffer,
             [In] DWORD nLength,
@@ -89,7 +89,7 @@ namespace Win32
         /// </para>
         /// </remarks>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool WriteConsoleInput(
+        public static extern BOOL WriteConsoleInput(
             [In] HANDLE hConsoleInput,
             [In] InputEvent[] lpBuffer,
             [In] DWORD nLength,
@@ -115,7 +115,7 @@ namespace Win32
         /// </para>
         /// </remarks>
         [DllImport("Kernel32.dll")]
-        public static extern uint GetConsoleCP();
+        public static extern UINT GetConsoleCP();
 
         /// <summary>
         /// Retrieves the output code page used by the console associated with the calling process. A console uses its output code page to translate the character values written by the various output functions into the images displayed in the console window.
@@ -129,7 +129,7 @@ namespace Win32
         /// </para>
         /// </returns>
         [DllImport("Kernel32.dll")]
-        public static extern uint GetConsoleOutputCP();
+        public static extern UINT GetConsoleOutputCP();
 
         /// <summary>
         /// Sets the input code page used by the console associated with the calling process. A console uses its input code page to translate keyboard input into the corresponding character value.
@@ -164,7 +164,7 @@ namespace Win32
         /// </para>
         /// </remarks>
         [DllImport("Kernel32.dll")]
-        public static extern bool SetConsoleCP([In] uint wCodePageID);
+        public static extern BOOL SetConsoleCP([In] UINT wCodePageID);
 
         /// <summary>
         /// Sets the output code page used by the console associated with the calling process. A console uses its output code page to translate the character values written by the various output functions into the images displayed in the console window.
@@ -199,7 +199,7 @@ namespace Win32
         /// </para>
         /// </remarks>
         [DllImport("Kernel32.dll")]
-        public static extern bool SetConsoleOutputCP([In] uint wCodePageID);
+        public static extern BOOL SetConsoleOutputCP([In] UINT wCodePageID);
 
         [DllImport("kernel32.dll")]
         public static extern HANDLE GetStdHandle(DWORD nStdHandle);
@@ -215,7 +215,7 @@ namespace Win32
             HANDLE template);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool WriteConsoleOutput(
+        public static extern BOOL WriteConsoleOutput(
             HANDLE hConsoleOutput,
             CharInfo[] lpBuffer,
             Coord dwBufferSize,
@@ -223,7 +223,7 @@ namespace Win32
             ref SmallRect lpWriteRegion);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool WriteConsoleOutputW(
+        public static extern BOOL WriteConsoleOutputW(
             SafeFileHandle hConsoleOutput,
             CharInfo[] lpBuffer,
             Coord dwBufferSize,
@@ -231,10 +231,10 @@ namespace Win32
             ref SmallRect lpWriteRegion);
 
         [DllImport("kernel32.dll")]
-        public static extern bool GetConsoleMode(HANDLE hConsoleInput, ref DWORD lpMode);
+        public static extern BOOL GetConsoleMode(HANDLE hConsoleInput, ref DWORD lpMode);
 
         [DllImport("kernel32.dll")]
-        public static extern bool SetConsoleMode(HANDLE hConsoleInput, DWORD dwMode);
+        public static extern BOOL SetConsoleMode(HANDLE hConsoleInput, DWORD dwMode);
 
         /// <summary>
         /// Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread basis. Multiple threads do not overwrite each other's last-error code.

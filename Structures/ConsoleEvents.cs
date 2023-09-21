@@ -101,37 +101,37 @@ namespace Win32
         ///   <item>
         ///    <term>KEY_EVENT 0x0001</term>
         ///    <description>
-        ///     The Event member contains a <see cref="RayTracer.KeyEvent"/> structure with information about a keyboard event.
+        ///     The Event member contains a <see cref="KeyEvent"/> structure with information about a keyboard event.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>MOUSE_EVENT 0x0002</term>
         ///    <description>
-        ///     The Event member contains a <see cref="RayTracer.MouseEvent"/> structure with information about a mouse movement or button press event.
+        ///     The Event member contains a <see cref="MouseEvent"/> structure with information about a mouse movement or button press event.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>WINDOW_BUFFER_SIZE_EVENT 0x0004</term>
         ///    <description>
-        ///     The Event member contains a <see cref="RayTracer.WindowBufferSizeEvent"/> structure with information about the new size of the console screen buffer.
+        ///     The Event member contains a <see cref="WindowBufferSizeEvent"/> structure with information about the new size of the console screen buffer.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>MENU_EVENT 0x0008</term>
         ///    <description>
-        ///     The Event member contains a MENU_EVENT_RECORD structure. These events are used internally and should be ignored.
+        ///     The Event member contains a <c>MENU_EVENT_RECORD</c> structure. These events are used internally and should be ignored.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>FOCUS_EVENT 0x0010</term>
         ///    <description>
-        ///     The Event member contains a FOCUS_EVENT_RECORD structure. These events are used internally and should be ignored. 
+        ///     The Event member contains a <c>FOCUS_EVENT_RECORD</c> structure. These events are used internally and should be ignored. 
         ///    </description>
         ///   </item>
         ///  </list>
         /// </summary>
         [FieldOffset(0)]
-        public readonly ushort EventType;
+        public readonly WORD EventType;
 
         [FieldOffset(4)]
         public readonly KeyEvent KeyEvent;
@@ -160,22 +160,20 @@ namespace Win32
         /// </summary>
         public readonly Coord MousePosition;
 
-        readonly uint dwButtonState;
+        /// <summary>
+        /// The status of the mouse buttons. The least significant bit corresponds to the leftmost mouse button. The next least significant bit corresponds to the rightmost mouse button. The next bit indicates the next-to-leftmost mouse button. The bits then correspond left to right to the mouse buttons. A bit is 1 if the button was pressed.
+        /// </summary>
+        public readonly DWORD ButtonState;
 
         /// <summary>
         /// The state of the control keys.
         /// </summary>
-        public readonly uint ControlKeyState;
+        public readonly DWORD ControlKeyState;
 
         /// <summary>
         /// The type of mouse event.
         /// </summary>
-        public readonly uint EventFlags;
-
-        /// <summary>
-        /// The status of the mouse buttons. The least significant bit corresponds to the leftmost mouse button. The next least significant bit corresponds to the rightmost mouse button. The next bit indicates the next-to-leftmost mouse button. The bits then correspond left to right to the mouse buttons. A bit is 1 if the button was pressed.
-        /// </summary>
-        public readonly MouseButtonState ButtonState => (MouseButtonState)dwButtonState;
+        public readonly DWORD EventFlags;
     }
 
     /// <summary>
@@ -188,34 +186,34 @@ namespace Win32
         /// If the key is pressed, this member is <see langword="true"/>. Otherwise, this member is <see langword="false"/> (the key is released).
         /// </summary>
         [FieldOffset(0)]
-        public readonly bool IsDown;
+        public readonly BOOL IsDown;
 
         /// <summary>
         /// The repeat count, which indicates that a key is being held down. For example, when a key is held down, you might get five events with this member equal to 1, one event with this member equal to 5, or multiple events with this member greater than or equal to 1.
         /// </summary>
         [FieldOffset(4)]
-        public readonly ushort RepeatCount;
+        public readonly WORD RepeatCount;
 
         /// <summary>
         /// A <see href="https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes">virtual-key code</see> that identifies the given key in a device-independent manner.
         /// </summary>
         [FieldOffset(6)]
-        public readonly ushort VirtualKeyCode;
+        public readonly WORD VirtualKeyCode;
 
         [FieldOffset(8)]
-        public readonly ushort wVirtualScanCode;
+        public readonly WORD wVirtualScanCode;
 
         [FieldOffset(10)]
-        public readonly char UnicodeChar;
+        public readonly WCHAR UnicodeChar;
 
         [FieldOffset(10)]
-        public readonly byte AsciiChar;
+        public readonly CHAR AsciiChar;
 
         /// <summary>
         /// The state of the control keys.
         /// </summary>
         [FieldOffset(12)]
-        public readonly uint ControlKeyState;
+        public readonly DWORD ControlKeyState;
     }
 
     /// <summary>
@@ -223,9 +221,9 @@ namespace Win32
     /// </summary>
     public readonly struct WindowBufferSizeEvent
     {
-        readonly Coord dwSize;
+        public readonly Coord Size;
 
-        public readonly short Width => dwSize.X;
-        public readonly short Height => dwSize.Y;
+        public readonly SHORT Width => Size.X;
+        public readonly SHORT Height => Size.Y;
     }
 }
