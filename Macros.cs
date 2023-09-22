@@ -36,5 +36,10 @@
             => (WORD)(((byte)(low & 0xFF)) | ((byte)(high & 0xFF) << 8));
         public static int MAKELONG(int low, int high)
             => (int)(((WORD)(low & 0xFFFF)) | (((DWORD)(WORD)(high & 0xFFFF)) << 16));
+
+        public static short GET_WHEEL_DELTA_WPARAM(WPARAM wParam) => unchecked((short)HIWORD(wParam));
+        public static ushort GET_KEYSTATE_WPARAM(WPARAM wParam) => LOWORD(wParam);
+        public static short GET_NCHITTEST_WPARAM(WPARAM wParam) => unchecked((short)LOWORD(wParam));
+        public static ushort GET_XBUTTON_WPARAM(WPARAM wParam) => HIWORD(wParam);
     }
 }

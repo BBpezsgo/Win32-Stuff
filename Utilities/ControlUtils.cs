@@ -27,7 +27,7 @@
                     height,
                     id);
 
-                return new Control() { _handle = handle };
+                return new Control(handle);
             }
         }
 

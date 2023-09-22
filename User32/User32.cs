@@ -4,6 +4,105 @@ namespace Win32
 {
     public static class User32
     {
+        /// <summary>
+        /// Changes the parent window of the specified child window.
+        /// </summary>
+        /// <param name="hWndChild">
+        /// A handle to the child window.
+        /// </param>
+        /// <param name="hWndNewParent">
+        /// A handle to the new parent window.
+        /// If this parameter is <c>NULL</c>, the desktop window becomes the new
+        /// parent window. If this parameter is <c>HWND_MESSAGE</c>,
+        /// the child window becomes a <see href="https://learn.microsoft.com/en-us/windows/desktop/winmsg/window-features">message-only window</see>.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is a handle to the previous parent window.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is <c>NULL</c>. To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern HWND SetParent(
+          [In] HWND hWndChild,
+          [In, Optional] HWND hWndNewParent
+        );
+
+        /// <summary>
+        /// Determines whether a window is a child window or descendant window of a
+        /// specified parent window. A child window is the direct descendant of a
+        /// specified parent window if that parent window is in the chain of parent
+        /// windows; the chain of parent windows leads from the original overlapped
+        /// or pop-up window to the child window.
+        /// </summary>
+        /// <param name="hWndParent">
+        /// A handle to the parent window.
+        /// </param>
+        /// <param name="hWnd">
+        /// A handle to the window to be tested.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the window is a child or descendant window of the specified parent window, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the window is not a child or descendant window of the specified parent window, the return value is zero.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern BOOL IsChild(
+              [In] HWND hWndParent,
+              [In] HWND hWnd
+            );
+
+        /// <summary>
+        /// <para>
+        /// Retrieves a handle to the specified window's parent or owner.
+        /// </para>
+        /// <para>
+        /// To retrieve a handle to a specified ancestor, use the <c>GetAncestor</c> function.
+        /// </para>
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window whose parent window handle is to be retrieved.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the window is a child window, the return value is a handle to the parent window.
+        /// If the window is a top-level window with the <c>WS_POPUP</c> style, the return value is a handle to the owner window.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is <c>NULL</c>.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// <para>
+        /// This function typically fails for one of the following reasons:
+        /// <list type="bullet">
+        /// <item>
+        /// The window is a top-level window that is unowned or does not have
+        /// the <c>WS_POPUP</c> style.
+        /// </item>
+        /// <item>
+        /// The owner window has <c>WS_POPUP</c> style.
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// To obtain a window's owner window, instead of using <c>GetParent</c>,
+        /// use <c>GetWindow</c> with the <c>GW_OWNER</c> flag. To obtain the parent window and
+        /// not the owner, instead of using <c>GetParent</c>, use <c>GetAncestor</c> with
+        /// the <c>GA_PARENT</c> flag.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern HWND GetParent(
+              [In] HWND hWnd
+            );
+
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT SendMessage(
               [In] HWND hWnd,

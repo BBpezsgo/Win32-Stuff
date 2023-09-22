@@ -1,26 +1,21 @@
 ﻿namespace Win32.Utilities
 {
-    public partial class Control
+    public partial class Control : Window
     {
-    public delegate LRESULT? EventHandler(HWND sender, HWND parent, ushort code);
+        public delegate LRESULT? EventHandler(HWND sender, HWND parent, ushort code);
 
-        HWND _handle;
         public EventHandler? OnEvent;
 
-        public HWND Handle
-        {
-            get => _handle;
-            protected set => _handle = value;
-        }
-
         public Control()
+            : base()
         {
-            _handle = HWND.Zero;
+
         }
 
         public Control(HWND handle)
+            : base(handle)
         {
-            _handle = handle;
+
         }
 
         public virtual LRESULT DispatchEvent(HWND parent, uint message, WPARAM wParam, LPARAM lParam)

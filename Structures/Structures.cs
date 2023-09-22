@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    [StructLayout(LayoutKind.Sequential)]
     unsafe public struct CREATESTRUCT
     {
         public void* lpCreateParams;
@@ -167,37 +168,6 @@ namespace Win32
         public const int GWL_WNDPROC = -4;
     }
 
-    public static class WS
-    {
-        public const uint WS_BORDER = 0x00800000;
-        public const uint WS_CAPTION = 0x00C00000;
-        public const uint WS_CHILD = 0x40000000;
-        public const uint WS_CHILDWINDOW = 0x40000000;
-        public const uint WS_CLIPCHILDREN = 0x02000000;
-        public const uint WS_CLIPSIBLINGS = 0x04000000;
-        public const uint WS_DISABLED = 0x08000000;
-        public const uint WS_DLGFRAME = 0x00400000;
-        public const uint WS_GROUP = 0x00020000;
-        public const uint WS_HSCROLL = 0x00100000;
-        public const uint WS_ICONIC = 0x20000000;
-        public const uint WS_MAXIMIZE = 0x01000000;
-        public const uint WS_MAXIMIZEBOX = 0x00010000;
-        public const uint WS_MINIMIZE = 0x20000000;
-        public const uint WS_MINIMIZEBOX = 0x00020000;
-        public const uint WS_OVERLAPPED = 0x00000000;
-        public const uint WS_OVERLAPPEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-        public const uint WS_POPUP = 0x80000000;
-        public const uint WS_POPUPWINDOW = (WS_POPUP | WS_BORDER | WS_SYSMENU);
-        public const uint WS_SIZEBOX = 0x00040000;
-        public const uint WS_SYSMENU = 0x00080000;
-        public const uint WS_TABSTOP = 0x00010000;
-        public const uint WS_THICKFRAME = 0x00040000;
-        public const uint WS_TILED = 0x00000000;
-        public const uint WS_TILEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-        public const uint WS_VISIBLE = 0x10000000;
-        public const uint WS_VSCROLL = 0x00200000;
-    }
-
     public struct FormatMessageAttributes
     {
         /// <remarks>
@@ -253,6 +223,7 @@ namespace Win32
         public const int FORMAT_MESSAGE_MAX_WIDTH_MASK = 255;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct PaintStruct
     {
         public HDC hdc;
@@ -263,6 +234,7 @@ namespace Win32
         public readonly int rgbReserved;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct WNDCLASSEXW
     {
         public uint cbSize;
@@ -279,12 +251,26 @@ namespace Win32
         public HICON hIconSm;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct Point
     {
         public int X;
         public int Y;
 
-        public static Point Empty => new() { X = 0, Y = 0, };
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public static explicit operator Coord(Point p) => new(p.X, p.Y);
+        public static explicit operator Point(Coord p) => new(p.X, p.Y);
+
+        public static Point Empty => new(0, 0);
+
+        public override readonly string ToString()
+            => $"({X}, {Y})";
     }
 
     public struct Color
@@ -296,12 +282,30 @@ namespace Win32
         public const DWORD White = 0x00FFFFFF;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct Rect
     {
-        public int Left;
-        public int Top;
-        public int Right;
-        public int Bottom;
+        public LONG Left;
+        public LONG Top;
+        public LONG Right;
+        public LONG Bottom;
+
+        public readonly Point Position => new(Math.Min(Left, Right), Math.Min(Top, Bottom));
+
+        public readonly LONG Width => Math.Max(Left, Right) - Math.Min(Left, Right);
+        public readonly LONG Height => Math.Max(Top, Bottom) - Math.Min(Top, Bottom);
+
+        public Rect(LONG top, LONG left, LONG bottom, LONG right)
+        {
+            Top = top;
+            Left = left;
+            Bottom = bottom;
+            Right = right;
+        }
+
+        public override readonly string ToString()
+            => $"{{ Left: {Left} Top: {Top} Bottom: {Bottom} Right: {Right} }}";
     }
 
     public enum ForegroundColor : WORD
@@ -376,6 +380,7 @@ namespace Win32
     /// Defines the coordinates of a character cell in a console screen buffer. The origin of the coordinate system (0,0) is at the top, left cell of the buffer.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
+    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct Coord : IEquatable<Coord>
     {
         /// <summary>
@@ -410,7 +415,7 @@ namespace Win32
         public static bool operator !=(Coord a, Coord b) => !(a == b);
 
         public override readonly string ToString()
-            => $"{{ {X} ; {Y} }}";
+            => $"({X}, {Y})";
     }
 
     [StructLayout(LayoutKind.Explicit)]

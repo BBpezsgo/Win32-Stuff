@@ -2,7 +2,7 @@
 {
     public class Button : Control
     {
-        public Button(
+        unsafe public Button(
             HWND parent,
             string label,
             int x,
