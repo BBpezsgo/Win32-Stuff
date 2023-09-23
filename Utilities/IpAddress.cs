@@ -1,14 +1,11 @@
-﻿namespace Win32.Utilities
+﻿using Win32.Constants.Notification_Codes;
+
+namespace Win32.Utilities
 {
-    public class Button : Control
+    public class IpAddress : Control
     {
-        public delegate void SimpleEventHandler(Button sender);
-
-        public event SimpleEventHandler? OnClick;
-
-        unsafe public Button(
+        unsafe public IpAddress(
             HWND parent,
-            string label,
             int x,
             int y,
             int width,
@@ -17,9 +14,9 @@
         {
             Handle = Control.AnyHandle(
                         parent,
-                        label,
-                        ClassName.BUTTON,
-                        WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD | BS.BS_DEFPUSHBUTTON,
+                        "",
+                        ClassName.IP_ADDRESS,
+                        WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD,
                         x,
                         y,
                         width,
@@ -29,10 +26,9 @@
 
         protected override void HandleEvent(HWND parent, ushort code)
         {
-            if (code == BN.BN_CLICKED)
+            if (code == IPN.IPN_FIELDCHANGED)
             {
-                OnClick?.Invoke(this);
-                return;
+
             }
         }
     }

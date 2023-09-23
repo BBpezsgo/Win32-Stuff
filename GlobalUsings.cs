@@ -11,6 +11,7 @@ global using HWND = System.IntPtr;
 global using LPARAM = System.IntPtr;
 global using WPARAM = System.UIntPtr;
 global using LRESULT = System.IntPtr;
+global using HRESULT = System.Int32;
 global using HANDLE = System.IntPtr;
 
 // Integer types
@@ -58,7 +59,7 @@ global using WCHAR = System.Char;
 
 global using CHAR = System.Byte;
 
-class Constants
+public static class Constants
 {
     public const BOOL FALSE = 0;
     public const BOOL TRUE = 1;

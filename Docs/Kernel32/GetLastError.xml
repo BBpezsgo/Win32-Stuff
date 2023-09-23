@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <summary>
+    Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread basis. Multiple threads do not overwrite each other's last-error code.
+  </summary>
+  <returns>
+    <para>
+      The return value is the calling thread's last-error code.
+    </para>
+    <para>
+      The Return Value section of the documentation for each function that sets the last-error code notes the conditions under which the function sets the last-error code. Most functions that set the thread's last-error code set it when they fail. However, some functions also set the last-error code when they succeed. If the function is not documented to set the last-error code, the value returned by this function is simply the most recent last-error code to have been set; some functions set the last-error code to 0 on success and others do not.
+    </para>
+  </returns>
+  <remarks>
+    <para>
+      Functions executed by the calling thread set this value by calling the <c>SetLastError</c> function. You should call the <see  cref="GetLastError"/> function immediately when a function's return value indicates that such a call will return useful data. That is because some functions call SetLastError with a zero when they succeed, wiping out the error code set by the most recently failed function.
+    </para>
+    <para>
+      To obtain an error string for system error codes, use the <see cref="FormatMessage"/> function. For a complete list of error codes provided by the operating system, see <see href="https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes">System Error Codes</see>.
+    </para>
+    <para>
+      The error codes returned by a function are not part of the Windows API specification and can vary by operating system or device driver. For this reason, we cannot provide the complete list of error codes that can be returned by each function. There are also many functions whose documentation does not include even a partial list of error codes that can be returned.
+    </para>
+    <para>
+      Error codes are 32-bit values (bit 31 is the most significant bit). Bit 29 is reserved for application-defined error codes; no system error code has this bit set. If you are defining an error code for your application, set this bit to one. That indicates that the error code has been defined by an application, and ensures that your error code does not conflict with any error codes defined by the system.
+    </para>
+    <para>
+      To convert a system error into an <c>HRESULT</c> value, use the <c>HRESULT_FROM_WIN32</c> macro.
+    </para>
+  </remarks>
+  <example>
+    For an example, see <see href="https://learn.microsoft.com/en-us/windows/win32/debug/retrieving-the-last-error-code">Retrieving the Last-Error Code</see>.
+  </example>
+</docs>

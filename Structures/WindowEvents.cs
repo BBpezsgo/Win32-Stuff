@@ -782,7 +782,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct Message
+    public struct MSG
     {
         public HWND hwnd;
         public UINT message;

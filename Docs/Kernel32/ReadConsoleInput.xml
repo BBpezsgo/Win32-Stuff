@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <summary>
+    Reads data from a console input buffer and removes it from the buffer.
+  </summary>
+  <param name="hConsoleInput">
+    A handle to the console input buffer. The handle must have the <c>GENERIC_READ</c> access right. For more information, see <see href="https://learn.microsoft.com/en-us/windows/console/console-buffer-security-and-access-rights">Console Buffer Security and Access Rights</see>.
+  </param>
+  <param name="lpBuffer">
+    A pointer to an array of <c>INPUT_RECORD</c> structures that receives the input buffer data.
+  </param>
+  <param name="nLength">
+    The size of the array pointed to by the <paramref name="lpBuffer"/> parameter, in array elements.
+  </param>
+  <param name="lpNumberOfEventsRead">
+    A pointer to a variable that receives the number of input records read.
+  </param>
+  <returns>
+    <para>
+      If the function succeeds, the return value is nonzero.
+    </para>
+    <para>
+      If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.
+    </para>
+  </returns>
+  <remarks>
+    <para>
+      If the number of records requested in the <paramref name="nLength"/> parameter exceeds the number of records available in the buffer, the number available is read. The function does not return until at least one input record has been read.
+    </para>
+    <para>
+      A process can specify a console input buffer handle in one of the wait functions to determine when there is unread console input. When the input buffer is not empty, the state of a console input buffer handle is signaled.
+    </para>
+    <para>
+      To determine the number of unread input records in a console's input buffer, use the GetNumberOfConsoleInputEvents function. To read input records from a console input buffer without affecting the number of unread records, use the PeekConsoleInput function. To discard all unread records in a console's input buffer, use the FlushConsoleInputBuffer function.
+    </para>
+    <para>
+      This function uses either Unicode characters or 8-bit characters from the console's current code page. The console's code page defaults initially to the system's OEM code page. To change the console's code page, use the <see cref="SetConsoleCP"/> or <see cref="SetConsoleOutputCP"/> functions. Legacy consumers may also use the chcp or mode con cp select= commands, but it is not recommended for new development.
+    </para>
+  </remarks>
+  <example>
+    For an example, see <see href="https://learn.microsoft.com/en-us/windows/console/reading-input-buffer-events">Reading Input Buffer Events</see>.
+  </example>
+</docs>

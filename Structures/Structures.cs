@@ -4,6 +4,61 @@ using System.Runtime.InteropServices;
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
+    public readonly struct NMHDR
+    {
+        public readonly HWND hwndFrom;
+        public readonly UINT idFrom;
+        public readonly UINT code;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public readonly struct PBRANGE
+    {
+        public readonly int Low;
+        public readonly int High;
+
+        public PBRANGE(int low, int high)
+        {
+            Low = low;
+            High = high;
+        }
+
+        public static implicit operator ValueTuple<int, int>(PBRANGE v) => (v.Low, v.High);
+        public static implicit operator PBRANGE(ValueTuple<int, int> v) => (v.Item1, v.Item2);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    unsafe public struct STARTUPINFOW
+    {
+        public DWORD cb;
+        public WCHAR* lpReserved;
+        public WCHAR* lpDesktop;
+        public WCHAR* lpTitle;
+        public DWORD dwX;
+        public DWORD dwY;
+        public DWORD dwXSize;
+        public DWORD dwYSize;
+        public DWORD dwXCountChars;
+        public DWORD dwYCountChars;
+        public DWORD dwFillAttribute;
+        public DWORD dwFlags;
+        public WORD wShowWindow;
+        public WORD cbReserved2;
+        public BYTE* lpReserved2;
+        public HANDLE hStdInput;
+        public HANDLE hStdOutput;
+        public HANDLE hStdError;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    unsafe public struct SECURITY_ATTRIBUTES
+    {
+        public DWORD nLength;
+        public void* lpSecurityDescriptor;
+        public BOOL bInheritHandle;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     unsafe public struct CREATESTRUCT
     {
         public void* lpCreateParams;
@@ -103,39 +158,6 @@ namespace Win32
         public const uint PM_NOYIELD = 0x0002;
     }
 
-    public static class BS
-    {
-        public const DWORD BS_PUSHBUTTON = 0x00000000;
-        public const DWORD BS_DEFPUSHBUTTON = 0x00000001;
-        public const DWORD BS_CHECKBOX = 0x00000002;
-        public const DWORD BS_AUTOCHECKBOX = 0x00000003;
-        public const DWORD BS_RADIOBUTTON = 0x00000004;
-        public const DWORD BS_3STATE = 0x00000005;
-        public const DWORD BS_AUTO3STATE = 0x00000006;
-        public const DWORD BS_GROUPBOX = 0x00000007;
-        public const DWORD BS_USERBUTTON = 0x00000008;
-        public const DWORD BS_AUTORADIOBUTTON = 0x00000009;
-        public const DWORD BS_PUSHBOX = 0x0000000A;
-        public const DWORD BS_OWNERDRAW = 0x0000000B;
-        public const DWORD BS_TYPEMASK = 0x0000000F;
-        public const DWORD BS_LEFTTEXT = 0x00000020;
-
-        public const DWORD BS_TEXT = 0x00000000;
-        public const DWORD BS_ICON = 0x00000040;
-        public const DWORD BS_BITMAP = 0x00000080;
-        public const DWORD BS_LEFT = 0x00000100;
-        public const DWORD BS_RIGHT = 0x00000200;
-        public const DWORD BS_CENTER = 0x00000300;
-        public const DWORD BS_TOP = 0x00000400;
-        public const DWORD BS_BOTTOM = 0x00000800;
-        public const DWORD BS_VCENTER = 0x00000C00;
-        public const DWORD BS_PUSHLIKE = 0x00001000;
-        public const DWORD BS_MULTILINE = 0x00002000;
-        public const DWORD BS_NOTIFY = 0x00004000;
-        public const DWORD BS_FLAT = 0x00008000;
-        public const DWORD BS_RIGHTBUTTON = BS_LEFTTEXT;
-    }
-
     public static class GWL
     {
         /// <summary>
@@ -228,7 +250,7 @@ namespace Win32
     {
         public HDC hdc;
         public bool fErase;
-        public Rect rcPaint;
+        public RECT rcPaint;
         public bool fRestore;
         public bool fIncUpdate;
         public readonly int rgbReserved;
@@ -284,7 +306,7 @@ namespace Win32
 
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct Rect
+    public struct RECT
     {
         public LONG Left;
         public LONG Top;
@@ -296,7 +318,7 @@ namespace Win32
         public readonly LONG Width => Math.Max(Left, Right) - Math.Min(Left, Right);
         public readonly LONG Height => Math.Max(Top, Bottom) - Math.Min(Top, Bottom);
 
-        public Rect(LONG top, LONG left, LONG bottom, LONG right)
+        public RECT(LONG top, LONG left, LONG bottom, LONG right)
         {
             Top = top;
             Left = left;

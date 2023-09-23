@@ -2,33 +2,24 @@
 {
     public partial class Control : Window
     {
-        public delegate LRESULT? EventHandler(HWND sender, HWND parent, ushort code);
+        public delegate void EventHandler(HWND parent, ushort code);
 
-        public EventHandler? OnEvent;
+        public event EventHandler? OnEvent;
 
-        public Control()
-            : base()
+        public Control() : base() { }
+        public Control(HWND handle) : base(handle) { }
+
+        public virtual void DispatchEvent(HWND parent, uint message, WPARAM wParam, LPARAM lParam)
         {
+            if (lParam != Handle) return;
 
-        }
-
-        public Control(HWND handle)
-            : base(handle)
-        {
-
-        }
-
-        public virtual LRESULT DispatchEvent(HWND parent, uint message, WPARAM wParam, LPARAM lParam)
-        {
             ushort code = Macros.HIWORD(wParam);
 
-            OnEvent?.Invoke(lParam, parent, code);
+            OnEvent?.Invoke(parent, code);
 
-            HandleEvent(lParam, parent, code);
-
-            return User32.DefWindowProcW(parent, message, wParam, lParam);
+            HandleEvent(parent, code);
         }
 
-        protected virtual LRESULT? HandleEvent(HWND sender, HWND parent, ushort code) => null;
+        protected virtual void HandleEvent(HWND parent, ushort code) { }
     }
 }

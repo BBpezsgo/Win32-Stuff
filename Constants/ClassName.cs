@@ -123,5 +123,9 @@
         /// </para>
         /// </summary>
         public const string STATIC = "STATIC";
+
+        public const string PROGRESS_BAR = "msctls_progress32";
+
+        public const string IP_ADDRESS = "SysIPAddress32";
     }
 }

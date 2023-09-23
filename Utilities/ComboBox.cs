@@ -19,7 +19,7 @@
                 parent,
                 label,
                 ClassName.COMBOBOX,
-                WS.WS_CHILD | WS.WS_OVERLAPPED | WS.WS_VISIBLE | CBS.CBS_DROPDOWN | CBS.CBS_HASSTRINGS,
+                WS.WS_OVERLAPPED | WS.WS_VISIBLE | WS.WS_CHILD | CBS.CBS_DROPDOWNLIST | CBS.CBS_DROPDOWN | CBS.CBS_HASSTRINGS | WS.WS_VSCROLL | BS.BS_DEFSPLITBUTTON,
                 x,
                 y,
                 width,
@@ -41,14 +41,25 @@
         public string GetString(int index)
             => ComboBox.GetString(Handle, index);
 
-        protected override HWND? HandleEvent(HWND sender, HWND parent, ushort code)
+        protected override void HandleEvent(HWND parent, ushort code)
         {
-            if (sender != Handle) return null;
-
             if (code == CBN.CBN_SELCHANGE)
-            { return OnSelectionChanged?.Invoke(this, parent); }
+            {
+                OnSelectionChanged?.Invoke(this, parent);
+                return;
+            }
+            else if (code == CBN.CBN_SETFOCUS)
+            {
+                return;
+            }
+            else if (code == CBN.CBN_DROPDOWN)
+            {
+                return;
+            }
+            else
+            {
 
-            return null;
+            }
         }
     }
 }

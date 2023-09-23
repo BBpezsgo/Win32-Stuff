@@ -1,16 +1,21 @@
 ﻿namespace Win32.Utilities
 {
-    public delegate LRESULT FormEventHandler(Form sender, uint msg, WPARAM wParam, LPARAM lParam);
+    public delegate LRESULT? FormEventHandler(Form sender, uint msg, WPARAM wParam, LPARAM lParam);
 
     public class Form : Window, IDisposable
     {
+        unsafe public delegate void ResizeEventHandler(Form sender, RECT* rect);
+
         static readonly Dictionary<HWND, Form> Handlers = new();
 
         bool IsDisposed;
-        readonly FormEventHandler? EventHandler;
+
+        public event FormEventHandler? OnEvent;
+        public event ResizeEventHandler? OnResize;
+
         public readonly Dictionary<ushort, Control> Controls;
 
-        unsafe public Form(string title, int width, int height, DWORD style = WS.WS_OVERLAPPEDWINDOW | WS.WS_VISIBLE, FormEventHandler? eventHandler = null) : base()
+        unsafe public Form(string title, int width, int height, DWORD style = DefaultStyles) : base()
         {
             Handle = Create(
                 title,
@@ -21,11 +26,15 @@
             Handlers.Add(Handle, this);
 
             IsDisposed = false;
-            EventHandler = eventHandler;
             Controls = new Dictionary<ushort, Control>();
         }
 
-        unsafe public static HWND Create(string title, int width, int height, delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> windProc, DWORD style = WS.WS_OVERLAPPEDWINDOW | WS.WS_VISIBLE, void* lpParam = null, string className = "windowClass")
+        const uint DefaultStyles =
+            WS.WS_OVERLAPPEDWINDOW ^ WS.WS_THICKFRAME ^ WS.WS_MAXIMIZEBOX |
+            WS.WS_SYSMENU |
+            WS.WS_VISIBLE;
+
+        unsafe public static HWND Create(string title, int width, int height, delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> windProc, DWORD style = DefaultStyles, void* lpParam = null, string className = "windowClass")
         {
             fixed (char* classNamePtr = className)
             {
@@ -51,7 +60,7 @@
             {
                 uint exStyles = 0;
 
-                return User32.CreateWindowExW(exStyles,
+                HWND handle = User32.CreateWindowExW(exStyles,
                     classNamePtr,
                     windowNamePtr,
                     style,
@@ -61,6 +70,10 @@
                     HMENU.Zero,
                     HINSTANCE.Zero,
                     lpParam);
+
+                // UxTheme.SetWindowTheme(handle, " ", " ");
+
+                return handle;
             }
         }
 
@@ -74,10 +87,9 @@
         {
             if (IsDisposed) return;
             IsDisposed = true;
+            Handlers.Remove(Handle);
 
             if (!disposing) return;
-
-            Handlers.Remove(Handle);
         }
 
         static LRESULT WinProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
@@ -90,7 +102,21 @@
 
         LRESULT HandleEventInternal(uint uMsg, WPARAM wParam, LPARAM lParam)
         {
-            if (EventHandler != null) return EventHandler.Invoke(this, uMsg, wParam, lParam);
+            LRESULT? result = OnEvent?.Invoke(this, uMsg, wParam, lParam);
+
+            if (result.HasValue) return result.Value;
+
+            if (uMsg == WM.WM_SIZING)
+            {
+                unsafe
+                {
+                    RECT* rect = (RECT*)lParam.ToPointer();
+                    OnResize?.Invoke(this, rect);
+                }
+
+                return (LRESULT)TRUE;
+            }
+
             return HandleEventDefault(uMsg, wParam, lParam);
         }
 
@@ -121,6 +147,11 @@
                         }
                     }
                     break;
+                case WM.WM_NOTIFY:
+                    unsafe {
+                        NMHDR* info = (NMHDR*)lParam.ToPointer();
+                    }
+                    break;
                 case WM.WM_CLOSE:
                     if (User32.DestroyWindow(Handle) == 0)
                     { throw WindowsException.Get(); }
@@ -136,30 +167,32 @@
             return User32.DefWindowProcW(Handle, uMsg, wParam, lParam);
         }
 
-        public unsafe void HandleEvents()
+        public static unsafe void HandleEvents()
         {
-            Message msg;
+            MSG msg;
             int res;
 
-            if (!IsDisposed && (res = User32.PeekMessageW(&msg, Handle, 0, 0, PM.PM_REMOVE)) != 0)
+            if (Handlers.Count > 0 && (res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PM.PM_REMOVE)) != 0)
             {
                 if (res == -1)
                 { throw WindowsException.Get(); }
 
+                _ = User32.TranslateMessage(&msg);
                 User32.DispatchMessageW(&msg);
             }
         }
 
-        public unsafe void HandleEventsBlocking()
+        public static unsafe void HandleEventsBlocking()
         {
-            Message msg;
+            MSG msg;
             int res;
 
-            while (!IsDisposed && (res = User32.GetMessageW(&msg, Handle, 0, 0)) != 0)
+            while (Handlers.Count > 0 && (res = User32.GetMessageW(&msg, HWND.Zero, 0, 0)) != 0)
             {
                 if (res == -1)
                 { throw WindowsException.Get(); }
 
+                _ = User32.TranslateMessage(&msg);
                 User32.DispatchMessageW(&msg);
             }
         }

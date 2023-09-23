@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <summary>
+    Retrieves the output code page used by the console associated with the calling process. A console uses its output code page to translate the character values written by the various output functions into the images displayed in the console window.
+  </summary>
+  <returns>
+    <para>
+      The return value is a code that identifies the code page. For a list of identifiers, see <see href="https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers">Code Page Identifiers</see>.
+    </para>
+    <para>
+      If the return value is zero, the function has failed. To get extended error information, call <see cref="GetLastError"/>.
+    </para>
+  </returns>
+</docs>

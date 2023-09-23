@@ -2,3 +2,5 @@
 /bin
 /obj
 /Win32.sln
+*.user
+*.h

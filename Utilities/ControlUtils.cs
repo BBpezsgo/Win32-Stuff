@@ -45,7 +45,7 @@
             fixed (char* windowNamePtr = name)
             fixed (char* classNamePtr = @class)
             {
-                return User32.CreateWindowExW(
+                HWND handle = User32.CreateWindowExW(
                     0,
                     classNamePtr,
                     windowNamePtr,
@@ -57,6 +57,8 @@
                     parent,
                     new HMENU(id),
                     User32.GetWindowLongPtrW(parent, GWL.GWL_HINSTANCE));
+
+                return handle;
             }
         }
 
