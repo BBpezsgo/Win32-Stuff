@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace Win32.Utilities
@@ -60,7 +61,7 @@ namespace Win32.Utilities
         /// <exception cref="WindowsException"/>
         public HWND SetParent(HWND newParent)
         {
-            HWND result = User32.SetParent(Handle, newParent);
+            HWND result = User32.SetParent(_handle, newParent);
             if (result == HWND.Zero)
             { throw WindowsException.Get(); }
             return result;
@@ -68,12 +69,32 @@ namespace Win32.Utilities
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public HWND ParentOrOwner
+        {
+            get
+            {
+                HWND result = User32.GetParent(_handle);
+                if (result == HWND.Zero)
+                { throw WindowsException.Get(); }
+                return result;
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public HWND Parent
         {
             set => SetParent(value);
+            get => User32.GetAncestor(_handle, GA.GA_PARENT);
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public HWND Owner
+        {
             get
             {
-                HWND result = User32.GetParent(Handle);
+                HWND result = User32.GetWindow(_handle, GW.GW_OWNER);
                 if (result == HWND.Zero)
                 { throw WindowsException.Get(); }
                 return result;
@@ -141,6 +162,6 @@ namespace Win32.Utilities
             return TRUE;
         }
 
-        string GetDebuggerDisplay() => "0x" + _handle.ToString("x").PadLeft(16, '0');
+        string GetDebuggerDisplay() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
     }
 }

@@ -13,6 +13,7 @@ global using WPARAM = System.UIntPtr;
 global using LRESULT = System.IntPtr;
 global using HRESULT = System.Int32;
 global using HANDLE = System.IntPtr;
+global using HLOCAL = System.IntPtr;
 
 // Integer types
 
@@ -58,6 +59,17 @@ global using wchar_t = System.Char;
 global using WCHAR = System.Char;
 
 global using CHAR = System.Byte;
+
+// Structures
+
+global using RECT = Win32.Rect;
+global using POINT = Win32.Point;
+global using CURSORINFO = Win32.CursorInfo;
+global using GUITHREADINFO = Win32.GuiThreadInfo;
+global using PBRANGE = Win32.ProgressBarRange;
+global using STARTUPINFOW = Win32.StartupInfo;
+global using CREATESTRUCT = Win32.CreateStruct;
+global using WNDCLASSEXW = Win32.WindowClassEx;
 
 public static class Constants
 {

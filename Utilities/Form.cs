@@ -30,7 +30,7 @@
         }
 
         const uint DefaultStyles =
-            WS.WS_OVERLAPPEDWINDOW ^ WS.WS_THICKFRAME ^ WS.WS_MAXIMIZEBOX |
+            (WS.WS_OVERLAPPEDWINDOW ^ WS.WS_THICKFRAME ^ WS.WS_MAXIMIZEBOX) |
             WS.WS_SYSMENU |
             WS.WS_VISIBLE;
 
@@ -132,6 +132,12 @@
             return result;
         }
 
+        public ushort MakeId(out ushort result)
+        {
+            result = MakeId();
+            return result;
+        }
+
         public LRESULT HandleEventDefault(uint uMsg, WPARAM wParam, LPARAM lParam)
         {
             switch (uMsg)
@@ -167,6 +173,7 @@
             return User32.DefWindowProcW(Handle, uMsg, wParam, lParam);
         }
 
+        /// <exception cref="WindowsException"/>
         public static unsafe void HandleEvents()
         {
             MSG msg;
@@ -182,6 +189,7 @@
             }
         }
 
+        /// <exception cref="WindowsException"/>
         public static unsafe void HandleEventsBlocking()
         {
             MSG msg;
@@ -197,9 +205,17 @@
             }
         }
 
+        /// <exception cref="WindowsException"/>
         public void Close()
         {
             if (User32.PostMessageW(Handle, WM.WM_CLOSE, WPARAM.Zero, LPARAM.Zero) == 0)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public void Minimize()
+        {
+            if (User32.CloseWindow(Handle) == 0)
             { throw WindowsException.Get(); }
         }
     }

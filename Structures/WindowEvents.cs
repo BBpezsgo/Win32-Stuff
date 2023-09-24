@@ -789,7 +789,7 @@ namespace Win32
         public WPARAM wParam;
         public LPARAM lParam;
         public DWORD time;
-        public Point pt;
+        public POINT pt;
         public DWORD lPrivate;
     }
 }

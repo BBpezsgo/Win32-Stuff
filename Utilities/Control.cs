@@ -1,4 +1,6 @@
-﻿namespace Win32.Utilities
+﻿using System.Diagnostics;
+
+namespace Win32.Utilities
 {
     public partial class Control : Window
     {
@@ -21,5 +23,12 @@
         }
 
         protected virtual void HandleEvent(HWND parent, ushort code) { }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool Enabled
+        {
+            get => User32.IsWindowEnabled(Handle) != FALSE;
+            set => _ = User32.EnableWindow(Handle, value ? TRUE : FALSE);
+        }
     }
 }

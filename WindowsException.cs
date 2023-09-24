@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Win32
+﻿namespace Win32
 {
     public class WindowsException : Exception
     {
@@ -11,21 +9,27 @@ namespace Win32
             Code = code;
         }
 
-        public static WindowsException Get()
+        unsafe public static WindowsException Get()
         {
             uint errorCode = Kernel32.GetLastError();
+            char* buffer = null;
 
             uint formatResult = Kernel32.FormatMessage(
                 FormatMessageAttributes.FORMAT_MESSAGE_ALLOCATE_BUFFER | FormatMessageAttributes.FORMAT_MESSAGE_FROM_SYSTEM | FormatMessageAttributes.FORMAT_MESSAGE_IGNORE_INSERTS,
                 IntPtr.Zero,
                 errorCode,
                 0,
-                out StringBuilder message,
+                buffer,
                 0,
                 IntPtr.Zero);
 
             if (formatResult == 0)
-            { return new WindowsException(message.ToString(), errorCode); }
+            {
+                string result = new(buffer);
+                Kernel32.LocalFree((HLOCAL)buffer);
+
+                return new WindowsException(result, errorCode);
+            }
             else
             { return new WindowsException($"Unknown exception {errorCode}", errorCode); }
         }

@@ -48,10 +48,7 @@ namespace Win32.Utilities
                 LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETPOS, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set
-            {
-                User32.SendMessage(Handle, PBM.PBM_SETPOS, (WPARAM)value, LPARAM.Zero);
-            }
+            set => User32.SendMessage(Handle, PBM.PBM_SETPOS, (WPARAM)value, LPARAM.Zero);
         }
 
         public int GetLowLimit()
@@ -84,10 +81,7 @@ namespace Win32.Utilities
                 LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETSTEP, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set
-            {
-                User32.SendMessage(Handle, PBM.PBM_SETSTEP, (WPARAM)value, LPARAM.Zero);
-            }
+            set => User32.SendMessage(Handle, PBM.PBM_SETSTEP, (WPARAM)value, LPARAM.Zero);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,20 +92,13 @@ namespace Win32.Utilities
                 LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETSTATE, WPARAM.Zero, LPARAM.Zero);
                 return (ProgressBarState)unchecked((uint)result.ToInt32());
             }
-            set
-            {
-                User32.SendMessage(Handle, PBM.PBM_SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
-            }
+            set => User32.SendMessage(Handle, PBM.PBM_SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
         }
 
         public void Add(uint value)
-        {
-            User32.SendMessage(Handle, PBM.PBM_DELTAPOS, (WPARAM)value, LPARAM.Zero);
-        }
+            => User32.SendMessage(Handle, PBM.PBM_DELTAPOS, (WPARAM)value, LPARAM.Zero);
 
         public void StepIt()
-        {
-            User32.SendMessage(Handle, PBM.PBM_STEPIT, WPARAM.Zero, LPARAM.Zero);
-        }
+            => User32.SendMessage(Handle, PBM.PBM_STEPIT, WPARAM.Zero, LPARAM.Zero);
     }
 }

@@ -5,6 +5,252 @@ namespace Win32
     public static class User32
     {
         /// <summary>
+        /// Retrieves information about the global cursor.
+        /// </summary>
+        /// <param name="pci">
+        /// A pointer to a <see cref="CURSORINFO"/> structure that receives the information.
+        /// Note that you must set the <c>cbSize</c> member to <see langword="sizeof"/>(<see cref="CURSORINFO"/>) before calling this function.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        unsafe public static extern BOOL GetCursorInfo(
+          [In, Out] CURSORINFO* pci
+        );
+
+        /// <summary>
+        /// Retrieves the identifier of the thread that created the
+        /// specified window and, optionally, the identifier of the process that created the window.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window.
+        /// </param>
+        /// <param name="lpdwProcessId">
+        /// A pointer to a variable that receives the process identifier.
+        /// If this parameter is not <c>NULL</c>, <c>GetWindowThreadProcessId</c> copies
+        /// the identifier of the process to the variable; otherwise,
+        /// it does not. If the function fails, the value of the variable is unchanged.
+        /// </param>
+        /// <returns>
+        /// If the function succeeds, the return value is the identifier
+        /// of the thread that created the window. If the window handle
+        /// is invalid, the return value is zero. To get extended error
+        /// information, call <see cref="Kernel32.GetLastError"/>.
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        unsafe public static extern DWORD GetWindowThreadProcessId(
+          [In] HWND hWnd,
+          [Out, Optional] DWORD* lpdwProcessId
+        );
+
+        /// <summary>
+        /// Retrieves information about the active window or a specified GUI thread.
+        /// </summary>
+        /// <param name="idThread">
+        /// The identifier for the thread for which information is to be retrieved.
+        /// To retrieve this value, use the <see cref="GetWindowThreadProcessId"/> function.
+        /// If this parameter is <c>NULL</c>, the function returns information for the foreground thread.
+        /// </param>
+        /// <param name="pgui">
+        /// A pointer to a <see cref="GUITHREADINFO"/> structure that receives information describing the thread.
+        /// Note that you must set the cbSize member to <see langword="sizeof"/>(<see cref="GUITHREADINFO"/>) before calling
+        /// this function.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function succeeds even if the active window is not owned by the calling process.
+        /// If the specified thread does not exist or have an input queue, the function will fail.
+        /// </para>
+        /// <para>
+        /// This function is useful for retrieving out-of-context information about a thread.
+        /// The information retrieved is the same as if an application retrieved the information about itself.
+        /// </para>
+        /// <para>
+        /// For an edit control, the returned rcCaret rectangle contains the caret plus information on
+        /// text direction and padding. Thus, it may not give the correct position of the cursor.
+        /// The Sans Serif font uses four characters for the cursor:
+        /// <list type="table">
+        /// <item>
+        /// <term>
+        /// CURSOR_LTR
+        /// </term>
+        /// <description>
+        /// 0xf00c
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <term>
+        /// CURSOR_RTL
+        /// </term>
+        /// <description>
+        /// 0xf00d
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <term>
+        /// CURSOR_THAI
+        /// </term>
+        /// <description>
+        /// 0xf00e
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <term>
+        /// CURSOR_USA
+        /// </term>
+        /// <description>
+        /// 0xfff (this is a marker value with no associated glyph)
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// To get the actual insertion point in the <c>rcCaret</c> rectangle, perform the following steps.
+        /// <list type="number">
+        /// <item>
+        /// Call <see cref="GetKeyboardLayout"/> to retrieve the current input language.
+        /// </item>
+        /// <item>
+        /// Determine the character used for the cursor, based on the current input language.
+        /// </item>
+        /// <item>
+        /// Call <see cref="CreateFont"/> using Sans Serif for the font,
+        /// the height given by <c>rcCaret</c>, and a width of <c>zero</c>.
+        /// For <c>fnWeight</c>, call <c>SystemParametersInfo(SPI_GETCARETWIDTH, 0, pvParam, 0)</c>.
+        /// If <c>pvParam</c> is greater than 1, set <c>fnWeight</c> to 700, otherwise set <c>fnWeight</c> to 400.
+        /// </item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// The function may not return valid window handles in the
+        /// <see cref="GUITHREADINFO"/> structure when called to retrieve information
+        /// for the foreground thread, such as when a window is losing activation.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        unsafe public static extern BOOL GetGUIThreadInfo(
+          [In] DWORD idThread,
+          [In, Out] GUITHREADINFO* pgui
+        );
+
+        /// <summary>
+        /// Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+        /// The desktop window is the area on top of which other windows are painted.
+        /// </summary>
+        /// <returns>
+        /// The return value is a handle to the desktop window.
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern HWND GetDesktopWindow();
+
+        /// <summary>
+        /// Retrieves the handle to the ancestor of the specified window.
+        /// </summary>
+        /// <param name="hwnd">
+        /// A handle to the window whose ancestor is to be retrieved.
+        /// If this parameter is the desktop window, the function returns <c>NULL</c>.
+        /// </param>
+        /// <param name="gaFlags">
+        /// The ancestor to be retrieved. See <see cref="GA"/> for values.
+        /// </param>
+        /// <returns>
+        /// The return value is the handle to the ancestor window.
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern HWND GetAncestor(
+          [In] HWND hwnd,
+          [In] UINT gaFlags
+        );
+
+        /// <summary>
+        /// Minimizes (but does not destroy) the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window to be minimized.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// To destroy a window, an application must use the <see cref="DestroyWindow"/> function.
+        /// </remarks>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern BOOL CloseWindow(
+          [In] HWND hWnd
+        );
+
+        /// <summary>
+        /// Determines whether the specified window is enabled for mouse and keyboard input.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window to be tested.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the window is enabled, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the window is not enabled, the return value is zero.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// A child window receives input only if it is both enabled and visible.
+        /// </remarks>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern BOOL IsWindowEnabled(
+          [In] HWND hWnd
+        );
+
+        /// <summary>
+        /// Enables or disables mouse and keyboard input to the specified window or control.
+        /// When input is disabled, the window does not receive input such as
+        /// mouse clicks and key presses. When input is enabled, the window receives all input.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window to be enabled or disabled.
+        /// </param>
+        /// <param name="bEnable">
+        /// Indicates whether to enable or disable the window.
+        /// If this parameter is <c>TRUE</c>, the
+        /// window is enabled. If the parameter is <c>FALSE</c>, the window is disabled.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the window was previously disabled, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the window was not previously disabled, the return value is zero.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern BOOL EnableWindow(
+          [In] HWND hWnd,
+          [In] BOOL bEnable
+        );
+
+        /// <summary>
         /// Enables you to produce special effects when showing or hiding windows.
         /// There are four types of animation: roll, slide, collapse or expand, and alpha-blended fade.
         /// </summary>
@@ -401,7 +647,7 @@ namespace Win32
         /// Retrieves a handle to the specified window's parent or owner.
         /// </para>
         /// <para>
-        /// To retrieve a handle to a specified ancestor, use the <c>GetAncestor</c> function.
+        /// To retrieve a handle to a specified ancestor, use the <see cref="GetAncestor"/> function.
         /// </para>
         /// </summary>
         /// <param name="hWnd">
@@ -433,9 +679,9 @@ namespace Win32
         /// <remarks>
         /// <para>
         /// To obtain a window's owner window, instead of using <c>GetParent</c>,
-        /// use <c>GetWindow</c> with the <c>GW_OWNER</c> flag. To obtain the parent window and
-        /// not the owner, instead of using <c>GetParent</c>, use <c>GetAncestor</c> with
-        /// the <c>GA_PARENT</c> flag.
+        /// use <see cref="GetWindow"/> with the <c>GW_OWNER</c> flag. To obtain the parent window and
+        /// not the owner, instead of using <c>GetParent</c>, use <see cref="GetAncestor"/> with
+        /// the <see cref="GA.GA_PARENT"/> flag.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

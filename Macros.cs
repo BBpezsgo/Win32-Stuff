@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 
 namespace Win32
 {
@@ -77,8 +78,8 @@ namespace Win32
 
         public override int GetHashCode() => HashCode.Combine(code);
 
-        public override string ToString() => code.ToString();
-        readonly string GetDebuggerDisplay() => code.ToString();
+        public override string ToString() => code.ToString(CultureInfo.InvariantCulture);
+        readonly string GetDebuggerDisplay() => ToString();
 
         public static bool operator ==(HResult left, HResult right) => left.Equals(right);
         public static bool operator !=(HResult left, HResult right) => !(left == right);

@@ -582,7 +582,7 @@
     public static class PWR
     {
         public const uint PWR_OK = 1;
-        public const int PWR_FAIL = (-1);
+        public const uint PWR_FAIL = uint.MaxValue;
         public const uint PWR_SUSPENDREQUEST = 1;
         public const uint PWR_SUSPENDRESUME = 2;
         public const uint PWR_CRITICALRESUME = 3;

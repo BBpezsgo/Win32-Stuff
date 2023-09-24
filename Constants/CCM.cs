@@ -16,23 +16,23 @@
         // endif
 
         public const uint CCM_FIRST = 0x2000;      // Common control shared messages
-        public const uint CCM_LAST = (CCM_FIRST + 0x200);
+        public const uint CCM_LAST = CCM_FIRST + 0x200;
 
 
-        public const uint CCM_SETBKCOLOR = (CCM_FIRST + 1); // lParam is bkColor
+        public const uint CCM_SETBKCOLOR = CCM_FIRST + 1; // lParam is bkColor
 
-        public const uint CCM_SETCOLORSCHEME = (CCM_FIRST + 2); // lParam is color scheme
-        public const uint CCM_GETCOLORSCHEME = (CCM_FIRST + 3); // fills in COLORSCHEME pointed to by lParam
-        public const uint CCM_GETDROPTARGET = (CCM_FIRST + 4);
-        public const uint CCM_SETUNICODEFORMAT = (CCM_FIRST + 5);
-        public const uint CCM_GETUNICODEFORMAT = (CCM_FIRST + 6);
+        public const uint CCM_SETCOLORSCHEME = CCM_FIRST + 2; // lParam is color scheme
+        public const uint CCM_GETCOLORSCHEME = CCM_FIRST + 3; // fills in COLORSCHEME pointed to by lParam
+        public const uint CCM_GETDROPTARGET = CCM_FIRST + 4;
+        public const uint CCM_SETUNICODEFORMAT = CCM_FIRST + 5;
+        public const uint CCM_GETUNICODEFORMAT = CCM_FIRST + 6;
 
-        public const uint CCM_SETVERSION = (CCM_FIRST + 0x7);
-        public const uint CCM_GETVERSION = (CCM_FIRST + 0x8);
-        public const uint CCM_SETNOTIFYWINDOW = (CCM_FIRST + 0x9); // wParam == hwndParent
+        public const uint CCM_SETVERSION = CCM_FIRST + 0x7;
+        public const uint CCM_GETVERSION = CCM_FIRST + 0x8;
+        public const uint CCM_SETNOTIFYWINDOW = CCM_FIRST + 0x9; // wParam == hwndParent
         // if (NTDDI_VERSION >= NTDDI_WINXP)        
-        public const uint CCM_SETWINDOWTHEME = (CCM_FIRST + 0xb);
-        public const uint CCM_DPISCALE = (CCM_FIRST + 0xc); // wParam == Awareness
+        public const uint CCM_SETWINDOWTHEME = CCM_FIRST + 0xb;
+        public const uint CCM_DPISCALE = CCM_FIRST + 0xc; // wParam == Awareness
         // endif
 
         // for tooltips

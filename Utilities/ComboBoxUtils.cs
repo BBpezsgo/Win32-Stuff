@@ -3,20 +3,16 @@
     public partial class ComboBox
     {
         public static int GetSelectedIndex(HWND handle)
-        {
-            return User32.SendMessage(handle, CB.CB_GETCURSEL, (WPARAM)0, (LPARAM)0).ToInt32();
-        }
+            => User32.SendMessage(handle, CB.CB_GETCURSEL, WPARAM.Zero, LPARAM.Zero).ToInt32();
 
         public static void SetSelectedIndex(HWND handle, int index)
-        {
-            User32.SendMessage(handle, CB.CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
-        }
+            => User32.SendMessage(handle, CB.CB_SETCURSEL, (WPARAM)index, LPARAM.Zero);
 
         unsafe public static int AddString(HWND handle, string text)
         {
             fixed (char* newElementText = text)
             {
-                return User32.SendMessage(handle, CB.CB_ADDSTRING, (WPARAM)0, (LPARAM)newElementText).ToInt32();
+                return User32.SendMessage(handle, CB.CB_ADDSTRING, WPARAM.Zero, (LPARAM)newElementText).ToInt32();
             }
         }
 

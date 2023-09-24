@@ -3,6 +3,87 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    /// <summary>
+    /// Contains global cursor information.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public readonly struct CursorInfo
+    {
+        /// <summary>
+        /// The size of the structure, in bytes.
+        /// The caller must set this to <see langword="sizeof"/>(<see cref="CURSORINFO"/>).
+        /// </summary>
+        public readonly DWORD cbSize;
+        /// <summary>
+        /// The cursor state. This parameter can be one of the following values.
+        /// <list type="table">
+        /// 
+        /// <item>
+        /// <term>
+        /// 0
+        /// </term>
+        /// <description>
+        /// The cursor is hidden.
+        /// </description>
+        /// </item>
+        /// 
+        /// <item>
+        /// <term>
+        /// CURSOR_SHOWING = 0x00000001
+        /// </term>
+        /// <description>
+        /// The cursor is showing.
+        /// </description>
+        /// </item>
+        /// 
+        /// <item>
+        /// <term>
+        /// CURSOR_SUPPRESSED = 0x00000002
+        /// </term>
+        /// <description>
+        /// <b>Windows 8:</b> The cursor is suppressed.
+        /// This flag indicates that the system is
+        /// not drawing the cursor because the user
+        /// is providing input through touch or pen
+        /// instead of the mouse.
+        /// </description>
+        /// </item>
+        /// 
+        /// </list>
+        /// </summary>
+        public readonly DWORD flags;
+        /// <summary>
+        /// A handle to the cursor.
+        /// </summary>
+        public readonly HCURSOR hCursor;
+        /// <summary>
+        /// A structure that receives the screen coordinates of the cursor.
+        /// </summary>
+        public readonly POINT ptScreenPos;
+
+        CursorInfo(uint cbSize) : this() => this.cbSize = cbSize;
+
+        unsafe public static CURSORINFO Create() => new((uint)sizeof(CURSORINFO));
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public readonly struct GuiThreadInfo
+    {
+        public readonly DWORD cbSize;
+        public readonly DWORD flags;
+        public readonly HWND hwndActive;
+        public readonly HWND hwndFocus;
+        public readonly HWND hwndCapture;
+        public readonly HWND hwndMenuOwner;
+        public readonly HWND hwndMoveSize;
+        public readonly HWND hwndCaret;
+        public readonly RECT rcCaret;
+
+        GuiThreadInfo(uint cbSize) : this() => this.cbSize = cbSize;
+
+        unsafe public static GUITHREADINFO Create() => new((uint)sizeof(GUITHREADINFO));
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct NMHDR
     {
@@ -12,12 +93,12 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct PBRANGE
+    public readonly struct ProgressBarRange
     {
         public readonly int Low;
         public readonly int High;
 
-        public PBRANGE(int low, int high)
+        public ProgressBarRange(int low, int high)
         {
             Low = low;
             High = high;
@@ -27,8 +108,8 @@ namespace Win32
         public static implicit operator PBRANGE(ValueTuple<int, int> v) => (v.Item1, v.Item2);
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    unsafe public struct STARTUPINFOW
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    unsafe public struct StartupInfo
     {
         public DWORD cb;
         public WCHAR* lpReserved;
@@ -59,7 +140,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    unsafe public struct CREATESTRUCT
+    unsafe public struct CreateStruct
     {
         public void* lpCreateParams;
         public HINSTANCE hInstance;
@@ -257,7 +338,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct WNDCLASSEXW
+    public struct WindowClassEx
     {
         public uint cbSize;
         public uint style;
@@ -273,11 +354,20 @@ namespace Win32
         public HICON hIconSm;
     }
 
+    /// <summary>
+    /// The <see cref="POINT"/> structure defines the x- and y-coordinates of a point.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct Point
     {
+        /// <summary>
+        /// Specifies the x-coordinate of the point.
+        /// </summary>
         public int X;
+        /// <summary>
+        /// Specifies the y-coordinate of the point.
+        /// </summary>
         public int Y;
 
         public Point(int x, int y)
@@ -286,10 +376,10 @@ namespace Win32
             Y = y;
         }
 
-        public static explicit operator Coord(Point p) => new(p.X, p.Y);
-        public static explicit operator Point(Coord p) => new(p.X, p.Y);
+        public static explicit operator Coord(POINT p) => new(p.X, p.Y);
+        public static explicit operator POINT(Coord p) => new(p.X, p.Y);
 
-        public static Point Empty => new(0, 0);
+        public static POINT Empty => new(0, 0);
 
         public override readonly string ToString()
             => $"({X}, {Y})";
@@ -306,19 +396,19 @@ namespace Win32
 
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct RECT
+    public struct Rect
     {
         public LONG Left;
         public LONG Top;
         public LONG Right;
         public LONG Bottom;
 
-        public readonly Point Position => new(Math.Min(Left, Right), Math.Min(Top, Bottom));
+        public readonly POINT Position => new(Math.Min(Left, Right), Math.Min(Top, Bottom));
 
         public readonly LONG Width => Math.Max(Left, Right) - Math.Min(Left, Right);
         public readonly LONG Height => Math.Max(Top, Bottom) - Math.Min(Top, Bottom);
 
-        public RECT(LONG top, LONG left, LONG bottom, LONG right)
+        public Rect(LONG top, LONG left, LONG bottom, LONG right)
         {
             Top = top;
             Left = left;
@@ -416,8 +506,8 @@ namespace Win32
 
         public Coord(SHORT x, SHORT y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
         public Coord(int x, int y) : this((SHORT)x, (SHORT)y) { }
         public Coord(System.Drawing.Point p) : this((SHORT)p.X, (SHORT)p.Y) { }
@@ -428,8 +518,8 @@ namespace Win32
             Equals(coord);
 
         public readonly bool Equals(Coord other) =>
-            this.X == other.X &&
-            this.Y == other.Y;
+            X == other.X &&
+            Y == other.Y;
 
         public override readonly int GetHashCode() => HashCode.Combine(X, Y);
 
@@ -440,7 +530,7 @@ namespace Win32
             => $"({X}, {Y})";
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
     public struct CharInfo
     {
         [FieldOffset(0)] public char Char;
@@ -448,8 +538,8 @@ namespace Win32
 
         public CharInfo(char @char, WORD attributes)
         {
-            this.Char = @char;
-            this.Attributes = attributes;
+            Char = @char;
+            Attributes = attributes;
         }
 
         public CharInfo(char @char) : this(@char, 0)
@@ -472,8 +562,8 @@ namespace Win32
 
         public override readonly bool Equals(object? obj) => obj is CharInfo charInfo && Equals(charInfo);
         public readonly bool Equals(CharInfo other) =>
-            this.Attributes == other.Attributes &&
-            this.Char == other.Char;
+            Attributes == other.Attributes &&
+            Char == other.Char;
 
         public override readonly int GetHashCode() => HashCode.Combine(Attributes, Char);
 
