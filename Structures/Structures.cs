@@ -536,17 +536,20 @@ namespace Win32
         [FieldOffset(0)] public char Char;
         [FieldOffset(2)] public WORD Attributes;
 
-        public CharInfo(char @char, WORD attributes)
+        const WORD MASK_FG = 0b_0000_1111;
+        const WORD MASK_BG = 0b_1111_0000;
+
+        public byte Foreground
         {
-            Char = @char;
-            Attributes = attributes;
+            readonly get => (byte)(Attributes & MASK_FG);
+            set => Attributes = (ushort)((Attributes & MASK_BG) | (value & MASK_FG));
         }
 
-        public CharInfo(char @char) : this(@char, 0)
-        { }
-
-        public CharInfo(char @char, ForegroundColor fg, BackgroundColor bg) : this(@char, (WORD)((int)fg | (int)bg))
-        { }
+        public byte Background
+        {
+            readonly get => (byte)(Attributes >> 4);
+            set => Attributes = (ushort)((Attributes & MASK_FG) | ((value << 4) & MASK_BG));
+        }
 
         public ForegroundColor ForegroundColor
         {
@@ -559,6 +562,18 @@ namespace Win32
             readonly get => (BackgroundColor)(Attributes & (0x0010 | 0x0020 | 0x0040 | 0x0080));
             set => Attributes = (WORD)((int)ForegroundColor & (int)value);
         }
+
+        public CharInfo(char @char, WORD attributes)
+        {
+            Char = @char;
+            Attributes = attributes;
+        }
+
+        public CharInfo(char @char) : this(@char, 0)
+        { }
+
+        public CharInfo(char @char, ForegroundColor fg, BackgroundColor bg) : this(@char, (WORD)((int)fg | (int)bg))
+        { }
 
         public override readonly bool Equals(object? obj) => obj is CharInfo charInfo && Equals(charInfo);
         public readonly bool Equals(CharInfo other) =>
