@@ -14,6 +14,8 @@ global using LRESULT = System.IntPtr;
 global using HRESULT = System.Int32;
 global using HANDLE = System.IntPtr;
 global using HLOCAL = System.IntPtr;
+global using FLOAT = System.Single;
+global using DOUBLE = System.Double;
 
 // Integer types
 
@@ -55,9 +57,7 @@ global using UINT_PTR = System.IntPtr;
 
 // Characters
 
-global using wchar_t = System.Char;
 global using WCHAR = System.Char;
-
 global using CHAR = System.Byte;
 
 // Structures
@@ -70,6 +70,12 @@ global using PBRANGE = Win32.ProgressBarRange;
 global using STARTUPINFOW = Win32.StartupInfo;
 global using CREATESTRUCT = Win32.CreateStruct;
 global using WNDCLASSEXW = Win32.WindowClassEx;
+
+// Strings
+global using LPSTR = System.String;
+global using LPCSTR = System.String;
+global using LPWSTR = System.String;
+global using LPCWSTR = System.String;
 
 public static class Constants
 {
