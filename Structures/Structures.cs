@@ -621,18 +621,10 @@ namespace Win32
 
     public struct InputMode
     {
-        internal const uint
-            ENABLE_MOUSE_INPUT = 0x0010,
-            ENABLE_QUICK_EDIT_MODE = 0x0040,
-            ENABLE_EXTENDED_FLAGS = 0x0080,
-            ENABLE_ECHO_INPUT = 0x0004,
-            ENABLE_WINDOW_INPUT = 0x0008;
-
-        public static void Default(ref uint mode)
-        {
-            mode &= ~InputMode.ENABLE_QUICK_EDIT_MODE;
-            mode |= InputMode.ENABLE_WINDOW_INPUT;
-            mode |= InputMode.ENABLE_MOUSE_INPUT;
-        }
+        public const uint ENABLE_MOUSE_INPUT = 0x0010;
+        public const uint ENABLE_QUICK_EDIT_MODE = 0x0040;
+        public const uint ENABLE_EXTENDED_FLAGS = 0x0080;
+        public const uint ENABLE_ECHO_INPUT = 0x0004;
+        public const uint ENABLE_WINDOW_INPUT = 0x0008;
     }
 }

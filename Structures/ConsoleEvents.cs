@@ -7,17 +7,19 @@ namespace Win32
         public const ushort KEY = 0x0001;
         public const ushort MOUSE = 0x0002;
         public const ushort WINDOW_BUFFER_SIZE = 0x0004;
+        public const ushort MENU = 0x0008;
+        public const ushort FOCUS = 0x0010;
     }
 
-    public enum MouseButtonState : ulong
+    public struct MouseButton
     {
-        Left = 0x0001,
-        Right = 0x0002,
-        Middle = 0x0004,
-        Button3 = 0x0008,
-        Button4 = 0x0010,
-        ScrollUp = 7864320,
-        ScrollDown = 4287102976,
+        public const DWORD Left = 0x0001;
+        public const DWORD Right = 0x0002;
+        public const DWORD Middle = 0x0004;
+        public const DWORD Button3 = 0x0008;
+        public const DWORD Button4 = 0x0010;
+        public const DWORD ScrollUp = 7864320;
+        public const DWORD ScrollDown = 4287102976;
     }
 
     public struct MouseEventFlags
@@ -61,31 +63,31 @@ namespace Win32
         ///   <item>
         ///    <term>KEY_EVENT 0x0001</term>
         ///    <description>
-        ///     The Event member contains a <see cref="KeyEvent"/> structure with information about a keyboard event.
+        ///     The Event member contains a <see cref="Win32.KeyEvent"/> structure with information about a keyboard event.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>MOUSE_EVENT 0x0002</term>
         ///    <description>
-        ///     The Event member contains a <see cref="MouseEvent"/> structure with information about a mouse movement or button press event.
+        ///     The Event member contains a <see cref="Win32.MouseEvent"/> structure with information about a mouse movement or button press event.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>WINDOW_BUFFER_SIZE_EVENT 0x0004</term>
         ///    <description>
-        ///     The Event member contains a <see cref="WindowBufferSizeEvent"/> structure with information about the new size of the console screen buffer.
+        ///     The Event member contains a <see cref="Win32.WindowBufferSizeEvent"/> structure with information about the new size of the console screen buffer.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>MENU_EVENT 0x0008</term>
         ///    <description>
-        ///     The Event member contains a <c>MENU_EVENT_RECORD</c> structure. These events are used internally and should be ignored.
+        ///     The Event member contains a <see cref="Win32.MenuEvent"/> structure. These events are used internally and should be ignored.
         ///    </description>
         ///   </item>
         ///   <item>
         ///    <term>FOCUS_EVENT 0x0010</term>
         ///    <description>
-        ///     The Event member contains a <c>FOCUS_EVENT_RECORD</c> structure. These events are used internally and should be ignored. 
+        ///     The Event member contains a <see cref="Win32.FocusEvent"/> structure. These events are used internally and should be ignored. 
         ///    </description>
         ///   </item>
         ///  </list>
@@ -102,12 +104,11 @@ namespace Win32
         [FieldOffset(4)]
         public readonly WindowBufferSizeEvent WindowBufferSizeEvent;
 
-        /*
         [FieldOffset(4)]
-        public readonly MENU_EVENT_RECORD MenuEvent;
+        public readonly MenuEvent MenuEvent;
+
         [FieldOffset(4)]
-        public readonly FOCUS_EVENT_RECORD FocusEvent;
-        */
+        public readonly FocusEvent FocusEvent;
     }
 
     /// <summary>
@@ -219,5 +220,29 @@ namespace Win32
 
         public readonly SHORT Width => Size.X;
         public readonly SHORT Height => Size.Y;
+    }
+
+    /// <summary>
+    /// Describes a focus event in a console <see cref="INPUT_RECORD"/> structure.
+    /// These events are used internally and should be ignored.
+    /// </summary>
+    public readonly struct FocusEvent
+    {
+        /// <summary>
+        /// Reserved.
+        /// </summary>
+        public readonly BOOL bSetFocus;
+    }
+
+    /// <summary>
+    /// Describes a menu event in a console <see cref="INPUT_RECORD"/> structure.
+    /// These events are used internally and should be ignored.
+    /// </summary>
+    public readonly struct MenuEvent
+    {
+        /// <summary>
+        /// Reserved.
+        /// </summary>
+        public readonly UINT CommandId;
     }
 }
