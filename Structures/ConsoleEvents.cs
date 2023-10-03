@@ -208,7 +208,7 @@ namespace Win32
         [FieldOffset(12)]
         public readonly DWORD ControlKeyState;
 
-        public override string ToString() => $"{{ '{UnicodeChar}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {Convert.ToString(ControlKeyState, 2).PadLeft(9, '0')} }}";
+        public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n")}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {Convert.ToString(ControlKeyState, 2).PadLeft(9, '0')} }}";
     }
 
     /// <summary>
