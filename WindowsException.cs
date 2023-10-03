@@ -28,11 +28,12 @@
                 string result = new(buffer);
                 Kernel32.LocalFree((HLOCAL)buffer);
 
-                return new WindowsException(result, errorCode);
+                if (!string.IsNullOrWhiteSpace(result)) {
+                    return new WindowsException(result, errorCode);
+                }
             }
-            else
-            { return new WindowsException($"Unknown exception {errorCode}", errorCode); }
+            
+            return new WindowsException($"Unknown exception {errorCode}", errorCode);
         }
     }
-
 }
