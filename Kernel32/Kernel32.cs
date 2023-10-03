@@ -7,6 +7,32 @@ namespace Win32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
+        /// <summary>
+        /// Retrieves the current system date and time in Coordinated Universal Time (UTC) format.
+        /// </summary>
+        /// <param name="lpSystemTime">
+        /// A pointer to a <see cref="SYSTEMTIME"/> structure to receive the current
+        /// system date and time. The <paramref name="lpSystemTime"/> parameter must not
+        /// be <c>NULL</c>. Using <c>NULL</c> will result in an access violation.
+        /// </param>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern void GetSystemTime(
+          [Out] SYSTEMTIME* lpSystemTime
+        );
+
+        /// <summary>
+        /// Retrieves the current system date and time.
+        /// The information is in Coordinated Universal Time (UTC) format.
+        /// </summary>
+        /// <param name="lpSystemTimeAsFileTime">
+        /// A pointer to a <see cref="FILETIME"/> structure to receive the current
+        /// system date and time in UTC format.
+        /// </param>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern void GetSystemTimeAsFileTime(
+          [Out] FILETIME* lpSystemTimeAsFileTime
+        );
+
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern HLOCAL LocalFree(
           [In] HLOCAL hMem
