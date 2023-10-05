@@ -46,6 +46,48 @@ namespace Win32
         public static ushort GET_XBUTTON_WPARAM(WPARAM wParam) => HIWORD(wParam);
     }
 
+    public struct LanguageMacros
+    {
+        public static ULONG MAKELCID(WORD l, WORD s) => Macros.MAKELONG(l, s);
+
+        public static WORD MAKELANGID(WORD p, WORD s) => (WORD)((s << 10) | p);
+        public static WORD PRIMARYLANGID(WORD l) => (WORD)(l & 0b_0000_0011_1111_1111); // 0x3ff
+        public static WORD SUBLANGID(WORD l) => (WORD)(l >> 10);
+
+        public static WORD LANGIDFROMLCID(WORD lcid) => lcid;
+        public static WORD SORTIDFROMLCID(DWORD lcid) => (WORD)((lcid >> 16) & 0b_1111);
+
+        public const WORD LANG_NEUTRAL = 0x00;  // Default custom (MUI) locale language
+        // public const WORD LANG_USER_DEFAULT = 0x01;  // User default locale language
+        // public const WORD LANG_SYSTEM_DEFAULT = 0x02;  // System default locale language
+        public const WORD LANG_INVARIANT = 0x7F;  // Invariant locale language
+
+        public const WORD SUBLANG_NEUTRAL = 0x00;  // Neutral sublanguage
+        public const WORD SUBLANG_INVARIANT = 0x00;  // Invariant sublanguage
+        public const WORD SUBLANG_DEFAULT = 0x01;  // User default sublanguage
+        public const WORD SUBLANG_SYS_DEFAULT = 0x02;  // System default sublanguage
+        public const WORD SUBLANG_CUSTOM_DEFAULT = 0x03;  // Default custom sublanguage
+        public const WORD SUBLANG_CUSTOM_UNSPECIFIED = 0x04;  // Unspecified custom sublanguage
+        public const WORD SUBLANG_UI_CUSTOM_DEFAULT = 0x05;  // Default custom MUI sublanguage
+
+        public static readonly WORD LANG_SYSTEM_DEFAULT = MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT);
+        public static readonly WORD LANG_USER_DEFAULT = MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT);
+
+        public static readonly ULONG LOCALE_SYSTEM_DEFAULT = MAKELCID(LANG_SYSTEM_DEFAULT, SORT_DEFAULT);
+        public static readonly ULONG LOCALE_USER_DEFAULT = MAKELCID(LANG_USER_DEFAULT, SORT_DEFAULT);
+        public static readonly ULONG LOCALE_NEUTRAL = MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL), SORT_DEFAULT);
+        public static readonly ULONG LOCALE_INVARIANT = MAKELCID(MAKELANGID(LANG_INVARIANT, SUBLANG_NEUTRAL), SORT_DEFAULT);
+        public static readonly ULONG LOCALE_CUSTOM_DEFAULT = MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_DEFAULT), SORT_DEFAULT);
+        public static readonly ULONG LOCALE_CUSTOM_UNSPECIFIED = MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_UNSPECIFIED), SORT_DEFAULT);
+        public static readonly ULONG LOCALE_CUSTOM_UI_DEFAULT = MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_UI_CUSTOM_DEFAULT), SORT_DEFAULT);
+
+        public const int LOCALE_NAME_MAX_LENGTH = 85;
+
+        public const WORD SORT_DEFAULT = 0x0; // sorting default
+        public const WORD SORT_INVARIANT_MATH = 0x1; // Invariant (Mathematical Symbols)
+
+    }
+
     public struct WinErrorMacros
     {
         public static HRESULT MAKE_HRESULT(ULONG sev, ULONG fac, ULONG code) =>

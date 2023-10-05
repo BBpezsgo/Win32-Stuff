@@ -121,7 +121,7 @@ namespace Win32
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern DWORD GetLastError();
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = false)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern DWORD FormatMessage(
             [In] DWORD dwFlags,
             [In, Optional] IntPtr lpSource,
