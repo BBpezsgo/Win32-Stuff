@@ -2,6 +2,13 @@
 {
     public static class CharInfoAttribute
     {
+        public static ushort Make(int background, int foreground)
+        {
+            background &= 0b_1111;
+            foreground &= 0b_1111;
+            return unchecked((ushort)((background << 4) | foreground));
+        }
+
         public const ushort NONE = 0x0000;
 
         /// <summary>
