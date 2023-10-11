@@ -551,18 +551,6 @@ namespace Win32
             set => Attributes = (ushort)((Attributes & MASK_FG) | ((value << 4) & MASK_BG));
         }
 
-        public ForegroundColor ForegroundColor
-        {
-            readonly get => (ForegroundColor)(Attributes & (0x0001 | 0x0002 | 0x0004 | 0x0008));
-            set => Attributes = (WORD)((int)BackgroundColor & (int)value);
-        }
-
-        public BackgroundColor BackgroundColor
-        {
-            readonly get => (BackgroundColor)(Attributes & (0x0010 | 0x0020 | 0x0040 | 0x0080));
-            set => Attributes = (WORD)((int)ForegroundColor & (int)value);
-        }
-
         public CharInfo(char @char, WORD attributes)
         {
             Char = @char;
@@ -572,7 +560,7 @@ namespace Win32
         public CharInfo(char @char) : this(@char, 0)
         { }
 
-        public CharInfo(char @char, ForegroundColor fg, BackgroundColor bg) : this(@char, (WORD)((int)fg | (int)bg))
+        public CharInfo(char @char, byte foreground, byte background) : this(@char, (WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)))
         { }
 
         public override readonly bool Equals(object? obj) => obj is CharInfo charInfo && Equals(charInfo);
@@ -623,13 +611,7 @@ namespace Win32
 
         public static SmallRect Zero => default;
 
-        public System.Drawing.Point Location
-        {
-            get
-            {
-                return new System.Drawing.Point(Left, Top);
-            }
-        }
+        public readonly Point Location => new(Left, Top);
 
         public static SmallRect FromPosAndSize(int x, int y, int width, int height) => new()
         {
