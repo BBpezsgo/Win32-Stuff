@@ -70,6 +70,7 @@ global using PBRANGE = Win32.ProgressBarRange;
 global using STARTUPINFOW = Win32.StartupInfo;
 global using CREATESTRUCT = Win32.CreateStruct;
 global using WNDCLASSEXW = Win32.WindowClassEx;
+global using COORD = Win32.Coord;
 
 // Strings
 global using LPSTR = System.String;

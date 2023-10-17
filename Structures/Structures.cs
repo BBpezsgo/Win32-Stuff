@@ -557,9 +557,6 @@ namespace Win32
             Attributes = attributes;
         }
 
-        public CharInfo(char @char) : this(@char, 0)
-        { }
-
         public CharInfo(char @char, byte foreground, byte background) : this(@char, (WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)))
         { }
 

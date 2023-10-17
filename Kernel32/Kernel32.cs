@@ -8,6 +8,72 @@ namespace Win32
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
         /// <summary>
+        /// Retrieves extended information about the current console font.
+        /// </summary>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL GetCurrentConsoleFontEx(
+          [In] HANDLE hConsoleOutput,
+          [In] BOOL bMaximumWindow,
+          [Out] out CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+        );
+
+        /// <summary>
+        /// Retrieves extended information about the current console font.
+        /// </summary>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL GetCurrentConsoleFontEx(
+          [In] SafeFileHandle hConsoleOutput,
+          [In] BOOL bMaximumWindow,
+          [Out] out CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+        );
+
+        /// <summary>
+        /// Sets extended information about the current console font.
+        /// </summary>
+        /// <param name="hConsoleOutput">
+        /// A handle to the console screen buffer.
+        /// The handle must have the <c>GENERIC_WRITE</c> access right.
+        /// For more information, see <see href="https://learn.microsoft.com/en-us/windows/console/console-buffer-security-and-access-rights">Console Buffer Security and Access Rights</see>.
+        /// </param>
+        /// <param name="bMaximumWindow">
+        /// If this parameter is <c>TRUE</c>, font information is set for the maximum window size.
+        /// If this parameter is <c>FALSE</c>, font information is set for the current window size.
+        /// </param>
+        /// <param name="lpConsoleCurrentFontEx">
+        /// A pointer to a <see cref="CONSOLE_FONT_INFOEX"/> structure that contains the font information.
+        /// </param>
+        /// <returns></returns>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SetCurrentConsoleFontEx(
+          [In] HANDLE hConsoleOutput,
+          [In] BOOL bMaximumWindow,
+          [In] ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+        );
+
+        /// <summary>
+        /// Sets extended information about the current console font.
+        /// </summary>
+        /// <param name="hConsoleOutput">
+        /// A handle to the console screen buffer.
+        /// The handle must have the <c>GENERIC_WRITE</c> access right.
+        /// For more information, see <see href="https://learn.microsoft.com/en-us/windows/console/console-buffer-security-and-access-rights">Console Buffer Security and Access Rights</see>.
+        /// </param>
+        /// <param name="bMaximumWindow">
+        /// If this parameter is <c>TRUE</c>, font information is set for the maximum window size.
+        /// If this parameter is <c>FALSE</c>, font information is set for the current window size.
+        /// </param>
+        /// <param name="lpConsoleCurrentFontEx">
+        /// A pointer to a <see cref="CONSOLE_FONT_INFOEX"/> structure that contains the font information.
+        /// </param>
+        /// <returns></returns>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SetCurrentConsoleFontEx(
+          [In] SafeFileHandle hConsoleOutput,
+          [In] BOOL bMaximumWindow,
+          [In] ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+        );
+
+        /// <summary>
         /// Retrieves the current system date and time in Coordinated Universal Time (UTC) format.
         /// </summary>
         /// <param name="lpSystemTime">
@@ -37,7 +103,7 @@ namespace Win32
         public static extern HLOCAL LocalFree(
           [In] HLOCAL hMem
         );
-        
+
         /// <include file="Docs/Kernel32/ReadConsoleInput.xml" path="/*"/>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL ReadConsoleInput(
