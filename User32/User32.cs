@@ -5,6 +5,16 @@ namespace Win32
     public static class User32
     {
         [DllImport("User32.dll", SetLastError = true)]
+        public static extern int GetSystemMetrics(
+          [In] int nIndex
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL GetCursorPos(
+          [Out] out POINT lpPoint
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
         public static extern BOOL SetCursorPos(
           [In] int X,
           [In] int Y
