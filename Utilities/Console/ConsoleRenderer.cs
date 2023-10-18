@@ -9,6 +9,8 @@ namespace Win32.Utilities
         public short Width => bufferWidth;
         public short Height => bufferHeight;
 
+        public COORD Rect => new(bufferWidth, bufferHeight);
+
         public int Size => bufferWidth * bufferHeight;
 
         protected short bufferWidth;
@@ -55,6 +57,6 @@ namespace Win32.Utilities
             { throw WindowsException.Get(); }
         }
 
-        public void ClearBuffer() => Array.Clear(ConsoleBuffer);
+        public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
     }
 }
