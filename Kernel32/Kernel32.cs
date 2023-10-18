@@ -7,14 +7,35 @@ namespace Win32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
-        /// <summary>
-        /// Retrieves extended information about the current console font.
-        /// </summary>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern BOOL GetCurrentConsoleFontEx(
+        public static extern BOOL SetConsoleScreenBufferSize(
+          [In] HANDLE hConsoleOutput,
+          [In] COORD  dwSize
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL GetConsoleSelectionInfo(
+          [Out] out CONSOLE_SELECTION_INFO lpConsoleSelectionInfo
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HWND GetConsoleWindow();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL GetNumberOfConsoleMouseButtons(
+          [Out] out DWORD lpNumberOfMouseButtons
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern COORD GetLargestConsoleWindowSize(
+          [In] HANDLE hConsoleOutput
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL GetCurrentConsoleFont(
           [In] HANDLE hConsoleOutput,
           [In] BOOL bMaximumWindow,
-          [Out] out CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+          [Out] out CONSOLE_FONT_INFO lpConsoleCurrentFont
         );
 
         /// <summary>
@@ -22,9 +43,9 @@ namespace Win32
         /// </summary>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL GetCurrentConsoleFontEx(
-          [In] SafeFileHandle hConsoleOutput,
+          [In] HANDLE hConsoleOutput,
           [In] BOOL bMaximumWindow,
-          [Out] out CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+          /*[Out]*/ ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
         );
 
         /// <summary>
@@ -46,29 +67,6 @@ namespace Win32
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL SetCurrentConsoleFontEx(
           [In] HANDLE hConsoleOutput,
-          [In] BOOL bMaximumWindow,
-          [In] ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
-        );
-
-        /// <summary>
-        /// Sets extended information about the current console font.
-        /// </summary>
-        /// <param name="hConsoleOutput">
-        /// A handle to the console screen buffer.
-        /// The handle must have the <c>GENERIC_WRITE</c> access right.
-        /// For more information, see <see href="https://learn.microsoft.com/en-us/windows/console/console-buffer-security-and-access-rights">Console Buffer Security and Access Rights</see>.
-        /// </param>
-        /// <param name="bMaximumWindow">
-        /// If this parameter is <c>TRUE</c>, font information is set for the maximum window size.
-        /// If this parameter is <c>FALSE</c>, font information is set for the current window size.
-        /// </param>
-        /// <param name="lpConsoleCurrentFontEx">
-        /// A pointer to a <see cref="CONSOLE_FONT_INFOEX"/> structure that contains the font information.
-        /// </param>
-        /// <returns></returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern BOOL SetCurrentConsoleFontEx(
-          [In] SafeFileHandle hConsoleOutput,
           [In] BOOL bMaximumWindow,
           [In] ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
         );

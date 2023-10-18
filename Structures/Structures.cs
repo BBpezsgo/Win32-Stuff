@@ -560,6 +560,9 @@ namespace Win32
         public CharInfo(char @char, byte foreground, byte background) : this(@char, (WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)))
         { }
 
+        public CharInfo(char @char) : this(@char, 0)
+        { }
+
         public override readonly bool Equals(object? obj) => obj is CharInfo charInfo && Equals(charInfo);
         public readonly bool Equals(CharInfo other) =>
             Attributes == other.Attributes &&
