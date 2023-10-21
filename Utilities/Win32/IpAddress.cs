@@ -14,7 +14,7 @@ namespace Win32.Utilities
         {
             Handle = Control.AnyHandle(
                         parent,
-                        "",
+                        string.Empty,
                         ClassName.IP_ADDRESS,
                         WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD,
                         x,

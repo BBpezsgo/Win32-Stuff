@@ -560,6 +560,9 @@ namespace Win32
         public CharInfo(char @char, byte foreground, byte background) : this(@char, (WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)))
         { }
 
+        public CharInfo(char @char, ForegroundColor foreground, BackgroundColor background) : this(@char, (WORD)(((byte)foreground & MASK_FG) | ((byte)background & MASK_BG)))
+        { }
+
         public CharInfo(char @char) : this(@char, 0)
         { }
 
