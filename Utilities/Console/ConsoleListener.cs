@@ -24,7 +24,7 @@
             if (Handle == Kernel32.INVALID_HANDLE_VALUE)
             { throw WindowsException.Get(); }
 
-            new Thread(ThreadJob).Start();
+            new Thread(ThreadJob) { Name = "ConsoleListener" }.Start();
         }
 
         /// <exception cref="WindowsException"/>
