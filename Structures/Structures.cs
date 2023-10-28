@@ -612,9 +612,9 @@ namespace Win32
             set => Bottom = (short)(Top + value);
         }
 
-        public static SmallRect Zero => default;
-
         public readonly Point Location => new(Left, Top);
+        
+        public static SmallRect Zero => default;
 
         public static SmallRect FromPosAndSize(int x, int y, int width, int height) => new()
         {
@@ -641,7 +641,13 @@ namespace Win32
         public override readonly string ToString()
             => $"{{ Left: {Left} Top: {Top} Bottom: {Bottom} Right: {Right} }}";
 
-        public readonly bool Contains(Point point) =>
+        public readonly bool Contains(POINT point) =>
+            point.X >= Left &&
+            point.Y >= Top &&
+            point.X < Right &&
+            point.Y < Height;
+
+        public readonly bool Contains(COORD point) =>
             point.X >= Left &&
             point.Y >= Top &&
             point.X < Right &&

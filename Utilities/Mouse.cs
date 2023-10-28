@@ -1,6 +1,6 @@
 namespace Win32.Utilities
 {
-    public static class Mouse
+    public static partial class Mouse
     {
         public static POINT Position
         {

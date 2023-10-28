@@ -2,61 +2,109 @@
 
 namespace Win32.Utilities
 {
-    public partial class ConsoleRenderer
+    public partial class ConsoleRenderer : IDisposable
     {
-        protected readonly SafeFileHandle Handle;
+        protected SafeFileHandle? SafeHandle;
+        protected HANDLE Handle;
 
-        public short Width => bufferWidth;
-        public short Height => bufferHeight;
+        public short Width => BufferWidth;
+        public short Height => BufferHeight;
 
-        public COORD Rect => new(bufferWidth, bufferHeight);
+        public COORD Rect => new(BufferWidth, BufferHeight);
 
-        public int Size => bufferWidth * bufferHeight;
+        public int Size => BufferWidth * BufferHeight;
 
-        protected short bufferWidth;
-        protected short bufferHeight;
+        protected short BufferWidth;
+        protected short BufferHeight;
 
         protected CharInfo[] ConsoleBuffer;
         protected SmallRect ConsoleRect;
 
         public ref CharInfo this[int i] => ref ConsoleBuffer[i];
-        public ref CharInfo this[int x, int y] => ref ConsoleBuffer[(y * bufferWidth) + x];
+        public ref CharInfo this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
+        public ref CharInfo this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        public ref CharInfo this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
 
-        public ConsoleRenderer(SafeFileHandle handle, short bufferWidth, short bufferHeight)
+        public ConsoleRenderer(SafeFileHandle? safeHandle, int bufferWidth, int bufferHeight)
         {
-            Handle = handle;
-            this.bufferWidth = bufferWidth;
-            this.bufferHeight = bufferHeight;
-            ConsoleBuffer = new CharInfo[this.bufferWidth * this.bufferHeight];
-            for (int i = 0; i < ConsoleBuffer.Length; i++)
-            {
-                ConsoleBuffer[i].Char = ' ';
-            }
-            ConsoleRect = new SmallRect() { Left = 0, Top = 0, Right = this.bufferWidth, Bottom = this.bufferHeight };
+            /*
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            _ = Kernel32.SetConsoleOutputCP(65001);
+            _ = Kernel32.SetConsoleCP(65001);
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            */
+
+            Handle = Kernel32.GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
+            SafeHandle = safeHandle;
+
+            BufferWidth = (short)bufferWidth;
+            BufferHeight = (short)bufferHeight;
+
+            ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
+            Array.Fill(ConsoleBuffer, new CharInfo(' ', 0));
+            ConsoleRect = new SmallRect() { Left = 0, Top = 0, Right = BufferWidth, Bottom = BufferHeight };
         }
 
-        public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < bufferWidth && y < bufferHeight;
+        public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
 
         public void Render()
         {
-            if (Handle.IsInvalid)
+            if (SafeHandle != null)
             {
-                System.Diagnostics.Debug.WriteLine("Console handle is invalid");
-                return;
+                if (SafeHandle.IsInvalid)
+                {
+                    System.Diagnostics.Debug.WriteLine("Console handle is invalid");
+                    return;
+                }
+
+                if (SafeHandle.IsClosed)
+                { return; }
+
+                if (Kernel32.WriteConsoleOutputW(
+                    SafeHandle,
+                    ConsoleBuffer,
+                    new Coord(BufferWidth, BufferHeight),
+                    new Coord(0, 0),
+                    ref ConsoleRect) == 0)
+                { throw WindowsException.Get(); }
             }
-
-            if (Handle.IsClosed)
-            { return; }
-
-            if (Kernel32.WriteConsoleOutputW(
-                Handle,
-                ConsoleBuffer,
-                new Coord(bufferWidth, bufferHeight),
-                new Coord(0, 0),
-                ref ConsoleRect) == 0)
-            { throw WindowsException.Get(); }
+            else
+            {
+                if (Kernel32.WriteConsoleOutput(Handle, ConsoleBuffer,
+                    new Coord(BufferWidth, BufferHeight),
+                    new Coord(0, 0),
+                    ref ConsoleRect) == 0)
+                { throw WindowsException.Get(); }
+            }
         }
 
         public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
+
+        public void Resize()
+        {
+            BufferWidth = (short)Console.WindowWidth;
+            BufferHeight = (short)Console.WindowHeight;
+
+            ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
+            ConsoleRect = new SmallRect() { Left = 0, Top = 0, Right = BufferWidth, Bottom = BufferHeight };
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (SafeHandle != null)
+                {
+                    SafeHandle.Dispose();
+                    SafeHandle = null;
+                }
+            }
+        }
     }
 }

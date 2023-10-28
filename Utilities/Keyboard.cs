@@ -1,6 +1,6 @@
 ﻿namespace Win32.Utilities
 {
-    public static class Keyboard
+    public static partial class Keyboard
     {
         public static readonly Dictionary<char, ushort> AsciiToKey = new()
         {
@@ -48,6 +48,5 @@
             { '\r', VirtualKeyCodes.RETURN },
             { '\t', VirtualKeyCodes.TAB },
         };
-
     }
 }

@@ -9,7 +9,7 @@
         public static event ConsoleEvent<WindowBufferSizeEvent>? WindowBufferSizeEvent;
 
         static bool Run;
-        static IntPtr Handle;
+        static HANDLE Handle;
 
         public const int MaxRecordReads = 1;
 
