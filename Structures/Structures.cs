@@ -359,7 +359,7 @@ namespace Win32
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct Point
+    public struct Point : IEquatable<POINT>
     {
         /// <summary>
         /// Specifies the x-coordinate of the point.
@@ -376,13 +376,23 @@ namespace Win32
             Y = y;
         }
 
-        public static explicit operator Coord(POINT p) => new(p.X, p.Y);
-        public static explicit operator POINT(Coord p) => new(p.X, p.Y);
+        public static explicit operator COORD(POINT p) => new(p.X, p.Y);
+        public static explicit operator POINT(COORD p) => new(p.X, p.Y);
 
-        public static POINT Empty => new(0, 0);
+        public static bool operator ==(POINT left, POINT right) => left.Equals(right);
+        public static bool operator !=(POINT left, POINT right) => !(left == right);
 
-        public override readonly string ToString()
-            => $"({X}, {Y})";
+        public static POINT operator +(POINT a, POINT b) => new(a.X + b.X, a.Y + b.Y);
+        public static POINT operator -(POINT a, POINT b) => new(a.X - b.X, a.Y - b.Y);
+
+        public static POINT Zero => new(0, 0);
+
+        public override readonly string ToString() => $"({X}, {Y})";
+
+        public override readonly bool Equals(object? obj) => obj is POINT point && Equals(point);
+        public readonly bool Equals(POINT other) => X == other.X && Y == other.Y;
+
+        public override readonly int GetHashCode() => HashCode.Combine(X, Y);
     }
 
     public struct Color
@@ -416,8 +426,7 @@ namespace Win32
             Right = right;
         }
 
-        public override readonly string ToString()
-            => $"{{ Left: {Left} Top: {Top} Bottom: {Bottom} Right: {Right} }}";
+        public override readonly string ToString() => $"{{ Left: {Left} Top: {Top} Bottom: {Bottom} Right: {Right} }}";
     }
 
     public enum ForegroundColor : WORD
@@ -504,6 +513,8 @@ namespace Win32
         /// </summary>
         public SHORT Y;
 
+        public static COORD Zero => new(0, 0);
+
         public Coord(SHORT x, SHORT y)
         {
             X = x;
@@ -513,21 +524,16 @@ namespace Win32
         public Coord(System.Drawing.Point p) : this((SHORT)p.X, (SHORT)p.Y) { }
         public Coord(System.Drawing.PointF p) : this((SHORT)p.X, (SHORT)p.Y) { }
 
-        public override readonly bool Equals(object? obj) =>
-            obj is Coord coord &&
-            Equals(coord);
+        public override readonly bool Equals(object? obj) => obj is Coord coord && Equals(coord);
 
-        public readonly bool Equals(Coord other) =>
-            X == other.X &&
-            Y == other.Y;
+        public readonly bool Equals(Coord other) => X == other.X && Y == other.Y;
 
         public override readonly int GetHashCode() => HashCode.Combine(X, Y);
 
         public static bool operator ==(Coord a, Coord b) => a.Equals(b);
         public static bool operator !=(Coord a, Coord b) => !(a == b);
 
-        public override readonly string ToString()
-            => $"({X}, {Y})";
+        public override readonly string ToString() => $"({X}, {Y})";
     }
 
     [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
@@ -613,7 +619,7 @@ namespace Win32
         }
 
         public readonly Point Location => new(Left, Top);
-        
+
         public static SmallRect Zero => default;
 
         public static SmallRect FromPosAndSize(int x, int y, int width, int height) => new()

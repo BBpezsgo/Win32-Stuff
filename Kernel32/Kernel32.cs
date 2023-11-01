@@ -7,6 +7,42 @@ namespace Win32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
+        /// <summary>
+        /// Sets the last-error code for the calling thread.
+        /// </summary>
+        /// <param name="dwErrCode">
+        /// The last-error code for the thread.
+        /// </param>
+        /// <remarks>
+        /// <para>
+        /// The last-error code is kept in thread local
+        /// storage so that multiple threads do not overwrite each other's values.
+        /// </para>
+        /// <para>
+        /// Most functions call <c>SetLastError</c> or <c>SetLastErrorEx</c> only
+        /// when they fail. However, some system functions call
+        /// <c>SetLastError</c> or <c>SetLastErrorEx</c> under conditions of
+        /// success; those cases are noted in each function's documentation.
+        /// </para>
+        /// <para>
+        /// Applications can optionally retrieve the value set by this function
+        /// by using the <see cref="GetLastError"/> function immediately after a function fails.
+        /// </para>
+        /// <para>
+        /// Error codes are 32-bit values (bit 31 is the most significant bit).
+        /// Bit 29 is reserved for application-defined error codes;
+        /// no system error code has this bit set.
+        /// If you are defining an error code for your application,
+        /// set this bit to indicate that the error code has
+        /// been defined by your application and to ensure that
+        /// your error code does not conflict with any system-defined error codes.
+        /// </para>
+        /// </remarks>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern void SetLastError(
+          [In] DWORD dwErrCode
+        );
+
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL SetConsoleScreenBufferSize(
           [In] HANDLE hConsoleOutput,

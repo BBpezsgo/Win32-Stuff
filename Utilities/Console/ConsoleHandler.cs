@@ -44,7 +44,7 @@ namespace Win32.Utilities
             Console.CursorVisible = true;
 
             if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
-            { throw new WindowsException(6); }
+            { throw WindowsException.Get(6); }
 
             if (Kernel32.SetConsoleMode(stdinHandle, SavedMode) == 0)
             { throw WindowsException.Get(); }

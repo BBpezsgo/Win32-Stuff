@@ -1,4 +1,6 @@
-﻿namespace Win32.Utilities
+﻿using System.Diagnostics;
+
+namespace Win32.Utilities
 {
     public static class Cursor
     {
@@ -15,43 +17,58 @@
         }
     }
 
+    public struct MouseMetrics
+    {
+        public static int MouseButtonCount => User32.GetSystemMetrics(SM.CMOUSEBUTTONS);
+        public static bool IsMousePresent => User32.GetSystemMetrics(SM.MOUSEPRESENT) != 0;
+        public static bool IsMouseHWheelPresent => User32.GetSystemMetrics(SM.MOUSEHORIZONTALWHEELPRESENT) != 0;
+        public static bool IsMouseVWheelPresent => User32.GetSystemMetrics(SM.MOUSEWHEELPRESENT) != 0;
+    }
+
+    public struct DisplayMetrics
+    {
+        public static int DisplayMonitorCount => User32.GetSystemMetrics(SM.CMONITORS);
+
+        public static int Width => User32.GetSystemMetrics(SM.CXSCREEN);
+        public static int Height => User32.GetSystemMetrics(SM.CYSCREEN);
+    }
+
+    public struct WindowMetrics
+    {
+        public static int BorderWidth => User32.GetSystemMetrics(SM.CXBORDER);
+        public static int BorderHeight => User32.GetSystemMetrics(SM.CYBORDER);
+
+        public static int MinimumWidth => User32.GetSystemMetrics(SM.CXMIN);
+        public static int MinimumHeight => User32.GetSystemMetrics(SM.CYMIN);
+
+        public static int TitleBarButtonWidth => User32.GetSystemMetrics(SM.CXSIZE);
+        public static int TitleBarButtonHeight => User32.GetSystemMetrics(SM.CYSIZE);
+
+
+        public static int MaximizedWidth => User32.GetSystemMetrics(SM.CXMAXIMIZED);
+        public static int MaximizedHeight => User32.GetSystemMetrics(SM.CYMAXIMIZED);
+
+        public static int MinimizedWidth => User32.GetSystemMetrics(SM.CXMINIMIZED);
+        public static int MinimizedHeight => User32.GetSystemMetrics(SM.CYMINIMIZED);
+    }
+
+    public struct SystemMetrics
+    {
+        public static int FullScreenWidth => User32.GetSystemMetrics(SM.CXFULLSCREEN);
+        public static int FullScreenHeight => User32.GetSystemMetrics(SM.CYFULLSCREEN);
+
+        public static int SystemBootMode => User32.GetSystemMetrics(SM.CLEANBOOT);
+        public static int CursorWidth => User32.GetSystemMetrics(SM.CXCURSOR);
+        public static int CursorHeight => User32.GetSystemMetrics(SM.CYCURSOR);
+        public static bool IsDbcsEnabled => User32.GetSystemMetrics(SM.DBCSENABLED) != 0;
+        public static bool IsDebug => User32.GetSystemMetrics(SM.DEBUG) != 0;
+        public static bool IsNetworkPresent => (User32.GetSystemMetrics(SM.NETWORK) & 1) != 0;
+        public static bool IsShuttingDown => User32.GetSystemMetrics(SM.SHUTTINGDOWN) != 0;
+        public static bool IsSlowMachine => User32.GetSystemMetrics(SM.SLOWMACHINE) != 0;
+    }
+
     public static class Utils
     {
-        /// <summary>
-        /// Retrieves the identifier of the thread that created the
-        /// specified window.
-        /// </summary>
-        /// <param name="windowHandle">
-        /// A handle to the window.
-        /// </param>
-        /// <exception cref="WindowsException"/>
-        unsafe public static void GetWindowThreadId(this HWND windowHandle, out DWORD threadId)
-        {
-            threadId = User32.GetWindowThreadProcessId(windowHandle, null);
-
-            if (threadId == 0)
-            { throw WindowsException.Get(); }
-        }
-
-        /// <summary>
-        /// Retrieves the identifier of the thread that created the
-        /// specified window and the identifier of the process that created the window.
-        /// </summary>
-        /// <param name="windowHandle">
-        /// A handle to the window.
-        /// </param>
-        /// <exception cref="WindowsException"/>
-        unsafe public static void GetWindowThreadAndProcessId(this HWND windowHandle, out DWORD threadId, out DWORD processId)
-        {
-            DWORD processId_ = 0;
-
-            threadId = User32.GetWindowThreadProcessId(windowHandle, &processId_);
-            processId = processId_;
-
-            if (threadId == 0)
-            { throw WindowsException.Get(); }
-        }
-
         /// <summary>
         /// Retrieves information about the active window or a specified GUI thread.
         /// </summary>
@@ -67,5 +84,8 @@
             { throw WindowsException.Get(); }
             return result;
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public static bool IsGuiThread => User32.IsGUIThread(FALSE) != 0;
     }
 }

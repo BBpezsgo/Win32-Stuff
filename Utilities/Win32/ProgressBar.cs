@@ -41,7 +41,7 @@ namespace Win32.Utilities
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public uint Position
+        public uint Value
         {
             get
             {

@@ -71,6 +71,8 @@ global using STARTUPINFOW = Win32.StartupInfo;
 global using CREATESTRUCT = Win32.CreateStruct;
 global using WNDCLASSEXW = Win32.WindowClassEx;
 global using COORD = Win32.Coord;
+global using SIZE = Win32.Size;
+global using TITLEBARINFO = Win32.TitleBarInfo;
 
 // Strings
 global using LPSTR = System.String;
