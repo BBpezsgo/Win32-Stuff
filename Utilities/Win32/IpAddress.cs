@@ -16,7 +16,7 @@ namespace Win32.Utilities
                         parent,
                         string.Empty,
                         ClassName.IP_ADDRESS,
-                        WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD,
+                        WS.TABSTOP | WS.VISIBLE | WS.CHILD,
                         x,
                         y,
                         width,
@@ -26,7 +26,7 @@ namespace Win32.Utilities
 
         protected override void HandleEvent(HWND parent, ushort code)
         {
-            if (code == IPN.IPN_FIELDCHANGED)
+            if (code == IPN.FIELDCHANGED)
             {
 
             }

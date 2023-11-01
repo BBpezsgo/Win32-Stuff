@@ -43,13 +43,13 @@ namespace Win32
     /// <summary>
     /// Contains title bar information.
     /// </summary>
-    public struct TitleBarInfo
+    public readonly struct TitleBarInfo
     {
         /// <summary>
         /// The size, in bytes, of the structure.
         /// The caller must set this member to <c>sizeof(TITLEBARINFO)</c>.
         /// </summary>
-        DWORD Size;
+        readonly DWORD cbSize;
         /// <summary>
         /// The coordinates of the title bar.
         /// These coordinates include all title-bar elements except the window menu.
@@ -61,9 +61,8 @@ namespace Win32
         /// </summary>
         public readonly RgStates RgState;
 
-        public static TitleBarInfo Default => new()
-        {
-            Size = (DWORD)Marshal.SizeOf<TitleBarInfo>(),
-        };
+        TitleBarInfo(DWORD cbSize) : this() => this.cbSize = cbSize;
+
+        unsafe public static TitleBarInfo Create() => new((uint)sizeof(TitleBarInfo));
     }
 }

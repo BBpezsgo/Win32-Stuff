@@ -8,46 +8,46 @@
         /// that owns the window. This prevents the calling thread from blocking its
         /// execution while other threads process the request.
         /// </summary>
-        public const DWORD SWP_ASYNCWINDOWPOS = 0x4000;
+        public const DWORD ASYNCWINDOWPOS = 0x4000;
         /// <summary>
         /// Prevents generation of the <see cref="WM.WM_SYNCPAINT"/> message.
         /// </summary>
-        public const DWORD SWP_DEFERERASE = 0x2000;
+        public const DWORD DEFERERASE = 0x2000;
         /// <summary>
         /// Draws a frame (defined in the window's class description) around the window.
         /// </summary>
-        public const DWORD SWP_DRAWFRAME = 0x0020;
+        public const DWORD DRAWFRAME = 0x0020;
         /// <summary>
         /// Applies new frame styles set using the <see cref="SetWindowLong"/> function.
         /// Sends a <see cref="WM.WM_NCCALCSIZE"/> message to the window, even if the window's
         /// size is not being changed. If this flag is not specified, <see cref="WM.WM_NCCALCSIZE"/>
         /// is sent only when the window's size is being changed.
         /// </summary>
-        public const DWORD SWP_FRAMECHANGED = 0x0020;
+        public const DWORD FRAMECHANGED = 0x0020;
         /// <summary>
         /// Hides the window.
         /// </summary>
-        public const DWORD SWP_HIDEWINDOW = 0x0080;
+        public const DWORD HIDEWINDOW = 0x0080;
         /// <summary>
         /// Does not activate the window.If this flag is not set, the window is activated
         /// and moved to the top of either the topmost or non-topmost group
         /// (depending on the setting of the <c>hWndInsertAfter</c> parameter).
         /// </summary>
-        public const DWORD SWP_NOACTIVATE = 0x0010;
+        public const DWORD NOACTIVATE = 0x0010;
         /// <summary>
         /// Discards the entire contents of the client area.If this flag is not specified,
         /// the valid contents of the client area are saved and copied back into the client
         /// area after the window is sized or repositioned.
         /// </summary>
-        public const DWORD SWP_NOCOPYBITS = 0x0100;
+        public const DWORD NOCOPYBITS = 0x0100;
         /// <summary>
         /// Retains the current position (ignores X and Y parameters).
         /// </summary>
-        public const DWORD SWP_NOMOVE = 0x0002;
+        public const DWORD NOMOVE = 0x0002;
         /// <summary>
         /// Does not change the owner window's position in the Z order.
         /// </summary>
-        public const DWORD SWP_NOOWNERZORDER = 0x0200;
+        public const DWORD NOOWNERZORDER = 0x0200;
         /// <summary>
         /// Does not redraw changes.If this flag is set, no repainting of any kind occurs.
         /// This applies to the client area, the nonclient area (including the title bar and
@@ -55,26 +55,26 @@
         /// being moved.When this flag is set, the application must explicitly invalidate or
         /// redraw any parts of the window and parent window that need redrawing.
         /// </summary>
-        public const DWORD SWP_NOREDRAW = 0x0008;
+        public const DWORD NOREDRAW = 0x0008;
         /// <summary>
         /// Same as the SWP_NOOWNERZORDER flag.
         /// </summary>
-        public const DWORD SWP_NOREPOSITION = 0x0200;
+        public const DWORD NOREPOSITION = 0x0200;
         /// <summary>
         /// Prevents the window from receiving the <see cref="WM.WM_WINDOWPOSCHANGING"/> message.
         /// </summary>
-        public const DWORD SWP_NOSENDCHANGING = 0x0400;
+        public const DWORD NOSENDCHANGING = 0x0400;
         /// <summary>
         /// Retains the current size (ignores the cx and cy parameters).
         /// </summary>
-        public const DWORD SWP_NOSIZE = 0x0001;
+        public const DWORD NOSIZE = 0x0001;
         /// <summary>
         /// Retains the current Z order (ignores the <c>hWndInsertAfter</c> parameter).
         /// </summary>
-        public const DWORD SWP_NOZORDER = 0x0004;
+        public const DWORD NOZORDER = 0x0004;
         /// <summary>
         /// Displays the window.
         /// </summary>
-        public const DWORD SWP_SHOWWINDOW = 0x0040;
+        public const DWORD SHOWWINDOW = 0x0040;
     }
 }

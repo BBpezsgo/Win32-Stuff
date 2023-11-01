@@ -19,7 +19,7 @@
                         parent,
                         label,
                         ClassName.BUTTON,
-                        WS.WS_TABSTOP | WS.WS_VISIBLE | WS.WS_CHILD | BS.BS_DEFPUSHBUTTON,
+                        WS.TABSTOP | WS.VISIBLE | WS.CHILD | BS.DEFPUSHBUTTON,
                         x,
                         y,
                         width,
@@ -29,7 +29,7 @@
 
         protected override void HandleEvent(HWND parent, ushort code)
         {
-            if (code == BN.BN_CLICKED)
+            if (code == BN.CLICKED)
             {
                 OnClick?.Invoke(this);
                 return;

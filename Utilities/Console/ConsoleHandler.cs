@@ -57,15 +57,12 @@ namespace Win32.Utilities
         {
             set
             {
-                value.StructSize = (uint)Marshal.SizeOf<CONSOLE_FONT_INFOEX>();
-
                 if (Kernel32.SetCurrentConsoleFontEx(stdoutHandle, FALSE, ref value) == 0)
                 { throw WindowsException.Get(); }
             }
             get
             {
-                CONSOLE_FONT_INFOEX fontInfo = new()
-                { StructSize = (uint)Marshal.SizeOf<CONSOLE_FONT_INFOEX>() };
+                CONSOLE_FONT_INFOEX fontInfo = CONSOLE_FONT_INFOEX.Create();
 
                 if (Kernel32.GetCurrentConsoleFontEx(stdoutHandle, FALSE, ref fontInfo) == 0)
                 { throw WindowsException.Get(); }
@@ -85,15 +82,19 @@ namespace Win32.Utilities
             ConsoleHandler.Font = fontInfo;
         }
 
-        public static CONSOLE_FONT_INFOEX DefaultFont => new()
+        public static CONSOLE_FONT_INFOEX DefaultFont
         {
-            StructSize = (uint)Marshal.SizeOf<CONSOLE_FONT_INFOEX>(),
-            FontIndex = 0,
-            FontFamily = FixedWidthTrueType,
-            FaceName = "Consolas",
-            FontWeight = 400,
-            FontSize = 16,
-            FontWidth = 8,
-        };
+            get
+            {
+                CONSOLE_FONT_INFOEX result = CONSOLE_FONT_INFOEX.Create();
+                result.FontIndex = 0;
+                result.FontFamily = FixedWidthTrueType;
+                result.FaceName = "Consolas";
+                result.FontWeight = 400;
+                result.FontSize = 16;
+                result.FontWidth = 8;
+                return result;
+            }
+        }
     }
 }

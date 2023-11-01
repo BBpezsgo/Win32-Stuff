@@ -30,9 +30,9 @@
         }
 
         const uint DefaultStyles =
-            (WS.WS_OVERLAPPEDWINDOW ^ WS.WS_THICKFRAME ^ WS.WS_MAXIMIZEBOX) |
-            WS.WS_SYSMENU |
-            WS.WS_VISIBLE;
+            (WS.OVERLAPPEDWINDOW ^ WS.THICKFRAME ^ WS.MAXIMIZEBOX) |
+            WS.SYSMENU |
+            WS.VISIBLE;
 
         unsafe public static HWND Create(string title, int width, int height, delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> windProc, DWORD style = DefaultStyles, void* lpParam = null, string className = "windowClass")
         {
@@ -179,7 +179,7 @@
             MSG msg;
             int res;
 
-            if (Handlers.Count > 0 && (res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PM.PM_REMOVE)) != 0)
+            if (Handlers.Count > 0 && (res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PM.REMOVE)) != 0)
             {
                 if (res == -1)
                 { throw WindowsException.Get(); }

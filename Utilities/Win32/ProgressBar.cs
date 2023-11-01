@@ -26,7 +26,7 @@ namespace Win32.Utilities
                         parent,
                         label,
                         ClassName.PROGRESS_BAR,
-                        WS.WS_VISIBLE | WS.WS_CHILD,
+                        WS.VISIBLE | WS.CHILD,
                         x,
                         y,
                         width,
@@ -37,7 +37,7 @@ namespace Win32.Utilities
         public void SetRange(ushort min, ushort max)
         {
             ULONG lParam = Macros.MAKELONG(min, max);
-            User32.SendMessage(Handle, PBM.PBM_SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
+            User32.SendMessage(Handle, PBM.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -45,17 +45,17 @@ namespace Win32.Utilities
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETPOS, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, PBM.GETPOS, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.PBM_SETPOS, (WPARAM)value, LPARAM.Zero);
+            set => User32.SendMessage(Handle, PBM.SETPOS, (WPARAM)value, LPARAM.Zero);
         }
 
         public int GetLowLimit()
-            => User32.SendMessage(Handle, PBM.PBM_GETRANGE, (WPARAM)TRUE, LPARAM.Zero).ToInt32();
+            => User32.SendMessage(Handle, PBM.GETRANGE, (WPARAM)TRUE, LPARAM.Zero).ToInt32();
 
         public int GetHighLimit()
-            => User32.SendMessage(Handle, PBM.PBM_GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
+            => User32.SendMessage(Handle, PBM.GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         unsafe public PBRANGE Range
@@ -63,13 +63,13 @@ namespace Win32.Utilities
             get
             {
                 PBRANGE result = new();
-                User32.SendMessage(Handle, PBM.PBM_GETRANGE, WPARAM.Zero, (LPARAM)(&result));
+                User32.SendMessage(Handle, PBM.GETRANGE, WPARAM.Zero, (LPARAM)(&result));
                 return result;
             }
             set
             {
                 ULONG lParam = Macros.MAKELONG((ushort)value.Low, (ushort)value.High);
-                User32.SendMessage(Handle, PBM.PBM_SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
+                User32.SendMessage(Handle, PBM.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
             }
         }
 
@@ -78,10 +78,10 @@ namespace Win32.Utilities
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETSTEP, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, PBM.GETSTEP, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.PBM_SETSTEP, (WPARAM)value, LPARAM.Zero);
+            set => User32.SendMessage(Handle, PBM.SETSTEP, (WPARAM)value, LPARAM.Zero);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,16 +89,16 @@ namespace Win32.Utilities
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.PBM_GETSTATE, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, PBM.GETSTATE, WPARAM.Zero, LPARAM.Zero);
                 return (ProgressBarState)unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.PBM_SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
+            set => User32.SendMessage(Handle, PBM.SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
         }
 
         public void Add(uint value)
-            => User32.SendMessage(Handle, PBM.PBM_DELTAPOS, (WPARAM)value, LPARAM.Zero);
+            => User32.SendMessage(Handle, PBM.DELTAPOS, (WPARAM)value, LPARAM.Zero);
 
         public void StepIt()
-            => User32.SendMessage(Handle, PBM.PBM_STEPIT, WPARAM.Zero, LPARAM.Zero);
+            => User32.SendMessage(Handle, PBM.STEPIT, WPARAM.Zero, LPARAM.Zero);
     }
 }

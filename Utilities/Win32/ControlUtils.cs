@@ -56,7 +56,7 @@
                     height,
                     parent,
                     new HMENU(id),
-                    User32.GetWindowLongPtrW(parent, GWL.GWL_HINSTANCE));
+                    User32.GetWindowLongPtrW(parent, GWL.HINSTANCE));
 
                 return handle;
             }

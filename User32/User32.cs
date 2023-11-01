@@ -110,22 +110,22 @@ namespace Win32
         /// <returns>
         /// <para>
         /// If the specified window, its parent window, its parent's parent window,
-        /// and so forth, have the <see cref="WS.WS_VISIBLE"/> style, the return value is nonzero.
+        /// and so forth, have the <see cref="WS.VISIBLE"/> style, the return value is nonzero.
         /// Otherwise, the return value is zero.
         /// </para>
         /// <para>
-        /// Because the return value specifies whether the window has the <see cref="WS.WS_VISIBLE"/> style,
+        /// Because the return value specifies whether the window has the <see cref="WS.VISIBLE"/> style,
         /// it may be nonzero even if the window is totally obscured by other windows.
         /// </para>
         /// </returns>
         /// <remarks>
         /// <para>
-        /// The visibility state of a window is indicated by the <see cref="WS.WS_VISIBLE"/> style bit.
-        /// When <see cref="WS.WS_VISIBLE"/> is set, the window is displayed and subsequent drawing into
-        /// it is displayed as long as the window has the <see cref="WS.WS_VISIBLE"/> style.
+        /// The visibility state of a window is indicated by the <see cref="WS.VISIBLE"/> style bit.
+        /// When <see cref="WS.VISIBLE"/> is set, the window is displayed and subsequent drawing into
+        /// it is displayed as long as the window has the <see cref="WS.VISIBLE"/> style.
         /// </para>
         /// <para>
-        /// Any drawing to a window with the <see cref="WS.WS_VISIBLE"/> style will not be displayed
+        /// Any drawing to a window with the <see cref="WS.VISIBLE"/> style will not be displayed
         /// if the window is obscured by other windows or is clipped by its parent window.
         /// </para>
         /// </remarks>
@@ -202,7 +202,7 @@ namespace Win32
         /// If the target window is owned by the current process,
         /// <c>SetWindowText</c> causes a <see cref="WM.WM_SETTEXT"/> message to be sent to the
         /// specified window or control. If the control is a list box control
-        /// created with the <see cref="WS.WS_CAPTION"/> style, however, <c>SetWindowText</c> sets the
+        /// created with the <see cref="WS.CAPTION"/> style, however, <c>SetWindowText</c> sets the
         /// text for the control, not for the list box entries.
         /// </para>
         /// <para>
@@ -260,7 +260,7 @@ namespace Win32
         /// <param name="lpKids">
         /// An array of handles to the child windows to arrange.
         /// If a specified child window is a top-level window
-        /// with the style <see cref="WS.WS_EX_TOPMOST"/> or <see cref="WS.WS_EX_TOOLWINDOW"/>,
+        /// with the style <see cref="WS.EX_TOPMOST"/> or <see cref="WS.EX_TOOLWINDOW"/>,
         /// the child window is not arranged. If this parameter
         /// is <c>NULL</c>, all child windows of the specified parent
         /// window (or of the desktop window) are arranged.
@@ -1074,7 +1074,7 @@ namespace Win32
         /// <para>
         /// The <c>EnumWindows</c> function does not enumerate child windows,
         /// with the exception of a few top-level windows owned by the
-        /// system that have the <see cref="WS.WS_CHILD"/> style.
+        /// system that have the <see cref="WS.CHILD"/> style.
         /// </para>
         /// <para>
         /// This function is more reliable than calling the <see cref="GetWindow"/>
@@ -1372,7 +1372,7 @@ namespace Win32
         /// <returns>
         /// <para>
         /// If the window is a child window, the return value is a handle to the parent window.
-        /// If the window is a top-level window with the <see cref="WS.WS_POPUP"/> style,
+        /// If the window is a top-level window with the <see cref="WS.POPUP"/> style,
         /// the return value is a handle to the owner window.
         /// </para>
         /// <para>
@@ -1384,10 +1384,10 @@ namespace Win32
         /// <list type="bullet">
         /// <item>
         /// The window is a top-level window that is unowned or does not have
-        /// the <see cref="WS.WS_POPUP"/> style.
+        /// the <see cref="WS.POPUP"/> style.
         /// </item>
         /// <item>
-        /// The owner window has <see cref="WS.WS_POPUP"/> style.
+        /// The owner window has <see cref="WS.POPUP"/> style.
         /// </item>
         /// </list>
         /// </para>
@@ -1397,7 +1397,7 @@ namespace Win32
         /// To obtain a window's owner window, instead of using <c>GetParent</c>,
         /// use <see cref="GetWindow"/> with the <c>GW_OWNER</c> flag. To obtain the parent window and
         /// not the owner, instead of using <c>GetParent</c>, use <see cref="GetAncestor"/> with
-        /// the <see cref="GA.GA_PARENT"/> flag.
+        /// the <see cref="GA.PARENT"/> flag.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

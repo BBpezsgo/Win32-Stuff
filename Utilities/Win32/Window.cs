@@ -86,7 +86,7 @@ namespace Win32.Utilities
         public HWND Parent
         {
             set => SetParent(value);
-            get => User32.GetAncestor(_handle, GA.GA_PARENT);
+            get => User32.GetAncestor(_handle, GA.PARENT);
         }
 
         /// <exception cref="WindowsException"/>
@@ -95,7 +95,7 @@ namespace Win32.Utilities
         {
             get
             {
-                HWND result = User32.GetWindow(_handle, GW.GW_OWNER);
+                HWND result = User32.GetWindow(_handle, GW.OWNER);
                 if (result == HWND.Zero)
                 { throw WindowsException.Get(); }
                 return result;
@@ -271,7 +271,7 @@ namespace Win32.Utilities
         {
             get
             {
-                TITLEBARINFO result = TITLEBARINFO.Default;
+                TITLEBARINFO result = TITLEBARINFO.Create();
                 if (User32.GetTitleBarInfo(_handle, &result) == 0)
                 { throw WindowsException.Get(); }
                 return result;
@@ -374,7 +374,7 @@ namespace Win32.Utilities
         /// <exception cref="WindowsException"/>
         public void SetPos(int x, int y, int width, int height, uint flags = 0)
         {
-            if (User32.SetWindowPos(_handle, IntPtr.Zero, x, y, width, height, flags | SWP.SWP_NOZORDER) == 0)
+            if (User32.SetWindowPos(_handle, IntPtr.Zero, x, y, width, height, flags | SWP.NOZORDER) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -402,7 +402,7 @@ namespace Win32.Utilities
             }
             set
             {
-                if (User32.SetWindowPos(_handle, IntPtr.Zero, value.X, value.Y, 0, 0, SWP.SWP_NOZORDER | SWP.SWP_NOSIZE) == 0)
+                if (User32.SetWindowPos(_handle, IntPtr.Zero, value.X, value.Y, 0, 0, SWP.NOZORDER | SWP.NOSIZE) == 0)
                 { throw WindowsException.Get(); }
             }
         }
@@ -418,7 +418,7 @@ namespace Win32.Utilities
             }
             set
             {
-                if (User32.SetWindowPos(_handle, IntPtr.Zero, 0, 0, value.cx, value.cy, SWP.SWP_NOZORDER | SWP.SWP_NOMOVE) == 0)
+                if (User32.SetWindowPos(_handle, IntPtr.Zero, 0, 0, value.cx, value.cy, SWP.NOZORDER | SWP.NOMOVE) == 0)
                 { throw WindowsException.Get(); }
             }
         }

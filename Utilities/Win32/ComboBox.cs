@@ -19,7 +19,7 @@
                 parent,
                 label,
                 ClassName.COMBOBOX,
-                WS.WS_OVERLAPPED | WS.WS_VISIBLE | WS.WS_CHILD | CBS.CBS_DROPDOWNLIST | CBS.CBS_DROPDOWN | CBS.CBS_HASSTRINGS | WS.WS_VSCROLL | BS.BS_DEFSPLITBUTTON,
+                WS.OVERLAPPED | WS.VISIBLE | WS.CHILD | CBS.DROPDOWNLIST | CBS.DROPDOWN | CBS.HASSTRINGS | WS.VSCROLL | BS.DEFSPLITBUTTON,
                 x,
                 y,
                 width,
@@ -43,16 +43,16 @@
 
         protected override void HandleEvent(HWND parent, ushort code)
         {
-            if (code == CBN.CBN_SELCHANGE)
+            if (code == CBN.SELCHANGE)
             {
                 OnSelectionChanged?.Invoke(this, parent);
                 return;
             }
-            else if (code == CBN.CBN_SETFOCUS)
+            else if (code == CBN.SETFOCUS)
             {
                 return;
             }
-            else if (code == CBN.CBN_DROPDOWN)
+            else if (code == CBN.DROPDOWN)
             {
                 return;
             }
