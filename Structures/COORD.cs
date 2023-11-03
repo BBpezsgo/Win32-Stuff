@@ -41,5 +41,4 @@ namespace Win32
 
         public override readonly string ToString() => $"({X}, {Y})";
     }
-
 }

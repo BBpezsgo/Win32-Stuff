@@ -5,6 +5,15 @@ namespace Win32
 {
     public struct Macros
     {
+        public static bool IS_INTRESOURCE(ULONG_PTR _r)
+            => (((ULONG)_r) >> 16) == 0;
+        public static bool IS_INTRESOURCE(ULONG _r)
+            => ((_r) >> 16) == 0;
+        unsafe public static CHAR* MAKEINTRESOURCEA(WORD i)
+             => (CHAR*)(ULONG_PTR)i;
+        unsafe public static WCHAR* MAKEINTRESOURCEW(WORD i)
+             => (WCHAR*)(ULONG_PTR)i;
+
         public static byte LOBYTE(int w)
             => (byte)(w & 0xFF);
         public static byte HIBYTE(int w)
@@ -99,34 +108,5 @@ namespace Win32
         public static bool SUCCEEDED(HRESULT hr) => hr >= 0;
         public static bool FAILED(HRESULT hr) => hr < 0;
         public static bool IS_ERROR(HRESULT Status) => unchecked((ULONG)Status) >> 31 == 1;
-    }
-
-    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public readonly struct HResult : IEquatable<HResult>
-    {
-        readonly HRESULT code;
-
-        public HResult(int code) => this.code = code;
-
-        public readonly bool IsSucceeded => WinErrorMacros.SUCCEEDED(code);
-        public readonly bool IsFailed => WinErrorMacros.FAILED(code);
-        public readonly bool IsError => WinErrorMacros.IS_ERROR(code);
-        public readonly int Severity => WinErrorMacros.HRESULT_SEVERITY(code);
-        public readonly int Facility => WinErrorMacros.HRESULT_FACILITY(code);
-        public readonly int Code => WinErrorMacros.HRESULT_CODE(code);
-
-        public override bool Equals(object? obj) => obj is HResult result && Equals(result);
-        public bool Equals(HResult other) => code == other.code;
-
-        public override int GetHashCode() => HashCode.Combine(code);
-
-        public override string ToString() => code.ToString(CultureInfo.InvariantCulture);
-        readonly string GetDebuggerDisplay() => ToString();
-
-        public static bool operator ==(HResult left, HResult right) => left.Equals(right);
-        public static bool operator !=(HResult left, HResult right) => !(left == right);
-
-        public static implicit operator HRESULT(HResult hr) => hr.code;
-        public static implicit operator HResult(HRESULT hr) => new(hr);
     }
 }

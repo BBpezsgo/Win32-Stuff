@@ -27,5 +27,4 @@ namespace Win32
 
         public override readonly string ToString() => $"{{ Left: {Left} Top: {Top} Bottom: {Bottom} Right: {Right} }}";
     }
-
 }

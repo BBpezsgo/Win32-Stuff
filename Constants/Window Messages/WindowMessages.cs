@@ -96,6 +96,30 @@
         public const uint NF_QUERY = 3;
         public const uint NF_REQUERY = 4;
 
+        /// <summary>
+        /// Notifies a window that the user desires a context menu to appear.
+        /// The user may have clicked the right mouse button (right-clicked)
+        /// in the window, pressed Shift+F10 or pressed the applications key
+        /// (context menu key) available on some keyboards.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <b>wParam:</b><br/>
+        /// A handle to the window in which the user right-clicked the mouse.
+        /// This can be a child window of the window receiving the message.
+        /// For more information about processing this message,
+        /// see the Remarks section.
+        /// </para>
+        /// <b>lParam:</b><br/>
+        /// <para>
+        /// The low-order word specifies the horizontal position of the cursor,
+        /// in screen coordinates, at the time of the mouse click.
+        /// </para>
+        /// <para>
+        /// The high-order word specifies the vertical position of the cursor,
+        /// in screen coordinates, at the time of the mouse click.
+        /// </para>
+        /// </remarks>
         public const uint WM_CONTEXTMENU = 0x007B;
         public const uint WM_STYLECHANGING = 0x007C;
         public const uint WM_STYLECHANGED = 0x007D;
@@ -172,10 +196,14 @@
         public const uint WM_INITDIALOG = 0x0110;
 
         /// <summary>
-        /// Sent when the user selects a command item from a menu, when a control sends a notification message to its parent window, or when an accelerator keystroke is translated.
+        /// Sent when the user selects a command item from a menu, when
+        /// a control sends a notification message to its parent window,
+        /// or when an accelerator keystroke is translated.
         /// </summary>
+        /// <returns>
+        /// If an application processes this message, it should return zero.
+        /// </returns>
         /// <remarks>
-        /// <para>
         /// Use of the <c>wParam</c> and <c>lParam</c> parameters are summarized here.
         /// <list type="bullet">
         /// 
@@ -206,8 +234,6 @@
         /// </description>
         /// </item>
         /// </list>
-        /// 
-        /// </para>
         /// 
         /// </remarks>
         public const uint WM_COMMAND = 0x0111;

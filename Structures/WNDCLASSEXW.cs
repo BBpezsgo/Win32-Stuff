@@ -2,10 +2,10 @@
 
 namespace Win32
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct WindowClassEx
     {
-        public uint cbSize;
+        readonly uint cbSize;
         public uint style;
         unsafe public delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> lpfnWndProc;
         public int cbClsExtra;
@@ -17,5 +17,8 @@ namespace Win32
         unsafe public char* lpszMenuName;
         unsafe public char* lpszClassName;
         public HICON hIconSm;
+
+        WindowClassEx(DWORD cbSize) : this() => this.cbSize = cbSize;
+        unsafe public static WindowClassEx Create() => new((uint)sizeof(WindowClassEx));
     }
 }

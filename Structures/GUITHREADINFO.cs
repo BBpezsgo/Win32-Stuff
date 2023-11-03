@@ -2,7 +2,7 @@
 
 namespace Win32
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct GuiThreadInfo
     {
         readonly DWORD cbSize;
@@ -16,7 +16,6 @@ namespace Win32
         public readonly RECT rcCaret;
 
         GuiThreadInfo(uint cbSize) : this() => this.cbSize = cbSize;
-
         unsafe public static GUITHREADINFO Create() => new((uint)sizeof(GUITHREADINFO));
     }
 }

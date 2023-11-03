@@ -2,30 +2,26 @@
 {
     public partial class ComboBox : Control
     {
-        public delegate LRESULT? SelectionChangedHandler(ComboBox sender, HWND parent);
+        public delegate LRESULT? SelectionChangedHandler(ComboBox sender, Window parent);
 
         public event SelectionChangedHandler? OnSelectionChanged;
 
         public ComboBox(
             HWND parent,
             string label,
-            int x,
-            int y,
-            int width,
-            int height,
-            ushort id)
-        {
-            Handle = Control.AnyHandle(
-                parent,
-                label,
-                ClassName.COMBOBOX,
-                WS.OVERLAPPED | WS.VISIBLE | WS.CHILD | CBS.DROPDOWNLIST | CBS.DROPDOWN | CBS.HASSTRINGS | WS.VSCROLL | BS.DEFSPLITBUTTON,
-                x,
-                y,
-                width,
-                height,
-                id);
-        }
+            int x, int y,
+            int width, int height,
+            ushort id
+        ) : base(Control.AnyHandle(
+            parent,
+            label,
+            ClassName.COMBOBOX,
+            WS.OVERLAPPED | WS.VISIBLE | WS.CHILD | CBS.DROPDOWNLIST | CBS.DROPDOWN | CBS.HASSTRINGS | WS.VSCROLL | BS.DEFSPLITBUTTON,
+            x, y,
+            width, height,
+            id)
+        )
+        { }
 
         public ComboBox(HWND handle) : base(handle) { }
 
@@ -41,7 +37,7 @@
         public string GetString(int index)
             => ComboBox.GetString(Handle, index);
 
-        protected override void HandleEvent(HWND parent, ushort code)
+        public override void HandleNotification(Window parent, ushort code)
         {
             if (code == CBN.SELCHANGE)
             {

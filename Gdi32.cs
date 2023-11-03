@@ -6,6 +6,11 @@ namespace Win32
 {
     public static class Gdi32
     {
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL DeleteObject(
+          [In] HANDLE ho
+        );
+
         [DllImport("Gdi32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern COLORREF SetPixel(
           [In] HDC hdc,

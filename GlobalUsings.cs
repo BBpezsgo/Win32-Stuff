@@ -16,6 +16,7 @@ global using HANDLE = System.IntPtr;
 global using HLOCAL = System.IntPtr;
 global using FLOAT = System.Single;
 global using DOUBLE = System.Double;
+global using HBITMAP = System.IntPtr;
 
 // Integer types
 
@@ -52,8 +53,8 @@ global using static Constants;
 global using DWORD_PTR = System.IntPtr;
 global using INT_PTR = System.IntPtr;
 global using LONG_PTR = System.IntPtr;
-global using ULONG_PTR = System.IntPtr;
-global using UINT_PTR = System.IntPtr;
+global using ULONG_PTR = System.UIntPtr;
+global using UINT_PTR = System.UIntPtr;
 
 // Characters
 
@@ -73,12 +74,10 @@ global using WNDCLASSEXW = Win32.WindowClassEx;
 global using COORD = Win32.Coord;
 global using SIZE = Win32.Size;
 global using TITLEBARINFO = Win32.TitleBarInfo;
-
-// Strings
-global using LPSTR = System.String;
-global using LPCSTR = System.String;
-global using LPWSTR = System.String;
-global using LPCWSTR = System.String;
+global using MENUITEMINFOW = Win32.MenuItemInfo;
+global using MENUINFO = Win32.MenuInfo;
+global using MENUBARINFO = Win32.MenuBarInfo;
+global using TPMPARAMS = Win32.TpmParams;
 
 public static class Constants
 {

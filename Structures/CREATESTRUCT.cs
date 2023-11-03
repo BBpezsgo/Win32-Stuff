@@ -2,7 +2,7 @@
 
 namespace Win32
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     unsafe public struct CreateStruct
     {
         public void* lpCreateParams;

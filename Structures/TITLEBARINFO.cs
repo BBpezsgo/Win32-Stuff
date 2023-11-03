@@ -62,7 +62,6 @@ namespace Win32
         public readonly RgStates RgState;
 
         TitleBarInfo(DWORD cbSize) : this() => this.cbSize = cbSize;
-
         unsafe public static TitleBarInfo Create() => new((uint)sizeof(TitleBarInfo));
     }
 }

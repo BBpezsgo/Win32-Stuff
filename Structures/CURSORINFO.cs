@@ -5,7 +5,7 @@ namespace Win32
     /// <summary>
     /// Contains global cursor information.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct CursorInfo
     {
         /// <summary>
@@ -61,7 +61,6 @@ namespace Win32
         public readonly POINT ptScreenPos;
 
         CursorInfo(uint cbSize) : this() => this.cbSize = cbSize;
-
         unsafe public static CURSORINFO Create() => new((uint)sizeof(CURSORINFO));
     }
 }

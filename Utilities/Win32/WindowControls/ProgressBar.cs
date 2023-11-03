@@ -11,28 +11,22 @@ namespace Win32.Utilities
 
     public class ProgressBar : Control
     {
-        public delegate void SimpleEventHandler(ProgressBar sender);
-
-        unsafe public ProgressBar(
+        public ProgressBar(
             HWND parent,
             string label,
-            int x,
-            int y,
-            int width,
-            int height,
-            ushort id)
-        {
-            Handle = Control.AnyHandle(
-                        parent,
-                        label,
-                        ClassName.PROGRESS_BAR,
-                        WS.VISIBLE | WS.CHILD,
-                        x,
-                        y,
-                        width,
-                        height,
-                        id);
-        }
+            int x, int y,
+            int width, int height,
+            ushort id
+        ) : base(Control.AnyHandle(
+            parent,
+            label,
+            ClassName.PROGRESS_BAR,
+            WS.VISIBLE | WS.CHILD,
+            x, y,
+            width, height,
+            id)
+        )
+        { }
 
         public void SetRange(ushort min, ushort max)
         {
@@ -40,7 +34,7 @@ namespace Win32.Utilities
             User32.SendMessage(Handle, PBM.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public uint Value
         {
             get
@@ -57,12 +51,12 @@ namespace Win32.Utilities
         public int GetHighLimit()
             => User32.SendMessage(Handle, PBM.GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public PBRANGE Range
         {
             get
             {
-                PBRANGE result = new();
+                PBRANGE result = default;
                 User32.SendMessage(Handle, PBM.GETRANGE, WPARAM.Zero, (LPARAM)(&result));
                 return result;
             }
@@ -73,8 +67,8 @@ namespace Win32.Utilities
             }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        unsafe public uint Step
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public uint Step
         {
             get
             {
@@ -84,8 +78,8 @@ namespace Win32.Utilities
             set => User32.SendMessage(Handle, PBM.SETSTEP, (WPARAM)value, LPARAM.Zero);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        unsafe public ProgressBarState State
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public ProgressBarState State
         {
             get
             {

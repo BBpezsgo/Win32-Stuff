@@ -43,5 +43,4 @@ namespace Win32
 
         public override readonly int GetHashCode() => HashCode.Combine(X, Y);
     }
-
 }

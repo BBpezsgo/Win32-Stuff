@@ -31,35 +31,45 @@ namespace Win32.Utilities
 
         public static int Width => User32.GetSystemMetrics(SM.CXSCREEN);
         public static int Height => User32.GetSystemMetrics(SM.CYSCREEN);
+        public static SIZE Size => new(Width, Height);
     }
 
     public struct WindowMetrics
     {
         public static int BorderWidth => User32.GetSystemMetrics(SM.CXBORDER);
         public static int BorderHeight => User32.GetSystemMetrics(SM.CYBORDER);
+        public static SIZE BorderSize => new(BorderWidth, BorderHeight);
 
         public static int MinimumWidth => User32.GetSystemMetrics(SM.CXMIN);
         public static int MinimumHeight => User32.GetSystemMetrics(SM.CYMIN);
+        public static SIZE MinimumSize => new(MinimumWidth, MinimumHeight);
 
         public static int TitleBarButtonWidth => User32.GetSystemMetrics(SM.CXSIZE);
         public static int TitleBarButtonHeight => User32.GetSystemMetrics(SM.CYSIZE);
+        public static SIZE TitleBarButtonSize => new(TitleBarButtonWidth, TitleBarButtonHeight);
 
 
         public static int MaximizedWidth => User32.GetSystemMetrics(SM.CXMAXIMIZED);
         public static int MaximizedHeight => User32.GetSystemMetrics(SM.CYMAXIMIZED);
+        public static SIZE MaximizedSize => new(MaximizedWidth, MaximizedHeight);
 
         public static int MinimizedWidth => User32.GetSystemMetrics(SM.CXMINIMIZED);
         public static int MinimizedHeight => User32.GetSystemMetrics(SM.CYMINIMIZED);
+        public static SIZE MinimizedSize => new(MinimizedWidth, MinimizedHeight);
     }
 
     public struct SystemMetrics
     {
         public static int FullScreenWidth => User32.GetSystemMetrics(SM.CXFULLSCREEN);
         public static int FullScreenHeight => User32.GetSystemMetrics(SM.CYFULLSCREEN);
+        public static SIZE FullScreenSize => new(FullScreenWidth, FullScreenHeight);
 
         public static int SystemBootMode => User32.GetSystemMetrics(SM.CLEANBOOT);
+
         public static int CursorWidth => User32.GetSystemMetrics(SM.CXCURSOR);
         public static int CursorHeight => User32.GetSystemMetrics(SM.CYCURSOR);
+        public static SIZE CursorSize => new(CursorWidth, CursorHeight);
+
         public static bool IsDbcsEnabled => User32.GetSystemMetrics(SM.DBCSENABLED) != 0;
         public static bool IsDebug => User32.GetSystemMetrics(SM.DEBUG) != 0;
         public static bool IsNetworkPresent => (User32.GetSystemMetrics(SM.NETWORK) & 1) != 0;
@@ -69,6 +79,8 @@ namespace Win32.Utilities
 
     public static class Utils
     {
+        public const DebuggerBrowsableState GlobalDebuggerBrowsable = DebuggerBrowsableState.Collapsed;
+
         /// <summary>
         /// Retrieves information about the active window or a specified GUI thread.
         /// </summary>
@@ -85,7 +97,14 @@ namespace Win32.Utilities
             return result;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public static bool IsGuiThread => User32.IsGUIThread(FALSE) != 0;
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static uint DoubleClickTime => User32.GetDoubleClickTime();
+
+        public static void BlockInput(bool block) => _ = User32.BlockInput(block ? TRUE : FALSE);
+
+        public static bool SoundSentry() => User32.SoundSentry() != FALSE;
     }
 }

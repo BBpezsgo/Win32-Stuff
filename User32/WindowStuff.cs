@@ -2,8 +2,501 @@
 
 namespace Win32
 {
-    public static class User32
+    public static partial class User32
     {
+        /// <summary>
+        /// Retrieves information about the specified window.
+        /// </summary>
+        /// <param name="hwnd">
+        /// A handle to the window whose information is to be retrieved.
+        /// </param>
+        /// <param name="pwi">
+        /// A pointer to a <see cref="WINDOWINFO"/> structure to receive the information.
+        /// Note that you must set the <c>cbSize</c> member to sizeof(WINDOWINFO) before calling this function.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero. 
+        /// </para>
+        /// <para>
+        /// To get extended error information, call GetLastError.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern BOOL GetWindowInfo(
+          [In] HWND hwnd,
+          [In, Out] WINDOWINFO* pwi
+        );
+
+        /// <summary>
+        /// <para>
+        /// Changes an attribute of the specified window. The function also
+        /// sets a value at the specified offset in the extra window memory.
+        /// </para>
+        /// <para>
+        /// <b>Note:</b>
+        /// To write code that is compatible with both 32-bit and 64-bit
+        /// versions of Windows, use <c>SetWindowLongPtr</c>. When compiling for
+        /// 32-bit Windows, <c>SetWindowLongPtr</c> is defined as a call to
+        /// the <c>SetWindowLong</c> function.
+        /// </para>
+        /// </summary>
+        /// <param name="hWnd">
+        /// <para>
+        /// A handle to the window and, indirectly, the class to which
+        /// the window belongs. The <c>SetWindowLongPtr</c> function fails
+        /// if the process that owns the window specified by the <paramref name="hWnd"/>
+        /// parameter is at a higher process privilege in the UIPI
+        /// hierarchy than the process the calling thread resides in.
+        /// </para>
+        /// <para>
+        /// <b>Windows XP/2000:</b>
+        /// The <c>SetWindowLongPtr</c> function fails if the window specified
+        /// by the <paramref name="hWnd"/> parameter does not belong to
+        /// the same process as the calling thread.
+        /// </para>
+        /// </param>
+        /// <param name="nIndex">
+        /// The zero-based offset to the value to be set.
+        /// Valid values are in the range zero through the number
+        /// of bytes of extra window memory, minus the size of a <see cref="LONG_PTR"/>.
+        /// </param>
+        /// <param name="dwNewLong">
+        /// The replacement value.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is the previous value of the specified offset.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// <para>
+        /// If the previous value is zero and the function succeeds,
+        /// the return value is zero, but the function does not clear
+        /// the last error information. To determine success or failure,
+        /// clear the last error information by calling <see cref="Kernel32.SetLastError"/> with
+        /// 0, then call <c>SetWindowLongPtr</c>. Function failure will be indicated
+        /// by a return value of zero and a <see cref="Kernel32.GetLastError"/> result that is nonzero.
+        /// </para>
+        /// </returns>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern LONG_PTR SetWindowLongPtrW(
+          [In] HWND hWnd,
+          [In] int nIndex,
+          [In] LONG_PTR dwNewLong
+        );
+
+        /// <summary>
+        /// <para>
+        /// Retrieves information about the specified window.
+        /// The function also retrieves the value at a
+        /// specified offset into the extra window memory.
+        /// </para>
+        /// <para>
+        /// <b>Note:</b>
+        /// To write code that is compatible with both 32-bit
+        /// and 64-bit versions of Windows, use <c>GetWindowLongPtr</c>.
+        /// When compiling for 32-bit Windows, <c>GetWindowLongPtr</c>
+        /// is defined as a call to the <c>GetWindowLong</c> function.
+        /// </para>
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window and, indirectly, the class to which the window belongs.
+        /// </param>
+        /// <param name="nIndex">
+        /// The zero-based offset to the value to be retrieved.
+        /// Valid values are in the range zero through the number of bytes
+        /// of extra window memory, minus the size of a <see cref="LONG_PTR"/>.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is the requested value.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// <para>
+        /// If <see cref="SetWindowLongW"/> or <see cref="SetWindowLongPtrW"/> has not been called previously,
+        /// <c>GetWindowLongPtrW</c> returns zero for values in the extra window or class memory.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// Reserve extra window memory by specifying a nonzero value in the <c>cbWndExtra</c> member
+        /// of the <see cref="WNDCLASSEXW"/> structure used with the <see cref="RegisterClassExW"/> function.
+        /// </remarks>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern LONG_PTR GetWindowLongPtrW(
+          [In] HWND hWnd,
+          [In] int nIndex
+        );
+
+        /// <summary>
+        /// The <c>ScreenToClient</c> function converts the screen coordinates
+        /// of a specified point on the screen to client-area coordinates.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window whose client area will be used for the conversion.
+        /// </param>
+        /// <param name="lpPoint">
+        /// A pointer to a <see cref="POINT"/> structure that specifies the screen coordinates to be converted.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The function uses the window identified by the <paramref name="hWnd"/> parameter and the
+        /// screen coordinates given in the <see cref="POINT"/> structure to compute client coordinates.
+        /// It then replaces the screen coordinates with the client coordinates.
+        /// The new coordinates are relative to the upper-left corner of the
+        /// specified window's client area.
+        /// </para>
+        /// <para>
+        /// The <c>ScreenToClient</c> function assumes the specified point is in screen coordinates.
+        /// </para>
+        /// <para>
+        /// All coordinates are in device units.
+        /// </para>
+        /// <para>
+        /// Do not use <c>ScreenToClient</c> when in a mirroring situation, that is, when changing from
+        /// left-to-right layout to right-to-left layout. Instead, use <see cref="MapWindowPoints"/>.
+        /// For more information, see "Window Layout and Mirroring" in
+        /// <see href="https://learn.microsoft.com/en-us/windows/desktop/winmsg/window-features">Window Features</see>.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern BOOL ScreenToClient(
+          [In] HWND hWnd,
+               POINT* lpPoint
+        );
+
+        /// <summary>
+        /// The <c>ClientToScreen</c> function converts the client-area
+        /// coordinates of a specified point to screen coordinates.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window whose client area is used for the conversion.
+        /// </param>
+        /// <param name="lpPoint">
+        /// A pointer to a <see cref="POINT"/> structure that contains the client coordinates to be converted.
+        /// The new screen coordinates are copied into this structure if the function succeeds.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The <c>ClientToScreen</c> function replaces the client-area coordinates
+        /// in the <see cref="POINT"/> structure with the screen coordinates. The screen
+        /// coordinates are relative to the upper-left corner of the screen.
+        /// Note, a screen-coordinate point that is above the window's client
+        /// area has a negative y-coordinate. Similarly, a screen coordinate
+        /// to the left of a client area has a negative x-coordinate.
+        /// </para>
+        /// <para>
+        /// All coordinates are device coordinates.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern BOOL ClientToScreen(
+          [In] HWND hWnd,
+          [In, Out] POINT* lpPoint
+        );
+
+        /// <summary>
+        /// Retrieves a handle to the child window at the specified point.
+        /// The search is restricted to immediate child windows;
+        /// grandchildren and deeper descendant windows are not searched.
+        /// </summary>
+        /// <param name="hwndParent">
+        /// A handle to the window whose child is to be retrieved.
+        /// </param>
+        /// <param name="ptParentClientCoords">
+        /// A <see cref="POINT"/> structure that defines the client
+        /// coordinates of the point to be checked.
+        /// </param>
+        /// <returns>
+        /// The return value is a handle to the child window that contains the specified point.
+        /// </returns>
+        /// <remarks>
+        /// <c>RealChildWindowFromPoint</c> treats <c>HTTRANSPARENT</c> areas of a standard
+        /// control differently from other areas of the control; it returns
+        /// the child window behind a transparent part of a control.
+        /// In contrast, <see cref="ChildWindowFromPoint"/> treats <c>HTTRANSPARENT</c> areas
+        /// of a control the same as other areas. For example, if the point
+        /// is in a transparent area of a groupbox, <c>RealChildWindowFromPoint</c>
+        /// returns the child window behind a groupbox, whereas <see cref="ChildWindowFromPoint"/>
+        /// returns the groupbox. However, both APIs return a static field, even
+        /// though it, too, returns <c>HTTRANSPARENT</c>.
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND RealChildWindowFromPoint(
+          [In] HWND hwndParent,
+          [In] POINT ptParentClientCoords
+        );
+
+        /// <summary>
+        /// Determines which, if any, of the child windows belonging to the specified
+        /// parent window contains the specified point. The function can ignore invisible,
+        /// disabled, and transparent child windows. The search is restricted to
+        /// immediate child windows. Grandchildren and deeper descendants are not searched.
+        /// </summary>
+        /// <param name="hwnd">
+        /// A handle to the parent window.
+        /// </param>
+        /// <param name="pt">
+        /// A structure that defines the client coordinates
+        /// (relative to <paramref name="hwnd"/>) of the point to be checked.
+        /// </param>
+        /// <param name="flags">
+        /// The child windows to be skipped.
+        /// See <see cref="CWP"/>
+        /// </param>
+        /// <returns>
+        /// The return value is a handle to the first child window that
+        /// contains the point and meets the criteria specified by <paramref name="flags"/>.
+        /// If the point is within the parent window but not within any
+        /// child window that meets the criteria, the return value is a
+        /// handle to the parent window. If the point lies outside the
+        /// parent window or if the function fails, the return value is <c>NULL</c>.
+        /// </returns>
+        /// <remarks>
+        /// The system maintains an internal list that contains the handles of the
+        /// child windows associated with a parent window. The order of the
+        /// handles in the list depends on the Z order of the child windows.
+        /// If more than one child window contains the specified point, the
+        /// system returns a handle to the first window in the list that contains
+        /// the point and meets the criteria specified by <paramref name="flags"/>.
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND ChildWindowFromPointEx(
+          [In] HWND hwnd,
+          [In] POINT pt,
+          [In] UINT flags
+        );
+
+        /// <summary>
+        /// <para>
+        /// Determines which, if any, of the child windows belonging to a parent
+        /// window contains the specified point. The search is restricted to
+        /// immediate child windows. Grandchildren, and
+        /// deeper descendant windows are not searched.
+        /// </para>
+        /// <para>
+        /// To skip certain child windows, use the <see cref="ChildWindowFromPointEx"/> function.
+        /// </para>
+        /// </summary>
+        /// <param name="hWndParent">
+        /// A handle to the parent window.
+        /// </param>
+        /// <param name="Point">
+        /// A structure that defines the client coordinates,
+        /// relative to <paramref name="hWndParent"/>, of the point to be checked.
+        /// </param>
+        /// <returns>
+        /// The return value is a handle to the child window that contains the point,
+        /// even if the child window is hidden or disabled.
+        /// If the point lies outside the parent window, the return value is <c>NULL</c>.
+        /// If the point is within the parent window but not within any child window,
+        /// the return value is a handle to the parent window.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The system maintains an internal list, containing the handles of the
+        /// child windows associated with a parent window. The order of the handles
+        /// in the list depends on the Z order of the child windows. If more than
+        /// one child window contains the specified point, the system returns a
+        /// handle to the first window in the list that contains the point.
+        /// </para>
+        /// <para>
+        /// <c>ChildWindowFromPoint</c> treats an <c>HTTRANSPARENT</c> area of a standard control
+        /// the same as other parts of the control. In contrast,
+        /// <see cref="RealChildWindowFromPoint"/> treats an <c>HTTRANSPARENT</c> area differently;
+        /// it returns the child window behind a transparent area of a control.
+        /// For example, if the point is in a transparent area of a groupbox,
+        /// <c>ChildWindowFromPoint</c> returns the groupbox while <see cref="RealChildWindowFromPoint"/>
+        /// returns the child window behind the groupbox. However, both APIs return a
+        /// static field, even though it, too, returns <c>HTTRANSPARENT</c>.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND ChildWindowFromPoint(
+          [In] HWND hWndParent,
+          [In] POINT Point
+        );
+
+        /// <summary>
+        /// Shows or hides all pop-up windows owned by the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window that owns the pop-up windows to be shown or hidden.
+        /// </param>
+        /// <param name="fShow">
+        /// If this parameter is <c>TRUE</c>, all hidden pop-up windows are shown.
+        /// If this parameter is <c>FALSE</c>, all visible pop-up windows are hidden.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <c>ShowOwnedPopups</c> shows only windows hidden by a previous call to <c>ShowOwnedPopups</c>.
+        /// For example, if a pop-up window is hidden by using the <see cref="ShowWindow"/> function,
+        /// subsequently calling <c>ShowOwnedPopups</c> with the <paramref name="fShow"/> parameter set to
+        /// <c>TRUE</c> does not cause the window to be shown.
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL ShowOwnedPopups(
+          [In] HWND hWnd,
+          [In] BOOL fShow
+        );
+
+        /// <summary>
+        /// Determines which pop-up window owned by the specified window was most recently active.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the owner window.
+        /// </param>
+        /// <returns>
+        /// The return value identifies the most recently active pop-up window.
+        /// The return value is the same as the <paramref name="hWnd"/> parameter,
+        /// if any of the following conditions are met:
+        /// <list type="bullet">
+        /// <item>
+        /// The window identified by <paramref name="hWnd"/> was most recently active.
+        /// </item>
+        /// <item>
+        /// The window identified by <paramref name="hWnd"/> does not own any pop-up windows.
+        /// </item>
+        /// <item>
+        /// The window identifies by <paramref name="hWnd"/> is not a top-level window,
+        /// or it is owned by another window.
+        /// </item>
+        /// </list>
+        /// </returns>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND GetLastActivePopup(
+          [In] HWND hWnd
+        );
+
+        /// <summary>
+        /// Retrieves a handle to the menu assigned to the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window whose menu handle is to be retrieved.
+        /// </param>
+        /// <returns>
+        /// The return value is a handle to the menu. If the specified window has no menu,
+        /// the return value is <c>NULL</c>. If the window is a child window,
+        /// the return value is undefined.
+        /// </returns>
+        /// <remarks>
+        /// <c>GetMenu</c> does not work on floating menu bars.
+        /// Floating menu bars are custom controls that mimic standard menus;
+        /// they are not menus. To get the handle on a floating menu bar,
+        /// use the <see href="https://learn.microsoft.com/en-us/previous-versions/ms971350(v=msdn.10)">Active Accessibility</see> APIs.
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HMENU GetMenu(
+          [In] HWND hWnd
+        );
+
+        /// <summary>
+        /// Assigns a new menu to the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window to which the menu is to be assigned.
+        /// </param>
+        /// <param name="hMenu">
+        /// A handle to the new menu. If this parameter is <c>NULL</c>, the window's current menu is removed.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The window is redrawn to reflect the menu change.
+        /// A menu can be assigned to any window that is not a child window.
+        /// </para>
+        /// <para>
+        /// The SetMenu function replaces the previous menu, if any, but it does not destroy it.
+        /// An application should call the <see cref="DestroyMenu"/> function to accomplish this task.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL SetMenu(
+          [In] HWND hWnd,
+          [In, Optional] HMENU hMenu
+        );
+
+        /// <summary>
+        /// Retrieves a handle to the window (if any) that has captured the mouse.
+        /// Only one window at a time can capture the mouse; this window
+        /// receives mouse input whether or not the cursor is within its borders.
+        /// </summary>
+        /// <returns>
+        /// The return value is a handle to the capture window associated with the current thread.
+        /// If no window in the thread has captured the mouse, the return value is <c>NULL</c>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// A <c>NULL</c> return value means the current thread has not captured the mouse.
+        /// However, it is possible that another thread or process has captured the mouse.
+        /// </para>
+        /// <para>
+        /// To get a handle to the capture window on another thread, use the <see cref="GetGUIThreadInfo"/> function.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND GetCapture();
+
+        /// <summary>
+        /// Retrieves the window handle to the active window
+        /// attached to the calling thread's message queue.
+        /// </summary>
+        /// <returns>
+        /// The return value is the handle to the active window attached to the
+        /// calling thread's message queue. Otherwise, the return value is <c>NULL</c>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// To get the handle to the foreground window, you can use <see cref="GetForegroundWindow"/>.
+        /// </para>
+        /// <para>
+        /// To get the window handle to the active window in the
+        /// message queue for another thread, use <see cref="GetGUIThreadInfo"/>.
+        /// </para>
+        /// </remarks>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND GetActiveWindow();
+
         /// <summary>
         /// Retrieves the full path and file name of the module associated with the specified window handle.
         /// </summary>
@@ -19,6 +512,48 @@ namespace Win32
         /// <returns>
         /// The return value is the total number of characters copied into the buffer.
         /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This function is intended for use with applications that allow
+        /// the user to customize the environment.
+        /// </para>
+        /// <para>
+        /// A keyboard layout name should be derived from the hexadecimal
+        /// value of the language identifier corresponding to the layout.
+        /// For example, U.S. English has a language identifier of 0x0409,
+        /// so the primary U.S. English layout is named "00000409". Variants of U.S. English layout,
+        /// such as the Dvorak layout, are named "00010409", "00020409" and so on.For a list of the
+        /// primary language identifiers and sublanguage identifiers that make
+        /// up a language identifier, see the <see cref="LanguageMacros.MAKELANGID"/> macro.
+        /// </para>
+        /// <para>
+        /// There is a difference between the High Contrast color scheme and
+        /// the High Contrast Mode. The High Contrast color scheme changes the
+        /// system colors to colors that have obvious contrast; you switch to
+        /// this color scheme by using the Display Options in the control panel.
+        /// The High Contrast Mode, which uses <c>SPI_GETHIGHCONTRAST</c> and <c>SPI_SETHIGHCONTRAST</c>,
+        /// advises applications to modify their appearance for visually-impaired users.
+        /// It involves such things as audible warning to users and customized
+        /// color scheme (using the Accessibility Options in the control panel).
+        /// For more information, see <see href="https://learn.microsoft.com/en-us/windows/desktop/api/winuser/ns-winuser-highcontrasta">HIGHCONTRAST</see>.
+        /// For more information on general accessibility features, see <see href="https://learn.microsoft.com/en-us/windows/desktop/accessibility">Accessibility</see>.
+        /// </para>
+        /// <para>
+        /// During the time that the primary button is held down to activate the Mouse ClickLock feature,
+        /// the user can move the mouse. After the primary button is locked down,
+        /// releasing the primary button does not result in a <see cref="WM.WM_LBUTTONUP"/> message.
+        /// Thus, it will appear to an application that the primary button is still down.
+        /// Any subsequent button message releases the primary button, sending a <see cref="WM.WM_LBUTTONUP"/> message
+        /// to the application, thus the button can be unlocked programmatically or
+        /// through the user clicking any button.
+        /// </para>
+        /// <para>
+        /// This API is not DPI aware, and should not be used if the calling
+        /// thread is per-monitor DPI aware.For the DPI-aware version of this API,
+        /// see <see href="https://learn.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-systemparametersinfofordpi">SystemParametersInfoForDPI</see>. For more information on DPI awareness,
+        /// see <see href="https://learn.microsoft.com/en-us/windows/desktop/hidpi/high-dpi-desktop-application-development-on-windows">the Windows High DPI documentation</see>.
+        /// </para>
+        /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern UINT GetWindowModuleFileNameW(
           [In] HWND hwnd,
@@ -307,36 +842,6 @@ namespace Win32
         [DllImport("User32.dll", SetLastError = true)]
         public static extern HWND WindowFromPoint(
           [In] POINT Point
-        );
-
-        /// <summary>
-        /// Determines whether the calling thread is already a GUI thread.
-        /// It can also optionally convert the thread to a GUI thread.
-        /// </summary>
-        /// <param name="bConvert">
-        /// If <c>TRUE</c> and the thread is not a GUI thread, convert the thread to a GUI thread.
-        /// </param>
-        /// <returns>
-        /// <para>
-        /// The function returns a nonzero value in the following situations:
-        /// <list type="bullet">
-        /// <item>
-        /// If the calling thread is already a GUI thread.
-        /// </item>
-        /// <item>
-        /// If <c>bConvert</c> is <c>TRUE</c> and the function successfully converts the thread to a GUI thread.
-        /// </item>
-        /// </list>
-        /// Otherwise, the function returns zero.
-        /// </para>
-        /// <para>
-        /// If <c>bConvert</c> is <c>TRUE</c> and the function cannot successfully convert
-        /// the thread to a GUI thread, <c>IsGUIThread</c> returns <c>ERROR_NOT_ENOUGH_MEMORY</c>.
-        /// </para>
-        /// </returns>
-        [DllImport("User32.dll", SetLastError = true)]
-        public static extern BOOL IsGUIThread(
-          [In] BOOL bConvert
         );
 
         /// <summary>
@@ -748,43 +1253,6 @@ namespace Win32
           [In] DWORD dwFlags
         );
 
-        [DllImport("User32.dll", SetLastError = true)]
-        public static extern int GetSystemMetrics(
-          [In] int nIndex
-        );
-
-        [DllImport("User32.dll", SetLastError = true)]
-        public static extern BOOL GetCursorPos(
-          [Out] out POINT lpPoint
-        );
-
-        [DllImport("User32.dll", SetLastError = true)]
-        public static extern BOOL SetCursorPos(
-          [In] int X,
-          [In] int Y
-        );
-
-        /// <summary>
-        /// Retrieves information about the global cursor.
-        /// </summary>
-        /// <param name="pci">
-        /// A pointer to a <see cref="CURSORINFO"/> structure that receives the information.
-        /// Note that you must set the <c>cbSize</c> member to <see langword="sizeof"/>(<see cref="CURSORINFO"/>) before calling this function.
-        /// </param>
-        /// <returns>
-        /// <para>
-        /// If the function succeeds, the return value is nonzero.
-        /// </para>
-        /// <para>
-        /// If the function fails, the return value is zero.
-        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
-        /// </para>
-        /// </returns>
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetCursorInfo(
-          [In, Out] CURSORINFO* pci
-        );
-
         /// <summary>
         /// Retrieves the identifier of the thread that created the
         /// specified window and, optionally, the identifier of the process that created the window.
@@ -808,105 +1276,6 @@ namespace Win32
         unsafe public static extern DWORD GetWindowThreadProcessId(
           [In] HWND hWnd,
           [Out, Optional] DWORD* lpdwProcessId
-        );
-
-        /// <summary>
-        /// Retrieves information about the active window or a specified GUI thread.
-        /// </summary>
-        /// <param name="idThread">
-        /// The identifier for the thread for which information is to be retrieved.
-        /// To retrieve this value, use the <see cref="GetWindowThreadProcessId"/> function.
-        /// If this parameter is <c>NULL</c>, the function returns information for the foreground thread.
-        /// </param>
-        /// <param name="pgui">
-        /// A pointer to a <see cref="GUITHREADINFO"/> structure that receives information describing the thread.
-        /// Note that you must set the cbSize member to <see langword="sizeof"/>(<see cref="GUITHREADINFO"/>) before calling
-        /// this function.
-        /// </param>
-        /// <returns>
-        /// <para>
-        /// If the function succeeds, the return value is nonzero.
-        /// </para>
-        /// <para>
-        /// If the function fails, the return value is zero.
-        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
-        /// </para>
-        /// </returns>
-        /// <remarks>
-        /// <para>
-        /// This function succeeds even if the active window is not owned by the calling process.
-        /// If the specified thread does not exist or have an input queue, the function will fail.
-        /// </para>
-        /// <para>
-        /// This function is useful for retrieving out-of-context information about a thread.
-        /// The information retrieved is the same as if an application retrieved the information about itself.
-        /// </para>
-        /// <para>
-        /// For an edit control, the returned rcCaret rectangle contains the caret plus information on
-        /// text direction and padding. Thus, it may not give the correct position of the cursor.
-        /// The Sans Serif font uses four characters for the cursor:
-        /// <list type="table">
-        /// <item>
-        /// <term>
-        /// CURSOR_LTR
-        /// </term>
-        /// <description>
-        /// 0xf00c
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <term>
-        /// CURSOR_RTL
-        /// </term>
-        /// <description>
-        /// 0xf00d
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <term>
-        /// CURSOR_THAI
-        /// </term>
-        /// <description>
-        /// 0xf00e
-        /// </description>
-        /// </item>
-        /// <item>
-        /// <term>
-        /// CURSOR_USA
-        /// </term>
-        /// <description>
-        /// 0xfff (this is a marker value with no associated glyph)
-        /// </description>
-        /// </item>
-        /// </list>
-        /// </para>
-        /// <para>
-        /// To get the actual insertion point in the <c>rcCaret</c> rectangle, perform the following steps.
-        /// <list type="number">
-        /// <item>
-        /// Call <see cref="GetKeyboardLayout"/> to retrieve the current input language.
-        /// </item>
-        /// <item>
-        /// Determine the character used for the cursor, based on the current input language.
-        /// </item>
-        /// <item>
-        /// Call <see cref="CreateFont"/> using Sans Serif for the font,
-        /// the height given by <c>rcCaret</c>, and a width of <c>zero</c>.
-        /// For <c>fnWeight</c>, call <c>SystemParametersInfo(SPI_GETCARETWIDTH, 0, pvParam, 0)</c>.
-        /// If <c>pvParam</c> is greater than 1, set <c>fnWeight</c> to 700, otherwise set <c>fnWeight</c> to 400.
-        /// </item>
-        /// </list>
-        /// </para>
-        /// <para>
-        /// The function may not return valid window handles in the
-        /// <see cref="GUITHREADINFO"/> structure when called to retrieve information
-        /// for the foreground thread, such as when a window is losing activation.
-        /// </para>
-        /// </remarks>
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetGUIThreadInfo(
-          [In] DWORD idThread,
-          [In, Out] GUITHREADINFO* pgui
         );
 
         /// <summary>
@@ -1402,151 +1771,205 @@ namespace Win32
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern HWND GetParent(
-              [In] HWND hWnd
-            );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern LRESULT SendMessage(
-              [In] HWND hWnd,
-              [In] UINT Msg,
-              [In] WPARAM wParam,
-              [In] LPARAM lParam
-            );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern LONG_PTR GetWindowLongPtrW(
-          [In] HWND hWnd,
-          [In] int nIndex
+          [In] HWND hWnd
         );
 
+        /// <summary>
+        /// <para>
+        /// Destroys the specified window. The function sends <see cref="WM.WM_DESTROY"/> and
+        /// <see cref="WM.WM_NCDESTROY"/> messages to the window to deactivate it and remove
+        /// the keyboard focus from it. The function also destroys the window's menu,
+        /// flushes the thread message queue, destroys timers, removes clipboard
+        /// ownership, and breaks the clipboard viewer chain (if the window is at
+        /// the top of the viewer chain).
+        /// </para>
+        /// <para>
+        /// If the specified window is a parent or owner window, <c>DestroyWindow</c>
+        /// automatically destroys the associated child or owned windows when it
+        /// destroys the parent or owner window. The function first destroys
+        /// child or owned windows, and then it destroys the parent or owner window.
+        /// </para>
+        /// <para>
+        /// <c>DestroyWindow</c> also destroys modeless dialog boxes created
+        /// by the <see cref="CreateDialog"/> function.
+        /// </para>
+        /// </summary>
+        /// <param name="hWnd">
+        /// A handle to the window to be destroyed.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// A thread cannot use <c>DestroyWindow</c> to destroy a window created by a different thread.
+        /// </para>
+        /// <para>
+        /// If the window being destroyed is a child window that does not have
+        /// the <see cref="WS.EX_NOPARENTNOTIFY"/> style, a <see cref="WM.WM_PARENTNOTIFY"/> message is sent to the parent.
+        /// </para>
+        /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern BOOL DestroyWindow(
           [In] HWND hWnd
         );
 
         /// <summary>
-        /// Displays a modal dialog box that contains a system icon,
-        /// a set of buttons, and a brief application-specific message,
-        /// such as status or error information. The message box returns
-        /// an integer value that indicates which button the user clicked.
+        /// Creates an overlapped, pop-up, or child window with an extended
+        /// window style; otherwise, this function is identical to the
+        /// <see cref="CreateWindowW"/> function. For more information about creating
+        /// a window and for full descriptions of the other parameters
+        /// of <c>CreateWindowExW</c>, see <see cref="CreateWindowW"/>.
         /// </summary>
-        /// <param name="hWnd">
-        /// A handle to the owner window of the message box to be created.
-        /// If this parameter is <c>NULL</c>, the message box has no owner window.
+        /// <param name="dwExStyle">
+        /// The extended window style of the window being created.
+        /// For a list of possible values,
+        /// see <see href="https://learn.microsoft.com/en-us/windows/desktop/winmsg/extended-window-styles">Extended Window Styles</see>.
         /// </param>
-        /// <param name="text">
-        /// The message to be displayed. If the string consists of more
-        /// than one line, you can separate the lines using a carriage return
-        /// and/or linefeed character between each line.
+        /// <param name="lpClassName">
+        /// A null-terminated string or a class atom created by a previous
+        /// call to the <see cref="RegisterClassW"/> or <see cref="RegisterClassExW"/> function.
+        /// The atom must be in the low-order word of <paramref name="lpClassName"/>;
+        /// the high-order word must be zero. If <paramref name="lpClassName"/> is a string,
+        /// it specifies the window class name. The class name can
+        /// be any name registered with <see cref="RegisterClassW"/> or <see cref="RegisterClassExW"/>,
+        /// provided that the module that registers the class is also
+        /// the module that creates the window. The class name can also
+        /// be any of the predefined system class names.
         /// </param>
-        /// <param name="caption">
-        /// The dialog box title. If this parameter is <c>NULL</c>, the default title is Error.
+        /// <param name="lpWindowName">
+        /// The window name. If the window style specifies a title bar, the window title
+        /// pointed to by <paramref name="lpWindowName"/> is displayed in the title bar. When using
+        /// <see cref="CreateWindowW"/> to create controls, such as buttons, check boxes, and
+        /// static controls, use <paramref name="lpWindowName"/> to specify the text of the control.
+        /// When creating a static control with the <c>SS_ICON</c> style, use <paramref name="lpWindowName"/>
+        /// to specify the icon name or identifier. To specify an identifier,
+        /// use the syntax <c>"#num"</c>.
         /// </param>
-        /// <param name="type">
-        /// The contents and behavior of the dialog box. This parameter can be
-        /// a combination of flags from the following groups of flags.
+        /// <param name="dwStyle">
+        /// The style of the window being created. This parameter can be a combination
+        /// of the
+        /// <see href="https://learn.microsoft.com/en-us/windows/desktop/winmsg/window-styles"> window style values</see>,
+        /// plus the control styles indicated in the Remarks section.
         /// </param>
-        /// <returns></returns>
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern MessageBoxResult MessageBox(
-          [In, Optional] HWND hWnd,
-          [In, Optional] char* lpText,
-          [In, Optional] char* lpCaption,
-          [In] UINT uType
-        );
-
-        unsafe public static MessageBoxResult MessageBox(
-           HWND hWnd,
-           string lbText,
-           string lpCaption,
-           UINT uType)
-        {
-            fixed (char* _lbText = lbText)
-            {
-                fixed (char* _lpCaption = lpCaption)
-                {
-                    return User32.MessageBox(hWnd, _lbText, _lpCaption, uType);
-                }
-            }
-        }
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern BOOL PostMessageW(
-          [In, Optional] HWND hWnd,
-          [In] UINT Msg,
-          [In] WPARAM wParam,
-          [In] LPARAM lParam
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern void PostQuitMessage(
-          [In] int nExitCode
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL InvalidateRect(
-          [In] HWND hWnd,
-          [In] RECT* lpRect,
-          [In] BOOL bErase
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern LRESULT DispatchMessageW(
-            [In] MSG* lpMsg
-        );
-
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetMessageW(
-              [Out] MSG* lpMsg,
-              [In, Optional] HWND hWnd,
-              [In] UINT wMsgFilterMin,
-              [In] UINT wMsgFilterMax
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL PeekMessageW(
-              [Out] MSG* lpMsg,
-              [In, Optional] HWND hWnd,
-              [In] uint wMsgFilterMin,
-              [In] uint wMsgFilterMax,
-              [In] uint wRemoveMsg
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL TranslateMessage(
-          [In] MSG* lpMsg
-        );
-
-
+        /// <param name="X">
+        /// The initial horizontal position of the window.
+        /// For an overlapped or pop-up window, the <paramref name="X"/> parameter is the initial
+        /// x-coordinate of the window's upper-left corner, in screen coordinates.
+        /// For a child window, <paramref name="X"/> is the x-coordinate of the upper-left corner
+        /// of the window relative to the upper-left corner of the parent window's
+        /// client area. If <paramref name="X"/> is set to <c>CW_USEDEFAULT</c>, the system selects the default
+        /// position for the window's upper-left corner and ignores the <paramref name="Y"/> parameter.
+        /// <c>CW_USEDEFAULT</c> is valid only for overlapped windows; if it is specified for
+        /// a pop-up or child window, the <paramref name="X"/> and <paramref name="Y"/> parameters are set to zero.
+        /// </param>
+        /// <param name="Y">
+        /// <para>
+        /// The initial vertical position of the window.
+        /// For an overlapped or pop-up window, the <paramref name="Y"/> parameter is the initial
+        /// y-coordinate of the window's upper-left corner, in screen coordinates.
+        /// For a child window, <paramref name="Y"/> is the initial y-coordinate of the upper-left corner
+        /// of the child window relative to the upper-left corner of the parent window's
+        /// client area. For a list box y is the initial y-coordinate of the upper-left
+        /// corner of the list box's client area relative to the upper-left corner of
+        /// the parent window's client area.
+        /// </para>
+        /// <para>
+        /// If an overlapped window is created with the <see cref="WS.VISIBLE"/> style bit set and
+        /// the <paramref name="X"/> parameter is set to <c>CW_USEDEFAULT</c>,
+        /// then the <paramref name="Y"/> parameter determines
+        /// how the window is shown. If the <paramref name="Y"/> parameter is <c>CW_USEDEFAULT</c>, then the
+        /// window manager calls <see cref="ShowWindow"/> with the <see cref="SW.SHOW"/> flag after the window
+        /// has been created. If the <paramref name="Y"/> parameter is some other value, then the window
+        /// manager calls <see cref="ShowWindow"/> with that value as the <c>nCmdShow</c> parameter.
+        /// </para>
+        /// </param>
+        /// <param name="nWidth">
+        /// The width, in device units, of the window.
+        /// For overlapped windows, <paramref name="nWidth"/> is the window's width, in screen coordinates,
+        /// or <c>CW_USEDEFAULT</c>. If <paramref name="nWidth"/> is <c>CW_USEDEFAULT</c>, the system selects a default
+        /// width and height for the window; the default width extends from the initial
+        /// x-coordinates to the right edge of the screen; the default height extends
+        /// from the initial y-coordinate to the top of the icon area. <c>CW_USEDEFAULT</c>
+        /// is valid only for overlapped windows; if <c>CW_USEDEFAULT</c> is specified for a
+        /// pop-up or child window, the <paramref name="nWidth"/> and <paramref name="nHeight"/> parameter are set to zero.
+        /// </param>
+        /// <param name="nHeight">
+        /// The height, in device units, of the window. For overlapped windows, <paramref name="nHeight"/> is the window's height,
+        /// in screen coordinates. If the <paramref name="nWidth"/> parameter is set
+        /// to <c>CW_USEDEFAULT</c>, the system ignores <paramref name="nHeight"/>.
+        /// </param>
+        /// <param name="hWndParent">
+        /// <para>
+        /// A handle to the parent or owner window of the window being created.
+        /// To create a child window or an owned window, supply a valid window
+        /// handle. This parameter is optional for pop-up windows.
+        /// </para>
+        /// <para>
+        /// To create a
+        /// <see href="https://learn.microsoft.com/en-us/windows/desktop/winmsg/window-features">message-only window</see>,
+        /// supply <c>HWND_MESSAGE</c> or a
+        /// handle to an existing message-only window.
+        /// </para>
+        /// </param>
+        /// <param name="hMenu">
+        /// A handle to a menu, or specifies a child-window identifier,
+        /// depending on the window style. For an overlapped or pop-up window,
+        /// <paramref name="hMenu"/> identifies the menu to be used with the window; it can be
+        /// <c>NULL</c> if the class menu is to be used. For a child window, <paramref name="hMenu"/>
+        /// specifies the child-window identifier, an integer value used by
+        /// a dialog box control to notify its parent about events.
+        /// The application determines the child-window identifier;
+        /// it must be unique for all child windows with the same parent window.
+        /// </param>
+        /// <param name="hInstance">
+        /// A handle to the instance of the module to be associated with the window.
+        /// </param>
+        /// <param name="lpParam">
+        /// <para>
+        /// Pointer to a value to be passed to the window through the <see cref="CREATESTRUCT"/>
+        /// structure (<c>lpCreateParams</c> member) pointed to by the <c>lParam</c> param of
+        /// the <see cref="WM.WM_CREATE"/> message. This message is sent to the created window by
+        /// this function before it returns.
+        /// </para>
+        /// <para>
+        /// If an application calls <see cref="CreateWindowW"/> to create a MDI client window,
+        /// <c>lpParam</c> should point to a <see cref="CLIENTCREATESTRUCT"/> structure.
+        /// If an MDI client window calls <see cref="CreateWindowW"/> to create an MDI
+        /// child window, <c>lpParam</c> should point to a <see cref="MDICREATESTRUCT"/> structure.
+        /// <c>lpParam</c> may be <c>NULL</c> if no additional data is needed.
+        /// </para>
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is a handle to the new window.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is <c>NULL</c>.
+        /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
+        /// </para>
+        /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern HWND CreateWindowExW(
-              [In] DWORD dwExStyle,
-              [In, Optional] char* lpClassName,
-              [In, Optional] char* lpWindowName,
-              [In] DWORD dwStyle,
-              [In] int X,
-              [In] int Y,
-              [In] int nWidth,
-              [In] int nHeight,
-              [In, Optional] HWND hWndParent,
-              [In, Optional] HMENU hMenu,
-              [In, Optional] HINSTANCE hInstance,
-              [In, Optional] void* lpParam
+          [In] DWORD dwExStyle,
+          [In, Optional] char* lpClassName,
+          [In, Optional] char* lpWindowName,
+          [In] DWORD dwStyle,
+          [In] int X,
+          [In] int Y,
+          [In] int nWidth,
+          [In] int nHeight,
+          [In, Optional] HWND hWndParent,
+          [In, Optional] HMENU hMenu,
+          [In, Optional] HINSTANCE hInstance,
+          [In, Optional] void* lpParam
         );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL EndPaint(
-              [In] HWND hWnd,
-              [In] PaintStruct* lpPaint
-        );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern HDC BeginPaint(
-              [In] HWND hWnd,
-              [Out] PaintStruct* lpPaint
-        );
-
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT DefWindowProcW(
@@ -1555,10 +1978,5 @@ namespace Win32
             [In] WPARAM wParam,
             [In] LPARAM lParam
         );
-
-        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern ATOM RegisterClassExW(
-            [In] WNDCLASSEXW* unnamedParam1);
-
     }
 }

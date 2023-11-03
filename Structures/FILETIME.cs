@@ -6,7 +6,7 @@ namespace Win32
     /// Contains a 64-bit value representing the number
     /// of 100-nanosecond intervals since January 1, 1601 (UTC).
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct FILETIME
     {
         /// <summary>

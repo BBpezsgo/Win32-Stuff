@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace Win32.Utilities
 {
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class Window
+    public class Window : IEquatable<Window?>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         HWND _handle;
@@ -53,6 +52,8 @@ namespace Win32.Utilities
             }
         }
 
+        public static explicit operator Window(HWND handle) => new(handle);
+
         /// <param name="newParent">
         /// Handle to the new parent window
         /// </param>
@@ -69,7 +70,7 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public HWND ParentOrOwner
         {
             get
@@ -82,15 +83,18 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public HWND Parent
         {
             set => SetParent(value);
             get => User32.GetAncestor(_handle, GA.PARENT);
         }
 
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public HWND Root => User32.GetAncestor(_handle, GA.ROOT);
+
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public HWND Owner
         {
             get
@@ -122,8 +126,8 @@ namespace Win32.Utilities
 
             return TRUE;
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        unsafe public HWND[] Childs
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        unsafe public Window[] Children
         {
             get
             {
@@ -132,12 +136,17 @@ namespace Win32.Utilities
                 _ = User32.EnumChildWindows(_handle, &EnumChildWindowsProc, GCHandle.ToIntPtr(handle));
                 HWND[] _result = result.ToArray();
                 handle.Free();
-                return _result;
+                Window[] _result2 = new Window[_result.Length];
+                for (int i = 0; i < _result.Length; i++)
+                {
+                    _result2[i] = (Window)_result[i];
+                }
+                return _result2;
             }
         }
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public RECT ClientRect
         {
             get
@@ -157,7 +166,7 @@ namespace Win32.Utilities
         /// If the function fails, the return value is <see langword="false"/>.
         /// </para>
         /// </returns>
-        public bool UpdateWindow()
+        public bool Update()
         {
             BOOL result = User32.UpdateWindow(_handle);
             return result != FALSE;
@@ -173,9 +182,9 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        public static void ArrangeIconicWindows(Window window)
+        public void ArrangeIconicChildWindows()
         {
-            if (User32.ArrangeIconicWindows(window._handle) == 0)
+            if (User32.ArrangeIconicWindows(_handle) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -266,7 +275,7 @@ namespace Win32.Utilities
         public static HWND GetActive() => User32.GetForegroundWindow();
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public TITLEBARINFO TitleBarInfo
         {
             get
@@ -278,17 +287,17 @@ namespace Win32.Utilities
             }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public bool IsMinimized => User32.IsIconic(_handle) != 0;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public bool IsMaximized => User32.IsZoomed(_handle) != 0;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public bool IsVisible => User32.IsWindowVisible(_handle) != 0;
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public unsafe string Text
         {
             get
@@ -317,10 +326,10 @@ namespace Win32.Utilities
             { throw WindowsException.Get(); }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public HWND TopChild => User32.GetTopWindow(_handle);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public static HWND TopWindow => User32.GetTopWindow(HWND.Zero);
 
         /// <exception cref="WindowsException"/>
@@ -331,14 +340,7 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        public static void BringToTop(HWND handle)
-        {
-            if (User32.BringWindowToTop(handle) == 0)
-            { throw WindowsException.Get(); }
-        }
-
-        /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public DWORD ThreadId
         {
             get
@@ -351,7 +353,7 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public (DWORD ThreadId, DWORD ProcessId) ThreadProcessId
         {
             get
@@ -379,7 +381,7 @@ namespace Win32.Utilities
         }
 
         /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public RECT Rect
         {
             get
@@ -391,6 +393,7 @@ namespace Win32.Utilities
             }
         }
 
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public POINT Position
         {
             get
@@ -407,6 +410,7 @@ namespace Win32.Utilities
             }
         }
 
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public SIZE Size
         {
             get
@@ -414,15 +418,16 @@ namespace Win32.Utilities
                 RECT result = default;
                 if (User32.GetWindowRect(_handle, &result) == 0)
                 { throw WindowsException.Get(); }
-                return new Size() { cx = result.Width, cy = result.Height };
+                return new Size() { Width = result.Width, Height = result.Height };
             }
             set
             {
-                if (User32.SetWindowPos(_handle, IntPtr.Zero, 0, 0, value.cx, value.cy, SWP.NOZORDER | SWP.NOMOVE) == 0)
+                if (User32.SetWindowPos(_handle, IntPtr.Zero, 0, 0, value.Width, value.Height, SWP.NOZORDER | SWP.NOMOVE) == 0)
                 { throw WindowsException.Get(); }
             }
         }
 
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public string ModuleFileName
         {
             get
@@ -435,5 +440,173 @@ namespace Win32.Utilities
                 }
             }
         }
+
+        /// <exception cref="WindowsException"/>
+        public void ShowOwnedPopups(bool show)
+        {
+            if (User32.ShowOwnedPopups(_handle, show ? TRUE : FALSE) == 0)
+            { throw WindowsException.Get(); }
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public HWND? LastActivePopup
+        {
+            get
+            {
+                HWND result = User32.GetLastActivePopup(_handle);
+                if (result == _handle)
+                { return null; }
+                return result;
+            }
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static Window? MouseCaptureBy
+        {
+            get
+            {
+                HWND handle = User32.GetCapture();
+                if (handle == HWND.Zero)
+                { return null; }
+                return new Window(handle);
+            }
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static Window? ActiveWindow
+        {
+            get
+            {
+                HWND handle = User32.GetActiveWindow();
+                if (handle == HWND.Zero)
+                { return null; }
+                return new Window(handle);
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public void TileWindows(uint how, HWND[]? windows)
+        {
+            if (windows == null)
+            {
+                if (User32.TileWindows(_handle, how, null, 0, null) == 0)
+                { throw WindowsException.Get(); }
+            }
+            else
+            {
+                fixed (HWND* windowsPtr = windows)
+                {
+                    if (User32.TileWindows(_handle, how, null, (uint)windows.Length, windowsPtr) == 0)
+                    { throw WindowsException.Get(); }
+                }
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public void TileWindows(uint how, RECT rect, HWND[]? windows)
+        {
+            if (windows == null)
+            {
+                if (User32.TileWindows(_handle, how, &rect, 0, null) == 0)
+                { throw WindowsException.Get(); }
+            }
+            else
+            {
+                fixed (HWND* windowsPtr = windows)
+                {
+                    if (User32.TileWindows(_handle, how, &rect, (uint)windows.Length, windowsPtr) == 0)
+                    { throw WindowsException.Get(); }
+                }
+            }
+        }
+
+        public static Window? WindowFromPoint(POINT point)
+        {
+            HWND handle = User32.WindowFromPoint(point);
+            if (handle == HWND.Zero)
+            { return null; }
+            return new Window(handle);
+        }
+
+        public Window? ChildFromPoint(POINT point)
+        {
+            HWND handle = User32.ChildWindowFromPoint(_handle, point);
+            if (handle == HWND.Zero)
+            { return null; }
+            return new Window(handle);
+        }
+
+        public Window? ChildFromPoint(POINT point, uint flags)
+        {
+            HWND handle = User32.ChildWindowFromPointEx(_handle, point, flags);
+            if (handle == HWND.Zero)
+            { return null; }
+            return new Window(handle);
+        }
+
+        unsafe public bool ClientToScreen(ref POINT point)
+        {
+            POINT* pointPtr = (POINT*)System.Runtime.CompilerServices.Unsafe.AsPointer(ref point);
+            int result = User32.ClientToScreen(_handle, pointPtr);
+            return result != 0;
+        }
+
+        unsafe public bool ScreenToClient(ref POINT point)
+        {
+            POINT* pointPtr = (POINT*)System.Runtime.CompilerServices.Unsafe.AsPointer(ref point);
+            int result = User32.ScreenToClient(_handle, pointPtr);
+            return result != 0;
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public bool Enabled
+        {
+            get => User32.IsWindowEnabled(Handle) != FALSE;
+            set => _ = User32.EnableWindow(Handle, value ? TRUE : FALSE);
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public WindowPropertiesContainer Properties => new(_handle);
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        unsafe public string Win32ClassName
+        {
+            get
+            {
+                const int BUFFER_SIZE = 64;
+                fixed (WCHAR* buffer = new string('\0', BUFFER_SIZE))
+                {
+                    int length = User32.GetClassNameW(_handle, buffer, BUFFER_SIZE);
+                    if (length == 0)
+                    { throw WindowsException.Get(); }
+                    return new string(buffer, 0, length);
+                }
+            }
+        }
+
+        public static bool operator ==(Window window, HWND handle) => window.Handle == handle;
+        public static bool operator !=(Window window, HWND handle) => window.Handle != handle;
+        public static bool operator ==(HWND handle, Window window) => window.Handle == handle;
+        public static bool operator !=(HWND handle, Window window) => window.Handle != handle;
+
+        public override bool Equals(object? obj) => obj is Window other && this.Equals(other);
+        public bool Equals(Window? other) => other is not null && _handle.Equals(other._handle);
+
+        public override int GetHashCode() => HashCode.Combine(_handle);
+
+        /// <exception cref="WindowsException"/>
+        unsafe public WINDOWINFO Info
+        {
+            get
+            {
+                WINDOWINFO info = WINDOWINFO.Create();
+                if (User32.GetWindowInfo(_handle, &info) == 0)
+                { throw WindowsException.Get(); }
+                return info;
+            }
+        }
+
+        public LRESULT SendMessage(uint msg, WPARAM wParam, LPARAM lParam) => User32.SendMessage(Handle, msg, wParam, lParam);
     }
 }
