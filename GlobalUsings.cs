@@ -17,6 +17,12 @@ global using HLOCAL = System.IntPtr;
 global using FLOAT = System.Single;
 global using DOUBLE = System.Double;
 global using HBITMAP = System.IntPtr;
+global using HACCEL = System.IntPtr;
+global using HGDIOBJ = System.IntPtr;
+global using SIZE_T = System.UIntPtr;
+global using HGLOBAL = System.IntPtr;
+global using HRGN = System.IntPtr;
+global using HPEN = System.IntPtr;
 
 // Integer types
 
@@ -65,6 +71,7 @@ global using CHAR = System.Byte;
 
 global using RECT = Win32.Rect;
 global using POINT = Win32.Point;
+global using POINTL = Win32.Point;
 global using CURSORINFO = Win32.CursorInfo;
 global using GUITHREADINFO = Win32.GuiThreadInfo;
 global using PBRANGE = Win32.ProgressBarRange;
@@ -78,6 +85,9 @@ global using MENUITEMINFOW = Win32.MenuItemInfo;
 global using MENUINFO = Win32.MenuInfo;
 global using MENUBARINFO = Win32.MenuBarInfo;
 global using TPMPARAMS = Win32.TpmParams;
+global using SMALL_RECT = Win32.SmallRect;
+
+global using Win32.LowLevel;
 
 public static class Constants
 {

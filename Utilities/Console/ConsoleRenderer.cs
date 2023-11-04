@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 
-namespace Win32.Utilities
+namespace Win32
 {
     public partial class ConsoleRenderer : IDisposable
     {
@@ -42,7 +42,7 @@ namespace Win32.Utilities
 
             ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
             Array.Fill(ConsoleBuffer, new CharInfo(' ', 0));
-            ConsoleRect = new SmallRect() { Left = 0, Top = 0, Right = BufferWidth, Bottom = BufferHeight };
+            ConsoleRect = new SmallRect(0, 0, BufferWidth, BufferHeight);
         }
 
         public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
@@ -64,7 +64,7 @@ namespace Win32.Utilities
                     SafeHandle,
                     ConsoleBuffer,
                     new Coord(BufferWidth, BufferHeight),
-                    new Coord(0, 0),
+                    default,
                     ref ConsoleRect) == 0)
                 { throw WindowsException.Get(); }
             }
@@ -72,7 +72,7 @@ namespace Win32.Utilities
             {
                 if (Kernel32.WriteConsoleOutput(Handle, ConsoleBuffer,
                     new Coord(BufferWidth, BufferHeight),
-                    new Coord(0, 0),
+                    default,
                     ref ConsoleRect) == 0)
                 { throw WindowsException.Get(); }
             }
@@ -86,7 +86,7 @@ namespace Win32.Utilities
             BufferHeight = (short)Console.WindowHeight;
 
             ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
-            ConsoleRect = new SmallRect() { Left = 0, Top = 0, Right = BufferWidth, Bottom = BufferHeight };
+            ConsoleRect = new SmallRect(0, 0, BufferWidth, BufferHeight);
         }
 
         public void Dispose()

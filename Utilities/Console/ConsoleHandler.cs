@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win32.Utilities
+namespace Win32
 {
     public static class ConsoleHandler
     {

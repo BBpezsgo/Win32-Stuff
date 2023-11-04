@@ -1,4 +1,4 @@
-namespace Win32.Utilities
+namespace Win32
 {
     public static partial class Mouse
     {
