@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Win32
 {
@@ -57,9 +59,21 @@ namespace Win32
         COLORSPACE = OBJ.COLORSPACE,
     }
 
-    public struct DC
+    public abstract class DC : IDisposable, IEquatable<DC?>
     {
-        /// <exception cref="NotWindowsException"/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected HDC Handle;
+        bool IsDisposed;
+
+        protected DC(HDC handle)
+        {
+            Handle = handle;
+            IsDisposed = false;
+        }
+
+        public static implicit operator HDC(DC dc) => dc.Handle;
+
+        /// <exception cref="GdiException"/>
         public static void CopyTo(RECT sourceRect, HDC source, RECT destinationRect, HDC destination)
         {
             if (Gdi32.StretchBlt(destination,
@@ -69,10 +83,10 @@ namespace Win32
                 sourceRect.X, sourceRect.Y,
                 sourceRect.Width, sourceRect.Height,
                 0x00CC0020) == 0) // SRCCOPY = 0x00CC0020
-            { throw new NotWindowsException($"{nameof(Gdi32.StretchBlt)} has failed"); }
+            { throw new GdiException($"{nameof(Gdi32.StretchBlt)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public static void CopyTo(POINT sourceStart, HDC source, RECT destinationRect, HDC destination)
         {
             if (Gdi32.BitBlt(destination,
@@ -81,166 +95,237 @@ namespace Win32
                 source,
                 sourceStart.X, sourceStart.Y,
                 0x00CC0020) == 0) // SRCCOPY = 0x00CC0020
-            { throw new NotWindowsException($"{nameof(Gdi32.BitBlt)} has failed"); }
+            { throw new GdiException($"{nameof(Gdi32.BitBlt)} has failed"); }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static GdiColor GetPixel(HDC dc, int x, int y) => Gdi32.GetPixel(dc, x, y);
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void SetPixel(HDC dc, int x, int y, GdiColor color)
+        /// <exception cref="GdiException"/>
+        unsafe public SIZE MeasureText(string text)
         {
-            if (Gdi32.SetPixel(dc, x, y, color) == unchecked((uint)-1))
-            { throw new NotWindowsException($"{nameof(Gdi32.SetPixel)} has failed"); }
+            SIZE size = default;
+            fixed (WCHAR* textPtr = text)
+            {
+                if (Gdi32.GetTextExtentPoint32W(Handle, textPtr, text.Length, &size) == FALSE)
+                { throw new GdiException($"{nameof(Gdi32.GetTextExtentPoint32W)} has failed"); }
+            }
+            return size;
         }
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void SetPixelV(HDC dc, int x, int y, GdiColor color)
+        /// <exception cref="GdiException"/>
+        unsafe public void MoveTo(POINT point)
         {
-            if (Gdi32.SetPixelV(dc, x, y, color) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.SetPixelV)} has failed"); }
+            if (Gdi32.MoveToEx(Handle, point.X, point.Y, null) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
         }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void SetStretchMode(HDC dc, StretchMode mode)
+        /// <exception cref="GdiException"/>
+        unsafe public void MoveTo(int x, int y)
         {
-            if (Gdi32.SetStretchBltMode(dc, (int)mode) == FALSE)
-            { throw new NotWindowsException($"{nameof(Gdi32.SetStretchBltMode)} has failed"); }
+            if (Gdi32.MoveToEx(Handle, x, y, null) == 0)
+            { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static StretchMode GetStretchMode(HDC dc)
+        /// <exception cref="GdiException"/>
+        unsafe public void LineTo(POINT point)
         {
-            StretchMode mode = (StretchMode)Gdi32.GetStretchBltMode(dc);
-            if (!Enum.IsDefined(mode))
-            { throw new NotWindowsException($"Invalid {nameof(StretchMode)} {mode}"); }
-            return mode;
+            if (Gdi32.LineTo(Handle, point.X, point.Y) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.LineTo)} has failed"); }
         }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static GdiColor GetBrushColor(HDC dc)
+        /// <exception cref="GdiException"/>
+        unsafe public void LineTo(int x, int y)
         {
-            COLORREF color = Gdi32.GetDCBrushColor(dc);
-            if (color == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.GetDCBrushColor)} has failed"); }
-            return color;
+            if (Gdi32.LineTo(Handle, x, y) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.LineTo)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void SetBrushColor(HDC dc, GdiColor color)
-        {
-            COLORREF prevColor = Gdi32.SetDCBrushColor(dc, color);
-            if (prevColor == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.SetDCBrushColor)} has failed"); }
-        }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static GdiColor GetPenColor(HDC dc)
-        {
-            COLORREF color = Gdi32.GetDCPenColor(dc);
-            if (color == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.GetDCPenColor)} has failed"); }
-            return color;
-        }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void SetPenColor(HDC dc, GdiColor color)
-        {
-            COLORREF prevColor = Gdi32.SetDCPenColor(dc, color);
-            if (prevColor == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.SetDCPenColor)} has failed"); }
-        }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void MoveTo(HDC dc, POINT point) => DC.MoveTo(dc, point.X, point.Y);
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void MoveTo(HDC dc, int x, int y)
-        {
-            if (Gdi32.MoveToEx(dc, x, y, null) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.MoveToEx)} has failed"); }
-        }
-
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void LineTo(HDC dc, POINT point) => DC.LineTo(dc, point.X, point.Y);
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void LineTo(HDC dc, int x, int y)
-        {
-            if (Gdi32.LineTo(dc, x, y) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.LineTo)} has failed"); }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void DrawText(HDC dc, string text, RECT rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, RECT rect, uint format = DT.CENTER | DT.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
-            { _ = User32.DrawTextW(dc, textPtr, text.Length, &rect, format); }
+            { _ = User32.DrawTextW(Handle, textPtr, text.Length, &rect, format); }
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void DrawText(HDC dc, string text, RECT* rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, RECT* rect, uint format = DT.CENTER | DT.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
-            { _ = User32.DrawTextW(dc, textPtr, text.Length, rect, format); }
+            { _ = User32.DrawTextW(Handle, textPtr, text.Length, rect, format); }
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void DrawText(HDC dc, string text, ref RECT rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, ref RECT rect, uint format = DT.CENTER | DT.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
-            { _ = User32.DrawTextW(dc, textPtr, text.Length, (RECT*)Unsafe.AsPointer(ref rect), format); }
+            { _ = User32.DrawTextW(Handle, textPtr, text.Length, (RECT*)Unsafe.AsPointer(ref rect), format); }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SelectObject(HDC dc, HGDIOBJ obj) => Gdi32.SelectObject(dc, obj);
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void DrawRect(HDC dc, RECT rect)
+        /// <exception cref="GdiException"/>
+        unsafe public void DrawRect(RECT rect)
         {
-            if (Gdi32.Rectangle(dc, rect.Left, rect.Top, rect.Right, rect.Bottom) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.Rectangle)} has failed"); }
+            if (Gdi32.Rectangle(Handle, rect.Left, rect.Top, rect.Right, rect.Bottom) == 0)
+            { throw new GdiException($"{nameof(Gdi32.Rectangle)} has failed"); }
         }
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe public static void DrawRect(HDC dc, int left, int top, int right, int bottom)
+        /// <exception cref="GdiException"/>
+        unsafe public void DrawRect(int left, int top, int right, int bottom)
         {
-            if (Gdi32.Rectangle(dc, left, top, right, bottom) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.Rectangle)} has failed"); }
+            if (Gdi32.Rectangle(Handle, left, top, right, bottom) == 0)
+            { throw new GdiException($"{nameof(Gdi32.Rectangle)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetBgColor(HDC dc, GdiColor color)
+        /// <exception cref="GdiException"/>
+        public void DrawEllipse(RECT rect)
         {
-            if (Gdi32.SetBkColor(dc, color) == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.SetBkColor)} has failed"); }
+            if (Gdi32.Ellipse(Handle, rect.Left, rect.Top, rect.Right, rect.Bottom) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.FrameRgn)} has failed"); }
         }
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GdiColor GetBgColor(HDC dc)
+        /// <exception cref="GdiException"/>
+        public void DrawEllipse(int left, int top, int right, int bottom)
         {
-            COLORREF color = Gdi32.GetBkColor(dc);
-            if (color == 0xFFFFFFFF)
-            { throw new NotWindowsException($"{nameof(Gdi32.GetBkColor)} has failed"); }
-            return color;
+            if (Gdi32.Ellipse(Handle, left, top, right, bottom) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.FrameRgn)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Fill(HDC hdc, HRGN region, HBRUSH brush)
+        /// <exception cref="GdiException"/>
+        public void OutlineRegion(HRGN region, HBRUSH brush, int w, int h)
         {
-            if (Gdi32.FillRgn(hdc, region, brush) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.FillRgn)} has failed"); }
+            if (Gdi32.FrameRgn(Handle, region, brush, w, h) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.FrameRgn)} has failed"); }
+        }
+
+        /// <exception cref="GdiException"/>
+        public void InvertRegion(HRGN region)
+        {
+            if (Gdi32.InvertRgn(Handle, region) == FALSE)
+            { throw new GdiException($"{nameof(Gdi32.FrameRgn)} has failed"); }
+        }
+
+        /// <exception cref="GdiException"/>
+        public void Fill(HRGN region, HBRUSH brush)
+        {
+            if (Gdi32.FillRgn(Handle, region, brush) == 0)
+            { throw new GdiException($"{nameof(Gdi32.FillRgn)} has failed"); }
+        }
+        /// <exception cref="GdiException"/>
+        public void Fill(HRGN region)
+        {
+            if (Gdi32.PaintRgn(Handle, region) == 0)
+            { throw new GdiException($"{nameof(Gdi32.PaintRgn)} has failed"); }
+        }
+
+        /// <exception cref="GdiException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public GdiColor BrushColor
+        {
+            get
+            {
+                COLORREF color = Gdi32.GetDCBrushColor(Handle);
+                if (color == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.GetDCBrushColor)} has failed"); }
+                return color;
+            }
+            set
+            {
+                COLORREF prevColor = Gdi32.SetDCBrushColor(Handle, value);
+                if (prevColor == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.SetDCBrushColor)} has failed"); }
+            }
+        }
+
+        /// <exception cref="GdiException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public GdiColor PenColor
+        {
+            get
+            {
+                COLORREF color = Gdi32.GetDCPenColor(Handle);
+                if (color == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.GetDCPenColor)} has failed"); }
+                return color;
+            }
+            set
+            {
+                COLORREF prevColor = Gdi32.SetDCPenColor(Handle, value);
+                if (prevColor == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.SetDCPenColor)} has failed"); }
+            }
+        }
+
+        /// <exception cref="GdiException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public GdiColor BackgroundColor
+        {
+            get
+            {
+                COLORREF color = Gdi32.GetBkColor(Handle);
+                if (color == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.GetBkColor)} has failed"); }
+                return color;
+            }
+            set
+            {
+                if (Gdi32.SetBkColor(Handle, value) == 0xFFFFFFFF)
+                { throw new GdiException($"{nameof(Gdi32.SetBkColor)} has failed"); }
+            }
+        }
+
+        /// <exception cref="GdiException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public StretchMode StretchMode
+        {
+            get
+            {
+                StretchMode mode = (StretchMode)Gdi32.GetStretchBltMode(Handle);
+                if (!Enum.IsDefined(mode))
+                { throw new GdiException($"Invalid {nameof(StretchMode)} {mode}"); }
+                return mode;
+            }
+            set
+            {
+                if (Gdi32.SetStretchBltMode(Handle, (int)value) == FALSE)
+                { throw new GdiException($"{nameof(Gdi32.SetStretchBltMode)} has failed"); }
+            }
+        }
+
+        public GdiColor GetPixel(int x, int y) => Gdi32.GetPixel(Handle, x, y);
+        /// <exception cref="GdiException"/>
+        public void SetPixel(int x, int y, GdiColor color)
+        {
+            if (Gdi32.SetPixel(Handle, x, y, color) == unchecked((uint)-1))
+            { throw new GdiException($"{nameof(Gdi32.SetPixel)} has failed"); }
+        }
+        /// <exception cref="GdiException"/>
+        public void SetPixelV(int x, int y, GdiColor color)
+        {
+            if (Gdi32.SetPixelV(Handle, x, y, color) == 0)
+            { throw new GdiException($"{nameof(Gdi32.SetPixelV)} has failed"); }
+        }
+
+        public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+
+        protected abstract void DisposeDC();
+        void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            if (disposing)
+            { DisposeDC(); }
+
+            IsDisposed = true;
+            Handle = HDC.Zero;
+        }
+        ~DC() { Dispose(disposing: false); }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        public override int GetHashCode() => Handle.GetHashCode();
+        public override bool Equals(object? obj) => Equals(obj as DC);
+        public bool Equals(DC? other) => other is not null && Handle.Equals(other.Handle);
+
+        public static bool operator !=(DC? a, DC? b) => !(a == b);
+        public static bool operator ==(DC? a, DC? b)
+        {
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
+            return a.Equals(b);
         }
     }
 }

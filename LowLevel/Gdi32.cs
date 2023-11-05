@@ -7,6 +7,74 @@ namespace Win32.LowLevel
     public static class Gdi32
     {
         [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL Ellipse(
+          [In] HDC hdc,
+          [In] int left,
+          [In] int top,
+          [In] int right,
+          [In] int bottom
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        unsafe public static extern HBRUSH CreateDIBPatternBrushPt(
+          [In] void* lpPackedDIB,
+          [In] UINT iUsage
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern HBRUSH CreatePatternBrush(
+          [In] HBITMAP hbm
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern HBRUSH CreateHatchBrush(
+          [In] int iHatch,
+          [In] COLORREF color
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL InvertRgn(
+          [In] HDC hdc,
+          [In] HRGN hrgn
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL FrameRgn(
+          [In] HDC hdc,
+          [In] HRGN hrgn,
+          [In] HBRUSH hbr,
+          [In] int w,
+          [In] int h
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        unsafe public static extern BOOL RectInRegion(
+          [In] HRGN hrgn,
+          [In] RECT* lprect
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL PtInRegion(
+          [In] HRGN hrgn,
+          [In] int x,
+          [In] int y
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL PaintRgn(
+          [In] HDC hdc,
+          [In] HRGN hrgn
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        unsafe public static extern BOOL GetTextExtentPoint32W(
+          [In] HDC hdc,
+          [In] WCHAR* lpString,
+          [In] int c,
+          [Out] SIZE* psizl
+        );
+
+        [DllImport("Gdi32.dll", SetLastError = true)]
         public static extern HGDIOBJ GetStockObject(
           [In] int i
         );

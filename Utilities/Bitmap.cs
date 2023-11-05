@@ -8,16 +8,25 @@ namespace Win32
         readonly HBITMAP _handle;
         public Bitmap(HWND handle) => _handle = handle;
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public BITMAP Info => Objects.GetObject<BITMAP>(_handle);
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public static Bitmap CreateCompatibleBitmap(HDC hdc, int width, int height)
         {
             HANDLE handle = Gdi32.CreateCompatibleBitmap(hdc, width, height);
             if (handle == HANDLE.Zero)
-            { throw new NotWindowsException($"{nameof(Gdi32.CreateCompatibleBitmap)} failed"); }
+            { throw new GdiException($"{nameof(Gdi32.CreateCompatibleBitmap)} failed"); }
+            return new Bitmap(handle);
+        }
+
+        /// <exception cref="GdiException"/>
+        unsafe public static Bitmap Create(int width, int height, uint planes, uint bitCount, void* bits)
+        {
+            HBITMAP handle = Gdi32.CreateBitmap(width, height, planes, bitCount, bits);
+            if (handle == HANDLE.Zero)
+            { throw new GdiException($"{nameof(Gdi32.CreateBitmap)} failed"); }
             return new Bitmap(handle);
         }
 
@@ -40,10 +49,11 @@ namespace Win32
             }
         }
 
+        /// <exception cref="GdiException"/>
         public void Dispose()
         {
             if (Gdi32.DeleteObject(_handle) == 0)
-            { throw new NotWindowsException($"Failed to delete object ({nameof(Bitmap)}) {this}"); }
+            { throw new GdiException($"Failed to delete object ({nameof(Bitmap)}) {this}"); }
         }
 
         /// <exception cref="WindowsException"/>

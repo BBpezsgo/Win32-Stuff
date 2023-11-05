@@ -5,20 +5,21 @@ namespace Win32
 {
     public static class Objects
     {
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public static HGDIOBJ GetCurrentObject(HDC dc, ObjectType type)
         {
             HGDIOBJ obj = Gdi32.GetCurrentObject(dc, (uint)type);
             if (obj == HGDIOBJ.Zero)
-            { throw new NotWindowsException($"{nameof(Gdi32.GetCurrentObject)} has failed"); }
+            { throw new GdiException($"{nameof(Gdi32.GetCurrentObject)} has failed"); }
             return obj;
         }
 
+        /// <exception cref="GdiException"/>
         unsafe public static T GetObject<T>(HANDLE handle) where T : unmanaged
         {
             T obj = default;
             if (Gdi32.GetObject(handle, sizeof(T), &obj) == 0)
-            { throw new NotWindowsException($"{nameof(Gdi32.GetObject)} has failed"); }
+            { throw new GdiException($"{nameof(Gdi32.GetObject)} has failed"); }
             return obj;
         }
 

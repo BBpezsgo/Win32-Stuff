@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Win32
 {
@@ -20,7 +21,8 @@ namespace Win32
             _index = index;
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="InvalidEnumArgumentException"/>
+        /// <exception cref="GeneralException"/>
         public void SetState(MenuItemState state)
         {
             uint state_ = state switch
@@ -28,11 +30,11 @@ namespace Win32
                 MenuItemState.Enabled => 0x00000000,
                 MenuItemState.Disabled => 0x00000002,
                 MenuItemState.Grayed => 0x00000001,
-                _ => throw new NotWindowsException($"Unknown menu state {state}")
+                _ => throw new InvalidEnumArgumentException(nameof(state), (int)(uint)state, typeof(MenuItemState)),
             };
             int prevState = User32.EnableMenuItem(_parentHandle, (uint)_index, 0x00000400 | state_);
             if (prevState == -1)
-            { throw new NotWindowsException($"Menu item at index {_index} does not exists in menu {_parentHandle}"); }
+            { throw new GeneralException($"Menu item at index {_index} does not exists in menu {_parentHandle}"); }
         }
 
         /// <exception cref="WindowsException"/>

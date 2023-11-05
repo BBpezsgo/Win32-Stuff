@@ -676,29 +676,30 @@ namespace Win32
             handle.Free();
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public DisplayDC GetDC()
         {
             HDC dc = User32.GetWindowDC(_handle);
             if (dc == HDC.Zero)
-            { throw new NotWindowsException($"Failed to get DC ({nameof(User32.GetWindowDC)}) of window {this}"); }
+            { throw new GdiException($"Failed to get DC ({nameof(User32.GetWindowDC)}) of window {this}"); }
             return new DisplayDC(dc, _handle);
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public DisplayDC GetClientDC()
         {
             HDC dc = User32.GetDC(_handle);
             if (dc == HDC.Zero)
-            { throw new NotWindowsException($"Failed to get DC ({nameof(User32.GetDC)}) of window {this}"); }
+            { throw new GdiException($"Failed to get DC ({nameof(User32.GetDC)}) of window {this}"); }
             return new DisplayDC(dc, _handle);
         }
 
+        /// <exception cref="GdiException"/>
         public static DisplayDC GetPrimaryDisplayDC()
         {
             HDC dc = User32.GetWindowDC(HWND.Zero);
             if (dc == HDC.Zero)
-            { throw new NotWindowsException($"Failed to get DC ({nameof(User32.GetWindowDC)}) of the primary display"); }
+            { throw new GdiException($"Failed to get DC ({nameof(User32.GetWindowDC)}) of the primary display"); }
             return new DisplayDC(dc, HWND.Zero);
         }
     }

@@ -147,18 +147,18 @@ namespace Win32
             x < right &&
             y < Height;
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public unsafe static void SetRect(ref RECT rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect((RECT*)Unsafe.AsPointer(ref rect), left, top, right, bottom) == 0)
-            { throw new NotWindowsException($"{nameof(User32.SetRect)} has failed"); }
+            { throw new GdiException($"{nameof(User32.SetRect)} has failed"); }
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GdiException"/>
         public unsafe static void SetRect(RECT* rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect(rect, left, top, right, bottom) == 0)
-            { throw new NotWindowsException($"{nameof(User32.SetRect)} has failed"); }
+            { throw new GdiException($"{nameof(User32.SetRect)} has failed"); }
         }
     }
 }

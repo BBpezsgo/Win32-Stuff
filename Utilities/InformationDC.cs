@@ -1,27 +1,16 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-
-namespace Win32
+﻿namespace Win32
 {
-    /// <summary>
-    /// Information Device Context
-    /// </summary>
-    public readonly struct InformationDC : IDisposable
+    /// <summary>Information Device Context</summary>
+    public class InformationDC : DC
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly HDC _handle;
+        InformationDC(HDC handle) : base(handle)
+        { }
 
-        internal InformationDC(HDC handle)
+        /// <exception cref="GdiException"/>
+        protected override void DisposeDC()
         {
-            _handle = handle;
-        }
-
-        public static implicit operator HDC(InformationDC dc) => dc._handle;
-
-        public void Dispose()
-        {
-            if (Gdi32.DeleteDC(_handle) == FALSE)
-            { throw new NotWindowsException($"Failed to delete DC ({nameof(Gdi32.DeleteDC)}) {this}"); }
+            if (Gdi32.DeleteDC(Handle) == FALSE)
+            { throw new GdiException($"Failed to delete DC ({nameof(Gdi32.DeleteDC)}) {this}"); }
         }
 
         /// <summary>
@@ -43,7 +32,7 @@ namespace Win32
         /// (if any) specified by the user.
         /// </param>
         /// <returns></returns>
-        /// <exception cref="NotWindowsException"></exception>
+        /// <exception cref="GdiException"/>
         unsafe public static InformationDC Create(string driver, string device, DEVMODE deviceMode)
         {
             fixed (WCHAR* driverPtr = driver)
@@ -53,7 +42,7 @@ namespace Win32
                 HDC handle = Gdi32.CreateICW(driverPtr, devicePtr, null, &deviceMode);
 #pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
                 if (handle == HDC.Zero)
-                { throw new NotWindowsException($"Failed to create DC ({nameof(Gdi32.CreateICW)})"); }
+                { throw new GdiException($"Failed to create DC ({nameof(Gdi32.CreateICW)})"); }
                 return new InformationDC(handle);
             }
         }

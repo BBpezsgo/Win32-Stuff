@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Win32
 {
@@ -78,6 +79,31 @@ namespace Win32
             }
         }
 
+        static string GenerateClassName()
+        {
+            StringBuilder result = new(ClassName);
+            for (int i = 0; i < 8; i++)
+            {
+                int yes = Random.Shared.Next(0, 3);
+                switch (yes)
+                {
+                    case 0:
+                        result.Append((char)Random.Shared.Next('a', 'z'));
+                        break;
+                    case 1:
+                        result.Append((char)Random.Shared.Next('A', 'Z'));
+                        break;
+                    case 2:
+                        result.Append((char)Random.Shared.Next('0', '9'));
+                        break;
+                    default:
+                        result.Append('_');
+                        break;
+                }
+            }
+            return result.ToString();
+        }
+
         public readonly Dictionary<ushort, Control> Controls;
 
         /// <exception cref="WindowsException"/>
@@ -89,7 +115,8 @@ namespace Win32
 
             WNDCLASSEXW windowClass = WNDCLASSEXW.Create();
 
-            fixed (char* classNamePtr = ClassName)
+            string className = GenerateClassName();
+            fixed (char* classNamePtr = className)
             {
                 windowClass.hbrBackground = HBRUSH.Zero;
                 windowClass.hCursor = HCURSOR.Zero;
@@ -179,6 +206,7 @@ namespace Win32
 
             if (disposing)
             {
+                Destroy();
                 Class?.Unregister();
             }
 
@@ -217,7 +245,7 @@ namespace Win32
             return User32.DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GeneralException"/>
         public ushort GenerateControlId()
         {
             ushort result = 1;
@@ -226,14 +254,14 @@ namespace Win32
             {
                 result++;
                 if (--endlessSafe <= 0)
-                { throw new NotWindowsException($"Failed to generate control id"); }
+                { throw new GeneralException($"Failed to generate control id"); }
             }
             if (result == 0)
-            { throw new NotWindowsException($"Failed to generate control id"); }
+            { throw new GeneralException($"Failed to generate control id"); }
             return result;
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GeneralException"/>
         public ushort GenerateControlId(out ushort result)
         {
             result = GenerateControlId();
@@ -549,5 +577,8 @@ namespace Win32
             LONG_PTR ptr = User32.GetWindowLongPtrW(hwnd, GWLP.USERDATA);
             return (void*)ptr;
         }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public bool IsValid => User32.IsWindow(Handle) != FALSE;
     }
 }

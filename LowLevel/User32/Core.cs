@@ -5,6 +5,11 @@ namespace Win32.LowLevel
     public static partial class User32
     {
         [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND WindowFromDC(
+          [In] HDC hDC
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
         public static extern HBRUSH GetSysColorBrush(
           [In] int nIndex
         );

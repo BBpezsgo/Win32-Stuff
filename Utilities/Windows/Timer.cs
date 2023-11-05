@@ -15,7 +15,7 @@
             Callback = callback;
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GeneralException"/>
         static UINT_PTR GenerateId()
         {
             uint result = 1;
@@ -24,18 +24,18 @@
             {
                 result++;
                 if (--endlessSafe <= 0)
-                { throw new NotWindowsException($"Failed to generate timer id"); }
+                { throw new GeneralException($"Failed to generate timer id"); }
             }
             if (result == 0)
-            { throw new NotWindowsException($"Failed to generate timer id"); }
+            { throw new GeneralException($"Failed to generate timer id"); }
             return (UINT_PTR)result;
         }
 
-        /// <exception cref="NotWindowsException"/>
+        /// <exception cref="GeneralException"/>
         static void TimerCallback(HWND window, uint _1, UINT_PTR timerId, uint _2)
         {
             if (!TimerIds.TryGetValue(timerId, out Timer timer))
-            { throw new NotWindowsException($"Timer with id {timerId} not found"); }
+            { throw new GeneralException($"Timer with id {timerId} not found"); }
             timer.Callback?.Invoke();
         }
 
