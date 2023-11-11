@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Win32
+﻿namespace Win32
 {
     public static class ConsoleHandler
     {
@@ -96,5 +94,22 @@ namespace Win32
                 return result;
             }
         }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static CONSOLE_SCREEN_BUFFER_INFO ScreenBufferInfo
+        {
+            get
+            {
+                CONSOLE_SCREEN_BUFFER_INFO result = default;
+                if (Kernel32.GetConsoleScreenBufferInfo(stdoutHandle, &result) == FALSE)
+                { throw WindowsException.Get(); }
+                return result;
+            }
+        }
+
+        public static short WindowLeft => ScreenBufferInfo.srWindow.Left;
+        public static short WindowTop => ScreenBufferInfo.srWindow.Top;
+        public static short WindowWidth => (short)(ScreenBufferInfo.srWindow.Right - ScreenBufferInfo.srWindow.Left + 1);
+        public static short WindowHeight => (short)(ScreenBufferInfo.srWindow.Bottom - ScreenBufferInfo.srWindow.Top + 1);
     }
 }

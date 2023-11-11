@@ -1,10 +1,7 @@
-﻿using Microsoft.Win32.SafeHandles;
-
-namespace Win32
+﻿namespace Win32
 {
-    public partial class ConsoleRenderer : IDisposable
+    public partial class ConsoleRenderer
     {
-        protected SafeFileHandle? SafeHandle;
         protected HANDLE Handle;
 
         public short Width => BufferWidth;
@@ -18,14 +15,14 @@ namespace Win32
         protected short BufferHeight;
 
         protected CharInfo[] ConsoleBuffer;
-        protected SmallRect ConsoleRect;
+        protected SMALL_RECT ConsoleRect;
 
         public ref CharInfo this[int i] => ref ConsoleBuffer[i];
         public ref CharInfo this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
         public ref CharInfo this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
         public ref CharInfo this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
 
-        public ConsoleRenderer(SafeFileHandle? safeHandle, int bufferWidth, int bufferHeight)
+        public ConsoleRenderer(short bufferWidth, short bufferHeight)
         {
             /*
             Console.OutputEncoding = System.Text.Encoding.Unicode;
@@ -35,76 +32,40 @@ namespace Win32
             */
 
             Handle = Kernel32.GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
-            SafeHandle = safeHandle;
 
-            BufferWidth = (short)bufferWidth;
-            BufferHeight = (short)bufferHeight;
+            if (Handle == Kernel32.INVALID_HANDLE_VALUE)
+            { throw WindowsException.Get(); }
 
-            ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
-            Array.Fill(ConsoleBuffer, new CharInfo(' ', 0));
-            ConsoleRect = new SmallRect(0, 0, BufferWidth, BufferHeight);
+            BufferWidth = bufferWidth;
+            BufferHeight = bufferHeight;
+
+            ConsoleBuffer = new CharInfo[Size];
+            Array.Fill(ConsoleBuffer, CharInfo.Empty);
+            ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
         }
 
         public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
 
         public void Render()
         {
-            if (SafeHandle != null)
-            {
-                if (SafeHandle.IsInvalid)
-                {
-                    System.Diagnostics.Debug.WriteLine("Console handle is invalid");
-                    return;
-                }
-
-                if (SafeHandle.IsClosed)
-                { return; }
-
-                if (Kernel32.WriteConsoleOutputW(
-                    SafeHandle,
-                    ConsoleBuffer,
-                    new Coord(BufferWidth, BufferHeight),
-                    default,
-                    ref ConsoleRect) == 0)
-                { throw WindowsException.Get(); }
-            }
-            else
-            {
-                if (Kernel32.WriteConsoleOutput(Handle, ConsoleBuffer,
-                    new Coord(BufferWidth, BufferHeight),
-                    default,
-                    ref ConsoleRect) == 0)
-                { throw WindowsException.Get(); }
-            }
+            if (Kernel32.WriteConsoleOutput(
+                Handle,
+                ConsoleBuffer,
+                Rect,
+                default,
+                ref ConsoleRect) == FALSE)
+            { throw WindowsException.Get(); }
         }
 
         public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
 
         public void Resize()
         {
-            BufferWidth = (short)Console.WindowWidth;
-            BufferHeight = (short)Console.WindowHeight;
+            BufferWidth = ConsoleHandler.WindowWidth;
+            BufferHeight = ConsoleHandler.WindowHeight;
 
-            ConsoleBuffer = new CharInfo[BufferWidth * BufferHeight];
-            ConsoleRect = new SmallRect(0, 0, BufferWidth, BufferHeight);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (SafeHandle != null)
-                {
-                    SafeHandle.Dispose();
-                    SafeHandle = null;
-                }
-            }
+            ConsoleBuffer = new CharInfo[Size];
+            ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
         }
     }
 }

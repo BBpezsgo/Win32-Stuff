@@ -6,7 +6,79 @@ namespace Win32.LowLevel
     public static class Kernel32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
-       
+
+        /// <summary>
+        /// Sets the current size and position of a console screen buffer's window.
+        /// </summary>
+        /// <param name="hConsoleOutput">
+        /// A handle to the console screen buffer.
+        /// The handle must have the <c>GENERIC_READ</c> access right.
+        /// </param>
+        /// <param name="bAbsolute">
+        /// If this parameter is <c>TRUE</c>, the coordinates specify the new upper-left and
+        /// lower-right corners of the window. If it is <c>FALSE</c>, the coordinates are
+        /// relative to the current window-corner coordinates.
+        /// </param>
+        /// <param name="lpConsoleWindow">
+        /// A pointer to a <see cref="SMALL_RECT"/> structure that specifies
+        /// the new upper-left and lower-right corners of the window.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="GetLastError"/>.
+        /// </para>
+        /// </returns>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL SetConsoleWindowInfo(
+          [In] HANDLE     hConsoleOutput,
+          [In] BOOL       bAbsolute,
+          [In] SMALL_RECT*lpConsoleWindow
+        );
+
+        /// <summary>
+        /// Retrieves information about the specified console screen buffer.
+        /// </summary>
+        /// <param name="hConsoleOutput">
+        /// A handle to the console screen buffer.
+        /// The handle must have the <c>GENERIC_READ</c> access right.
+        /// </param>
+        /// <param name="lpConsoleScreenBufferInfo">
+        /// A pointer to a <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure
+        /// that receives the console screen buffer information.
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// If the function succeeds, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If the function fails, the return value is zero.
+        /// To get extended error information, call <see cref="GetLastError"/>.
+        /// </para>
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The rectangle returned in the srWindow member of the
+        /// <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure can be modified
+        /// and then passed to the <see cref="SetConsoleWindowInfo"/> function to
+        /// scroll the console screen buffer in the window, to change
+        /// the size of the window, or both.
+        /// </para>
+        /// <para>
+        /// All coordinates returned in the <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure are in
+        /// character-cell coordinates, where the origin (0, 0) is at the upper-left
+        /// corner of the console screen buffer.
+        /// </para>
+        /// </remarks>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetConsoleScreenBufferInfo(
+           [In] HANDLE                      hConsoleOutput,
+           [Out] CONSOLE_SCREEN_BUFFER_INFO*lpConsoleScreenBufferInfo
+         );
+
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern HGLOBAL GlobalReAlloc(
           [In] HGLOBAL hMem,

@@ -32,6 +32,8 @@ namespace Win32
         [FieldOffset(0)] public char Char;
         [FieldOffset(2)] public WORD Attributes;
 
+        public static CharInfo Empty => new(' ', 0);
+
         const WORD MASK_FG = 0b_0000_1111;
         const WORD MASK_BG = 0b_1111_0000;
 
