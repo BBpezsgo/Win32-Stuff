@@ -10,7 +10,7 @@
         public static HWND OutputHandle => stdoutHandle;
 
         /// <exception cref="WindowsException"/>
-        public static void Setup()
+        public static void GetHandles()
         {
             stdinHandle = Kernel32.GetStdHandle(StdHandle.STD_INPUT_HANDLE);
             if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
@@ -19,6 +19,12 @@
             stdoutHandle = Kernel32.GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
             if (stdoutHandle == Kernel32.INVALID_HANDLE_VALUE)
             { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public static void Setup()
+        {
+            GetHandles();
 
             uint mode = 0;
             if (Kernel32.GetConsoleMode(stdinHandle, ref mode) == 0)
