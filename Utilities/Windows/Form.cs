@@ -559,8 +559,10 @@ namespace Win32
 
         public void Destroy()
         {
+            if (Handle == HWND.Zero) return;
             if (User32.DestroyWindow(Handle) == 0)
             { throw WindowsException.Get(); }
+            Handle = HWND.Zero;
         }
 
         /// <exception cref="WindowsException"/>

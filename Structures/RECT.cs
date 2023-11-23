@@ -108,10 +108,10 @@ namespace Win32
 
         public Rect(LONG x, LONG y, LONG width, LONG height)
         {
-            top = x;
-            left = y;
-            bottom = x + height;
-            right = y + width;
+            left = x;
+            top = y;
+            right = x + width;
+            bottom = y + height;
         }
 
         public static implicit operator RECT(System.Drawing.Rectangle rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
