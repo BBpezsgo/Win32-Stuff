@@ -1,54 +1,54 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct WINDOWINFO
+    public readonly struct WindowInfo
     {
-        /// <summary>
-        /// The size of the structure, in bytes.
-        /// </summary>
-        readonly DWORD cbSize;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly DWORD StructSize;
+
         /// <summary>
         /// The coordinates of the window.
         /// </summary>
-        public readonly RECT rcWindow;
+        public readonly RECT WindowRect;
         /// <summary>
         /// The coordinates of the client area.
         /// </summary>
-        public readonly RECT rcClient;
+        public readonly RECT ClientRect;
         /// <summary>
         /// The window styles.
         /// </summary>
-        public readonly DWORD dwStyle;
+        public readonly DWORD Styles;
         /// <summary>
         /// The extended window styles.
         /// </summary>
-        public readonly DWORD dwExStyle;
+        public readonly DWORD StylesEx;
         /// <summary>
         /// The window status.
-        /// If this member is <see cref="WS.ACTIVECAPTION"/> (0x0001),
+        /// If this member is <see cref="WindowStyles.ACTIVECAPTION"/> (0x0001),
         /// the window is active. Otherwise, this member is zero.
         /// </summary>
-        public readonly DWORD dwWindowStatus;
+        public readonly DWORD WindowStatus;
         /// <summary>
         /// The width of the window border, in pixels.
         /// </summary>
-        public readonly UINT cxWindowBorders;
+        public readonly UINT WindowBorderWidth;
         /// <summary>
         /// The height of the window border, in pixels.
         /// </summary>
-        public readonly UINT cyWindowBorders;
+        public readonly UINT WindowBorderHeight;
         /// <summary>
         /// The window class atom (see <see cref="User32.RegisterClassExW"/>).
         /// </summary>
-        public readonly ATOM atomWindowType;
+        public readonly ATOM WindowClassAtom;
         /// <summary>
         /// The Windows version of the application that created the window.
         /// </summary>
-        public readonly WORD wCreatorVersion;
+        public readonly WORD CreatorVersion;
 
-        WINDOWINFO(DWORD cbSize) : this() => this.cbSize = cbSize;
-        unsafe public static WINDOWINFO Create() => new((uint)sizeof(WINDOWINFO));
+        WindowInfo(DWORD structSize) : this() => this.StructSize = structSize;
+        unsafe public static WindowInfo Create() => new((uint)sizeof(WindowInfo));
     }
 }

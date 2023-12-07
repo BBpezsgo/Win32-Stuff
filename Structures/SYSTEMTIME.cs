@@ -3,7 +3,7 @@
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct SYSTEMTIME
+    public readonly struct SystemTime
     {
         public readonly WORD Year;
         public readonly WORD Month;

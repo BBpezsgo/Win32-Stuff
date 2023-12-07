@@ -1,4 +1,4 @@
-﻿namespace Win32
+﻿namespace Win32.Common
 {
     [Serializable]
 	public class GeneralException : Exception

@@ -2,32 +2,33 @@
 
 namespace Win32
 {
-    public struct EventType
+    public enum EventType : WORD
     {
-        public const ushort KEY = 0x0001;
-        public const ushort MOUSE = 0x0002;
-        public const ushort WINDOW_BUFFER_SIZE = 0x0004;
-        public const ushort MENU = 0x0008;
-        public const ushort FOCUS = 0x0010;
+        Key = 0x0001,
+        Mouse = 0x0002,
+        WindowBufferSize = 0x0004,
+        Menu = 0x0008,
+        Focus = 0x0010,
     }
 
-    public struct MouseButton
+    public enum MouseButton : DWORD
     {
-        public const DWORD Left = 0x0001;
-        public const DWORD Right = 0x0002;
-        public const DWORD Middle = 0x0004;
-        public const DWORD Button3 = 0x0008;
-        public const DWORD Button4 = 0x0010;
-        public const DWORD ScrollUp = 7864320;
-        public const DWORD ScrollDown = 4287102976;
+        Left = 0x0001,
+        Right = 0x0002,
+        Middle = 0x0004,
+        Button3 = 0x0008,
+        Button4 = 0x0010,
+        ScrollUp = 7864320,
+        ScrollDown = 4287102976,
     }
 
-    public struct MouseEventFlags
+    [Flags]
+    public enum MouseEventFlags : DWORD
     {
         /// <summary>
         /// The second click(button press) of a double-click occurred.The first click is returned as a regular button-press event.
         /// </summary>
-        public const uint DOUBLE_CLICK = 0x0002;
+        DoubleClick = 0x0002,
         /// <summary>
         /// <para>
         /// The horizontal mouse wheel was moved.
@@ -36,11 +37,11 @@ namespace Win32
         /// If the high word of the dwButtonState member contains a positive value, the wheel was rotated to the right. Otherwise, the wheel was rotated to the left.
         /// </para>
         /// </summary>
-        public const uint MOUSE_HWHEELED = 0x0008;
+        MouseWheeledHorizontal = 0x0008,
         /// <summary>
         /// A change in mouse position occurred.
         /// </summary>
-        public const uint MOUSE_MOVED = 0x0001;
+        MouseMoved = 0x0001,
         /// <summary>
         /// <para>
         /// The vertical mouse wheel was moved.
@@ -49,7 +50,32 @@ namespace Win32
         /// 
         /// If the high word of the dwButtonState member contains a positive value, the wheel was rotated forward, away from the user. Otherwise, the wheel was rotated backward, toward the user.</para>
         /// </summary>
-        public const uint MOUSE_WHEELED = 0x0004;
+        MouseWheeled = 0x0004,
+    }
+
+    [Flags]
+    public enum MouseButtonState : DWORD
+    {
+        /// <summary>
+        /// The leftmost mouse button.
+        /// </summary>
+        FROM_LEFT_1ST_BUTTON_PRESSED = 0x0001,
+        /// <summary>
+        /// The second button fom the left.
+        /// </summary>
+        FROM_LEFT_2ND_BUTTON_PRESSED = 0x0004,
+        /// <summary>
+        /// The third button from the left.
+        /// </summary>
+        FROM_LEFT_3RD_BUTTON_PRESSED = 0x0008,
+        /// <summary>
+        /// The fourth button from the left.
+        /// </summary>
+        FROM_LEFT_4TH_BUTTON_PRESSED = 0x0010,
+        /// <summary>
+        /// The rightmost mouse button.
+        /// </summary>
+        RIGHTMOST_BUTTON_PRESSED = 0x0002,
     }
 
     /// <summary>
@@ -93,7 +119,7 @@ namespace Win32
         ///  </list>
         /// </summary>
         [FieldOffset(0)]
-        public readonly WORD EventType;
+        public readonly EventType EventType;
 
         [FieldOffset(4)]
         public readonly KeyEvent KeyEvent;
@@ -114,6 +140,7 @@ namespace Win32
     /// <summary>
     /// Describes a mouse input event in a console <see cref="InputEvent"/> structure.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct MouseEvent
     {
         /// <summary>
@@ -127,16 +154,16 @@ namespace Win32
         public readonly DWORD ButtonState;
 
         /// <summary>
-        /// The state of the control keys. See <see cref="Win32.ControlKeyState"/>.
+        /// The state of the control keys.
         /// </summary>
-        public readonly DWORD ControlKeyState;
+        public readonly ControlKeyState ControlKeyState;
 
         /// <summary>
         /// The type of mouse event.
         /// </summary>
-        public readonly DWORD EventFlags;
+        public readonly MouseEventFlags EventFlags;
 
-        public override string ToString() => $"{{ Pos: {MousePosition}, State: {Convert.ToString(ButtonState, 2).PadLeft(8, '0')}, Flags: {EventFlags}, Ctrl: {Convert.ToString(ControlKeyState, 2).PadLeft(9, '0')} }}";
+        public override string ToString() => $"{{ Pos: {MousePosition}, State: {Convert.ToString(ButtonState, 2).PadLeft(8, '0')}, Flags: {EventFlags}, Ctrl: {ControlKeyState} }}";
     }
 
     /// <summary>
@@ -203,17 +230,18 @@ namespace Win32
         public readonly CHAR AsciiChar;
 
         /// <summary>
-        /// The state of the control keys. See <see cref="Win32.ControlKeyState"/>.
+        /// The state of the control keys.
         /// </summary>
         [FieldOffset(12)]
-        public readonly DWORD ControlKeyState;
+        public readonly ControlKeyState ControlKeyState;
 
-        public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n")}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {Convert.ToString(ControlKeyState, 2).PadLeft(9, '0')} }}";
+        public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n")}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
     }
 
     /// <summary>
     /// Describes a change in the size of the console screen buffer.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct WindowBufferSizeEvent
     {
         public readonly Coord Size;
@@ -223,21 +251,23 @@ namespace Win32
     }
 
     /// <summary>
-    /// Describes a focus event in a console <see cref="INPUT_RECORD"/> structure.
+    /// Describes a focus event in a console <see cref="InputEvent"/> structure.
     /// These events are used internally and should be ignored.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct FocusEvent
     {
         /// <summary>
         /// Reserved.
         /// </summary>
-        public readonly BOOL bSetFocus;
+        public readonly BOOL SetFocus;
     }
 
     /// <summary>
     /// Describes a menu event in a console <see cref="INPUT_RECORD"/> structure.
     /// These events are used internally and should be ignored.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct MenuEvent
     {
         /// <summary>

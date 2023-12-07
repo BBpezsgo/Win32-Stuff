@@ -4,10 +4,10 @@
     {
         public delegate void SimpleEventHandler<T>(T sender);
 
-        public Control() : base() { }
         public Control(HWND handle) : base(handle) { }
+
         unsafe public Control(
-            HWND parent,
+            Form parent,
             string? name,
             string @class,
             DWORD style,
@@ -30,6 +30,7 @@
                     (HMENU)id,
                     User32.GetWindowLongPtrW(parent, GWLP.HINSTANCE));
             }
+            parent.Controls.Add(id, this);
         }
 
         public virtual void HandleNotification(Window parent, ushort code) { }

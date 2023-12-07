@@ -3,9 +3,7 @@ namespace Win32
     public struct BitUtils
     {
         public static bool GetBit(int segment, int bit)
-        {
-            return (segment & (1 << bit)) != 0;
-        }
+            => (segment & (1 << bit)) != 0;
 
         public static void SetBit(ref int segment, int bit, int value)
             => SetBit(ref segment, bit, value != 0);

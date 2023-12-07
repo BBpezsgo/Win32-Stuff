@@ -41,12 +41,12 @@
             { 'Y', 0x59 },
             { 'Z', 0x5A },
 
-            { '.', VirtualKeyCodes.OEM_PERIOD },
-            { ',', VirtualKeyCodes.OEM_COMMA },
-            { '-', VirtualKeyCodes.OEM_MINUS },
-            { '+', VirtualKeyCodes.OEM_PLUS },
-            { '\r', VirtualKeyCodes.RETURN },
-            { '\t', VirtualKeyCodes.TAB },
+            { '.', VirtualKeyCode.OEM_PERIOD },
+            { ',', VirtualKeyCode.OEM_COMMA },
+            { '-', VirtualKeyCode.OEM_MINUS },
+            { '+', VirtualKeyCode.OEM_PLUS },
+            { '\r', VirtualKeyCode.RETURN },
+            { '\t', VirtualKeyCode.TAB },
         };
     }
 }

@@ -1,14 +1,24 @@
-﻿using System.Diagnostics;
+﻿global using POINT = Win32.Common.Point;
+global using POINTL = Win32.Common.Point;
+
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Common
 {
     /// <summary>
     /// Defines the x- and y-coordinates of a point.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct Point : IEquatable<POINT>
+    public struct Point :
+        IEquatable<POINT>,
+        System.Numerics.IEqualityOperators<POINT, POINT, bool>,
+        System.Numerics.IAdditionOperators<POINT, POINT, POINT>,
+        System.Numerics.ISubtractionOperators<POINT, POINT, POINT>,
+        System.Numerics.IMultiplyOperators<POINT, POINT, POINT>,
+        System.Numerics.IMultiplyOperators<POINT, int, POINT>,
+        System.Numerics.IDivisionOperators<POINT, int, POINT>
     {
         /// <summary>Specifies the x-coordinate of the point.</summary>
         public LONG X;
@@ -21,11 +31,14 @@ namespace Win32
             Y = y;
         }
 
-        public static bool operator ==(POINT left, POINT right) => left.Equals(right);
-        public static bool operator !=(POINT left, POINT right) => !(left == right);
+        public static bool operator ==(POINT a, POINT b) => a.Equals(b);
+        public static bool operator !=(POINT a, POINT b) => !a.Equals(b);
 
         public static POINT operator +(POINT a, POINT b) => new(a.X + b.X, a.Y + b.Y);
         public static POINT operator -(POINT a, POINT b) => new(a.X - b.X, a.Y - b.Y);
+        public static POINT operator *(POINT a, POINT b) => new(a.X * b.X, a.Y * b.Y);
+        public static POINT operator *(POINT a, int b) => new(a.X * b, a.Y * b);
+        public static POINT operator /(POINT a, int b) => new(a.X / b, a.Y / b);
 
         public override readonly string ToString() => $"({X}, {Y})";
         public override readonly bool Equals(object? obj) => obj is POINT point && Equals(point);

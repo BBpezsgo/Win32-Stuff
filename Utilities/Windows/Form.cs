@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Win32
@@ -7,48 +7,19 @@ namespace Win32
     public delegate void MenuItemEventHandler(Form sender, ushort menuItemId);
     public delegate void ContextMenuEventHandler(Form sender, Window context, POINT position);
 
-    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public readonly struct PaintHandle : IDisposable
-    {
-        readonly DisplayDC dc;
-        unsafe readonly PaintStruct* paint;
-
-        public DisplayDC DeviceContext => dc;
-
-        unsafe PaintHandle(DisplayDC dc, PaintStruct* paint)
-        {
-            this.dc = dc;
-            this.paint = paint;
-        }
-
-        public static implicit operator HDC(PaintHandle paintHandle) => paintHandle.dc;
-        public static implicit operator DisplayDC(PaintHandle paintHandle) => paintHandle.dc;
-
-        public override string ToString() => dc.ToString();
-
-        unsafe public static PaintHandle Begin(HWND window, out PaintStruct paint)
-        {
-            paint = default;
-            PaintStruct* paintPtr = (PaintStruct*)Unsafe.AsPointer(ref paint);
-            HDC dcHandle = User32.BeginPaint(window, paintPtr);
-            return new PaintHandle(new DisplayDC(dcHandle, window), paintPtr);
-        }
-
-        unsafe public void Dispose() => _ = User32.EndPaint(dc, paint);
-    }
-
     public class Form : Window, IDisposable
     {
-        public const string ClassName = "BruhWindow";
-
         unsafe public delegate void ResizeEventHandler(Form sender, RECT* rect);
         unsafe public delegate void PaintEventHandler(Form sender);
         unsafe public delegate void MouseEventHandler(Form sender, ushort x, ushort y, uint flags);
 
-        static readonly Dictionary<HWND, Form> FormInstances = new();
+        static int ActiveForms;
+
+        public static bool HasAllocatedForms => ActiveForms > 0;
 
         bool IsDisposed;
         readonly Win32Class? Class;
+        readonly GCHandle GCHandle;
 
         public event ResizeEventHandler? OnResize;
         public event MenuItemEventHandler? OnMenuItem;
@@ -71,17 +42,17 @@ namespace Win32
             }
             set
             {
-                if (User32.SetMenu(Handle, value?.Handle ?? HMENU.Zero) == 0)
+                if (User32.SetMenu(Handle, value?.Handle ?? HMENU.Zero) == FALSE)
                 { throw WindowsException.Get(); }
 
-                if (User32.DrawMenuBar(Handle) == 0)
+                if (User32.DrawMenuBar(Handle) == FALSE)
                 { throw WindowsException.Get(); }
             }
         }
 
         static string GenerateClassName()
         {
-            StringBuilder result = new(ClassName);
+            StringBuilder result = new("BruhWindow");
             for (int i = 0; i < 8; i++)
             {
                 int yes = Random.Shared.Next(0, 3);
@@ -104,32 +75,83 @@ namespace Win32
             return result.ToString();
         }
 
-        public readonly Dictionary<ushort, Control> Controls;
+        internal readonly Dictionary<ushort, Control> Controls;
+
+        unsafe public static delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> DefaultWindowProcess => &WinProc;
 
         /// <exception cref="WindowsException"/>
-        unsafe public Form(string title, int width, int height, Menu? menu = null, uint styles = DefaultStyles) : base()
+        unsafe public Form(string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
         {
-            HINSTANCE hInstance = Process.GetCurrentProcess().Handle;
+            HINSTANCE hInstance = System.Diagnostics.Process.GetCurrentProcess().Handle;
 
             uint exStyles = 0;
 
             WNDCLASSEXW windowClass = WNDCLASSEXW.Create();
 
             string className = GenerateClassName();
-            fixed (char* classNamePtr = className)
+
+            GCHandle = GCHandle.Alloc(this, GCHandleType.Normal);
+
+            try
             {
-                windowClass.hbrBackground = HBRUSH.Zero;
-                windowClass.hCursor = HCURSOR.Zero;
-                windowClass.hIcon = HICON.Zero;
-                windowClass.hIconSm = HICON.Zero;
-                windowClass.hInstance = hInstance;
-                windowClass.lpszClassName = classNamePtr;
-                windowClass.lpszMenuName = null;
-                windowClass.style = 0;
-                windowClass.lpfnWndProc = &WinProc;
+                fixed (char* classNamePtr = className)
+                {
+                    windowClass.BackgroundBrush = SystemBrushes.WINDOW;
+                    windowClass.ClsExtra = 0;
+                    windowClass.WndExtra = 0;
+                    windowClass.Cursor = HCURSOR.Zero;
+                    windowClass.Icon = HICON.Zero;
+                    windowClass.IconSm = HICON.Zero;
+                    windowClass.Instance = hInstance;
+                    windowClass.ClassName = classNamePtr;
+                    windowClass.MenuName = null;
+                    windowClass.Style = 0;
+                    windowClass.WindowProcedure = &WinProc;
 
-                Class = Win32Class.Register(&windowClass);
+                    Class = Win32Class.Register(&windowClass);
 
+                    fixed (char* windowNamePtr = title)
+                    {
+                        Handle = User32.CreateWindowExW(
+                            exStyles,
+                            classNamePtr,
+                            windowNamePtr,
+                            styles,
+                            CreateWindowFlags.USEDEFAULT, CreateWindowFlags.USEDEFAULT,
+                            width, height,
+                            HWND.Zero,
+                            (menu == null) ? HMENU.Zero : menu.Handle,
+                            hInstance,
+                            (void*)GCHandle.ToIntPtr(GCHandle));
+                    }
+                }
+
+                if (Handle == HWND.Zero)
+                { throw WindowsException.Get(); }
+
+                ActiveForms++;
+            }
+            catch
+            {
+                GCHandle.Free();
+            }
+
+            IsDisposed = false;
+            Controls = new Dictionary<ushort, Control>();
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public Form(Win32Class @class, string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
+        {
+            HINSTANCE hInstance = System.Diagnostics.Process.GetCurrentProcess().Handle;
+
+            uint exStyles = 0;
+
+            GCHandle = GCHandle.Alloc(this, GCHandleType.Normal);
+
+            try
+            {
+                fixed (char* classNamePtr = @class.Name)
                 fixed (char* windowNamePtr = title)
                 {
                     Handle = User32.CreateWindowExW(
@@ -137,62 +159,32 @@ namespace Win32
                         classNamePtr,
                         windowNamePtr,
                         styles,
-                        0, 0,
+                        CreateWindowFlags.USEDEFAULT, CreateWindowFlags.USEDEFAULT,
                         width, height,
                         HWND.Zero,
                         (menu == null) ? HMENU.Zero : menu.Handle,
                         hInstance,
-                        null);
+                        (void*)GCHandle.ToIntPtr(GCHandle));
                 }
+
+                if (Handle == HWND.Zero)
+                { throw WindowsException.Get(); }
+
+                ActiveForms++;
             }
-
-            if (Handle == HWND.Zero)
-            { throw WindowsException.Get(); }
-
-            FormInstances.Add(Handle, this);
-
-            IsDisposed = false;
-            Controls = new Dictionary<ushort, Control>();
-        }
-
-        unsafe public static delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> DefaultWindowProcess => &WinProc;
-
-        /// <exception cref="WindowsException"/>
-        unsafe public Form(Win32Class @class, string title, int width, int height, Menu? menu = null, uint styles = DefaultStyles) : base()
-        {
-            HINSTANCE hInstance = Process.GetCurrentProcess().Handle;
-
-            uint exStyles = 0;
-
-            fixed (char* classNamePtr = @class.Name)
-            fixed (char* windowNamePtr = title)
+            catch
             {
-                Handle = User32.CreateWindowExW(
-                    exStyles,
-                    classNamePtr,
-                    windowNamePtr,
-                    styles,
-                    0, 0,
-                    width, height,
-                    HWND.Zero,
-                    (menu == null) ? HMENU.Zero : menu.Handle,
-                    hInstance,
-                    null);
+                GCHandle.Free();
             }
-
-            if (Handle == HWND.Zero)
-            { throw WindowsException.Get(); }
-
-            FormInstances.Add(Handle, this);
 
             IsDisposed = false;
             Controls = new Dictionary<ushort, Control>();
         }
 
         public const uint DefaultStyles =
-            (WS.OVERLAPPEDWINDOW ^ WS.THICKFRAME ^ WS.MAXIMIZEBOX) |
-            WS.SYSMENU |
-            WS.VISIBLE;
+            (WindowStyles.OVERLAPPEDWINDOW ^ WindowStyles.THICKFRAME ^ WindowStyles.MAXIMIZEBOX) |
+            WindowStyles.SYSMENU |
+            WindowStyles.VISIBLE;
 
         public void Dispose()
         {
@@ -206,29 +198,30 @@ namespace Win32
 
             if (disposing)
             {
-                Destroy();
+                if (Handle != HWND.Zero && User32.IsWindow(Handle) != FALSE)
+                { _ = User32.DestroyWindow(Handle); }
                 Class?.Unregister();
             }
 
-            FormInstances.Remove(Handle);
             IsDisposed = true;
             Handle = HWND.Zero;
+            if (GCHandle.IsAllocated) GCHandle.Free();
+            ActiveForms--;
         }
 
         /// <exception cref="WindowsException"/>
         unsafe static LRESULT WinProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
         {
-            /*
             void* userDataPtr;
-            if (uMsg == WM.WM_CREATE)
+            if (uMsg == WindowMessage.WM_CREATE)
             {
                 CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
-                userDataPtr = pCreate->lpCreateParams;
+                userDataPtr = pCreate->CreateParams;
                 Kernel32.SetLastError(0);
-                LONG_PTR result = User32.SetWindowLongPtrW(hwnd, GWLP.USERDATA, (LONG_PTR)userDataPtr);
+                LONG_PTR result = User32.SetWindowLongPtrW(hwnd, GWLP.USERDATA, (nint)userDataPtr);
                 if (result == LONG_PTR.Zero)
                 {
-                    uint errorCode = Kernel32.GetLastError();
+                    DWORD errorCode = Kernel32.GetLastError();
                     if (errorCode != 0)
                     { throw WindowsException.Get(errorCode); }
                 }
@@ -237,10 +230,20 @@ namespace Win32
             {
                 userDataPtr = GetUserData(hwnd);
             }
-            */
 
-            if (FormInstances.TryGetValue(hwnd, out Form? window) && window.Handle == hwnd)
-            { return window.HandleEvent(uMsg, wParam, lParam); }
+            if (userDataPtr != null)
+            {
+                GCHandle handle = GCHandle.FromIntPtr((nint)userDataPtr);
+                if (handle.IsAllocated)
+                {
+                    object? obj = handle.Target;
+                    if (obj != null)
+                    {
+                        Form _form = (Form)obj;
+                        return _form.HandleEvent(uMsg, wParam, lParam);
+                    }
+                }
+            }
 
             return User32.DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
@@ -274,30 +277,22 @@ namespace Win32
             switch (uMsg)
             {
                 #region Painting & Drawing Messages
-                case WM.WM_DISPLAYCHANGE: break;
-                case WM.WM_ERASEBKGND: break;
-                case WM.WM_NCPAINT: break;
-                case WM.WM_PAINT:
+                case WindowMessage.WM_DISPLAYCHANGE: break;
+                case WindowMessage.WM_ERASEBKGND: break;
+                case WindowMessage.WM_NCPAINT: break;
+                case WindowMessage.WM_PAINT:
                     {
-                        if (OnPaint != null)
-                        {
-                            OnPaint.Invoke(this);
-                        }
-                        else
-                        {
-                            using PaintHandle hdc = PaintHandle.Begin(Handle, out PaintStruct paint);
-                            _ = User32.FillRect(hdc, &paint.rcPaint, (HBRUSH)(COLOR.COLOR_WINDOW + 1));
-                        }
+                        OnPaint?.Invoke(this);
                         break;
                     }
-                case WM.WM_PRINT: break;
-                case WM.WM_PRINTCLIENT: break;
-                case WM.WM_SETREDRAW: break;
-                case WM.WM_SYNCPAINT: break;
+                case WindowMessage.WM_PRINT: break;
+                case WindowMessage.WM_PRINTCLIENT: break;
+                case WindowMessage.WM_SETREDRAW: break;
+                case WindowMessage.WM_SYNCPAINT: break;
                 #endregion
 
                 #region Menu Notifications
-                case WM.WM_COMMAND:
+                case WindowMessage.WM_COMMAND:
                     if (lParam != LPARAM.Zero)
                     { // This is a control
                         ushort controlId = Macros.LOWORD(wParam);
@@ -306,38 +301,7 @@ namespace Win32
                             control.Handle == lParam)
                         {
                             control.HandleNotification(this, notificationCode);
-                            return (LPARAM)0;
-                        }
-
-                        const int BUFFER_SIZE = 64;
-                        string className;
-                        fixed (WCHAR* buffer = new string('\0', BUFFER_SIZE))
-                        {
-                            int length = User32.GetClassNameW(lParam, buffer, BUFFER_SIZE);
-                            if (length == 0)
-                            { throw WindowsException.Get(); }
-                            className = new string(buffer, 0, length);
-                        }
-                        className = className.ToUpperInvariant();
-                        switch (className)
-                        {
-                            case LowLevel.ClassName.STATIC:
-                                new StaticControl(lParam).HandleNotification(this, notificationCode);
-                                return (LPARAM)0;
-                            case LowLevel.ClassName.PROGRESS_BAR:
-                                new ProgressBar(lParam).HandleNotification(this, notificationCode);
-                                return (LPARAM)0;
-                            case LowLevel.ClassName.IP_ADDRESS:
-                                new IpAddress(lParam).HandleNotification(this, notificationCode);
-                                return (LPARAM)0;
-                            case LowLevel.ClassName.EDIT:
-                                new EditControl(lParam).HandleNotification(this, notificationCode);
-                                return (LPARAM)0;
-                            case LowLevel.ClassName.BUTTON:
-                                new Button(lParam).HandleNotification(this, notificationCode);
-                                return (LPARAM)0;
-                            default:
-                                break;
+                            return 0;
                         }
                     }
                     else
@@ -354,161 +318,161 @@ namespace Win32
                         }
                     }
                     break;
-                case WM.WM_CONTEXTMENU:
+                case WindowMessage.WM_CONTEXTMENU:
                     {
                         ushort x = Macros.LOWORD(lParam);
                         ushort y = Macros.HIWORD(lParam);
                         if (OnContextMenu != null)
                         {
                             OnContextMenu.Invoke(this, new Window((HWND)(void*)wParam), new POINT(x, y));
-                            return (LPARAM)0;
+                            return 0;
                         }
                         break;
                     }
-                case WM.WM_ENTERMENULOOP: break;
-                case WM.WM_EXITMENULOOP: break;
-                case WM.WM_GETTITLEBARINFOEX: break;
-                case WM.WM_MENUCOMMAND: break;
-                case WM.WM_MENUDRAG: break;
-                case WM.WM_MENUGETOBJECT: break;
-                case WM.WM_MENURBUTTONUP: break;
-                case WM.WM_NEXTMENU: break;
-                case WM.WM_UNINITMENUPOPUP: break;
+                case WindowMessage.WM_ENTERMENULOOP: break;
+                case WindowMessage.WM_EXITMENULOOP: break;
+                case WindowMessage.WM_GETTITLEBARINFOEX: break;
+                case WindowMessage.WM_MENUCOMMAND: break;
+                case WindowMessage.WM_MENUDRAG: break;
+                case WindowMessage.WM_MENUGETOBJECT: break;
+                case WindowMessage.WM_MENURBUTTONUP: break;
+                case WindowMessage.WM_NEXTMENU: break;
+                case WindowMessage.WM_UNINITMENUPOPUP: break;
 
                 #endregion
 
                 #region Control Messages
-                case WM.CCM_DPISCALE: break;
-                case WM.CCM_GETUNICODEFORMAT: break;
-                case WM.CCM_GETVERSION: break;
-                case WM.CCM_SETUNICODEFORMAT: break;
-                case WM.CCM_SETVERSION: break;
-                case WM.CCM_SETWINDOWTHEME: break;
-                case WM.WM_NOTIFY:
-                    NMHDR* info = (NMHDR*)lParam.ToPointer();
+                case WindowMessage.CCM_DPISCALE: break;
+                case WindowMessage.CCM_GETUNICODEFORMAT: break;
+                case WindowMessage.CCM_GETVERSION: break;
+                case WindowMessage.CCM_SETUNICODEFORMAT: break;
+                case WindowMessage.CCM_SETVERSION: break;
+                case WindowMessage.CCM_SETWINDOWTHEME: break;
+                case WindowMessage.WM_NOTIFY:
+                    NotificationMessageDetails* details = (NotificationMessageDetails*)lParam.ToPointer();
                     break;
-                case WM.WM_NOTIFYFORMAT: break;
+                case WindowMessage.WM_NOTIFYFORMAT: break;
                 #endregion
 
                 #region Messages
-                case WM.MN_GETHMENU: break;
-                case WM.WM_GETFONT: break;
-                case WM.WM_GETTEXT: break;
-                case WM.WM_GETTEXTLENGTH: break;
-                case WM.WM_SETFONT: break;
-                case WM.WM_SETICON: break;
-                case WM.WM_SETTEXT: break;
+                case WindowMessage.MN_GETHMENU: break;
+                case WindowMessage.WM_GETFONT: break;
+                case WindowMessage.WM_GETTEXT: break;
+                case WindowMessage.WM_GETTEXTLENGTH: break;
+                case WindowMessage.WM_SETFONT: break;
+                case WindowMessage.WM_SETICON: break;
+                case WindowMessage.WM_SETTEXT: break;
                 #endregion
 
                 #region Notifications
-                case WM.WM_ACTIVATEAPP: break;
-                case WM.WM_CANCELMODE: break;
-                case WM.WM_CHILDACTIVATE: break;
-                case WM.WM_CLOSE:
+                case WindowMessage.WM_ACTIVATEAPP: break;
+                case WindowMessage.WM_CANCELMODE: break;
+                case WindowMessage.WM_CHILDACTIVATE: break;
+                case WindowMessage.WM_CLOSE:
                     Destroy();
-                    return (LRESULT)0;
-                case WM.WM_COMPACTING: break;
-                case WM.WM_CREATE: break;
-                case WM.WM_DESTROY:
+                    return 0;
+                case WindowMessage.WM_COMPACTING: break;
+                case WindowMessage.WM_CREATE: break;
+                case WindowMessage.WM_DESTROY:
                     User32.PostQuitMessage(0);
-                    return (LRESULT)0;
-                case WM.WM_DPICHANGED: break;
-                case WM.WM_ENABLE: break;
-                case WM.WM_ENTERSIZEMOVE: break;
-                case WM.WM_EXITSIZEMOVE: break;
-                case WM.WM_GETICON: break;
-                case WM.WM_GETMINMAXINFO: break;
-                case WM.WM_INPUTLANGCHANGE: break;
-                case WM.WM_INPUTLANGCHANGEREQUEST: break;
-                case WM.WM_MOVE: break;
-                case WM.WM_MOVING: break;
-                case WM.WM_NCACTIVATE: break;
-                case WM.WM_NCCALCSIZE: break;
-                case WM.WM_NCCREATE: break;
-                case WM.WM_NCDESTROY: break;
-                case WM.WM_NULL: break;
-                case WM.WM_QUERYDRAGICON: break;
-                case WM.WM_QUERYOPEN: break;
-                case WM.WM_QUIT: break;
-                case WM.WM_SHOWWINDOW: break;
-                case WM.WM_SIZE: break;
-                case WM.WM_SIZING:
+                    return 0;
+                case WindowMessage.WM_DPICHANGED: break;
+                case WindowMessage.WM_ENABLE: break;
+                case WindowMessage.WM_ENTERSIZEMOVE: break;
+                case WindowMessage.WM_EXITSIZEMOVE: break;
+                case WindowMessage.WM_GETICON: break;
+                case WindowMessage.WM_GETMINMAXINFO: break;
+                case WindowMessage.WM_INPUTLANGCHANGE: break;
+                case WindowMessage.WM_INPUTLANGCHANGEREQUEST: break;
+                case WindowMessage.WM_MOVE: break;
+                case WindowMessage.WM_MOVING: break;
+                case WindowMessage.WM_NCACTIVATE: break;
+                case WindowMessage.WM_NCCALCSIZE: break;
+                case WindowMessage.WM_NCCREATE: break;
+                case WindowMessage.WM_NCDESTROY: break;
+                case WindowMessage.WM_NULL: break;
+                case WindowMessage.WM_QUERYDRAGICON: break;
+                case WindowMessage.WM_QUERYOPEN: break;
+                case WindowMessage.WM_QUIT: break;
+                case WindowMessage.WM_SHOWWINDOW: break;
+                case WindowMessage.WM_SIZE: break;
+                case WindowMessage.WM_SIZING:
                     {
                         RECT* rect = (RECT*)lParam.ToPointer();
                         OnResize?.Invoke(this, rect);
                         return (LRESULT)1;
                     }
-                case WM.WM_STYLECHANGED: break;
-                case WM.WM_STYLECHANGING: break;
-                case WM.WM_THEMECHANGED: break;
-                case WM.WM_USERCHANGED: break;
-                case WM.WM_WINDOWPOSCHANGED: break;
-                case WM.WM_WINDOWPOSCHANGING: break;
+                case WindowMessage.WM_STYLECHANGED: break;
+                case WindowMessage.WM_STYLECHANGING: break;
+                case WindowMessage.WM_THEMECHANGED: break;
+                case WindowMessage.WM_USERCHANGED: break;
+                case WindowMessage.WM_WINDOWPOSCHANGED: break;
+                case WindowMessage.WM_WINDOWPOSCHANGING: break;
                 #endregion
 
                 #region Mouse Input Notifications
-                case WM.WM_CAPTURECHANGED: break;
-                case WM.WM_LBUTTONDBLCLK: break;
-                case WM.WM_LBUTTONDOWN:
+                case WindowMessage.WM_CAPTURECHANGED: break;
+                case WindowMessage.WM_LBUTTONDBLCLK: break;
+                case WindowMessage.WM_LBUTTONDOWN:
                     if (OnMouseDown != null)
                     {
                         ushort x = Macros.LOWORD(lParam);
                         ushort y = Macros.HIWORD(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseDown.Invoke(this, x, y, flags);
-                        return (LPARAM)0;
+                        return 0;
                     }
                     break;
-                case WM.WM_LBUTTONUP:
+                case WindowMessage.WM_LBUTTONUP:
                     if (OnMouseUp != null)
                     {
                         ushort x = Macros.LOWORD(lParam);
                         ushort y = Macros.HIWORD(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseUp.Invoke(this, x, y, flags);
-                        return (LPARAM)0;
+                        return 0;
                     }
                     break;
-                case WM.WM_MBUTTONDBLCLK: break;
-                case WM.WM_MBUTTONDOWN: break;
-                case WM.WM_MBUTTONUP: break;
-                case WM.WM_MOUSEACTIVATE: break;
-                case WM.WM_MOUSEHOVER: break;
-                case WM.WM_MOUSEHWHEEL: break;
-                case WM.WM_MOUSELEAVE: break;
-                case WM.WM_MOUSEMOVE:
+                case WindowMessage.WM_MBUTTONDBLCLK: break;
+                case WindowMessage.WM_MBUTTONDOWN: break;
+                case WindowMessage.WM_MBUTTONUP: break;
+                case WindowMessage.WM_MOUSEACTIVATE: break;
+                case WindowMessage.WM_MOUSEHOVER: break;
+                case WindowMessage.WM_MOUSEHWHEEL: break;
+                case WindowMessage.WM_MOUSELEAVE: break;
+                case WindowMessage.WM_MOUSEMOVE:
                     if (OnMouseMove != null)
                     {
                         ushort x = Macros.LOWORD(lParam);
                         ushort y = Macros.HIWORD(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseMove.Invoke(this, x, y, flags);
-                        return (LPARAM)0;
+                        return 0;
                     }
                     break;
-                case WM.WM_MOUSEWHEEL: break;
-                case WM.WM_NCHITTEST: break;
-                case WM.WM_NCLBUTTONDBLCLK: break;
-                case WM.WM_NCLBUTTONDOWN: break;
-                case WM.WM_NCLBUTTONUP: break;
-                case WM.WM_NCMBUTTONDBLCLK: break;
-                case WM.WM_NCMBUTTONDOWN: break;
-                case WM.WM_NCMBUTTONUP: break;
-                case WM.WM_NCMOUSEHOVER: break;
-                case WM.WM_NCMOUSELEAVE: break;
-                case WM.WM_NCMOUSEMOVE: break;
-                case WM.WM_NCRBUTTONDBLCLK: break;
-                case WM.WM_NCRBUTTONDOWN: break;
-                case WM.WM_NCRBUTTONUP: break;
-                case WM.WM_NCXBUTTONDBLCLK: break;
-                case WM.WM_NCXBUTTONDOWN: break;
-                case WM.WM_NCXBUTTONUP: break;
-                case WM.WM_RBUTTONDBLCLK: break;
-                case WM.WM_RBUTTONDOWN: break;
-                case WM.WM_RBUTTONUP: break;
-                case WM.WM_XBUTTONDBLCLK: break;
-                case WM.WM_XBUTTONDOWN: break;
-                case WM.WM_XBUTTONUP: break;
+                case WindowMessage.WM_MOUSEWHEEL: break;
+                case WindowMessage.WM_NCHITTEST: break;
+                case WindowMessage.WM_NCLBUTTONDBLCLK: break;
+                case WindowMessage.WM_NCLBUTTONDOWN: break;
+                case WindowMessage.WM_NCLBUTTONUP: break;
+                case WindowMessage.WM_NCMBUTTONDBLCLK: break;
+                case WindowMessage.WM_NCMBUTTONDOWN: break;
+                case WindowMessage.WM_NCMBUTTONUP: break;
+                case WindowMessage.WM_NCMOUSEHOVER: break;
+                case WindowMessage.WM_NCMOUSELEAVE: break;
+                case WindowMessage.WM_NCMOUSEMOVE: break;
+                case WindowMessage.WM_NCRBUTTONDBLCLK: break;
+                case WindowMessage.WM_NCRBUTTONDOWN: break;
+                case WindowMessage.WM_NCRBUTTONUP: break;
+                case WindowMessage.WM_NCXBUTTONDBLCLK: break;
+                case WindowMessage.WM_NCXBUTTONDOWN: break;
+                case WindowMessage.WM_NCXBUTTONUP: break;
+                case WindowMessage.WM_RBUTTONDBLCLK: break;
+                case WindowMessage.WM_RBUTTONDOWN: break;
+                case WindowMessage.WM_RBUTTONUP: break;
+                case WindowMessage.WM_XBUTTONDBLCLK: break;
+                case WindowMessage.WM_XBUTTONDOWN: break;
+                case WindowMessage.WM_XBUTTONUP: break;
                 #endregion
 
                 default:
@@ -524,7 +488,7 @@ namespace Win32
             MSG msg;
             int res;
 
-            if (FormInstances.Count > 0 && (res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PM.REMOVE)) != 0)
+            if ((res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PeekMessageFlags.REMOVE)) != 0)
             {
                 if (res == -1)
                 { throw WindowsException.Get(); }
@@ -540,7 +504,7 @@ namespace Win32
             MSG msg;
             int res;
 
-            while (FormInstances.Count > 0 && (res = User32.GetMessageW(&msg, HWND.Zero, 0, 0)) != 0)
+            while (ActiveForms > 0 && (res = User32.GetMessageW(&msg, HWND.Zero, 0, 0)) != 0)
             {
                 if (res == -1)
                 { throw WindowsException.Get(); }
@@ -553,14 +517,14 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void Close()
         {
-            if (User32.PostMessageW(Handle, WM.WM_CLOSE, WPARAM.Zero, LPARAM.Zero) == 0)
+            if (User32.PostMessageW(Handle, WindowMessage.WM_CLOSE, WPARAM.Zero, LPARAM.Zero) == FALSE)
             { throw WindowsException.Get(); }
         }
 
         public void Destroy()
         {
             if (Handle == HWND.Zero) return;
-            if (User32.DestroyWindow(Handle) == 0)
+            if (User32.DestroyWindow(Handle) == FALSE)
             { throw WindowsException.Get(); }
             Handle = HWND.Zero;
         }
@@ -568,7 +532,7 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void Minimize()
         {
-            if (User32.CloseWindow(Handle) == 0)
+            if (User32.CloseWindow(Handle) == FALSE)
             { throw WindowsException.Get(); }
         }
 

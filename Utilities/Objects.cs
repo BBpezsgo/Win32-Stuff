@@ -1,8 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
+    using LowLevel;
+
     public static class Objects
     {
         /// <exception cref="GdiException"/>

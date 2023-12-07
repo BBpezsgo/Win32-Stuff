@@ -6,7 +6,7 @@
         {
             public uint states;
 
-            public bool this[uint button]
+            public bool this[DWORD button]
             {
                 readonly get => (states & button) != 0;
                 set
@@ -32,22 +32,10 @@
         public static COORD RecordedPosition => recordedPosition;
         public static COORD LeftPressedAt => leftPressedAt;
 
-        public static bool IsPressed(uint key) => Accumulated[key] || Stage1[key] || Stage2[key];
-        public static bool IsHold(uint key) => Stage2[key];
-        public static bool IsDown(uint key)
-        {
-            bool stage1 = Stage1[key];
-            bool stage2 = Stage2[key];
-            bool stage3 = Stage3[key];
-            return stage1 && !stage2 && !stage3;
-        }
-        public static bool IsUp(uint key)
-        {
-            bool stage1 = Stage1[key];
-            bool stage2 = Stage2[key];
-            bool stage3 = Stage3[key];
-            return !stage1 && !stage2 && stage3;
-        }
+        public static bool IsPressed(MouseButton button) => Accumulated[(uint)button] || Stage1[(uint)button] || Stage2[(uint)button];
+        public static bool IsHold(MouseButton button) => Stage2[(uint)button];
+        public static bool IsDown(MouseButton button) => Stage1[(uint)button] && !Stage2[(uint)button] && !Stage3[(uint)button];
+        public static bool IsUp(MouseButton button) => !Stage1[(uint)button] && !Stage2[(uint)button] && Stage3[(uint)button];
 
         public static void Feed(MouseEvent e)
         {
@@ -57,7 +45,7 @@
 
         public static void Tick()
         {
-            if (Accumulated[MouseButton.Left] && !Stage1[MouseButton.Left])
+            if (Accumulated[(DWORD)MouseButton.Left] && !Stage1[(DWORD)MouseButton.Left])
             { leftPressedAt = recordedPosition; }
 
             Stage3 = Stage2;

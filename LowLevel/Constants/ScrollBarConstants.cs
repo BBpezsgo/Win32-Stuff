@@ -1,7 +1,7 @@
 ﻿namespace Win32.LowLevel
 {
     // Scroll Bar Constants
-    public static partial class SB
+    public static partial class ScrollBarControlConstants
     {
         public const int HORZ = 0;
         public const int VERT = 1;

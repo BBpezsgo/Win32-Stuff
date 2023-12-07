@@ -1,9 +1,43 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
 namespace Win32.LowLevel
 {
     public static partial class User32
     {
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern UINT RealGetWindowClassW(
+          [In] HWND hwnd,
+          [Out] WCHAR* ptszClassName,
+          [In] UINT cchClassNameMax
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL EndTask(
+          [In] HWND hWnd,
+          [In] BOOL fShutDown,
+          [In] BOOL fForce
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL SetForegroundWindow(
+          [In] HWND hWnd
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND GetFocus();
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND SetFocus(
+          [In, Optional] HWND hWnd
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND SetActiveWindow(
+          [In] HWND hWnd
+        );
+
         /// <summary>
         /// Retrieves a handle to a window whose class name and window name match
         /// the specified strings. The function searches child windows,
@@ -137,7 +171,7 @@ namespace Win32.LowLevel
         /// A handle to the window whose information is to be retrieved.
         /// </param>
         /// <param name="pwi">
-        /// A pointer to a <see cref="WINDOWINFO"/> structure to receive the information.
+        /// A pointer to a <see cref="WindowInfo"/> structure to receive the information.
         /// Note that you must set the <c>cbSize</c> member to sizeof(WINDOWINFO) before calling this function.
         /// </param>
         /// <returns>
@@ -154,7 +188,7 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern BOOL GetWindowInfo(
           [In] HWND hwnd,
-          [In, Out] WINDOWINFO* pwi
+          [In, Out] WindowInfo* pwi
         );
 
         /// <summary>
@@ -392,7 +426,6 @@ namespace Win32.LowLevel
         /// </param>
         /// <param name="flags">
         /// The child windows to be skipped.
-        /// See <see cref="CWP"/>
         /// </param>
         /// <returns>
         /// The return value is a handle to the first child window that
@@ -414,7 +447,7 @@ namespace Win32.LowLevel
         public static extern HWND ChildWindowFromPointEx(
           [In] HWND hwnd,
           [In] POINT pt,
-          [In] UINT flags
+          [In] ChildWindowFromPointFlags flags
         );
 
         /// <summary>
@@ -582,6 +615,14 @@ namespace Win32.LowLevel
           [In, Optional] HMENU hMenu
         );
 
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HWND SetCapture(
+          [In] HWND hWnd
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL ReleaseCapture();
+
         /// <summary>
         /// Retrieves a handle to the window (if any) that has captured the mouse.
         /// Only one window at a time can capture the mouse; this window
@@ -667,9 +708,9 @@ namespace Win32.LowLevel
         /// <para>
         /// During the time that the primary button is held down to activate the Mouse ClickLock feature,
         /// the user can move the mouse. After the primary button is locked down,
-        /// releasing the primary button does not result in a <see cref="WM.WM_LBUTTONUP"/> message.
+        /// releasing the primary button does not result in a <see cref="WindowMessage.WM_LBUTTONUP"/> message.
         /// Thus, it will appear to an application that the primary button is still down.
-        /// Any subsequent button message releases the primary button, sending a <see cref="WM.WM_LBUTTONUP"/> message
+        /// Any subsequent button message releases the primary button, sending a <see cref="WindowMessage.WM_LBUTTONUP"/> message
         /// to the application, thus the button can be unlocked programmatically or
         /// through the user clicking any button.
         /// </para>
@@ -740,7 +781,7 @@ namespace Win32.LowLevel
         /// </param>
         /// <param name="uFlags">
         /// The window sizing and positioning flags.
-        /// See <see cref="SWP"/>
+        /// See <see cref="SetWindowPosFlags"/>
         /// </param>
         /// <returns>
         /// <para>
@@ -759,7 +800,7 @@ namespace Win32.LowLevel
           [In] int Y,
           [In] int cx,
           [In] int cy,
-          [In] UINT uFlags
+          [In] SetWindowPosFlags uFlags
         );
 
         /// <summary>
@@ -771,22 +812,22 @@ namespace Win32.LowLevel
         /// <returns>
         /// <para>
         /// If the specified window, its parent window, its parent's parent window,
-        /// and so forth, have the <see cref="WS.VISIBLE"/> style, the return value is nonzero.
+        /// and so forth, have the <see cref="WindowStyles.VISIBLE"/> style, the return value is nonzero.
         /// Otherwise, the return value is zero.
         /// </para>
         /// <para>
-        /// Because the return value specifies whether the window has the <see cref="WS.VISIBLE"/> style,
+        /// Because the return value specifies whether the window has the <see cref="WindowStyles.VISIBLE"/> style,
         /// it may be nonzero even if the window is totally obscured by other windows.
         /// </para>
         /// </returns>
         /// <remarks>
         /// <para>
-        /// The visibility state of a window is indicated by the <see cref="WS.VISIBLE"/> style bit.
-        /// When <see cref="WS.VISIBLE"/> is set, the window is displayed and subsequent drawing into
-        /// it is displayed as long as the window has the <see cref="WS.VISIBLE"/> style.
+        /// The visibility state of a window is indicated by the <see cref="WindowStyles.VISIBLE"/> style bit.
+        /// When <see cref="WindowStyles.VISIBLE"/> is set, the window is displayed and subsequent drawing into
+        /// it is displayed as long as the window has the <see cref="WindowStyles.VISIBLE"/> style.
         /// </para>
         /// <para>
-        /// Any drawing to a window with the <see cref="WS.VISIBLE"/> style will not be displayed
+        /// Any drawing to a window with the <see cref="WindowStyles.VISIBLE"/> style will not be displayed
         /// if the window is obscured by other windows or is clipped by its parent window.
         /// </para>
         /// </remarks>
@@ -830,7 +871,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         /// <remarks>
-        /// <c>OpenIcon</c> sends a <see cref="WM.WM_QUERYOPEN"/> message to the given window.
+        /// <c>OpenIcon</c> sends a <see cref="WindowMessage.WM_QUERYOPEN"/> message to the given window.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
         public static extern BOOL OpenIcon(
@@ -861,14 +902,14 @@ namespace Win32.LowLevel
         /// <remarks>
         /// <para>
         /// If the target window is owned by the current process,
-        /// <c>SetWindowText</c> causes a <see cref="WM.WM_SETTEXT"/> message to be sent to the
+        /// <c>SetWindowText</c> causes a <see cref="WindowMessage.WM_SETTEXT"/> message to be sent to the
         /// specified window or control. If the control is a list box control
-        /// created with the <see cref="WS.CAPTION"/> style, however, <c>SetWindowText</c> sets the
+        /// created with the <see cref="WindowStyles.CAPTION"/> style, however, <c>SetWindowText</c> sets the
         /// text for the control, not for the list box entries.
         /// </para>
         /// <para>
         /// To set the text of a control in another process, send the
-        /// <see cref="WM.WM_SETTEXT"/> message directly instead of calling <c>SetWindowText</c>.
+        /// <see cref="WindowMessage.WM_SETTEXT"/> message directly instead of calling <c>SetWindowText</c>.
         /// </para>
         /// <para>
         /// The <c>SetWindowText</c> function does not expand tab characters
@@ -921,7 +962,7 @@ namespace Win32.LowLevel
         /// <param name="lpKids">
         /// An array of handles to the child windows to arrange.
         /// If a specified child window is a top-level window
-        /// with the style <see cref="WS.EX_TOPMOST"/> or <see cref="WS.EX_TOOLWINDOW"/>,
+        /// with the style <see cref="WindowStyles.EX_TOPMOST"/> or <see cref="WindowStyles.EX_TOOLWINDOW"/>,
         /// the child window is not arranged. If this parameter
         /// is <c>NULL</c>, all child windows of the specified parent
         /// window (or of the desktop window) are arranged.
@@ -1001,7 +1042,7 @@ namespace Win32.LowLevel
         /// <remarks>
         /// <para>
         /// If the target window is owned by the current process,
-        /// <c>GetWindowText</c> causes a <see cref="WM.WM_GETTEXT"/> message to be sent
+        /// <c>GetWindowText</c> causes a <see cref="WindowMessage.WM_GETTEXT"/> message to be sent
         /// to the specified window or control. If the target window
         /// is owned by another process and has a caption, <c>GetWindowText</c>
         /// retrieves the window caption text. If the window does not have
@@ -1014,7 +1055,7 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// To retrieve the text of a control in another process,
-        /// send a <see cref="WM.WM_GETTEXT"/> message directly instead of calling <c>GetWindowText</c>.
+        /// send a <see cref="WindowMessage.WM_GETTEXT"/> message directly instead of calling <c>GetWindowText</c>.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
@@ -1189,30 +1230,30 @@ namespace Win32.LowLevel
         /// <para>
         /// Use one of the following flags to specify how the function positions the pop-up window horizontally.
         /// <list type="bullet">
-        /// <item><see cref="TPM.CENTERALIGN"/></item>
-        /// <item><see cref="TPM.LEFTALIGN"/></item>
-        /// <item><see cref="TPM.RIGHTALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.CENTERALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.LEFTALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.RIGHTALIGN"/></item>
         /// </list>
         /// </para>
         /// <para>
         /// Uses one of the following flags to specify how the function positions the pop-up window vertically.
         /// <list type="bullet">
-        /// <item><see cref="TPM.BOTTOMALIGN"/></item>
-        /// <item><see cref="TPM.TOPALIGN"/></item>
-        /// <item><see cref="TPM.VCENTERALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.BOTTOMALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.TOPALIGN"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.VCENTERALIGN"/></item>
         /// </list>
         /// </para>
         /// <para>
         /// Use one of the following flags to specify whether to accommodate horizontal or vertical alignment.
         /// <list type="bullet">
-        /// <item><see cref="TPM.HORIZONTAL"/></item>
-        /// <item><see cref="TPM.VERTICAL"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.HORIZONTAL"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.VERTICAL"/></item>
         /// </list>
         /// </para>
         /// <para>
         /// The following flag is available starting with Windows 7.
         /// <list type="bullet">
-        /// <item><see cref="TPM.WORKAREA"/></item>
+        /// <item><see cref="TrackPopupMenuFlags.WORKAREA"/></item>
         /// </list>
         /// </para>
         /// </param>
@@ -1227,7 +1268,7 @@ namespace Win32.LowLevel
         /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
         /// </returns>
         /// <remarks>
-        /// <see cref="TPM.WORKAREA"/> is supported for the <see cref="TrackPopupMenu"/> and <see cref="TrackPopupMenuEx"/> functions.
+        /// <see cref="TrackPopupMenuFlags.WORKAREA"/> is supported for the <see cref="TrackPopupMenu"/> and <see cref="TrackPopupMenuEx"/> functions.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern BOOL CalculatePopupWindowPosition(
@@ -1309,7 +1350,7 @@ namespace Win32.LowLevel
         /// The type of animation. This parameter can be one or more of the
         /// following values. Note that, by default, these flags
         /// take effect when showing a window. To take effect when
-        /// hiding a window, use <see cref="AW.HIDE"/> and a logical OR operator
+        /// hiding a window, use <see cref="AnimateWindowFlags.HIDE"/> and a logical OR operator
         /// with the appropriate flags.
         /// </param>
         /// <returns>
@@ -1329,7 +1370,7 @@ namespace Win32.LowLevel
         /// If there is no direction specified for the slide or roll animation.
         /// </item>
         /// <item>
-        /// When trying to animate a child window with <see cref="AW.BLEND"/>.
+        /// When trying to animate a child window with <see cref="AnimateWindowFlags.BLEND"/>.
         /// </item>
         /// <item>
         /// If the thread does not own the window.
@@ -1347,18 +1388,18 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// When using slide or roll animation, you must specify the direction.
-        /// It can be either <see cref="AW.HOR_POSITIVE"/>, <see cref="AW.HOR_NEGATIVE"/>,
-        /// <see cref="AW.VER_POSITIVE"/>, or <see cref="AW.VER_NEGATIVE"/>.
+        /// It can be either <see cref="AnimateWindowFlags.HOR_POSITIVE"/>, <see cref="AnimateWindowFlags.HOR_NEGATIVE"/>,
+        /// <see cref="AnimateWindowFlags.VER_POSITIVE"/>, or <see cref="AnimateWindowFlags.VER_NEGATIVE"/>.
         /// </para>
         /// <para>
-        /// You can combine <see cref="AW.HOR_POSITIVE"/> or <see cref="AW.HOR_NEGATIVE"/> with
-        /// <see cref="AW.VER_POSITIVE"/> or <see cref="AW.VER_NEGATIVE"/> to animate a window diagonally.
+        /// You can combine <see cref="AnimateWindowFlags.HOR_POSITIVE"/> or <see cref="AnimateWindowFlags.HOR_NEGATIVE"/> with
+        /// <see cref="AnimateWindowFlags.VER_POSITIVE"/> or <see cref="AnimateWindowFlags.VER_NEGATIVE"/> to animate a window diagonally.
         /// </para>
         /// <para>
         /// The window procedures for the window and its child windows should
-        /// handle any <see cref="WM.PRINT"/> or <see cref="WM.PRINTCLIENT"/> messages. Dialog boxes, controls,
-        /// and common controls already handle <see cref="WM.PRINTCLIENT"/>.
-        /// The default window procedure already handles <see cref="WM.PRINT"/>.
+        /// handle any <see cref="WindowMessage.PRINT"/> or <see cref="WindowMessage.PRINTCLIENT"/> messages. Dialog boxes, controls,
+        /// and common controls already handle <see cref="WindowMessage.PRINTCLIENT"/>.
+        /// The default window procedure already handles <see cref="WindowMessage.PRINT"/>.
         /// </para>
         /// <para>
         /// If a child window is displayed partially clipped,
@@ -1376,7 +1417,7 @@ namespace Win32.LowLevel
         public static extern BOOL AnimateWindow(
           [In] HWND hWnd,
           [In] DWORD dwTime,
-          [In] DWORD dwFlags
+          [In] AnimateWindowFlags dwFlags
         );
 
         /// <summary>
@@ -1422,7 +1463,7 @@ namespace Win32.LowLevel
         /// If this parameter is the desktop window, the function returns <c>NULL</c>.
         /// </param>
         /// <param name="gaFlags">
-        /// The ancestor to be retrieved. See <see cref="GA"/> for values.
+        /// The ancestor to be retrieved.
         /// </param>
         /// <returns>
         /// The return value is the handle to the ancestor window.
@@ -1430,7 +1471,7 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern HWND GetAncestor(
           [In] HWND hwnd,
-          [In] UINT gaFlags
+          [In] GetAncestorFlags gaFlags
         );
 
         /// <summary>
@@ -1569,7 +1610,7 @@ namespace Win32.LowLevel
         /// <para>
         /// The <c>EnumWindows</c> function does not enumerate child windows,
         /// with the exception of a few top-level windows owned by the
-        /// system that have the <see cref="WS.CHILD"/> style.
+        /// system that have the <see cref="WindowStyles.CHILD"/> style.
         /// </para>
         /// <para>
         /// This function is more reliable than calling the <see cref="GetWindow"/>
@@ -1615,7 +1656,7 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern HWND GetWindow(
           [In] HWND hWnd,
-          [In] UINT uCmd
+          [In] GetWindowFlags uCmd
         );
 
         /// <summary>
@@ -1648,7 +1689,7 @@ namespace Win32.LowLevel
         /// <remarks>
         /// <para>
         /// If the <paramref name="bRepaint"/> parameter is <c>TRUE</c>,
-        /// the system sends the <see cref="WM.WM_PAINT"/> message to the window procedure
+        /// the system sends the <see cref="WindowMessage.WM_PAINT"/> message to the window procedure
         /// immediately after moving the window (that is, the MoveWindow function calls
         /// the <see cref="UpdateWindow"/> function). If <paramref name="bRepaint"/> is <c>FALSE</c>,
         /// the application must explicitly invalidate or redraw any parts of the window
@@ -1713,9 +1754,9 @@ namespace Win32.LowLevel
 
         /// <summary>
         /// The <c>UpdateWindow</c> function updates the client area of
-        /// the specified window by sending a <see cref="WM.WM_PAINT"/> message to
+        /// the specified window by sending a <see cref="WindowMessage.WM_PAINT"/> message to
         /// the window if the window's update region is not empty.
-        /// The function sends a <see cref="WM.WM_PAINT"/> message directly to the
+        /// The function sends a <see cref="WindowMessage.WM_PAINT"/> message directly to the
         /// window procedure of the specified window, bypassing the
         /// application queue. If the update region is empty, no message is sent.
         /// </summary>
@@ -1867,7 +1908,7 @@ namespace Win32.LowLevel
         /// <returns>
         /// <para>
         /// If the window is a child window, the return value is a handle to the parent window.
-        /// If the window is a top-level window with the <see cref="WS.POPUP"/> style,
+        /// If the window is a top-level window with the <see cref="WindowStyles.POPUP"/> style,
         /// the return value is a handle to the owner window.
         /// </para>
         /// <para>
@@ -1879,10 +1920,10 @@ namespace Win32.LowLevel
         /// <list type="bullet">
         /// <item>
         /// The window is a top-level window that is unowned or does not have
-        /// the <see cref="WS.POPUP"/> style.
+        /// the <see cref="WindowStyles.POPUP"/> style.
         /// </item>
         /// <item>
-        /// The owner window has <see cref="WS.POPUP"/> style.
+        /// The owner window has <see cref="WindowStyles.POPUP"/> style.
         /// </item>
         /// </list>
         /// </para>
@@ -1892,7 +1933,7 @@ namespace Win32.LowLevel
         /// To obtain a window's owner window, instead of using <c>GetParent</c>,
         /// use <see cref="GetWindow"/> with the <c>GW_OWNER</c> flag. To obtain the parent window and
         /// not the owner, instead of using <c>GetParent</c>, use <see cref="GetAncestor"/> with
-        /// the <see cref="GA.PARENT"/> flag.
+        /// the <see cref="GetAncestorFlags.PARENT"/> flag.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -1902,8 +1943,8 @@ namespace Win32.LowLevel
 
         /// <summary>
         /// <para>
-        /// Destroys the specified window. The function sends <see cref="WM.WM_DESTROY"/> and
-        /// <see cref="WM.WM_NCDESTROY"/> messages to the window to deactivate it and remove
+        /// Destroys the specified window. The function sends <see cref="WindowMessage.WM_DESTROY"/> and
+        /// <see cref="WindowMessage.WM_NCDESTROY"/> messages to the window to deactivate it and remove
         /// the keyboard focus from it. The function also destroys the window's menu,
         /// flushes the thread message queue, destroys timers, removes clipboard
         /// ownership, and breaks the clipboard viewer chain (if the window is at
@@ -1938,7 +1979,7 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// If the window being destroyed is a child window that does not have
-        /// the <see cref="WS.EX_NOPARENTNOTIFY"/> style, a <see cref="WM.WM_PARENTNOTIFY"/> message is sent to the parent.
+        /// the <see cref="WindowStyles.EX_NOPARENTNOTIFY"/> style, a <see cref="WindowMessage.WM_PARENTNOTIFY"/> message is sent to the parent.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -2007,11 +2048,11 @@ namespace Win32.LowLevel
         /// the parent window's client area.
         /// </para>
         /// <para>
-        /// If an overlapped window is created with the <see cref="WS.VISIBLE"/> style bit set and
+        /// If an overlapped window is created with the <see cref="WindowStyles.VISIBLE"/> style bit set and
         /// the <paramref name="X"/> parameter is set to <c>CW_USEDEFAULT</c>,
         /// then the <paramref name="Y"/> parameter determines
         /// how the window is shown. If the <paramref name="Y"/> parameter is <c>CW_USEDEFAULT</c>, then the
-        /// window manager calls <see cref="ShowWindow"/> with the <see cref="SW.SHOW"/> flag after the window
+        /// window manager calls <see cref="ShowWindow"/> with the <see cref="ShowWindowCommand.SHOW"/> flag after the window
         /// has been created. If the <paramref name="Y"/> parameter is some other value, then the window
         /// manager calls <see cref="ShowWindow"/> with that value as the <c>nCmdShow</c> parameter.
         /// </para>
@@ -2061,7 +2102,7 @@ namespace Win32.LowLevel
         /// <para>
         /// Pointer to a value to be passed to the window through the <see cref="CREATESTRUCT"/>
         /// structure (<c>lpCreateParams</c> member) pointed to by the <c>lParam</c> param of
-        /// the <see cref="WM.WM_CREATE"/> message. This message is sent to the created window by
+        /// the <see cref="WindowMessage.WM_CREATE"/> message. This message is sent to the created window by
         /// this function before it returns.
         /// </para>
         /// <para>

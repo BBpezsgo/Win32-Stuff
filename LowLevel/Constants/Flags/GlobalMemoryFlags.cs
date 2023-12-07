@@ -17,8 +17,8 @@
         public const int GMEM_VALID_FLAGS = 0x7F72;
         public const int GMEM_INVALID_HANDLE = 0x8000;
 
-        public const int GHND = (GMEM_MOVEABLE | GMEM_ZEROINIT);
-        public const int GPTR = (GMEM_FIXED | GMEM_ZEROINIT);
+        public const int GHND = GMEM_MOVEABLE | GMEM_ZEROINIT;
+        public const int GPTR = GMEM_FIXED | GMEM_ZEROINIT;
 
         /* Flags returned by GlobalFlags (in addition to GMEM_DISCARDABLE) */
         public const int GMEM_DISCARDED = 0x4000;

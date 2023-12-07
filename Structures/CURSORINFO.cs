@@ -1,66 +1,51 @@
-﻿using System.Runtime.InteropServices;
+﻿global using CURSORINFO = Win32.CursorInfo;
+
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    public enum CursorState : DWORD
+    {
+        /// <summary>
+        /// The cursor is hidden.
+        /// </summary>
+        Hidden = 0,
+        /// <summary>
+        /// The cursor is showing.
+        /// </summary>
+        Showing = 0x00000001,
+        /// <summary>
+        /// Windows 8: The cursor is suppressed.
+        /// This flag indicates
+        /// that the system is not drawing the cursor because
+        /// the user is providing input through touch or pen
+        /// instead of the mouse.
+        /// </summary>
+        Suppressed = 0x00000002,
+    }
+
     /// <summary>
     /// Contains global cursor information.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct CursorInfo
     {
+        readonly DWORD StructSize;
+
         /// <summary>
-        /// The size of the structure, in bytes.
-        /// The caller must set this to <see langword="sizeof"/>(<see cref="CURSORINFO"/>).
+        /// The cursor state.
         /// </summary>
-        readonly DWORD cbSize;
-        /// <summary>
-        /// The cursor state. This parameter can be one of the following values.
-        /// <list type="table">
-        /// 
-        /// <item>
-        /// <term>
-        /// 0
-        /// </term>
-        /// <description>
-        /// The cursor is hidden.
-        /// </description>
-        /// </item>
-        /// 
-        /// <item>
-        /// <term>
-        /// CURSOR_SHOWING = 0x00000001
-        /// </term>
-        /// <description>
-        /// The cursor is showing.
-        /// </description>
-        /// </item>
-        /// 
-        /// <item>
-        /// <term>
-        /// CURSOR_SUPPRESSED = 0x00000002
-        /// </term>
-        /// <description>
-        /// <b>Windows 8:</b> The cursor is suppressed.
-        /// This flag indicates that the system is
-        /// not drawing the cursor because the user
-        /// is providing input through touch or pen
-        /// instead of the mouse.
-        /// </description>
-        /// </item>
-        /// 
-        /// </list>
-        /// </summary>
-        public readonly DWORD flags;
+        public readonly CursorState Flags;
         /// <summary>
         /// A handle to the cursor.
         /// </summary>
-        public readonly HCURSOR hCursor;
+        public readonly HCURSOR Cursor;
         /// <summary>
         /// A structure that receives the screen coordinates of the cursor.
         /// </summary>
-        public readonly POINT ptScreenPos;
+        public readonly POINT ScreenPosition;
 
-        CursorInfo(uint cbSize) : this() => this.cbSize = cbSize;
+        CursorInfo(uint structSize) : this() => StructSize = structSize;
         unsafe public static CURSORINFO Create() => new((uint)sizeof(CURSORINFO));
     }
 }

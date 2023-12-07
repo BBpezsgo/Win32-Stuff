@@ -9,7 +9,7 @@ csharp_prefer_braces = when_multiline:suggestion
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:suggestion
 csharp_style_prefer_top_level_statements = false:suggestion
-csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_primary_constructors = false:suggestion
 csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_constructors = true:silent
 csharp_style_expression_bodied_operators = true:suggestion
@@ -54,6 +54,9 @@ dotnet_diagnostic.CA1200.severity = suggestion
 dotnet_diagnostic.CA1309.severity = suggestion
 dotnet_diagnostic.CA1311.severity = suggestion
 dotnet_diagnostic.CA1805.severity = suggestion
+
+# DV2002: Unmapped types
+dotnet_diagnostic.DV2002.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####
@@ -111,7 +114,7 @@ dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
 dotnet_style_prefer_auto_properties = false:suggestion
 dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
+dotnet_style_collection_initializer = false:suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_prefer_conditional_expression_over_return = true:silent
@@ -182,3 +185,4 @@ dotnet_diagnostic.CA1050.severity = silent
 
 # IDE0003: Remove qualification
 dotnet_diagnostic.IDE0003.severity = silent
+dotnet_style_prefer_collection_expression = false:suggestion

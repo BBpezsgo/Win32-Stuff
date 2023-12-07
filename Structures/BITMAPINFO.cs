@@ -1,12 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct BITMAPINFO
+    public struct BitmapInfo
     {
-        public BITMAPINFOHEADER bmiHeader;
+        public BitmapInfoHeader Header;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-        public RGBQUAD[] bmiColors;
+        public RGBQuad[] Colors;
     }
 }

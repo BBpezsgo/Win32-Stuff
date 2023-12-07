@@ -1,6 +1,6 @@
 ﻿namespace Win32.LowLevel
 {
-    public static class FILE_ATTRIBUTE
+    public static class FileAttributes
     {
         public const int READONLY = 0x00000001;
         public const int HIDDEN = 0x00000002;

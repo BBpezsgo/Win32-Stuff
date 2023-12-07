@@ -84,7 +84,7 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         unsafe public void AppendSeparator()
         {
-            if (User32.AppendMenuW(_handle, MF.SEPARATOR, UINT_PTR.Zero, null) == 0)
+            if (User32.AppendMenuW(_handle, MenuFlags.SEPARATOR, UINT_PTR.Zero, null) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -93,7 +93,7 @@ namespace Win32
         {
             fixed (char* labelPtr = label)
             {
-                if (User32.AppendMenuW(_handle, MF.STRING, (UINT_PTR)id, labelPtr) == 0)
+                if (User32.AppendMenuW(_handle, MenuFlags.STRING, (UINT_PTR)id, labelPtr) == 0)
                 { throw WindowsException.Get(); }
             }
         }
@@ -101,14 +101,14 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         unsafe public void AppendMenu(int id, HBITMAP bitmap)
         {
-            if (User32.AppendMenuW(_handle, MF.BITMAP, (UINT_PTR)id, (char*)bitmap) == 0)
+            if (User32.AppendMenuW(_handle, MenuFlags.BITMAP, (UINT_PTR)id, (char*)bitmap) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
         unsafe public void AppendMenu(int id, void* data)
         {
-            if (User32.AppendMenuW(_handle, MF.OWNERDRAW, (UINT_PTR)id, (char*)data) == 0)
+            if (User32.AppendMenuW(_handle, MenuFlags.OWNERDRAW, (UINT_PTR)id, (char*)data) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -142,7 +142,7 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void CheckRadioItem(int first, int last, int index)
         {
-            if (User32.CheckMenuRadioItem(_handle, (uint)first, (uint)last, (uint)index, MF.BYPOSITION) == 0)
+            if (User32.CheckMenuRadioItem(_handle, (uint)first, (uint)last, (uint)index, MenuFlags.BYPOSITION) == 0)
             { throw WindowsException.Get(); }
         }
     }

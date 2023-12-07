@@ -1,5 +1,7 @@
-﻿namespace Win32
+﻿namespace Win32.Gdi32
 {
+    using LowLevel;
+
     /// <summary>Display Device Context</summary>
     public class DisplayDC : DC
     {

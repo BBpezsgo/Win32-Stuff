@@ -7,28 +7,15 @@
         public event SelectionChangedHandler? OnSelectionChanged;
 
         public ComboBox(
-            HWND parent,
-            string label,
-            RECT rect,
-            ushort id
-        ) : base(
-            parent,
-            label,
-            ClassName.COMBOBOX,
-            WS.OVERLAPPED | WS.VISIBLE | WS.CHILD | CBS.DROPDOWNLIST | CBS.DROPDOWN | CBS.HASSTRINGS | WS.VSCROLL | BS.DEFSPLITBUTTON,
-            rect,
-            id
-        )
-        { }
-
-        public ComboBox(
             Form parent,
             string label,
             RECT rect,
             out ushort id
-        ) : this(
-            parent.Handle,
+        ) : base(
+            parent,
             label,
+            LowLevel.ClassName.COMBOBOX,
+            WindowStyles.OVERLAPPED | WindowStyles.VISIBLE | WindowStyles.CHILD | ComboBoxControlStyles.DROPDOWNLIST | ComboBoxControlStyles.DROPDOWN | ComboBoxControlStyles.HASSTRINGS | WindowStyles.VSCROLL | ButtonControlStyles.DEFSPLITBUTTON,
             rect,
             parent.GenerateControlId(out id)
         )
@@ -50,16 +37,16 @@
 
         public override void HandleNotification(Window parent, ushort code)
         {
-            if (code == CBN.SELCHANGE)
+            if (code == ComboBoxControlNotification.SELCHANGE)
             {
                 OnSelectionChanged?.Invoke(this, parent);
                 return;
             }
-            else if (code == CBN.SETFOCUS)
+            else if (code == ComboBoxControlNotification.SETFOCUS)
             {
                 return;
             }
-            else if (code == CBN.DROPDOWN)
+            else if (code == ComboBoxControlNotification.DROPDOWN)
             {
                 return;
             }

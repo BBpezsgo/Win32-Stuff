@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
@@ -6,7 +7,6 @@ namespace Win32
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HWND _handle;
-        static readonly Dictionary<HWND, Dictionary<string, HANDLE>> propEnumRequests = new();
 
         public WindowPropertiesContainer(HWND handle) => _handle = handle;
 
@@ -38,22 +38,37 @@ namespace Win32
             return result != HANDLE.Zero;
         }
 
-        unsafe static BOOL EnumPropsProc(HWND hwnd, WCHAR* propName, HANDLE propVal)
+        unsafe static BOOL ToDictionaryProc(HWND hwnd, WCHAR* propName, HANDLE propVal, ULONG_PTR lParam)
         {
-            if (!propEnumRequests.TryGetValue(hwnd, out Dictionary<string, HANDLE>? list))
+            GCHandle handle = GCHandle.FromIntPtr((nint)lParam);
+            if (!handle.IsAllocated)
+            { return FALSE; }
+            object? obj = handle.Target;
+            if (obj == null)
             { return FALSE; }
 
-            list.Add(new string(propName), propVal);
+            Dictionary<string, HANDLE> childList = (Dictionary<string, HANDLE>)obj;
+            childList.Add(new string(propName), propVal);
+
             return TRUE;
         }
 
         unsafe public Dictionary<string, HANDLE> ToDictionary()
         {
             Dictionary<string, HANDLE> result = new();
-            propEnumRequests.Add(_handle, result);
-            _ = User32.EnumPropsW(_handle, &EnumPropsProc);
-            propEnumRequests.Remove(_handle);
+            GCHandle handle = GCHandle.Alloc(result, GCHandleType.Weak);
+            _ = User32.EnumPropsExW(_handle, &ToDictionaryProc, GCHandle.ToIntPtr(handle));
+            handle.Free();
             return result;
+        }
+
+        unsafe public bool TryGetValue(string property, out HANDLE value)
+        {
+            HANDLE result;
+            fixed (WCHAR* propertyPtr = property)
+            { result = User32.GetPropW(_handle, propertyPtr); }
+            value = result;
+            return value != HANDLE.Zero;
         }
     }
 }

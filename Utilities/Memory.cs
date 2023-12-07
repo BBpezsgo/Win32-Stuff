@@ -54,5 +54,30 @@
             { throw WindowsException.Get(); }
             return new GlobalObject(handle);
         }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static void* VirtualAlloc(uint size, DWORD protect, DWORD allocationType)
+        {
+            void* address = Kernel32.VirtualAlloc(null, size, allocationType, protect);
+            if (address == null)
+            { throw WindowsException.Get(); }
+            return address;
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static void VirtualFree(void* address, uint size, DWORD freeType)
+        {
+            if (Kernel32.VirtualFree(address, size, freeType) == 0)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static DWORD VirtualProtect(void* address, uint size, DWORD protect)
+        {
+            DWORD oldProtect = default;
+            if (Kernel32.VirtualProtect(address, size, protect, &oldProtect) == 0)
+            { throw WindowsException.Get(); }
+            return oldProtect;
+        }
     }
 }

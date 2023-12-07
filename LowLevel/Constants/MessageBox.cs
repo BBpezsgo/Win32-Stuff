@@ -43,7 +43,6 @@
         MB_YESNOCANCEL = 0x00000003,
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "<Pending>")]
     public enum MessageBoxIcon : uint
     {
         /// <summary>

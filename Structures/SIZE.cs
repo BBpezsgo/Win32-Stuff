@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿global using SIZE = Win32.Common.Size;
+
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Common
 {
     /// <summary>
     /// Defines the width and height of a rectangle.
@@ -13,7 +15,9 @@ namespace Win32
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct Size : IEquatable<SIZE>
+    public struct Size :
+        IEquatable<SIZE>,
+        System.Numerics.IEqualityOperators<SIZE, SIZE, bool>
     {
         /// <summary>Specifies the rectangle's width. The units depend on which function uses this structure.</summary>
         public LONG Width;

@@ -1,6 +1,6 @@
 ﻿namespace Win32.LowLevel
 {
-    public static class SS
+    public static class StaticControlConstants
     {
         public const uint LEFT = 0x00000000;
         public const uint CENTER = 0x00000001;

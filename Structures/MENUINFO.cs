@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿global using MENUINFO = Win32.MenuInfo;
+
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
@@ -15,10 +17,10 @@ namespace Win32
         readonly DWORD cbSize;
         /// <summary>
         /// <para>
-        /// Indicates the members to be retrieved or set (except for <see cref="MIM.APPLYTOSUBMENUS"/>).
+        /// Indicates the members to be retrieved or set (except for <see cref="MenuInfoMasks.APPLYTOSUBMENUS"/>).
         /// </para>
         /// <para>
-        /// See <see cref="MIM"/>
+        /// See <see cref="MenuInfoMasks"/>
         /// </para>
         /// </summary>
         public DWORD fMask;
@@ -27,7 +29,7 @@ namespace Win32
         /// The menu style.
         /// </para>
         /// <para>
-        /// See <see cref="MNS"/>
+        /// See <see cref="MenuStyles"/>
         /// </para>
         /// </summary>
         public DWORD dwStyle;

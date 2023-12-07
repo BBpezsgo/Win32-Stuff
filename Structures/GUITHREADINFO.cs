@@ -1,21 +1,24 @@
-﻿using System.Runtime.InteropServices;
+﻿global using GUITHREADINFO = Win32.GuiThreadInfo;
+
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public readonly struct GuiThreadInfo
     {
-        readonly DWORD cbSize;
-        public readonly DWORD flags;
-        public readonly HWND hwndActive;
-        public readonly HWND hwndFocus;
-        public readonly HWND hwndCapture;
-        public readonly HWND hwndMenuOwner;
-        public readonly HWND hwndMoveSize;
-        public readonly HWND hwndCaret;
-        public readonly RECT rcCaret;
+        readonly DWORD StructSize;
 
-        GuiThreadInfo(uint cbSize) : this() => this.cbSize = cbSize;
+        public readonly DWORD Flags;
+        public readonly HWND ActiveHandle;
+        public readonly HWND FocusHandle;
+        public readonly HWND CaptureHandle;
+        public readonly HWND MenuOwnerHandle;
+        public readonly HWND MoveSizeHandle;
+        public readonly HWND CaretHandle;
+        public readonly RECT Caret;
+
+        GuiThreadInfo(uint structSize) : this() => this.StructSize = structSize;
         unsafe public static GUITHREADINFO Create() => new((uint)sizeof(GUITHREADINFO));
     }
 }

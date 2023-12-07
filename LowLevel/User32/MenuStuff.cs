@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
 namespace Win32.LowLevel
 {
     public static partial class User32
@@ -43,12 +45,12 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// For any animation to occur, the <see cref="SystemParametersInfo"/> function must
-        /// set <see cref="SPI.SETMENUANIMATION"/>. Also, all the <see cref="TPM"/>*ANIMATION flags, except
-        /// <see cref="TPM.NOANIMATION"/>, are ignored if menu fade animation is on.
+        /// set <see cref="SPI.SETMENUANIMATION"/>. Also, all the <see cref="TrackPopupMenuFlags"/>*ANIMATION flags, except
+        /// <see cref="TrackPopupMenuFlags.NOANIMATION"/>, are ignored if menu fade animation is on.
         /// For more information, see the <see cref="SPI.GETMENUFADE"/> flag in <see cref="SystemParametersInfo"/>.
         /// </para>
         /// <para>
-        /// Use the <see cref="TPM.RECURSE"/> flag to display a menu when another menu is already displayed.
+        /// Use the <see cref="TrackPopupMenuFlags.RECURSE"/> flag to display a menu when another menu is already displayed.
         /// This is intended to support context menus within a menu.
         /// </para>
         /// <para>
@@ -56,7 +58,7 @@ namespace Win32.LowLevel
         /// the menu should not overlap; it is specified by the <paramref name="lptpm"/> parameter.
         /// </para>
         /// <para>
-        /// For right-to-left text layout, use <see cref="TPM.LAYOUTRTL"/>. By default, the text layout is left-to-right.
+        /// For right-to-left text layout, use <see cref="TrackPopupMenuFlags.LAYOUTRTL"/>. By default, the text layout is left-to-right.
         /// </para>
         /// </param>
         /// <param name="x">
@@ -68,37 +70,37 @@ namespace Win32.LowLevel
         /// <param name="hwnd">
         /// A handle to the window that owns the shortcut menu.
         /// This window receives all messages from the menu.
-        /// The window does not receive a <see cref="WM.COMMAND"/> message
+        /// The window does not receive a <see cref="WindowMessage.COMMAND"/> message
         /// from the menu until the function returns.
-        /// If you specify <see cref="TPM.NONOTIFY"/> in the <paramref name="uFlags"/> parameter,
+        /// If you specify <see cref="TrackPopupMenuFlags.NONOTIFY"/> in the <paramref name="uFlags"/> parameter,
         /// the function does not send messages to the window
         /// identified by hwnd. However, you must still pass a
         /// window handle in hwnd. It can be any window handle
         /// from your application.
         /// </param>
         /// <param name="lptpm">
-        /// A pointer to a <see cref="TPMPARAMS"/> structure that specifies an area of
+        /// A pointer to a <see cref="TrackPopupMenuParams"/> structure that specifies an area of
         /// the screen the menu should not overlap. This parameter can be <c>NULL</c>.
         /// </param>
         /// <returns>
         /// <para>
-        /// If you specify <see cref="TPM.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
+        /// If you specify <see cref="TrackPopupMenuFlags.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
         /// the return value is the menu-item identifier of the item
         /// that the user selected. If the user cancels the menu without
         /// making a selection, or if an error occurs, the return value is zero.
         /// </para>
         /// <para>
-        /// If you do not specify <see cref="TPM.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
+        /// If you do not specify <see cref="TrackPopupMenuFlags.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
         /// the return value is nonzero if the function succeeds and zero
         /// if it fails. To get extended error information, call <see cref="Kernel32.GetLastError"/>.
         /// </para>
         /// </returns>
         /// <remarks>
         /// <para>
-        /// Call <see cref="GetSystemMetrics"/> with <see cref="SM.MENUDROPALIGNMENT"/> to determine
-        /// the correct horizontal alignment flag (<see cref="TPM.LEFTALIGN"/> or <see cref="TPM.RIGHTALIGN"/>)
-        /// and/or horizontal animation direction flag (<see cref="TPM.HORPOSANIMATION"/> or
-        /// <see cref="TPM.HORNEGANIMATION"/>) to pass to <see cref="TrackPopupMenu"/>
+        /// Call <see cref="GetSystemMetrics"/> with <see cref="SystemMetricsFlags.MENUDROPALIGNMENT"/> to determine
+        /// the correct horizontal alignment flag (<see cref="TrackPopupMenuFlags.LEFTALIGN"/> or <see cref="TrackPopupMenuFlags.RIGHTALIGN"/>)
+        /// and/or horizontal animation direction flag (<see cref="TrackPopupMenuFlags.HORPOSANIMATION"/> or
+        /// <see cref="TrackPopupMenuFlags.HORNEGANIMATION"/>) to pass to <see cref="TrackPopupMenu"/>
         /// or <c>TrackPopupMenuEx</c>.
         /// This is essential for creating an optimal user experience, especially
         /// when developing Microsoft Tablet PC applications.
@@ -116,11 +118,11 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern BOOL TrackPopupMenuEx(
           [In] HMENU hMenu,
-          [In] UINT uFlags,
+          [In] TrackPopupMenuFlags uFlags,
           [In] int x,
           [In] int y,
           [In] HWND hwnd,
-          [In, Optional] TPMPARAMS* lptpm
+          [In, Optional] TrackPopupMenuParams* lptpm
         );
 
         /// <summary>
@@ -137,20 +139,20 @@ namespace Win32.LowLevel
         /// <param name="uFlags">
         /// <para>
         /// Use zero of more of these flags to specify function options.
-        /// See <see cref="TPM"/>
+        /// See <see cref="TrackPopupMenuFlags"/>
         /// </para>
         /// <para>
         /// For any animation to occur, the <see cref="SystemParametersInfoW"/> function
-        /// must set <see cref="SPI.SETMENUANIMATION"/>. Also, all the <see cref="TPM"/>.*ANIMATION flags,
-        /// except <see cref="TPM.NOANIMATION"/>, are ignored if menu fade animation is on.
+        /// must set <see cref="SPI.SETMENUANIMATION"/>. Also, all the <see cref="TrackPopupMenuFlags"/>.*ANIMATION flags,
+        /// except <see cref="TrackPopupMenuFlags.NOANIMATION"/>, are ignored if menu fade animation is on.
         /// For more information, see the <see cref="SPI.GETMENUFADE"/> flag in <see cref="SystemParametersInfoW"/>.
         /// </para>
         /// <para>
-        /// Use the <see cref="TPM.RECURSE"/> flag to display a menu when another menu is already displayed.
+        /// Use the <see cref="TrackPopupMenuFlags.RECURSE"/> flag to display a menu when another menu is already displayed.
         /// This is intended to support context menus within a menu.
         /// </para>
         /// <para>
-        /// For right-to-left text layout, use <see cref="TPM.LAYOUTRTL"/>. By default, the text layout is left-to-right.
+        /// For right-to-left text layout, use <see cref="TrackPopupMenuFlags.LAYOUTRTL"/>. By default, the text layout is left-to-right.
         /// </para>
         /// </param>
         /// <param name="x">
@@ -165,8 +167,8 @@ namespace Win32.LowLevel
         /// <param name="hWnd">
         /// A handle to the window that owns the shortcut menu.
         /// This window receives all messages from the menu.
-        /// The window does not receive a <see cref="WM.COMMAND"/> message from the
-        /// menu until the function returns. If you specify <see cref="TPM.NONOTIFY"/>
+        /// The window does not receive a <see cref="WindowMessage.COMMAND"/> message from the
+        /// menu until the function returns. If you specify <see cref="TrackPopupMenuFlags.NONOTIFY"/>
         /// in the <paramref name="uFlags"/> parameter, the function does not send messages
         /// to the window identified by <paramref name="hWnd"/>. However, you must still
         /// pass a window handle in <paramref name="hWnd"/>. It can be any window handle
@@ -177,13 +179,13 @@ namespace Win32.LowLevel
         /// </param>
         /// <returns>
         /// <para>
-        /// If you specify <see cref="TPM.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
+        /// If you specify <see cref="TrackPopupMenuFlags.RETURNCMD"/> in the <paramref name="uFlags"/> parameter,
         /// the return value is the menu-item identifier of the item that the user selected.
         /// If the user cancels the menu without making a selection,
         /// or if an error occurs, the return value is zero.
         /// </para>
         /// <para>
-        /// If you do not specify <see cref="TPM.RETURNCMD"/> in the <paramref name="uFlags"/> parameter, the return value is
+        /// If you do not specify <see cref="TrackPopupMenuFlags.RETURNCMD"/> in the <paramref name="uFlags"/> parameter, the return value is
         /// nonzero if the function succeeds and zero if it fails.
         /// To get extended error information, call <see cref="Kernel32.GetLastError"/>.
         /// </para>
@@ -191,7 +193,7 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern BOOL TrackPopupMenu(
           [In] HMENU hMenu,
-          [In] UINT uFlags,
+          [In] TrackPopupMenuFlags uFlags,
           [In] int x,
           [In] int y,
           [In] int nReserved,
@@ -317,12 +319,12 @@ namespace Win32.LowLevel
         /// </param>
         /// <param name="uIDNewItem">
         /// The identifier of the modified menu item or, if the <paramref name="uFlags"/> parameter has
-        /// the <see cref="MF.POPUP"/> flag set, a handle to the drop-down menu or submenu.
+        /// the <see cref="MenuFlags.POPUP"/> flag set, a handle to the drop-down menu or submenu.
         /// </param>
         /// <param name="lpNewItem">
         /// The contents of the changed menu item. The interpretation of this parameter depends
         /// on whether the <paramref name="uFlags"/> parameter includes
-        /// the <see cref="MF.BITMAP"/>, <see cref="MF.OWNERDRAW"/>, or <see cref="MF.STRING"/> flag.
+        /// the <see cref="MenuFlags.BITMAP"/>, <see cref="MenuFlags.OWNERDRAW"/>, or <see cref="MenuFlags.STRING"/> flag.
         /// </param>
         /// <returns>
         /// <para>
@@ -372,7 +374,7 @@ namespace Win32.LowLevel
         /// <param name="lpNewItem">
         /// The content of the new menu item. The interpretation of <paramref name="lpNewItem"/> depends
         /// on whether the <paramref name="uFlags"/>
-        /// parameter includes the <see cref="MF.BITMAP"/>, <see cref="MF.OWNERDRAW"/>, or <see cref="MF.STRING"/> flag.
+        /// parameter includes the <see cref="MenuFlags.BITMAP"/>, <see cref="MenuFlags.OWNERDRAW"/>, or <see cref="MenuFlags.STRING"/> flag.
         /// </param>
         /// <returns>
         /// <para>
@@ -392,20 +394,20 @@ namespace Win32.LowLevel
         /// The following groups of flags cannot be used together:
         /// <list type="bullet">
         /// <item>
-        /// <see cref="MF.BYCOMMAND"/> and <see cref="MF.BYPOSITION"/>
+        /// <see cref="MenuFlags.BYCOMMAND"/> and <see cref="MenuFlags.BYPOSITION"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.DISABLED"/>, <see cref="MF.ENABLED"/>, and <see cref="MF.GRAYED"/>
+        /// <see cref="MenuFlags.DISABLED"/>, <see cref="MenuFlags.ENABLED"/>, and <see cref="MenuFlags.GRAYED"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.BITMAP"/>, <see cref="MF.STRING"/>,
-        /// <see cref="MF.OWNERDRAW"/>, and <see cref="MF.SEPARATOR"/>
+        /// <see cref="MenuFlags.BITMAP"/>, <see cref="MenuFlags.STRING"/>,
+        /// <see cref="MenuFlags.OWNERDRAW"/>, and <see cref="MenuFlags.SEPARATOR"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.MENUBARBREAK"/> and <see cref="MF.MENUBREAK"/>
+        /// <see cref="MenuFlags.MENUBARBREAK"/> and <see cref="MenuFlags.MENUBREAK"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.CHECKED"/> and <see cref="MF.UNCHECKED"/>
+        /// <see cref="MenuFlags.CHECKED"/> and <see cref="MenuFlags.UNCHECKED"/>
         /// </item>
         /// </list>
         /// </para>
@@ -437,8 +439,8 @@ namespace Win32.LowLevel
         /// <param name="uHilite">
         /// Controls the interpretation of the <paramref name="uIDHiliteItem"/> parameter and indicates
         /// whether the menu item is highlighted. This parameter must be a
-        /// combination of either <see cref="MF.BYCOMMAND"/> or <see cref="MF.BYPOSITION"/>
-        /// and <see cref="MF.HILITE"/> or <see cref="MF.UNHILITE"/>.
+        /// combination of either <see cref="MenuFlags.BYCOMMAND"/> or <see cref="MenuFlags.BYPOSITION"/>
+        /// and <see cref="MenuFlags.HILITE"/> or <see cref="MenuFlags.UNHILITE"/>.
         /// </param>
         /// <returns>
         /// <para>
@@ -449,7 +451,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         /// <remarks>
-        /// The <see cref="MF.HILITE"/> and <see cref="MF.UNHILITE"/> flags can be used only with
+        /// The <see cref="MenuFlags.HILITE"/> and <see cref="MenuFlags.UNHILITE"/> flags can be used only with
         /// the <c>HiliteMenuItem</c> function; they cannot be used with the <see cref="ModifyMenuW"/> function.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
@@ -512,8 +514,8 @@ namespace Win32.LowLevel
         /// <param name="flags">
         /// Indicates the meaning of <paramref name="first"/>, <paramref name="last"/>,
         /// and <paramref name="check"/>.
-        /// If this parameter is <see cref="MF.BYCOMMAND"/>, the other parameters
-        /// specify menu item identifiers. If it is <see cref="MF.BYPOSITION"/>,
+        /// If this parameter is <see cref="MenuFlags.BYCOMMAND"/>, the other parameters
+        /// specify menu item identifiers. If it is <see cref="MenuFlags.BYPOSITION"/>,
         /// the other parameters specify the menu item positions.
         /// </param>
         /// <returns>
@@ -822,7 +824,7 @@ namespace Win32.LowLevel
         /// <para>
         /// In order for keyboard accelerators to work with bitmap or
         /// owner-drawn menu items, the owner of the menu must process
-        /// the <see cref="WM.WM_MENUCHAR"/> message. See
+        /// the <see cref="WindowMessage.WM_MENUCHAR"/> message. See
         /// <see href="https://learn.microsoft.com/en-us/windows/desktop/menurc/using-menus">Owner-Drawn Menus and the <c>WM_MENUCHAR</c> Message</see> for more information.
         /// </para>
         /// </remarks>
@@ -865,7 +867,7 @@ namespace Win32.LowLevel
         /// </param>
         /// <param name="uFlags">
         /// Controls the appearance and behavior of the new menu item.
-        /// See <see cref="MF"/>
+        /// See <see cref="MenuFlags"/>
         /// </param>
         /// <param name="uIDNewItem">
         /// The identifier of the new menu item or, if the <paramref name="uFlags"/> parameter
@@ -878,7 +880,7 @@ namespace Win32.LowLevel
         /// <list type="table">
         /// <item>
         /// <term>
-        /// <see cref="MF.BITMAP"/>
+        /// <see cref="MenuFlags.BITMAP"/>
         /// </term>
         /// <description>
         /// Contains a bitmap handle.
@@ -886,19 +888,19 @@ namespace Win32.LowLevel
         /// </item>
         /// <item>
         /// <term>
-        /// <see cref="MF.OWNERDRAW"/>
+        /// <see cref="MenuFlags.OWNERDRAW"/>
         /// </term>
         /// <description>
         /// Contains an application-supplied value that can be used to
         /// maintain additional data related to the menu item.
         /// The value is in the <c>itemData</c> member of the structure pointed
-        /// by the <c>lParam</c> parameter of the <see cref="WM.WM_MEASUREITEM"/> or <see cref="WM.WM_DRAWITEM"/>
+        /// by the <c>lParam</c> parameter of the <see cref="WindowMessage.WM_MEASUREITEM"/> or <see cref="WindowMessage.WM_DRAWITEM"/>
         /// message sent when the menu is created or its appearance is updated.
         /// </description>
         /// </item>
         /// <item>
         /// <term>
-        /// <see cref="MF.STRING"/>
+        /// <see cref="MenuFlags.STRING"/>
         /// </term>
         /// <description>
         /// Contains a pointer to a null-terminated string.
@@ -922,7 +924,7 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// To get keyboard accelerators to work with bitmap or owner-drawn
-        /// menu items, the owner of the menu must process the <see cref="WM.WM_MENUCHAR"/> message.
+        /// menu items, the owner of the menu must process the <see cref="WindowMessage.WM_MENUCHAR"/> message.
         /// For more information, see
         /// <see href="https://learn.microsoft.com/en-us/windows/desktop/menurc/using-menus">Owner-Drawn Menus and the <c>WM_MENUCHAR</c> Message</see>.
         /// </para>
@@ -930,16 +932,16 @@ namespace Win32.LowLevel
         /// The following groups of flags cannot be used together:
         /// <list type="bullet">
         /// <item>
-        /// <see cref="MF.BITMAP"/>, <see cref="MF.STRING"/>, and <see cref="MF.OWNERDRAW"/>
+        /// <see cref="MenuFlags.BITMAP"/>, <see cref="MenuFlags.STRING"/>, and <see cref="MenuFlags.OWNERDRAW"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.CHECKED"/> and <see cref="MF.UNCHECKED"/>
+        /// <see cref="MenuFlags.CHECKED"/> and <see cref="MenuFlags.UNCHECKED"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.DISABLED"/>, <see cref="MF.ENABLED"/>, and <see cref="MF.GRAYED"/>
+        /// <see cref="MenuFlags.DISABLED"/>, <see cref="MenuFlags.ENABLED"/>, and <see cref="MenuFlags.GRAYED"/>
         /// </item>
         /// <item>
-        /// <see cref="MF.MENUBARBREAK"/> and <see cref="MF.MENUBREAK"/>
+        /// <see cref="MenuFlags.MENUBARBREAK"/> and <see cref="MenuFlags.MENUBREAK"/>
         /// </item>
         /// </list>
         /// </para>

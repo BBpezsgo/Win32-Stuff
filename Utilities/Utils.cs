@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
@@ -19,63 +21,63 @@ namespace Win32
 
     public struct MouseMetrics
     {
-        public static int MouseButtonCount => User32.GetSystemMetrics(SM.CMOUSEBUTTONS);
-        public static bool IsMousePresent => User32.GetSystemMetrics(SM.MOUSEPRESENT) != 0;
-        public static bool IsMouseHWheelPresent => User32.GetSystemMetrics(SM.MOUSEHORIZONTALWHEELPRESENT) != 0;
-        public static bool IsMouseVWheelPresent => User32.GetSystemMetrics(SM.MOUSEWHEELPRESENT) != 0;
+        public static int MouseButtonCount => User32.GetSystemMetrics(SystemMetricsFlags.CMOUSEBUTTONS);
+        public static bool IsMousePresent => User32.GetSystemMetrics(SystemMetricsFlags.MOUSEPRESENT) != 0;
+        public static bool IsMouseHWheelPresent => User32.GetSystemMetrics(SystemMetricsFlags.MOUSEHORIZONTALWHEELPRESENT) != 0;
+        public static bool IsMouseVWheelPresent => User32.GetSystemMetrics(SystemMetricsFlags.MOUSEWHEELPRESENT) != 0;
     }
 
     public struct DisplayMetrics
     {
-        public static int DisplayMonitorCount => User32.GetSystemMetrics(SM.CMONITORS);
+        public static int DisplayMonitorCount => User32.GetSystemMetrics(SystemMetricsFlags.CMONITORS);
 
-        public static int Width => User32.GetSystemMetrics(SM.CXSCREEN);
-        public static int Height => User32.GetSystemMetrics(SM.CYSCREEN);
+        public static int Width => User32.GetSystemMetrics(SystemMetricsFlags.CXSCREEN);
+        public static int Height => User32.GetSystemMetrics(SystemMetricsFlags.CYSCREEN);
         public static SIZE Size => new(Width, Height);
         public static RECT Rect => new(0, 0, Width, Height);
     }
 
     public struct WindowMetrics
     {
-        public static int BorderWidth => User32.GetSystemMetrics(SM.CXBORDER);
-        public static int BorderHeight => User32.GetSystemMetrics(SM.CYBORDER);
+        public static int BorderWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXBORDER);
+        public static int BorderHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYBORDER);
         public static SIZE BorderSize => new(BorderWidth, BorderHeight);
 
-        public static int MinimumWidth => User32.GetSystemMetrics(SM.CXMIN);
-        public static int MinimumHeight => User32.GetSystemMetrics(SM.CYMIN);
+        public static int MinimumWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXMIN);
+        public static int MinimumHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYMIN);
         public static SIZE MinimumSize => new(MinimumWidth, MinimumHeight);
 
-        public static int TitleBarButtonWidth => User32.GetSystemMetrics(SM.CXSIZE);
-        public static int TitleBarButtonHeight => User32.GetSystemMetrics(SM.CYSIZE);
+        public static int TitleBarButtonWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXSIZE);
+        public static int TitleBarButtonHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYSIZE);
         public static SIZE TitleBarButtonSize => new(TitleBarButtonWidth, TitleBarButtonHeight);
 
 
-        public static int MaximizedWidth => User32.GetSystemMetrics(SM.CXMAXIMIZED);
-        public static int MaximizedHeight => User32.GetSystemMetrics(SM.CYMAXIMIZED);
+        public static int MaximizedWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXMAXIMIZED);
+        public static int MaximizedHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYMAXIMIZED);
         public static SIZE MaximizedSize => new(MaximizedWidth, MaximizedHeight);
 
-        public static int MinimizedWidth => User32.GetSystemMetrics(SM.CXMINIMIZED);
-        public static int MinimizedHeight => User32.GetSystemMetrics(SM.CYMINIMIZED);
+        public static int MinimizedWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXMINIMIZED);
+        public static int MinimizedHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYMINIMIZED);
         public static SIZE MinimizedSize => new(MinimizedWidth, MinimizedHeight);
     }
 
     public struct SystemMetrics
     {
-        public static int FullScreenWidth => User32.GetSystemMetrics(SM.CXFULLSCREEN);
-        public static int FullScreenHeight => User32.GetSystemMetrics(SM.CYFULLSCREEN);
+        public static int FullScreenWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXFULLSCREEN);
+        public static int FullScreenHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYFULLSCREEN);
         public static SIZE FullScreenSize => new(FullScreenWidth, FullScreenHeight);
 
-        public static int SystemBootMode => User32.GetSystemMetrics(SM.CLEANBOOT);
+        public static int SystemBootMode => User32.GetSystemMetrics(SystemMetricsFlags.CLEANBOOT);
 
-        public static int CursorWidth => User32.GetSystemMetrics(SM.CXCURSOR);
-        public static int CursorHeight => User32.GetSystemMetrics(SM.CYCURSOR);
+        public static int CursorWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXCURSOR);
+        public static int CursorHeight => User32.GetSystemMetrics(SystemMetricsFlags.CYCURSOR);
         public static SIZE CursorSize => new(CursorWidth, CursorHeight);
 
-        public static bool IsDbcsEnabled => User32.GetSystemMetrics(SM.DBCSENABLED) != 0;
-        public static bool IsDebug => User32.GetSystemMetrics(SM.DEBUG) != 0;
-        public static bool IsNetworkPresent => (User32.GetSystemMetrics(SM.NETWORK) & 1) != 0;
-        public static bool IsShuttingDown => User32.GetSystemMetrics(SM.SHUTTINGDOWN) != 0;
-        public static bool IsSlowMachine => User32.GetSystemMetrics(SM.SLOWMACHINE) != 0;
+        public static bool IsDbcsEnabled => User32.GetSystemMetrics(SystemMetricsFlags.DBCSENABLED) != 0;
+        public static bool IsDebug => User32.GetSystemMetrics(SystemMetricsFlags.DEBUG) != 0;
+        public static bool IsNetworkPresent => (User32.GetSystemMetrics(SystemMetricsFlags.NETWORK) & 1) != 0;
+        public static bool IsShuttingDown => User32.GetSystemMetrics(SystemMetricsFlags.SHUTTINGDOWN) != 0;
+        public static bool IsSlowMachine => User32.GetSystemMetrics(SystemMetricsFlags.SLOWMACHINE) != 0;
     }
 
     public static class Utils
@@ -100,9 +102,6 @@ namespace Win32
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public static bool IsGuiThread => User32.IsGUIThread(FALSE) != 0;
-
-        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        public static uint DoubleClickTime => User32.GetDoubleClickTime();
 
         public static void BlockInput(bool block) => _ = User32.BlockInput(block ? TRUE : FALSE);
 

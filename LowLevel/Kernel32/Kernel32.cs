@@ -1,11 +1,275 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
 namespace Win32.LowLevel
 {
     public static class Kernel32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetThreadIdealProcessorEx(
+          [In] HANDLE hThread,
+          [Out] ProcessorNumber* lpIdealProcessor
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetThreadGroupAffinity(
+          [In] HANDLE hThread,
+          [Out] GroupAffinity* GroupAffinity
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetThreadId(
+          [In] HANDLE Thread
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetProcessIdOfThread(
+          [In] HANDLE Thread
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern HRESULT GetThreadDescription(
+          [In] HANDLE hThread,
+          [Out] WCHAR** ppszThreadDescription
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetExitCodeThread(
+          [In] HANDLE hThread,
+          [Out] DWORD* lpExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Process32NextW(
+          [In] HANDLE hSnapshot,
+          [Out] ProcessEntry* lppe
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Process32FirstW(
+          [In] HANDLE hSnapshot,
+          [In, Out] ProcessEntry* lppe
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HANDLE CreateToolhelp32Snapshot(
+          [In] TH32CS dwFlags,
+          [In] DWORD th32ProcessID
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern delegate*<INT_PTR> GetProcAddress(
+          [In] HMODULE hModule,
+          [In] CHAR* lpProcName
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern DWORD GetDeviceDriverFileNameW(
+          [In] void* ImageBase,
+          [Out] WCHAR* lpFilename,
+          [In] DWORD nSize
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern DWORD GetDeviceDriverBaseNameW(
+          [In] void* ImageBase,
+               WCHAR* lpFilename,
+          [In] DWORD nSize
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL EnumDeviceDrivers(
+          [Out] void** lpImageBase,
+          [In] DWORD cb,
+          [Out] DWORD* lpcbNeeded
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetModuleInformation(
+          [In] HANDLE hProcess,
+          [In] HMODULE hModule,
+          [Out] ModuleInfo* lpmodinfo,
+          [In] DWORD cb
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern DWORD GetModuleBaseNameW(
+          [In] HANDLE hProcess,
+          [In, Optional] HMODULE hModule,
+          [Out] WCHAR* lpBaseName,
+          [In] DWORD nSize
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern DWORD GetModuleFileNameExW(
+          [In] HANDLE hProcess,
+          [In, Optional] HMODULE hModule,
+          [Out] WCHAR* lpFilename,
+          [In] DWORD nSize
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL CreateProcessW(
+          [In, Optional] WCHAR* lpApplicationName,
+          [In, Out, Optional] WCHAR* lpCommandLine,
+          [In, Optional] SecurityAttributes* lpProcessAttributes,
+          [In, Optional] SecurityAttributes* lpThreadAttributes,
+          [In] BOOL bInheritHandles,
+          [In] DWORD dwCreationFlags,
+          [In, Optional] void* lpEnvironment,
+          [In, Optional] WCHAR* lpCurrentDirectory,
+          [In] STARTUPINFOW* lpStartupInfo,
+          [Out] ProcessInformation* lpProcessInformation
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL QueryFullProcessImageNameW(
+          [In] HANDLE hProcess,
+          [In] DWORD dwFlags,
+          [Out] WCHAR* lpExeName,
+          [In, Out] DWORD* lpdwSize
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetProcessId(
+          [In] HANDLE Process
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL GetProcessHandleCount(
+          [In] HANDLE hProcess,
+          [In, Out] DWORD* pdwHandleCount
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetProcessVersion(
+          [In] DWORD ProcessId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL IsImmersiveProcess(
+          [In] HANDLE hProcess
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL TerminateThread(
+          [In, Out] HANDLE hThread,
+          [In] DWORD dwExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL TerminateProcess(
+          [In] HANDLE hProcess,
+          [In] UINT uExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetCurrentProcessId();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HANDLE GetCurrentProcess();
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL EnumProcessModules(
+          [In] HANDLE hProcess,
+          [Out] HMODULE* lphModule,
+          [In] DWORD cb,
+          [Out] DWORD* lpcbNeeded
+        );
+
+        [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL EnumProcesses(
+          [Out] DWORD* lpidProcess,
+          [In] DWORD cb,
+          [Out] DWORD* lpcbNeeded
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL VirtualFree(
+          [In] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD dwFreeType
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern void* VirtualAlloc(
+          [In, Optional] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD flAllocationType,
+          [In] DWORD flProtect
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL VirtualProtect(
+          [In] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD flNewProtect,
+          [Out] DWORD* lpflOldProtect
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL VirtualProtectEx(
+          [In] HANDLE hProcess,
+          [In] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD flNewProtect,
+          [Out] DWORD* lpflOldProtect
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL VirtualFreeEx(
+          [In] HANDLE hProcess,
+          [In] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD dwFreeType
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD WaitForSingleObject(
+          [In] HANDLE hHandle,
+          [In] DWORD dwMilliseconds
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern HANDLE CreateRemoteThreadEx(
+          [In] HANDLE hProcess,
+          [In, Optional] SecurityAttributes* lpThreadAttributes,
+          [In] SIZE_T dwStackSize,
+          [In] delegate*<void*, DWORD> lpStartAddress,
+          [In, Optional] void* lpParameter,
+          [In] DWORD dwCreationFlags,
+          [In, Optional] void* lpAttributeList,
+          [Out, Optional] DWORD* lpThreadId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL WriteProcessMemory(
+          [In] HANDLE hProcess,
+          [In] void* lpBaseAddress,
+          [In] void* lpBuffer,
+          [In] SIZE_T nSize,
+          [Out] SIZE_T* lpNumberOfBytesWritten
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern void* VirtualAllocEx(
+          [In] HANDLE hProcess,
+          [In, Optional] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD flAllocationType,
+          [In] DWORD flProtect
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HANDLE OpenProcess(
+          [In] DWORD dwDesiredAccess,
+          [In] BOOL bInheritHandle,
+          [In] DWORD dwProcessId
+        );
 
         /// <summary>
         /// Sets the current size and position of a console screen buffer's window.
@@ -34,9 +298,9 @@ namespace Win32.LowLevel
         /// </returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern BOOL SetConsoleWindowInfo(
-          [In] HANDLE     hConsoleOutput,
-          [In] BOOL       bAbsolute,
-          [In] SMALL_RECT*lpConsoleWindow
+          [In] HANDLE hConsoleOutput,
+          [In] BOOL bAbsolute,
+          [In] SMALL_RECT* lpConsoleWindow
         );
 
         /// <summary>
@@ -47,7 +311,7 @@ namespace Win32.LowLevel
         /// The handle must have the <c>GENERIC_READ</c> access right.
         /// </param>
         /// <param name="lpConsoleScreenBufferInfo">
-        /// A pointer to a <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure
+        /// A pointer to a <see cref="ConsoleScreenBufferInfo"/> structure
         /// that receives the console screen buffer information.
         /// </param>
         /// <returns>
@@ -62,21 +326,21 @@ namespace Win32.LowLevel
         /// <remarks>
         /// <para>
         /// The rectangle returned in the srWindow member of the
-        /// <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure can be modified
+        /// <see cref="ConsoleScreenBufferInfo"/> structure can be modified
         /// and then passed to the <see cref="SetConsoleWindowInfo"/> function to
         /// scroll the console screen buffer in the window, to change
         /// the size of the window, or both.
         /// </para>
         /// <para>
-        /// All coordinates returned in the <see cref="CONSOLE_SCREEN_BUFFER_INFO"/> structure are in
+        /// All coordinates returned in the <see cref="ConsoleScreenBufferInfo"/> structure are in
         /// character-cell coordinates, where the origin (0, 0) is at the upper-left
         /// corner of the console screen buffer.
         /// </para>
         /// </remarks>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern BOOL GetConsoleScreenBufferInfo(
-           [In] HANDLE                      hConsoleOutput,
-           [Out] CONSOLE_SCREEN_BUFFER_INFO*lpConsoleScreenBufferInfo
+           [In] HANDLE hConsoleOutput,
+           [Out] ConsoleScreenBufferInfo* lpConsoleScreenBufferInfo
          );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
@@ -107,7 +371,7 @@ namespace Win32.LowLevel
           [In] void* lpBuffer,
           [In] DWORD nNumberOfBytesToWrite,
           [Out, Optional] DWORD* lpNumberOfBytesWritten,
-          [In, Out, Optional] OVERLAPPED* lpOverlapped
+          [In, Out, Optional] Overlapped* lpOverlapped
         );
 
         /// <summary>
@@ -191,7 +455,7 @@ namespace Win32.LowLevel
           [In] WCHAR* lpFileName,
           [In] DWORD dwDesiredAccess,
           [In] DWORD dwShareMode,
-          [In, Optional] SECURITY_ATTRIBUTES* lpSecurityAttributes,
+          [In, Optional] SecurityAttributes* lpSecurityAttributes,
           [In] DWORD dwCreationDisposition,
           [In] DWORD dwFlagsAndAttributes,
           [In, Optional] HANDLE hTemplateFile
@@ -282,7 +546,7 @@ namespace Win32.LowLevel
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL GetConsoleSelectionInfo(
-          [Out] out CONSOLE_SELECTION_INFO lpConsoleSelectionInfo
+          [Out] out ConsoleSelectionInfo lpConsoleSelectionInfo
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
@@ -302,7 +566,7 @@ namespace Win32.LowLevel
         public static extern BOOL GetCurrentConsoleFont(
           [In] HANDLE hConsoleOutput,
           [In] BOOL bMaximumWindow,
-          [Out] out CONSOLE_FONT_INFO lpConsoleCurrentFont
+          [Out] out ConsoleFontInfo lpConsoleCurrentFont
         );
 
         /// <summary>
@@ -312,7 +576,7 @@ namespace Win32.LowLevel
         public static extern BOOL GetCurrentConsoleFontEx(
           [In] HANDLE hConsoleOutput,
           [In] BOOL bMaximumWindow,
-          /*[Out]*/ ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+          /*[Out]*/ ref ConsoleFontInfoEx lpConsoleCurrentFontEx
         );
 
         /// <summary>
@@ -328,27 +592,27 @@ namespace Win32.LowLevel
         /// If this parameter is <c>FALSE</c>, font information is set for the current window size.
         /// </param>
         /// <param name="lpConsoleCurrentFontEx">
-        /// A pointer to a <see cref="CONSOLE_FONT_INFOEX"/> structure that contains the font information.
+        /// A pointer to a <see cref="ConsoleFontInfoEx"/> structure that contains the font information.
         /// </param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern BOOL SetCurrentConsoleFontEx(
           [In] HANDLE hConsoleOutput,
           [In] BOOL bMaximumWindow,
-          [In] ref CONSOLE_FONT_INFOEX lpConsoleCurrentFontEx
+          [In] ref ConsoleFontInfoEx lpConsoleCurrentFontEx
         );
 
         /// <summary>
         /// Retrieves the current system date and time in Coordinated Universal Time (UTC) format.
         /// </summary>
         /// <param name="lpSystemTime">
-        /// A pointer to a <see cref="SYSTEMTIME"/> structure to receive the current
+        /// A pointer to a <see cref="SystemTime"/> structure to receive the current
         /// system date and time. The <paramref name="lpSystemTime"/> parameter must not
         /// be <c>NULL</c>. Using <c>NULL</c> will result in an access violation.
         /// </param>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern void GetSystemTime(
-          [Out] SYSTEMTIME* lpSystemTime
+          [Out] SystemTime* lpSystemTime
         );
 
         /// <summary>
@@ -356,12 +620,12 @@ namespace Win32.LowLevel
         /// The information is in Coordinated Universal Time (UTC) format.
         /// </summary>
         /// <param name="lpSystemTimeAsFileTime">
-        /// A pointer to a <see cref="FILETIME"/> structure to receive the current
+        /// A pointer to a <see cref="FileTime"/> structure to receive the current
         /// system date and time in UTC format.
         /// </param>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern void GetSystemTimeAsFileTime(
-          [Out] FILETIME* lpSystemTimeAsFileTime
+          [Out] FileTime* lpSystemTimeAsFileTime
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
@@ -415,7 +679,7 @@ namespace Win32.LowLevel
             [In] WCHAR* lpFileName,
             [In] DWORD dwDesiredAccess,
             [In] DWORD dwShareMode,
-            [In, Optional] SECURITY_ATTRIBUTES* lpSecurityAttributes,
+            [In, Optional] SecurityAttributes* lpSecurityAttributes,
             [In] DWORD dwCreationDisposition,
             [In] DWORD dwFlagsAndAttributes,
             [In, Optional] HANDLE hTemplateFile);
@@ -425,8 +689,8 @@ namespace Win32.LowLevel
             [In] WCHAR* lpFileName,
             [In] DWORD dwDesiredAccess,
             [In] DWORD dwShareMode,
-            [In, Optional] SECURITY_ATTRIBUTES* lpSecurityAttributes,
-            [In] DWORD dwCreationDisposition,
+            [In, Optional] SecurityAttributes* lpSecurityAttributes,
+            [In] CreateFileFlags dwCreationDisposition,
             [In] DWORD dwFlagsAndAttributes,
             [In, Optional] HANDLE hTemplateFile);
 
@@ -434,7 +698,7 @@ namespace Win32.LowLevel
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern BOOL WriteConsoleOutput(
             [In] HANDLE hConsoleOutput,
-            [In] CharInfo[] lpBuffer,
+            [In] ConsoleChar[] lpBuffer,
             [In] Coord dwBufferSize,
             [In] Coord dwBufferCoord,
             [In, Out] ref SmallRect lpWriteRegion);
@@ -443,7 +707,7 @@ namespace Win32.LowLevel
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern BOOL WriteConsoleOutputW(
             SafeFileHandle hConsoleOutput,
-            [In] CharInfo[] lpBuffer,
+            [In] ConsoleChar[] lpBuffer,
             [In] Coord dwBufferSize,
             [In] Coord dwBufferCoord,
             [In, Out] ref SmallRect lpWriteRegion);

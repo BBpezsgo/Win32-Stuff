@@ -15,7 +15,7 @@ namespace Win32
         public readonly bool IsError => WinErrorMacros.IS_ERROR(code);
         public readonly int Severity => WinErrorMacros.HRESULT_SEVERITY(code);
         public readonly int FacilityId => WinErrorMacros.HRESULT_FACILITY(code);
-        public readonly string? Facility => FACILITY.ToString(FacilityId);
+        public readonly string? Facility => LowLevel.Facility.ToString(FacilityId);
         public readonly int Code => WinErrorMacros.HRESULT_CODE(code);
 
         public override bool Equals(object? obj) => obj is HResult result && Equals(result);

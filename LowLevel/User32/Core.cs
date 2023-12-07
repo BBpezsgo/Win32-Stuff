@@ -1,9 +1,68 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
 namespace Win32.LowLevel
 {
     public static partial class User32
     {
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern int GetMouseMovePointsEx(
+          [In] UINT cbSize,
+          [In] MouseMovePoint* lppt,
+          [Out] MouseMovePoint* lpptBuf,
+          [In] int nBufPoints,
+          [In] DWORD resolution
+        );
+
+        /// <summary>
+        /// Retrieves the current double-click time for the mouse.
+        /// A double-click is a series of two clicks of the mouse button,
+        /// the second occurring within a specified time after the first.
+        /// The double-click time is the maximum number of milliseconds that may occur between
+        /// the first and second click of a double-click.
+        /// The maximum double-click time is 5000 milliseconds.
+        /// </summary>
+        /// <returns>
+        /// The return value specifies the current double-click time, in milliseconds.
+        /// The maximum return value is 5000 milliseconds.
+        /// </returns>
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern UINT GetDoubleClickTime();
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL SetDoubleClickTime(
+          [In] UINT unnamedParam1
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern UINT SendInput(
+          [In] UINT cInputs,
+          [In] InputInfo* pInputs,
+          [In] int cbSize
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern int ToUnicode(
+          [In] UINT wVirtKey,
+          [In] UINT wScanCode,
+          [In, Optional] BYTE* lpKeyState,
+          [Out] WCHAR* pwszBuff,
+          [In] int cchBuff,
+          [In] UINT wFlags
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern UINT MapVirtualKeyW(
+          [In] UINT uCode,
+          [In] MapVirtualKeyType uMapType
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern BOOL GetKeyboardState(
+          [Out] BYTE* lpKeyState
+        );
+
         [DllImport("User32.dll", SetLastError = true)]
         public static extern HWND WindowFromDC(
           [In] HDC hDC
@@ -91,10 +150,10 @@ namespace Win32.LowLevel
         /// <summary>
         /// Processes accelerator keys for menu commands.
         /// The function translates a WM_KEYDOWN or
-        /// <see cref="WM.WM_SYSKEYDOWN"/> message to a <see cref="WM.WM_COMMAND"/> or
-        /// <see cref="WM.WM_SYSCOMMAND"/> message (if there is an entry
+        /// <see cref="WindowMessage.WM_SYSKEYDOWN"/> message to a <see cref="WindowMessage.WM_COMMAND"/> or
+        /// <see cref="WindowMessage.WM_SYSCOMMAND"/> message (if there is an entry
         /// for the key in the specified accelerator table)
-        /// and then sends the <see cref="WM.WM_COMMAND"/> or <see cref="WM.WM_SYSCOMMAND"/>
+        /// and then sends the <see cref="WindowMessage.WM_COMMAND"/> or <see cref="WindowMessage.WM_SYSCOMMAND"/>
         /// message directly to the specified window procedure.
         /// <c>TranslateAccelerator</c> does not return until the
         /// window procedure has processed the message.
@@ -329,6 +388,13 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern int EnumPropsExW(
+          [In] HWND hWnd,
+          [In] delegate*<HWND, WCHAR*, HANDLE, ULONG_PTR, BOOL> lpEnumFunc,
+          [In] LPARAM lParam
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern int EnumPropsW(
           [In] HWND hWnd,
           [In] delegate*<HWND, WCHAR*, HANDLE, BOOL> lpEnumFunc
@@ -360,7 +426,7 @@ namespace Win32.LowLevel
         /// </returns>
         /// <remarks>
         /// The <c>KillTimer</c> function does not remove
-        /// <see cref="WM.WM_TIMER"/> messages already posted to the message queue.
+        /// <see cref="WindowMessage.WM_TIMER"/> messages already posted to the message queue.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
         public static extern BOOL KillTimer(
@@ -407,7 +473,7 @@ namespace Win32.LowLevel
         /// A pointer to the function to be notified when the
         /// time-out value elapses. For more information about
         /// the function, see <c>TimerProc</c>. If <paramref name="lpTimerFunc"/> is <c>NULL</c>,
-        /// the system posts a <see cref="WM.WM_TIMER"/> message to the application queue.
+        /// the system posts a <see cref="WindowMessage.WM_TIMER"/> message to the application queue.
         /// The <c>hwnd</c> member of the message's <see cref="MSG"/> structure contains the
         /// value of the <paramref name="hWnd"/> parameter.
         /// </param>
@@ -548,21 +614,6 @@ namespace Win32.LowLevel
         );
 
         /// <summary>
-        /// Retrieves the current double-click time for the mouse.
-        /// A double-click is a series of two clicks of the mouse button,
-        /// the second occurring within a specified time after the first.
-        /// The double-click time is the maximum number of milliseconds that may occur between
-        /// the first and second click of a double-click.
-        /// The maximum double-click time is 5000 milliseconds.
-        /// </summary>
-        /// <returns>
-        /// The return value specifies the current double-click time, in milliseconds.
-        /// The maximum return value is 5000 milliseconds.
-        /// </returns>
-        [DllImport("User32.dll", SetLastError = true)]
-        public static extern UINT GetDoubleClickTime();
-
-        /// <summary>
         /// Blocks keyboard and mouse input events from reaching applications.
         /// </summary>
         /// <param name="fBlockIt">
@@ -631,12 +682,12 @@ namespace Win32.LowLevel
         /// <param name="fWinIni">
         /// <para>
         /// If a system parameter is being set, specifies whether the user profile
-        /// is to be updated, and if so, whether the <see cref="WM.WM_SETTINGCHANGE"/> message is
+        /// is to be updated, and if so, whether the <see cref="WindowMessage.WM_SETTINGCHANGE"/> message is
         /// to be broadcast to all top-level windows to notify them of the change.
         /// </para>
         /// <para>
         /// This parameter can be zero if you do not want to update the user
-        /// profile or broadcast the <see cref="WM.WM_SETTINGCHANGE"/> message.
+        /// profile or broadcast the <see cref="WindowMessage.WM_SETTINGCHANGE"/> message.
         /// </para>
         /// </param>
         /// <returns>
@@ -688,7 +739,7 @@ namespace Win32.LowLevel
 
         [DllImport("User32.dll", SetLastError = true)]
         public static extern int GetSystemMetrics(
-          [In] int nIndex
+          [In] SystemMetricsFlags nIndex
         );
 
         [DllImport("User32.dll", SetLastError = true)]
@@ -916,7 +967,7 @@ namespace Win32.LowLevel
               [In, Optional] HWND hWnd,
               [In] uint wMsgFilterMin,
               [In] uint wMsgFilterMax,
-              [In] uint wRemoveMsg
+              [In] PeekMessageFlags wRemoveMsg
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -927,13 +978,13 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern BOOL EndPaint(
               [In] HWND hWnd,
-              [In] PaintStruct* lpPaint
+              [In] Win32.Gdi32.PaintStruct* lpPaint
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         unsafe public static extern HDC BeginPaint(
               [In] HWND hWnd,
-              [Out] PaintStruct* lpPaint
+              [Out] Win32.Gdi32.PaintStruct* lpPaint
         );
 
         /// <summary>

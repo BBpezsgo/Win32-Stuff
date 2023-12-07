@@ -1,8 +1,10 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
+    using LowLevel;
+
     public readonly struct Region : IDisposable, IEquatable<Region>
     {
         readonly HRGN Handle;

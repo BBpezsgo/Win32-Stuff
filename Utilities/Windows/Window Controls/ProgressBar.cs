@@ -12,28 +12,15 @@ namespace Win32
     public class ProgressBar : Control
     {
         public ProgressBar(
-            HWND parent,
-            string label,
-            RECT rect,
-            ushort id
-        ) : base(
-            parent,
-            label,
-            ClassName.PROGRESS_BAR,
-            WS.VISIBLE | WS.CHILD,
-            rect,
-            id
-        )
-        { }
-
-        public ProgressBar(
             Form parent,
             string label,
             RECT rect,
             out ushort id
-        ) : this(
-            parent.Handle,
+        ) : base(
+            parent,
             label,
+            LowLevel.ClassName.PROGRESS_BAR,
+            WindowStyles.VISIBLE | WindowStyles.CHILD,
             rect,
             parent.GenerateControlId(out id)
         )
@@ -44,7 +31,7 @@ namespace Win32
         public void SetRange(ushort min, ushort max)
         {
             ULONG lParam = Macros.MAKELONG(min, max);
-            User32.SendMessage(Handle, PBM.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
+            User32.SendMessage(Handle, ProgressBarControlMessage.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
@@ -52,17 +39,17 @@ namespace Win32
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.GETPOS, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, ProgressBarControlMessage.GETPOS, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.SETPOS, (WPARAM)value, LPARAM.Zero);
+            set => User32.SendMessage(Handle, ProgressBarControlMessage.SETPOS, (WPARAM)value, LPARAM.Zero);
         }
 
         public int GetLowLimit()
-            => User32.SendMessage(Handle, PBM.GETRANGE, (WPARAM)TRUE, LPARAM.Zero).ToInt32();
+            => User32.SendMessage(Handle, ProgressBarControlMessage.GETRANGE, (WPARAM)TRUE, LPARAM.Zero).ToInt32();
 
         public int GetHighLimit()
-            => User32.SendMessage(Handle, PBM.GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
+            => User32.SendMessage(Handle, ProgressBarControlMessage.GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         unsafe public PBRANGE Range
@@ -70,13 +57,13 @@ namespace Win32
             get
             {
                 PBRANGE result = default;
-                User32.SendMessage(Handle, PBM.GETRANGE, WPARAM.Zero, (LPARAM)(&result));
+                User32.SendMessage(Handle, ProgressBarControlMessage.GETRANGE, WPARAM.Zero, (LPARAM)(&result));
                 return result;
             }
             set
             {
                 ULONG lParam = Macros.MAKELONG((ushort)value.Low, (ushort)value.High);
-                User32.SendMessage(Handle, PBM.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
+                User32.SendMessage(Handle, ProgressBarControlMessage.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
             }
         }
 
@@ -85,10 +72,10 @@ namespace Win32
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.GETSTEP, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, ProgressBarControlMessage.GETSTEP, WPARAM.Zero, LPARAM.Zero);
                 return unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.SETSTEP, (WPARAM)value, LPARAM.Zero);
+            set => User32.SendMessage(Handle, ProgressBarControlMessage.SETSTEP, (WPARAM)value, LPARAM.Zero);
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
@@ -96,17 +83,17 @@ namespace Win32
         {
             get
             {
-                LRESULT result = User32.SendMessage(Handle, PBM.GETSTATE, WPARAM.Zero, LPARAM.Zero);
+                LRESULT result = User32.SendMessage(Handle, ProgressBarControlMessage.GETSTATE, WPARAM.Zero, LPARAM.Zero);
                 return (ProgressBarState)unchecked((uint)result.ToInt32());
             }
-            set => User32.SendMessage(Handle, PBM.SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
+            set => User32.SendMessage(Handle, ProgressBarControlMessage.SETSTATE, (WPARAM)(uint)value, LPARAM.Zero).ToInt32();
         }
 
         public void Add(uint value)
-            => User32.SendMessage(Handle, PBM.DELTAPOS, (WPARAM)value, LPARAM.Zero);
+            => User32.SendMessage(Handle, ProgressBarControlMessage.DELTAPOS, (WPARAM)value, LPARAM.Zero);
 
         public void StepIt()
-            => User32.SendMessage(Handle, PBM.STEPIT, WPARAM.Zero, LPARAM.Zero);
+            => User32.SendMessage(Handle, ProgressBarControlMessage.STEPIT, WPARAM.Zero, LPARAM.Zero);
 
         public override void HandleNotification(Window parent, ushort code)
         {

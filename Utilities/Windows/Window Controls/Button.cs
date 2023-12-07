@@ -7,28 +7,15 @@
         public event ClickEventHandler? OnClick;
 
         public Button(
-            HWND parent,
-            string label,
-            RECT rect,
-            ushort id
-        ) : base(
-            parent,
-            label,
-            ClassName.BUTTON,
-            WS.TABSTOP | WS.VISIBLE | WS.CHILD | BS.DEFPUSHBUTTON,
-            rect,
-            id
-        )
-        { }
-
-        public Button(
             Form parent,
             string label,
             RECT rect,
             out ushort id
-        ) : this(
-            parent.Handle,
+        ) : base(
+            parent,
             label,
+            LowLevel.ClassName.BUTTON,
+            WindowStyles.TABSTOP | WindowStyles.VISIBLE | WindowStyles.CHILD | ButtonControlStyles.DEFPUSHBUTTON,
             rect,
             parent.GenerateControlId(out id)
         )
@@ -38,7 +25,7 @@
 
         public override void HandleNotification(Window parent, ushort code)
         {
-            if (code == BN.CLICKED)
+            if (code == ButtonControlNotifications.CLICKED)
             {
                 OnClick?.Invoke(this);
                 return;

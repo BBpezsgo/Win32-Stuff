@@ -3,28 +3,15 @@
     public class EditControl : Control
     {
         public EditControl(
-            HWND parent,
-            string label,
-            RECT rect,
-            ushort id
-        ) : base(
-            parent,
-            label,
-            ClassName.EDIT,
-            WS.TABSTOP | WS.VISIBLE | WS.CHILD | ES.LEFT,
-            rect,
-            id
-        )
-        { }
-
-        public EditControl(
             Form parent,
             string label,
             RECT rect,
             out ushort id
-        ) : this(
-            parent.Handle,
+        ) : base(
+            parent,
             label,
+            LowLevel.ClassName.EDIT,
+            WindowStyles.TABSTOP | WindowStyles.VISIBLE | WindowStyles.CHILD | EditControlStyles.LEFT,
             rect,
             parent.GenerateControlId(out id)
         )
@@ -36,25 +23,25 @@
         {
             switch (code)
             {
-                case EN.SETFOCUS:
+                case EditControlNotification.SETFOCUS:
                     break;
-                case EN.KILLFOCUS:
+                case EditControlNotification.KILLFOCUS:
                     break;
-                case EN.CHANGE:
+                case EditControlNotification.CHANGE:
                     break;
-                case EN.UPDATE:
+                case EditControlNotification.UPDATE:
                     break;
-                case EN.ERRSPACE:
+                case EditControlNotification.ERRSPACE:
                     break;
-                case EN.MAXTEXT:
+                case EditControlNotification.MAXTEXT:
                     break;
-                case EN.HSCROLL:
+                case EditControlNotification.HSCROLL:
                     break;
-                case EN.VSCROLL:
+                case EditControlNotification.VSCROLL:
                     break;
-                case EN.ALIGN_LTR_EC:
+                case EditControlNotification.ALIGN_LTR_EC:
                     break;
-                case EN.ALIGN_RTL_EC:
+                case EditControlNotification.ALIGN_RTL_EC:
                     break;
             }
         }

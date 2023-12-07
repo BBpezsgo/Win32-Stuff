@@ -6,7 +6,7 @@
         /// Displays the menu item using a bitmap. The low-order word
         /// of the <c>dwTypeData</c> member is the bitmap handle, and the cch
         /// member is ignored.
-        /// <see cref="MFT.BITMAP"/> is replaced by <see cref="MIIM.BITMAP"/> and <c>hbmpItem</c>.
+        /// <see cref="MFT.BITMAP"/> is replaced by <see cref="MenuItemInfoMasks.BITMAP"/> and <c>hbmpItem</c>.
         /// </summary>
         public const int BITMAP = 0x00000004;
         /// <summary>
@@ -25,9 +25,9 @@
         public const int MENUBREAK = 0x00000040;
         /// <summary>
         /// Assigns responsibility for drawing the menu item to the window that
-        /// owns the menu. The window receives a <see cref="WM.WM_MEASUREITEM"/> message
+        /// owns the menu. The window receives a <see cref="WindowMessage.WM_MEASUREITEM"/> message
         /// before the menu is displayed for the first time, and
-        /// a <see cref="WM.WM_DRAWITEM"/> message whenever the appearance of the menu
+        /// a <see cref="WindowMessage.WM_DRAWITEM"/> message whenever the appearance of the menu
         /// item must be updated. If this value is specified, the <c>dwTypeData</c>
         /// member contains an application-defined value.
         /// </summary>
@@ -58,7 +58,7 @@
         /// Displays the menu item using a text string.
         /// The <c>dwTypeData</c> member is the pointer to a null-terminated string, and the
         /// cch member is the length of the string.
-        /// <see cref="MFT.STRING"/> is replaced by <see cref="MIIM.STRING"/>.
+        /// <see cref="MFT.STRING"/> is replaced by <see cref="MenuItemInfoMasks.STRING"/>.
         /// </summary>
         public const int STRING = 0x00000000;
     }

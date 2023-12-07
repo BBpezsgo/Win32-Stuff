@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 
-namespace Win32
+namespace Win32.Gdi32
 {
+    using LowLevel;
+
     public enum HatchStyle : int
     {
         /// <summary>

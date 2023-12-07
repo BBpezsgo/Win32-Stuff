@@ -1,6 +1,6 @@
 ﻿namespace Win32.LowLevel
 {
-    public static class DT
+    public static class DrawTextFormat
     {
         public const uint TOP = 0x00000000;
         public const uint LEFT = 0x00000000;

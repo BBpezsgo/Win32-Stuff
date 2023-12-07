@@ -2,8 +2,10 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
+    using LowLevel;
+
     public enum StretchMode
     {
         /// <summary>
@@ -39,24 +41,6 @@ namespace Win32
         STRETCH_DELETESCANS = COLORONCOLOR,
         STRETCH_HALFTONE = HALFTONE,
         STRETCH_ORSCANS = WHITEONBLACK,
-    }
-
-    public enum ObjectType : uint
-    {
-        PEN = OBJ.PEN,
-        BRUSH = OBJ.BRUSH,
-        DC = OBJ.DC,
-        METADC = OBJ.METADC,
-        PAL = OBJ.PAL,
-        FONT = OBJ.FONT,
-        BITMAP = OBJ.BITMAP,
-        REGION = OBJ.REGION,
-        METAFILE = OBJ.METAFILE,
-        MEMDC = OBJ.MEMDC,
-        EXTPEN = OBJ.EXTPEN,
-        ENHMETADC = OBJ.ENHMETADC,
-        ENHMETAFILE = OBJ.ENHMETAFILE,
-        COLORSPACE = OBJ.COLORSPACE,
     }
 
     public abstract class DC : IDisposable, IEquatable<DC?>
@@ -136,17 +120,17 @@ namespace Win32
             { throw new GdiException($"{nameof(Gdi32.LineTo)} has failed"); }
         }
 
-        unsafe public void DrawText(string text, RECT rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, &rect, format); }
         }
-        unsafe public void DrawText(string text, RECT* rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, RECT* rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, rect, format); }
         }
-        unsafe public void DrawText(string text, ref RECT rect, uint format = DT.CENTER | DT.NOCLIP)
+        unsafe public void DrawText(string text, ref RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, (RECT*)Unsafe.AsPointer(ref rect), format); }

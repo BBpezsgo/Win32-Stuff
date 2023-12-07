@@ -43,7 +43,7 @@ namespace Win32
             get
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MIIM.STRING;
+                info.fMask = MenuItemInfoMasks.STRING;
                 info.dwTypeData = null;
                 if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
@@ -51,7 +51,7 @@ namespace Win32
                 fixed (WCHAR* buffer = new string('\0', (int)bufferSize))
                 {
                     info = MENUITEMINFOW.Create();
-                    info.fMask = MIIM.STRING;
+                    info.fMask = MenuItemInfoMasks.STRING;
                     info.dwTypeData = buffer;
                     info.cch = bufferSize;
                     if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
@@ -64,7 +64,7 @@ namespace Win32
                 fixed (WCHAR* textPtr = value)
                 {
                     MENUITEMINFOW info = MENUITEMINFOW.Create();
-                    info.fMask = MIIM.STRING;
+                    info.fMask = MenuItemInfoMasks.STRING;
                     info.dwTypeData = textPtr;
                     if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                     { throw WindowsException.Get(); }
@@ -79,7 +79,7 @@ namespace Win32
             get
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MIIM.FTYPE;
+                info.fMask = MenuItemInfoMasks.FTYPE;
                 if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
                 return (MenuItemType)info.fType;
@@ -87,7 +87,7 @@ namespace Win32
             set
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MIIM.FTYPE;
+                info.fMask = MenuItemInfoMasks.FTYPE;
                 info.fType = (uint)value;
                 if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
@@ -143,7 +143,7 @@ namespace Win32
             set
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MIIM.SUBMENU;
+                info.fMask = MenuItemInfoMasks.SUBMENU;
                 info.hSubMenu = (value == null) ? HMENU.Zero : value.Handle;
                 if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
@@ -153,13 +153,13 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void Remove()
         {
-            if (User32.RemoveMenu(_parentHandle, (uint)_index, MF.BYPOSITION) == 0)
+            if (User32.RemoveMenu(_parentHandle, (uint)_index, MenuFlags.BYPOSITION) == 0)
             { throw WindowsException.Get(); }
         }
 
         public bool Hilite(HWND window, bool hilite)
         {
-            int isChanged = User32.HiliteMenuItem(window, _parentHandle, (uint)_index, MF.BYPOSITION | (hilite ? MF.HILITE : MF.UNHILITE));
+            int isChanged = User32.HiliteMenuItem(window, _parentHandle, (uint)_index, MenuFlags.BYPOSITION | (hilite ? MenuFlags.HILITE : MenuFlags.UNHILITE));
             return isChanged != 0;
         }
     }

@@ -57,7 +57,7 @@
         const int FixedWidthTrueType = 54;
 
         /// <exception cref="WindowsException"/>
-        public static CONSOLE_FONT_INFOEX Font
+        public static ConsoleFontInfoEx Font
         {
             set
             {
@@ -66,7 +66,7 @@
             }
             get
             {
-                CONSOLE_FONT_INFOEX fontInfo = CONSOLE_FONT_INFOEX.Create();
+                ConsoleFontInfoEx fontInfo = ConsoleFontInfoEx.Create();
 
                 if (Kernel32.GetCurrentConsoleFontEx(stdoutHandle, FALSE, ref fontInfo) == 0)
                 { throw WindowsException.Get(); }
@@ -78,7 +78,7 @@
         /// <exception cref="WindowsException"/>
         public static void SetFont(string font, short fontSize)
         {
-            CONSOLE_FONT_INFOEX fontInfo = ConsoleHandler.Font;
+            ConsoleFontInfoEx fontInfo = ConsoleHandler.Font;
 
             fontInfo.FaceName = font;
             fontInfo.FontSize = fontSize;
@@ -86,11 +86,11 @@
             ConsoleHandler.Font = fontInfo;
         }
 
-        public static CONSOLE_FONT_INFOEX DefaultFont
+        public static ConsoleFontInfoEx DefaultFont
         {
             get
             {
-                CONSOLE_FONT_INFOEX result = CONSOLE_FONT_INFOEX.Create();
+                ConsoleFontInfoEx result = ConsoleFontInfoEx.Create();
                 result.FontIndex = 0;
                 result.FontFamily = FixedWidthTrueType;
                 result.FaceName = "Consolas";
@@ -102,20 +102,20 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static CONSOLE_SCREEN_BUFFER_INFO ScreenBufferInfo
+        unsafe public static ConsoleScreenBufferInfo ScreenBufferInfo
         {
             get
             {
-                CONSOLE_SCREEN_BUFFER_INFO result = default;
+                ConsoleScreenBufferInfo result = default;
                 if (Kernel32.GetConsoleScreenBufferInfo(stdoutHandle, &result) == FALSE)
                 { throw WindowsException.Get(); }
                 return result;
             }
         }
 
-        public static short WindowLeft => ScreenBufferInfo.srWindow.Left;
-        public static short WindowTop => ScreenBufferInfo.srWindow.Top;
-        public static short WindowWidth => (short)(ScreenBufferInfo.srWindow.Right - ScreenBufferInfo.srWindow.Left + 1);
-        public static short WindowHeight => (short)(ScreenBufferInfo.srWindow.Bottom - ScreenBufferInfo.srWindow.Top + 1);
+        public static short WindowLeft => ScreenBufferInfo.Window.Left;
+        public static short WindowTop => ScreenBufferInfo.Window.Top;
+        public static short WindowWidth => (short)(ScreenBufferInfo.Window.Right - ScreenBufferInfo.Window.Left + 1);
+        public static short WindowHeight => (short)(ScreenBufferInfo.Window.Bottom - ScreenBufferInfo.Window.Top + 1);
     }
 }

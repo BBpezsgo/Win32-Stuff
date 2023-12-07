@@ -14,13 +14,13 @@
         protected short BufferWidth;
         protected short BufferHeight;
 
-        protected CharInfo[] ConsoleBuffer;
+        protected ConsoleChar[] ConsoleBuffer;
         protected SMALL_RECT ConsoleRect;
 
-        public ref CharInfo this[int i] => ref ConsoleBuffer[i];
-        public ref CharInfo this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
-        public ref CharInfo this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
-        public ref CharInfo this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        public ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+        public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
+        public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
 
         public ConsoleRenderer(short bufferWidth, short bufferHeight)
         {
@@ -39,8 +39,8 @@
             BufferWidth = bufferWidth;
             BufferHeight = bufferHeight;
 
-            ConsoleBuffer = new CharInfo[Size];
-            Array.Fill(ConsoleBuffer, CharInfo.Empty);
+            ConsoleBuffer = new ConsoleChar[Size];
+            Array.Fill(ConsoleBuffer, ConsoleChar.Empty);
             ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
         }
 
@@ -64,7 +64,7 @@
             BufferWidth = ConsoleHandler.WindowWidth;
             BufferHeight = ConsoleHandler.WindowHeight;
 
-            ConsoleBuffer = new CharInfo[Size];
+            ConsoleBuffer = new ConsoleChar[Size];
             ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
         }
     }

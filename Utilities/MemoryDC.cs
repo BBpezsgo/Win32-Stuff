@@ -1,5 +1,7 @@
-﻿namespace Win32
+﻿namespace Win32.Gdi32
 {
+    using LowLevel;
+
     /// <summary>Memory Device Context</summary>
     public class MemoryDC : DC
     {

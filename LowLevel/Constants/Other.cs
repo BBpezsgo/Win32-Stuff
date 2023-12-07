@@ -9,50 +9,50 @@
         public const DWORD White = 0x00FFFFFF;
     }
 
-    public enum ForegroundColor : WORD
+    public enum ConsoleForegroundColor : WORD
     {
         Black = 0,
-        DarkGray = CharInfoAttributes.FOREGROUND_BRIGHT,
-        Gray = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_GREEN | CharInfoAttributes.FOREGROUND_BLUE,
-        White = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_GREEN | CharInfoAttributes.FOREGROUND_BLUE | CharInfoAttributes.FOREGROUND_BRIGHT,
+        DarkGray = ConsoleCharAttributes.ForegroundBright,
+        Gray = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBlue,
+        White = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundBright,
         Default = Gray,
 
-        DarkRed = CharInfoAttributes.FOREGROUND_RED,
-        DarkGreen = CharInfoAttributes.FOREGROUND_GREEN,
-        DarkBlue = CharInfoAttributes.FOREGROUND_BLUE,
-        DarkYellow = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_GREEN,
-        DarkCyan = CharInfoAttributes.FOREGROUND_BLUE | CharInfoAttributes.FOREGROUND_GREEN,
-        DarkMagenta = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_BLUE,
+        DarkRed = ConsoleCharAttributes.ForegroundRed,
+        DarkGreen = ConsoleCharAttributes.ForegroundGreen,
+        DarkBlue = ConsoleCharAttributes.ForegroundBlue,
+        DarkYellow = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen,
+        DarkCyan = ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundGreen,
+        DarkMagenta = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundBlue,
 
-        Red = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_BRIGHT,
-        Green = CharInfoAttributes.FOREGROUND_GREEN | CharInfoAttributes.FOREGROUND_BRIGHT,
-        Blue = CharInfoAttributes.FOREGROUND_BLUE | CharInfoAttributes.FOREGROUND_BRIGHT,
-        Yellow = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_GREEN | CharInfoAttributes.FOREGROUND_BRIGHT,
-        Cyan = CharInfoAttributes.FOREGROUND_BLUE | CharInfoAttributes.FOREGROUND_GREEN | CharInfoAttributes.FOREGROUND_BRIGHT,
-        Magenta = CharInfoAttributes.FOREGROUND_RED | CharInfoAttributes.FOREGROUND_BLUE | CharInfoAttributes.FOREGROUND_BRIGHT,
+        Red = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundBright,
+        Green = ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBright,
+        Blue = ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundBright,
+        Yellow = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBright,
+        Cyan = ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBright,
+        Magenta = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundBright,
     }
 
-    public enum BackgroundColor : WORD
+    public enum ConsoleBackgroundColor : WORD
     {
         Black = 0,
-        DarkGray = CharInfoAttributes.BACKGROUND_BRIGHT,
-        Gray = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_GREEN | CharInfoAttributes.BACKGROUND_BLUE,
-        White = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_GREEN | CharInfoAttributes.BACKGROUND_BLUE | CharInfoAttributes.BACKGROUND_BRIGHT,
+        DarkGray = ConsoleCharAttributes.BackgroundBright,
+        Gray = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBlue,
+        White = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundBright,
         Default = Black,
 
-        DarkRed = CharInfoAttributes.BACKGROUND_RED,
-        DarkGreen = CharInfoAttributes.BACKGROUND_GREEN,
-        DarkBlue = CharInfoAttributes.BACKGROUND_BLUE,
-        DarkYellow = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_GREEN,
-        DarkCyan = CharInfoAttributes.BACKGROUND_BLUE | CharInfoAttributes.BACKGROUND_GREEN,
-        DarkMagenta = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_BLUE,
+        DarkRed = ConsoleCharAttributes.BackgroundRed,
+        DarkGreen = ConsoleCharAttributes.BackgroundGreen,
+        DarkBlue = ConsoleCharAttributes.BackgroundBlue,
+        DarkYellow = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen,
+        DarkCyan = ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundGreen,
+        DarkMagenta = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundBlue,
 
-        Red = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_BRIGHT,
-        Green = CharInfoAttributes.BACKGROUND_GREEN | CharInfoAttributes.BACKGROUND_BRIGHT,
-        Blue = CharInfoAttributes.BACKGROUND_BLUE | CharInfoAttributes.BACKGROUND_BRIGHT,
-        Yellow = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_GREEN | CharInfoAttributes.BACKGROUND_BRIGHT,
-        Cyan = CharInfoAttributes.BACKGROUND_BLUE | CharInfoAttributes.BACKGROUND_GREEN | CharInfoAttributes.BACKGROUND_BRIGHT,
-        Magenta = CharInfoAttributes.BACKGROUND_RED | CharInfoAttributes.BACKGROUND_BLUE | CharInfoAttributes.BACKGROUND_BRIGHT,
+        Red = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundBright,
+        Green = ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBright,
+        Blue = ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundBright,
+        Yellow = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBright,
+        Cyan = ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBright,
+        Magenta = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundBright,
     }
 
     public struct InputMode

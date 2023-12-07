@@ -1,8 +1,10 @@
-﻿using System.Diagnostics;
+﻿global using RECT = Win32.Common.Rect;
+
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Common
 {
     /// <summary>
     /// defines the coordinates of the upper-left and lower-right corners of a rectangle.
@@ -147,18 +149,18 @@ namespace Win32
             x < right &&
             y < Height;
 
-        /// <exception cref="GdiException"/>
+        /// <exception cref="GeneralException"/>
         public unsafe static void SetRect(ref RECT rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect((RECT*)Unsafe.AsPointer(ref rect), left, top, right, bottom) == 0)
-            { throw new GdiException($"{nameof(User32.SetRect)} has failed"); }
+            { throw new GeneralException($"{nameof(User32.SetRect)} has failed"); }
         }
 
-        /// <exception cref="GdiException"/>
+        /// <exception cref="GeneralException"/>
         public unsafe static void SetRect(RECT* rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect(rect, left, top, right, bottom) == 0)
-            { throw new GdiException($"{nameof(User32.SetRect)} has failed"); }
+            { throw new GeneralException($"{nameof(User32.SetRect)} has failed"); }
         }
     }
 }

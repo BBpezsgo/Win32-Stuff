@@ -24,7 +24,7 @@
             if (Handle == Kernel32.INVALID_HANDLE_VALUE)
             { throw WindowsException.Get(); }
 
-            new Thread(ThreadJob) { Name = "ConsoleListener" }.Start();
+            new System.Threading.Thread(ThreadJob) { Name = "ConsoleListener" }.Start();
         }
 
         /// <exception cref="WindowsException"/>
@@ -47,13 +47,13 @@
                 {
                     switch (records[i].EventType)
                     {
-                        case EventType.MOUSE:
+                        case EventType.Mouse:
                             MouseEvent?.Invoke(records[i].MouseEvent);
                             break;
-                        case EventType.KEY:
+                        case EventType.Key:
                             KeyEvent?.Invoke(records[i].KeyEvent);
                             break;
-                        case EventType.WINDOW_BUFFER_SIZE:
+                        case EventType.WindowBufferSize:
                             WindowBufferSizeEvent?.Invoke(records[i].WindowBufferSizeEvent);
                             break;
                     }

@@ -1,12 +1,12 @@
 ﻿namespace Win32.LowLevel
 {
-    public static class GW
+    public enum GetWindowFlags : UINT
     {
-        public const UINT HWNDFIRST = 0;
-        public const UINT HWNDLAST = 1;
-        public const UINT HWNDNEXT = 2;
-        public const UINT HWNDPREV = 3;
-        public const UINT OWNER = 4;
-        public const UINT CHILD = 5;
+        HWNDFIRST = 0,
+        HWNDLAST = 1,
+        HWNDNEXT = 2,
+        HWNDPREV = 3,
+        OWNER = 4,
+        CHILD = 5,
     }
 }

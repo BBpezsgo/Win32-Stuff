@@ -3,7 +3,7 @@
     public static class CCM
     {
         public const uint LVM_FIRST = 0x1000;      // ListView messages
-        public const uint TV_FIRST = 0x1100;      // TreeView messages
+        public const uint TV_FIRST = 0x1100;       // TreeView messages
         public const uint HDM_FIRST = 0x1200;      // Header messages
         public const uint TCM_FIRST = 0x1300;      // Tab control messages
 

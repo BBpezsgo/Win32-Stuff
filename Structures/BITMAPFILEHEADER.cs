@@ -1,14 +1,14 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct BITMAPFILEHEADER
+    public struct BitmapFileHeader
     {
-        public WORD bfType;
-        public DWORD bfSize;
-        public WORD bfReserved1;
-        public WORD bfReserved2;
-        public DWORD bfOffBits;
+        public WORD Type;
+        public DWORD Size;
+        readonly WORD Reserved1;
+        readonly WORD Reserved2;
+        public DWORD OffBits;
     }
 }

@@ -1,9 +1,13 @@
-﻿using System.Runtime.InteropServices;
+﻿global using TITLEBARINFO = Win32.TitleBarInfo;
+
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct RgState
+    [DebuggerDisplay($"{{{nameof(Flags)}}}")]
+    public readonly struct TitleBarElementState
     {
         public readonly DWORD Flags;
         /// <summary>
@@ -29,39 +33,39 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct RgStates
+    public readonly struct TitleBarElementsState
     {
-        public readonly RgState TitleBar;
+        public readonly TitleBarElementState TitleBar;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly DWORD Reserved;
-        public readonly RgState MinimizeButton;
-        public readonly RgState MaximizeButton;
-        public readonly RgState HelpButton;
-        public readonly RgState CloseButton;
+        public readonly TitleBarElementState MinimizeButton;
+        public readonly TitleBarElementState MaximizeButton;
+        public readonly TitleBarElementState HelpButton;
+        public readonly TitleBarElementState CloseButton;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
     /// <summary>
     /// Contains title bar information.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct TitleBarInfo
     {
-        /// <summary>
-        /// The size, in bytes, of the structure.
-        /// The caller must set this member to <c>sizeof(TITLEBARINFO)</c>.
-        /// </summary>
-        readonly DWORD cbSize;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly DWORD StructSize;
+
         /// <summary>
         /// The coordinates of the title bar.
         /// These coordinates include all title-bar elements except the window menu.
         /// </summary>
-        public readonly RECT TitleBar;
+        public readonly RECT Rect;
+
         /// <summary>
         /// An array that receives a value for each element of the title bar.
         /// The following are the title bar elements represented by the array.
         /// </summary>
-        public readonly RgStates RgState;
+        public readonly TitleBarElementsState ElementsState;
 
-        TitleBarInfo(DWORD cbSize) : this() => this.cbSize = cbSize;
-        unsafe public static TitleBarInfo Create() => new((uint)sizeof(TitleBarInfo));
+        TitleBarInfo(DWORD structSize) : this() => StructSize = structSize;
+        public static unsafe TITLEBARINFO Create() => new((uint)sizeof(TITLEBARINFO));
     }
 }

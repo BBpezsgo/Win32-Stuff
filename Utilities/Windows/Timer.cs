@@ -8,19 +8,29 @@
         readonly HWND Window;
         readonly Action Callback;
 
-        Timer(UINT_PTR id, HWND window, Action callback)
+        /// <exception cref="WindowsException"/>
+        /// <exception cref="GeneralException"/>
+        unsafe public Timer(HWND window, uint timeoutMs, Action callback)
         {
-            Id = id;
-            Window = window;
-            Callback = callback;
+            UINT_PTR id = GenerateId();
+            UINT_PTR result = User32.SetTimer(window, id, timeoutMs, &TimerCallback);
+
+            if (result == UINT_PTR.Zero)
+            { throw WindowsException.Get(); }
+
+            this.Id = id;
+            this.Window = window;
+            this.Callback = callback;
+
+            TimerIds.Add(id, this);
         }
 
         /// <exception cref="GeneralException"/>
         static UINT_PTR GenerateId()
         {
-            uint result = 1;
+            UINT_PTR result = 1;
             int endlessSafe = int.MaxValue - 1;
-            while (TimerIds.ContainsKey((UINT_PTR)result))
+            while (TimerIds.ContainsKey(result))
             {
                 result++;
                 if (--endlessSafe <= 0)
@@ -28,7 +38,7 @@
             }
             if (result == 0)
             { throw new GeneralException($"Failed to generate timer id"); }
-            return (UINT_PTR)result;
+            return result;
         }
 
         /// <exception cref="GeneralException"/>
@@ -37,18 +47,6 @@
             if (!TimerIds.TryGetValue(timerId, out Timer timer))
             { throw new GeneralException($"Timer with id {timerId} not found"); }
             timer.Callback?.Invoke();
-        }
-
-        /// <exception cref="WindowsException"/>
-        unsafe public static Timer Create(HWND window, uint timeoutMs, Action callback)
-        {
-            UINT_PTR id = GenerateId();
-            UINT_PTR result = User32.SetTimer(window, id, timeoutMs, &TimerCallback);
-            if (result == UINT_PTR.Zero)
-            { throw WindowsException.Get(); }
-            Timer timer = new(id, window, callback);
-            TimerIds.Add(id, timer);
-            return timer;
         }
 
         /// <exception cref="WindowsException"/>

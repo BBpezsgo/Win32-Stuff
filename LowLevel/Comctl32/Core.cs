@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
 namespace Win32.LowLevel
 {
     public static class Comctl32
@@ -67,32 +69,32 @@ namespace Win32.LowLevel
         /// </description>
         /// </item>
         /// <item>
-        /// <term><see cref="DBCI.IDCANCEL"/></term>
+        /// <term><see cref="DialogBoxCommand.IDCANCEL"/></term>
         /// <description>
         /// Cancel button was selected, Alt-F4 was pressed,
         /// Escape was pressed or the user clicked on the close window button.
         /// </description>
         /// </item>
         /// <item>
-        /// <term><see cref="DBCI.IDNO"/></term>
+        /// <term><see cref="DialogBoxCommand.IDNO"/></term>
         /// <description>
         /// No button was selected.
         /// </description>
         /// </item>
         /// <item>
-        /// <term><see cref="DBCI.IDOK"/></term>
+        /// <term><see cref="DialogBoxCommand.IDOK"/></term>
         /// <description>
         /// OK button was selected.
         /// </description>
         /// </item>
         /// <item>
-        /// <term><see cref="DBCI.IDRETRY"/></term>
+        /// <term><see cref="DialogBoxCommand.IDRETRY"/></term>
         /// <description>
         /// Retry button was selected.
         /// </description>
         /// </item>
         /// <item>
-        /// <term><see cref="DBCI.IDYES"/></term>
+        /// <term><see cref="DialogBoxCommand.IDYES"/></term>
         /// <description>
         /// Yes button was selected.
         /// </description>

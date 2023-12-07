@@ -1,20 +1,24 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win32
+namespace Win32.Gdi32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct BITMAPINFOHEADER
+    public struct BitmapInfoHeader
     {
-        public DWORD biSize;
-        public LONG biWidth;
-        public LONG biHeight;
-        public WORD biPlanes;
-        public WORD biBitCount;
-        public DWORD biCompression;
-        public DWORD biSizeImage;
-        public LONG biXPelsPerMeter;
-        public LONG biYPelsPerMeter;
-        public DWORD biClrUsed;
-        public DWORD biClrImportant;
+        readonly DWORD StructSize;
+
+        public LONG Width;
+        public LONG Height;
+        public WORD Planes;
+        public WORD BitCount;
+        public DWORD Compression;
+        public DWORD SizeImage;
+        public LONG PixelsPerMeterX;
+        public LONG PixelsPerMeterY;
+        public DWORD ClrUsed;
+        public DWORD ClrImportant;
+
+        BitmapInfoHeader(DWORD structSize) : this() => StructSize = structSize;
+        unsafe public static BitmapInfoHeader Create() => new((uint)sizeof(BitmapInfoHeader));
     }
 }
