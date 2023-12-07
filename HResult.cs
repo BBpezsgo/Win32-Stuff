@@ -26,6 +26,13 @@ namespace Win32
         public override string ToString() => code.ToString(CultureInfo.InvariantCulture);
         readonly string GetDebuggerDisplay() => ToString();
 
+        /// <exception cref="HResultException"/>
+        public HResult Throw()
+        {
+            if (IsSucceeded) return this;
+            throw new HResultException($"HRESULT ({Code}) ({Facility}) ({Severity}) {Message}");
+        }
+
         public static bool operator ==(HResult left, HResult right) => left.Equals(right);
         public static bool operator !=(HResult left, HResult right) => !left.Equals(right);
 
@@ -58,5 +65,17 @@ namespace Win32
                 }
             }
         }
+    }
+
+
+    [Serializable]
+    public class HResultException : Exception
+    {
+        public HResultException() { }
+        public HResultException(string message) : base(message) { }
+        public HResultException(string message, Exception inner) : base(message, inner) { }
+        protected HResultException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

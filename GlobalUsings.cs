@@ -23,6 +23,7 @@ global using SIZE_T = System.UIntPtr;
 global using HGLOBAL = System.IntPtr;
 global using HRGN = System.IntPtr;
 global using HPEN = System.IntPtr;
+global using HMONITOR = System.IntPtr;
 
 // Integer types
 
