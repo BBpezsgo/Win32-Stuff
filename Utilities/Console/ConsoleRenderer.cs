@@ -59,7 +59,7 @@
 
         public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
 
-        public void Resize()
+        public void RefreshBufferSize()
         {
             BufferWidth = ConsoleHandler.WindowWidth;
             BufferHeight = ConsoleHandler.WindowHeight;
