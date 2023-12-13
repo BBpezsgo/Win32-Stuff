@@ -6,28 +6,78 @@
         static HWND stdinHandle = Kernel32.INVALID_HANDLE_VALUE;
         static HWND stdoutHandle = Kernel32.INVALID_HANDLE_VALUE;
 
-        public static HWND InputHandle => stdinHandle;
-        public static HWND OutputHandle => stdoutHandle;
+        /// <exception cref="WindowsException"/>
+        public static HWND InputHandle 
+        {
+            get
+            {
+                if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
+                { stdinHandle = Kernel32.GetStdHandle(StdHandle.STD_INPUT_HANDLE); }
+
+                if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
+                { throw WindowsException.Get(); }
+                
+                return stdinHandle;
+            }
+        }
+        /// <exception cref="WindowsException"/>
+        public static HWND OutputHandle
+        {
+            get
+            {
+                if (stdoutHandle == Kernel32.INVALID_HANDLE_VALUE)
+                { stdoutHandle = Kernel32.GetStdHandle(StdHandle.STD_OUTPUT_HANDLE); }
+
+                if (stdoutHandle == Kernel32.INVALID_HANDLE_VALUE)
+                { throw WindowsException.Get(); }
+
+                return stdoutHandle;
+            }
+        }
 
         /// <exception cref="WindowsException"/>
-        public static void GetHandles()
+        public static uint InputFlags
         {
-            stdinHandle = Kernel32.GetStdHandle(StdHandle.STD_INPUT_HANDLE);
-            if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
-            { throw WindowsException.Get(); }
+            get
+            {
+                uint mode = default;
 
-            stdoutHandle = Kernel32.GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
-            if (stdoutHandle == Kernel32.INVALID_HANDLE_VALUE)
-            { throw WindowsException.Get(); }
+                if (Kernel32.GetConsoleMode(InputHandle, ref mode) == FALSE)
+                { throw WindowsException.Get(); }
+
+                return mode;
+            }
+            set
+            {
+                if (Kernel32.SetConsoleMode(InputHandle, value) == FALSE)
+                { throw WindowsException.Get(); }
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public static uint OutputFlags
+        {
+            get
+            {
+                uint mode = default;
+
+                if (Kernel32.GetConsoleMode(OutputHandle, ref mode) == FALSE)
+                { throw WindowsException.Get(); }
+
+                return mode;
+            }
+            set
+            {
+                if (Kernel32.SetConsoleMode(OutputHandle, value) == FALSE)
+                { throw WindowsException.Get(); }
+            }
         }
 
         /// <exception cref="WindowsException"/>
         public static void Setup()
         {
-            GetHandles();
-
             uint mode = 0;
-            if (Kernel32.GetConsoleMode(stdinHandle, ref mode) == 0)
+            if (Kernel32.GetConsoleMode(InputHandle, ref mode) == 0)
             { throw WindowsException.Get(); }
 
             SavedMode = mode;
@@ -36,7 +86,7 @@
             mode |= InputMode.ENABLE_WINDOW_INPUT;
             mode |= InputMode.ENABLE_MOUSE_INPUT;
 
-            if (Kernel32.SetConsoleMode(stdinHandle, mode) == 0)
+            if (Kernel32.SetConsoleMode(InputHandle, mode) == 0)
             { throw WindowsException.Get(); }
 
             Console.CursorVisible = false;
@@ -47,10 +97,10 @@
         {
             Console.CursorVisible = true;
 
-            if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
+            if (InputHandle == Kernel32.INVALID_HANDLE_VALUE)
             { throw WindowsException.Get(6); }
 
-            if (Kernel32.SetConsoleMode(stdinHandle, SavedMode) == 0)
+            if (Kernel32.SetConsoleMode(InputHandle, SavedMode) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -61,14 +111,14 @@
         {
             set
             {
-                if (Kernel32.SetCurrentConsoleFontEx(stdoutHandle, FALSE, ref value) == 0)
+                if (Kernel32.SetCurrentConsoleFontEx(OutputHandle, FALSE, ref value) == 0)
                 { throw WindowsException.Get(); }
             }
             get
             {
                 ConsoleFontInfoEx fontInfo = ConsoleFontInfoEx.Create();
 
-                if (Kernel32.GetCurrentConsoleFontEx(stdoutHandle, FALSE, ref fontInfo) == 0)
+                if (Kernel32.GetCurrentConsoleFontEx(OutputHandle, FALSE, ref fontInfo) == 0)
                 { throw WindowsException.Get(); }
 
                 return fontInfo;
@@ -107,7 +157,7 @@
             get
             {
                 ConsoleScreenBufferInfo result = default;
-                if (Kernel32.GetConsoleScreenBufferInfo(stdoutHandle, &result) == FALSE)
+                if (Kernel32.GetConsoleScreenBufferInfo(OutputHandle, &result) == FALSE)
                 { throw WindowsException.Get(); }
                 return result;
             }
