@@ -7,7 +7,7 @@ namespace Win32
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     unsafe public struct StartupInfo
     {
-        public DWORD StructureSize;
+        public DWORD StructSize;
 
         readonly WCHAR* Reserved;
 

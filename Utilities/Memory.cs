@@ -1,17 +1,14 @@
-﻿namespace Win32
+﻿using System.Globalization;
+
+namespace Win32
 {
-    public readonly struct GlobalObject : IDisposable
+    public readonly struct GlobalObject :
+        IDisposable,
+        IEquatable<GlobalObject>
     {
         readonly HGLOBAL _handle;
 
         public GlobalObject(HGLOBAL handle) => this._handle = handle;
-
-        /// <exception cref="WindowsException"/>
-        public void Dispose()
-        {
-            if (Kernel32.GlobalFree(_handle) != HGLOBAL.Zero)
-            { throw WindowsException.Get(); }
-        }
 
         /// <exception cref="WindowsException"/>
         unsafe public void* Lock()
@@ -41,6 +38,21 @@
                 if (error != 0)
                 { throw WindowsException.Get(error); }
             }
+        }
+
+        public static bool operator ==(GlobalObject left, GlobalObject right) => left.Equals(right);
+        public static bool operator !=(GlobalObject left, GlobalObject right) => !left.Equals(right);
+
+        public override bool Equals(object? obj) => obj is GlobalObject @object && Equals(@object);
+        public bool Equals(GlobalObject other) => _handle == other._handle;
+        public override int GetHashCode() => _handle.GetHashCode();
+        public override string ToString() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.GlobalFree(_handle) != HGLOBAL.Zero)
+            { throw WindowsException.Get(); }
         }
     }
 

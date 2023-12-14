@@ -13,7 +13,7 @@ namespace Win32.Gdi32
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HBITMAP Handle;
 
-        public Bitmap(HWND handle) => Handle = handle;
+        Bitmap(HWND handle) => Handle = handle;
 
         /// <exception cref="GdiException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]

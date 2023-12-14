@@ -17,6 +17,6 @@ namespace Win32
         }
 
         public static implicit operator ValueTuple<int, int>(PBRANGE v) => (v.Low, v.High);
-        public static implicit operator PBRANGE(ValueTuple<int, int> v) => (v.Item1, v.Item2);
+        public static implicit operator PBRANGE(ValueTuple<int, int> v) => new(v.Item1, v.Item2);
     }
 }

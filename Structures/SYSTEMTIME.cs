@@ -13,5 +13,7 @@ namespace Win32
         public readonly WORD Minute;
         public readonly WORD Second;
         public readonly WORD Milliseconds;
+
+        public static explicit operator DateTime(SystemTime v) => new(v.Year, v.Month, v.Day, v.Hour, v.Minute, v.Second, v.Milliseconds);
     }
 }

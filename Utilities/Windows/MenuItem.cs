@@ -43,16 +43,16 @@ namespace Win32
             get
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MenuItemInfoMasks.STRING;
-                info.dwTypeData = null;
+                info.Mask = MenuItemInfoMasks.STRING;
+                info.TypeData = null;
                 if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
                 uint bufferSize = info.cch + 1;
                 fixed (WCHAR* buffer = new string('\0', (int)bufferSize))
                 {
                     info = MENUITEMINFOW.Create();
-                    info.fMask = MenuItemInfoMasks.STRING;
-                    info.dwTypeData = buffer;
+                    info.Mask = MenuItemInfoMasks.STRING;
+                    info.TypeData = buffer;
                     info.cch = bufferSize;
                     if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                     { throw WindowsException.Get(); }
@@ -64,8 +64,8 @@ namespace Win32
                 fixed (WCHAR* textPtr = value)
                 {
                     MENUITEMINFOW info = MENUITEMINFOW.Create();
-                    info.fMask = MenuItemInfoMasks.STRING;
-                    info.dwTypeData = textPtr;
+                    info.Mask = MenuItemInfoMasks.STRING;
+                    info.TypeData = textPtr;
                     if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                     { throw WindowsException.Get(); }
                 }
@@ -79,16 +79,16 @@ namespace Win32
             get
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MenuItemInfoMasks.FTYPE;
+                info.Mask = MenuItemInfoMasks.FTYPE;
                 if (User32.GetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
-                return (MenuItemType)info.fType;
+                return (MenuItemType)info.Type;
             }
             set
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MenuItemInfoMasks.FTYPE;
-                info.fType = (uint)value;
+                info.Mask = MenuItemInfoMasks.FTYPE;
+                info.Type = (uint)value;
                 if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
             }
@@ -143,8 +143,8 @@ namespace Win32
             set
             {
                 MENUITEMINFOW info = MENUITEMINFOW.Create();
-                info.fMask = MenuItemInfoMasks.SUBMENU;
-                info.hSubMenu = (value == null) ? HMENU.Zero : value.Handle;
+                info.Mask = MenuItemInfoMasks.SUBMENU;
+                info.SubMenuHandle = (value == null) ? HMENU.Zero : value.Handle;
                 if (User32.SetMenuItemInfoW(_parentHandle, (uint)_index, TRUE, &info) == 0)
                 { throw WindowsException.Get(); }
             }

@@ -5,7 +5,10 @@ namespace Win32.Gdi32
 {
     using LowLevel;
 
-    public readonly struct Region : IDisposable, IEquatable<Region>
+    public readonly struct Region :
+        IDisposable,
+        IEquatable<Region>,
+        System.Numerics.IEqualityOperators<Region, Region, bool>
     {
         readonly HRGN Handle;
 
@@ -43,7 +46,7 @@ namespace Win32.Gdi32
 
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         public override bool Equals(object? obj) => obj is Region region && Equals(region);
-        public bool Equals(Region other) => Handle.Equals(other.Handle);
+        public bool Equals(Region other) => Handle == other.Handle;
         public override int GetHashCode() => Handle.GetHashCode();
     }
 }

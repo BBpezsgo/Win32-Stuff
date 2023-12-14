@@ -66,6 +66,7 @@ namespace Win32
         public readonly TitleBarElementsState ElementsState;
 
         TitleBarInfo(DWORD structSize) : this() => StructSize = structSize;
-        public static unsafe TITLEBARINFO Create() => new((uint)sizeof(TITLEBARINFO));
+
+        public static unsafe TITLEBARINFO Create() => new((DWORD)sizeof(TITLEBARINFO));
     }
 }

@@ -14,7 +14,7 @@ namespace Win32
         /// The size of the structure, in bytes.
         /// The caller must set this member to <see langword="sizeof"/>(<see cref="MENUINFO"/>).
         /// </summary>
-        readonly DWORD cbSize;
+        readonly DWORD StructSize;
         /// <summary>
         /// <para>
         /// Indicates the members to be retrieved or set (except for <see cref="MenuInfoMasks.APPLYTOSUBMENUS"/>).
@@ -23,7 +23,7 @@ namespace Win32
         /// See <see cref="MenuInfoMasks"/>
         /// </para>
         /// </summary>
-        public DWORD fMask;
+        public DWORD Mask;
         /// <summary>
         /// <para>
         /// The menu style.
@@ -32,27 +32,27 @@ namespace Win32
         /// See <see cref="MenuStyles"/>
         /// </para>
         /// </summary>
-        public DWORD dwStyle;
+        public DWORD Style;
         /// <summary>
         /// The maximum height of the menu in pixels. When the menu items exceed the space available,
         /// scroll bars are automatically used. The default (0) is the screen height.
         /// </summary>
-        public UINT cyMax;
+        public UINT MaxHeight;
         /// <summary>
         /// A handle to the brush to be used for the menu's background.
         /// </summary>
-        public HBRUSH hbrBack;
+        public HBRUSH BackBrushHandle;
         /// <summary>
         /// The context help identifier. This is the same value used
         /// in the <c>GetMenuContextHelpId</c> and <c>SetMenuContextHelpId</c> functions.
         /// </summary>
-        public DWORD dwContextHelpID;
+        public DWORD ContextHelpId;
         /// <summary>
         /// An application-defined value.
         /// </summary>
-        public ULONG_PTR dwMenuData;
+        public ULONG_PTR MenuData;
 
-        MenuInfo(uint cbSize) : this() => this.cbSize = cbSize;
-        unsafe public static MENUINFO Create() => new((uint)sizeof(MENUINFO));
+        MenuInfo(DWORD structSize) : this() => this.StructSize = structSize;
+        unsafe public static MENUINFO Create() => new((DWORD)sizeof(MENUINFO));
     }
 }

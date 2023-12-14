@@ -4,55 +4,63 @@ using System.Globalization;
 
 namespace Win32
 {
-    public readonly struct ProcessSnapshot :
-        IEnumerable<ProcessEntry>,
+    public readonly struct HeapSnapshot :
+        IEnumerable<HeapList>,
         IDisposable,
-        IEquatable<ProcessSnapshot>,
-        System.Numerics.IEqualityOperators<ProcessSnapshot, ProcessSnapshot, bool>
+        IEquatable<HeapSnapshot>,
+        System.Numerics.IEqualityOperators<HeapSnapshot, HeapSnapshot, bool>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HANDLE Handle;
 
-        public ProcessSnapshot(HANDLE handle) => Handle = handle;
+        HeapSnapshot(HANDLE handle) => Handle = handle;
 
         public void Dispose() => _ = Kernel32.CloseHandle(Handle);
 
-        public readonly IEnumerator<ProcessEntry> GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
-        readonly IEnumerator IEnumerable.GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
+        public readonly IEnumerator<HeapList> GetEnumerator() => new HeapSnapshotEnumerator(Handle);
+        readonly IEnumerator IEnumerable.GetEnumerator() => new HeapSnapshotEnumerator(Handle);
 
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
-        public override bool Equals(object? obj) => obj is ProcessSnapshot snapshot && Equals(snapshot);
-        public bool Equals(ProcessSnapshot other) => Handle == other.Handle;
+        public override bool Equals(object? obj) => obj is HeapList snapshot && Equals(snapshot);
+        public bool Equals(HeapSnapshot other) => Handle.Equals(other.Handle);
         public override int GetHashCode() => Handle.GetHashCode();
 
-        public static bool operator ==(ProcessSnapshot left, ProcessSnapshot right) => left.Equals(right);
-        public static bool operator !=(ProcessSnapshot left, ProcessSnapshot right) => !left.Equals(right);
+        public static bool operator ==(HeapSnapshot left, HeapSnapshot right) => left.Equals(right);
+        public static bool operator !=(HeapSnapshot left, HeapSnapshot right) => !left.Equals(right);
+
+        public static HeapSnapshot CreateSnapshot(uint processId)
+        {
+            HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPHEAPLIST, processId);
+            if (Kernel32.INVALID_HANDLE_VALUE == hSnapshot)
+            { throw WindowsException.Get(); }
+            return new HeapSnapshot(hSnapshot);
+        }
     }
 
-    public class ProcessSnapshotEnumerator : IEnumerator<ProcessEntry>
+    public class HeapSnapshotEnumerator : IEnumerator<HeapList>
     {
         readonly HANDLE Handle;
-        ProcessEntry current;
+        HeapList current;
         bool IsDisposed;
         bool IsStarted;
 
-        public ProcessSnapshotEnumerator(HANDLE handle)
+        public HeapSnapshotEnumerator(HANDLE handle)
         {
             Handle = handle;
         }
 
-        public ProcessEntry Current => current;
+        public HeapList Current => current;
         object IEnumerator.Current => current;
 
         /// <exception cref="ObjectDisposedException"/>
         unsafe public void Reset()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ProcessSnapshotEnumerator));
+            if (IsDisposed) throw new ObjectDisposedException(nameof(HeapSnapshotEnumerator));
             IsStarted = true;
 
-            ProcessEntry processEntry = ProcessEntry.Create();
+            HeapList heapList = HeapList.Create();
 
-            int result = Kernel32.Process32FirstW(Handle, &processEntry);
+            int result = Kernel32.Heap32ListFirst(Handle, &heapList);
 
             if (result != TRUE)
             {
@@ -66,21 +74,21 @@ namespace Win32
                 throw WindowsException.Get(error);
             }
 
-            current = processEntry;
+            current = heapList;
         }
 
         /// <exception cref="ObjectDisposedException"/>
         unsafe public bool MoveNext()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ProcessSnapshotEnumerator));
+            if (IsDisposed) throw new ObjectDisposedException(nameof(HeapSnapshotEnumerator));
 
-            ProcessEntry processEntry = ProcessEntry.Create();
+            HeapList heapList = HeapList.Create();
 
             if (!IsStarted)
             {
                 IsStarted = true;
 
-                int result2 = Kernel32.Process32FirstW(Handle, &processEntry);
+                int result2 = Kernel32.Heap32ListFirst(Handle, &heapList);
 
                 if (result2 != TRUE)
                 {
@@ -94,12 +102,12 @@ namespace Win32
                     throw WindowsException.Get(error);
                 }
 
-                current = processEntry;
+                current = heapList;
             }
 
-            int result = Kernel32.Process32NextW(Handle, &processEntry);
+            int result = Kernel32.Heap32ListNext(Handle, &heapList);
             if (result != TRUE) return false;
-            current = processEntry;
+            current = heapList;
             return true;
         }
 
@@ -109,7 +117,7 @@ namespace Win32
             _ = Kernel32.CloseHandle(Handle);
             IsDisposed = true;
         }
-        ~ProcessSnapshotEnumerator() { ActualDispose(); }
+        ~HeapSnapshotEnumerator() { ActualDispose(); }
         public void Dispose()
         {
             ActualDispose();

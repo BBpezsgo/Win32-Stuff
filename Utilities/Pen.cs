@@ -4,7 +4,10 @@ namespace Win32.Gdi32
 {
     using LowLevel;
 
-    public readonly struct Pen : IDisposable, IEquatable<Pen>
+    public readonly struct Pen : 
+        IDisposable,
+        IEquatable<Pen>,
+        System.Numerics.IEqualityOperators<Pen, Pen, bool>
     {
         readonly HPEN Handle;
 
@@ -35,7 +38,7 @@ namespace Win32.Gdi32
 
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         public override bool Equals(object? obj) => obj is Pen pen && Equals(pen);
-        public bool Equals(Pen other) => Handle.Equals(other.Handle);
+        public bool Equals(Pen other) => Handle == other.Handle;
         public override int GetHashCode() => Handle.GetHashCode();
     }
 }

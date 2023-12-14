@@ -302,14 +302,14 @@ namespace Win32.Gdi32
 
         public override int GetHashCode() => Handle.GetHashCode();
         public override bool Equals(object? obj) => Equals(obj as DC);
-        public bool Equals(DC? other) => other is not null && Handle.Equals(other.Handle);
+        public bool Equals(DC? other) => other is not null && Handle == other.Handle;
 
         public static bool operator !=(DC? a, DC? b) => !(a == b);
         public static bool operator ==(DC? a, DC? b)
         {
             if (a is null && b is null) return true;
             if (a is null || b is null) return false;
-            return a.Equals(b);
+            return a.Handle == b.Handle;
         }
     }
 }

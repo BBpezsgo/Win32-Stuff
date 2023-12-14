@@ -4,7 +4,10 @@ using System.Globalization;
 namespace Win32
 {
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
-    public readonly struct Thread : IDisposable, IEquatable<Thread>
+    public readonly struct Thread :
+        IDisposable,
+        IEquatable<Thread>,
+        System.Numerics.IEqualityOperators<Thread, Thread, bool>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HANDLE _handle;
@@ -44,6 +47,14 @@ namespace Win32
                 HResult result = Kernel32.GetThreadDescription(_handle, &description);
                 result.Throw();
                 return new string(description);
+            }
+            set
+            {
+                fixed (WCHAR* description = value)
+                {
+                    HResult result = Kernel32.SetThreadDescription(_handle, description);
+                    result.Throw();
+                }
             }
         }
 
@@ -99,10 +110,18 @@ namespace Win32
             }
         }
 
+        public static Thread Open(ThreadAccessRights accessRights, DWORD threadId)
+        {
+            HANDLE handle = Kernel32.OpenThread((DWORD)accessRights, FALSE, threadId);
+            if (handle == HANDLE.Zero)
+            { throw WindowsException.Get(); }
+            return new Thread(handle);
+        }
+
         public override string ToString() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         string DebuggerDisplay() => ToString();
         public override bool Equals(object? obj) => obj is Thread handle && Equals(handle);
-        public bool Equals(Thread other) => _handle.Equals(other._handle);
+        public bool Equals(Thread other) => _handle == other._handle;
         public override int GetHashCode() => _handle.GetHashCode();
     }
 }

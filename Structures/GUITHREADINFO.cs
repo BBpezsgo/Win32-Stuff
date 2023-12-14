@@ -18,7 +18,8 @@ namespace Win32
         public readonly HWND CaretHandle;
         public readonly RECT Caret;
 
-        GuiThreadInfo(uint structSize) : this() => this.StructSize = structSize;
-        unsafe public static GUITHREADINFO Create() => new((uint)sizeof(GUITHREADINFO));
+        GuiThreadInfo(DWORD structSize) : this() => this.StructSize = structSize;
+
+        public static unsafe GUITHREADINFO Create() => new((DWORD)sizeof(GUITHREADINFO));
     }
 }

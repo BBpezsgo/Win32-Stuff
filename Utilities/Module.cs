@@ -1,10 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 
+#pragma warning disable CA1716 // Identifiers should not match keywords
+
 namespace Win32
 {
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
-    public readonly struct Module : IEquatable<Module>
+    public readonly struct Module :
+        IEquatable<Module>,
+        System.Numerics.IEqualityOperators<Module, Module, bool>
     {
         readonly HANDLE ProcessHandle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,7 +71,9 @@ namespace Win32
         }
 
         public override bool Equals(object? obj) => obj is Module module && Equals(module);
-        public bool Equals(Module other) => ProcessHandle.Equals(other.ProcessHandle) && ModuleHandle.Equals(other.ModuleHandle);
+        public bool Equals(Module other) =>
+            ProcessHandle == other.ProcessHandle &&
+            ModuleHandle == other.ModuleHandle;
         public override int GetHashCode() => HashCode.Combine(ProcessHandle, ModuleHandle);
         public override string ToString() => "0x" + ModuleHandle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         /// <exception cref="WindowsException"/>

@@ -24,6 +24,7 @@ namespace Win32
         public HICON IconSm;
 
         WindowClassEx(DWORD structSize) : this() => this.StructSize = structSize;
-        public static unsafe WNDCLASSEXW Create() => new((uint)sizeof(WNDCLASSEXW));
+
+        public static unsafe WNDCLASSEXW Create() => new((DWORD)sizeof(WNDCLASSEXW));
     }
 }

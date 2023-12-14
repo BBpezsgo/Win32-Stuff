@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable CA1716 // Identifiers should not match keywords
+
 namespace Win32.COM
 {
     [ComImport]

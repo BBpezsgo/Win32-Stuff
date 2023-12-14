@@ -47,7 +47,9 @@ namespace Win32.Gdi32
         RGB_COLORS = 0, /* color table in RGBs */
     }
 
-    public readonly struct Brush : IDisposable, IEquatable<Brush>
+    public readonly struct Brush :
+        IDisposable,
+        IEquatable<Brush>
     {
         readonly HBRUSH Handle;
 
@@ -107,8 +109,6 @@ namespace Win32.Gdi32
             return new Brush(brush);
         }
 
-        public static implicit operator HBRUSH(Brush brush) => brush.Handle;
-
         public void Use(HDC deviceContext) => Gdi32.SelectObject(deviceContext, Handle);
 
         /// <exception cref="GdiException"/>
@@ -118,12 +118,15 @@ namespace Win32.Gdi32
             { throw new GdiException($"Failed to delete object ({nameof(Brush)}) {this}"); }
         }
 
+        public static implicit operator HBRUSH(Brush v) => v.Handle;
+        public static explicit operator Brush(HBRUSH v) => new(v);
+
         public static bool operator ==(Brush left, Brush right) => left.Equals(right);
-        public static bool operator !=(Brush left, Brush right) => !(left == right);
+        public static bool operator !=(Brush left, Brush right) => !left.Equals(right);
 
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         public override bool Equals(object? obj) => obj is Brush brush && Equals(brush);
-        public bool Equals(Brush other) => Handle.Equals(other.Handle);
+        public bool Equals(Brush other) => Handle == other.Handle;
         public override int GetHashCode() => Handle.GetHashCode();
     }
 }

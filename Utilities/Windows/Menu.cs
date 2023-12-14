@@ -10,7 +10,7 @@ namespace Win32
         Grayed,
     }
 
-    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public class Menu : IDisposable
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -125,8 +125,7 @@ namespace Win32
 
         public MenuItemContainer MenuItems => new(_handle);
 
-        string GetDebuggerDisplay()
-            => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+        public override string ToString() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
 
         public int GetItemAtPosition(HWND window, POINT screenPosition)
             => User32.MenuItemFromPoint(window, _handle, screenPosition);
@@ -136,7 +135,7 @@ namespace Win32
             return itemIndex != -1;
         }
 
-        public static bool IsMenu(IntPtr handle)
+        public static bool IsMenu(HMENU handle)
             => User32.IsMenu(handle) != 0;
 
         /// <exception cref="WindowsException"/>

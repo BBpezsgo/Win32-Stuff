@@ -3,8 +3,11 @@ using System.Numerics;
 
 namespace Win32.Gdi32
 {
-    public readonly struct GdiColor : IEquatable<GdiColor>,
-        IFormattable, IParsable<GdiColor>, IEqualityOperators<GdiColor, GdiColor, bool>,
+    public readonly struct GdiColor :
+        IEquatable<GdiColor>,
+        IFormattable,
+        IParsable<GdiColor>,
+        IEqualityOperators<GdiColor, GdiColor, bool>,
         IShiftOperators<GdiColor, int, GdiColor>,
         IBitwiseOperators<GdiColor, GdiColor, GdiColor>
     {

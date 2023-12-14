@@ -10,6 +10,86 @@ namespace Win32.LowLevel
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern HRESULT SetThreadDescription(
+          [In] HANDLE hThread,
+          [In] WCHAR* lpThreadDescription
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HANDLE OpenThread(
+          [In] DWORD dwDesiredAccess,
+          [In] BOOL bInheritHandle,
+          [In] DWORD dwThreadId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern HANDLE CreateThread(
+          [In, Optional] SecurityAttributes* lpThreadAttributes,
+          [In] SIZE_T dwStackSize,
+          [In] delegate*<void*, DWORD> lpStartAddress,
+          [In, Optional] void* lpParameter,
+          [In] DWORD dwCreationFlags,
+          [Out, Optional] DWORD* lpThreadId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Toolhelp32ReadProcessMemory(
+          [In] DWORD th32ProcessID,
+          [In] void* lpBaseAddress,
+          [Out] void* lpBuffer,
+          [In] SIZE_T cbRead,
+          [Out] SIZE_T* lpNumberOfBytesRead
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Thread32Next(
+          [In] HANDLE hSnapshot,
+          [Out] ThreadEntry* lpte
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Thread32First(
+          [In] HANDLE hSnapshot,
+          [In, Out] ThreadEntry* lpte
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Heap32Next(
+          [Out] HeapEntry* lphe
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Heap32ListNext(
+          [In] HANDLE hSnapshot,
+          [Out] HeapList* lphl
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Heap32ListFirst(
+          [In] HANDLE hSnapshot,
+          [In, Out] HeapList* lphl
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Heap32First(
+          [In, Out] HeapEntry* lphe,
+          [In] DWORD th32ProcessID,
+          [In] ULONG_PTR th32HeapID
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Module32NextW(
+          [In] HANDLE hSnapshot,
+          [Out] ModuleEntry* lpme
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        unsafe public static extern BOOL Module32FirstW(
+          [In] HANDLE hSnapshot,
+          [In, Out] ModuleEntry* lpme
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         unsafe public static extern BOOL GetThreadIdealProcessorEx(
           [In] HANDLE hThread,
           [Out] ProcessorNumber* lpIdealProcessor

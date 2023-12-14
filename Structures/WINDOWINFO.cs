@@ -49,6 +49,7 @@ namespace Win32
         public readonly WORD CreatorVersion;
 
         WindowInfo(DWORD structSize) : this() => this.StructSize = structSize;
-        unsafe public static WindowInfo Create() => new((uint)sizeof(WindowInfo));
+
+        unsafe public static WindowInfo Create() => new((DWORD)sizeof(WindowInfo));
     }
 }

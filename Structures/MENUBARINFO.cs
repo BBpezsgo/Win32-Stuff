@@ -32,6 +32,7 @@ namespace Win32
         public bool Focused => (Flags & 0b_01000000_00000000_00000000_00000000) != 0;
 
         MenuBarInfo(DWORD structSize) : this() => StructSize = structSize;
-        unsafe public static MenuBarInfo Create() => new((uint)sizeof(MENUBARINFO));
+
+        public static unsafe MENUBARINFO Create() => new((DWORD)sizeof(MENUBARINFO));
     }
 }

@@ -20,6 +20,7 @@ namespace Win32
         public RECT Exclude;
 
         TrackPopupMenuParams(DWORD structSize) : this() => StructSize = structSize;
-        public static unsafe TPMPARAMS Create() => new((uint)sizeof(TPMPARAMS));
+
+        public static unsafe TPMPARAMS Create() => new((DWORD)sizeof(TPMPARAMS));
     }
 }

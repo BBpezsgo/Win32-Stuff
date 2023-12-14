@@ -45,7 +45,7 @@ namespace Win32
         /// </summary>
         public readonly POINT ScreenPosition;
 
-        CursorInfo(uint structSize) : this() => StructSize = structSize;
-        unsafe public static CURSORINFO Create() => new((uint)sizeof(CURSORINFO));
+        CursorInfo(DWORD structSize) : this() => StructSize = structSize;
+        unsafe public static CURSORINFO Create() => new((DWORD)sizeof(CURSORINFO));
     }
 }

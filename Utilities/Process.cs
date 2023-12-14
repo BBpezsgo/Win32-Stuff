@@ -72,6 +72,9 @@ namespace Win32
             return new Process(handle);
         }
 
+        public readonly ModuleSnapshot SnapModules() => ModuleSnapshot.CreateSnapshot(Id);
+        public readonly HeapSnapshot SnapHeap() => HeapSnapshot.CreateSnapshot(Id);
+
         public void Dispose() => _ = Kernel32.CloseHandle(Handle);
 
         public static explicit operator Process(HANDLE handle) => new(handle);
@@ -81,11 +84,15 @@ namespace Win32
         public static bool operator !=(Process a, Process b) => !a.Equals(b);
 
         /// <exception cref="WindowsException"/>
-        unsafe public Thread CreateRemoteThread(delegate*<void*, uint> startAddress, void* parameter)
-            => CreateRemoteThread(startAddress, parameter, out _);
+        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, out uint threadId)
+            => CreateThread(startAddress, null, out threadId);
 
         /// <exception cref="WindowsException"/>
-        unsafe public Thread CreateRemoteThread(delegate*<void*, uint> startAddress, void* parameter, out uint threadId)
+        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, void* parameter = null)
+            => CreateThread(startAddress, parameter, out _);
+
+        /// <exception cref="WindowsException"/>
+        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, void* parameter, out uint threadId)
         {
             uint _threadId = default;
             HANDLE handle = Kernel32.CreateRemoteThreadEx(
@@ -276,7 +283,7 @@ namespace Win32
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         string DebuggerDisplay() => ToString();
         public override bool Equals(object? obj) => obj is Process handle && Equals(handle);
-        public bool Equals(Process other) => Handle.Equals(other.Handle);
+        public bool Equals(Process other) => Handle == other.Handle;
         public override int GetHashCode() => Handle.GetHashCode();
     }
 }

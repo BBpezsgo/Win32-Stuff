@@ -1,8 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 
 namespace Win32
 {
-    public class MenuItemContainer
+    public class MenuItemContainer : IEnumerable<MenuItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HMENU MenuHandle;
@@ -31,6 +32,7 @@ namespace Win32
                 yield return new MenuItem(MenuHandle, i);
             }
         }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public MenuItem[] ToArray()
         {

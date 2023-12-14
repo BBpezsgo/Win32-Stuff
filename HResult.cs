@@ -33,8 +33,8 @@ namespace Win32
             throw new HResultException($"HRESULT ({Code}) ({Facility}) ({Severity}) {Message}");
         }
 
-        public static bool operator ==(HResult left, HResult right) => left.Equals(right);
-        public static bool operator !=(HResult left, HResult right) => !left.Equals(right);
+        public static bool operator ==(HResult left, HResult right) => left.code == right.code;
+        public static bool operator !=(HResult left, HResult right) => left.code != right.code;
 
         public static implicit operator HRESULT(HResult hr) => hr.code;
         public static implicit operator HResult(HRESULT hr) => new(hr);
@@ -66,7 +66,6 @@ namespace Win32
             }
         }
     }
-
 
     [Serializable]
     public class HResultException : Exception

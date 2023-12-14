@@ -21,8 +21,8 @@
             fixed (WCHAR* contentPtr = content)
             {
                 result = Comctl32.TaskDialog(
-                    IntPtr.Zero,
-                    IntPtr.Zero,
+                    HWND.Zero,
+                    HINSTANCE.Zero,
                     windowTitlePtr,
                     mainInstructionPtr,
                     contentPtr,

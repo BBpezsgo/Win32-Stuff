@@ -12,13 +12,7 @@
         public static bool IsKeyPressed(ushort key) => BitUtils.GetBit(Accumulated, key) || BitUtils.GetBit(Stage1, key) || BitUtils.GetBit(Stage2, key);
 
         public static bool IsKeyHold(char key) => IsKeyHold(AsciiToKey[key]);
-        public static bool IsKeyHold(ushort key)
-        {
-            bool stage1 = BitUtils.GetBit(Stage1, key);
-            bool stage2 = BitUtils.GetBit(Stage2, key);
-            bool stage3 = BitUtils.GetBit(Stage3, key);
-            return stage2;
-        }
+        public static bool IsKeyHold(ushort key) => BitUtils.GetBit(Stage2, key);
 
         public static bool IsKeyDown(char key) => IsKeyDown(AsciiToKey[key]);
         public static bool IsKeyDown(ushort key)

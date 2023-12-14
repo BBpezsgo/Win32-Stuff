@@ -15,6 +15,7 @@
 
         /// <exception cref="WindowsException"/>
         unsafe public static Win32Class Register(WNDCLASSEXW* info) => Win32Class.Register(info, out _);
+
         /// <exception cref="WindowsException"/>
         unsafe public static Win32Class Register(WNDCLASSEXW* info, out ushort id)
         {
@@ -48,7 +49,10 @@
 
         public override string ToString() => _className;
         public override bool Equals(object? obj) => Equals(obj as Win32Class);
-        public bool Equals(Win32Class? other) => other is not null && string.Equals(_className, other._className, StringComparison.Ordinal) && _moduleHandle.Equals(other._moduleHandle);
+        public bool Equals(Win32Class? other) =>
+            other is not null &&
+            string.Equals(_className, other._className, StringComparison.Ordinal) &&
+            _moduleHandle == other._moduleHandle;
         public override int GetHashCode() => HashCode.Combine(_className, _moduleHandle);
     }
 }
