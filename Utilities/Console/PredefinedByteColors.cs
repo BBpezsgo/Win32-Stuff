@@ -20,5 +20,11 @@
         public const byte Silver = 0b_0111;
         public const byte Gray = 0b_1000;
         public const byte White = 0b_1111;
+
+        public const WORD MASK_FG = 0b_0000_1111;
+        public const WORD MASK_BG = 0b_1111_0000;
+        public const WORD MASK_COLOR = 0b_1111_1111;
+
+        public static WORD Make(byte background, byte foreground) => unchecked((WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)));
     }
 }

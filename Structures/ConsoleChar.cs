@@ -29,29 +29,25 @@ namespace Win32
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public struct ConsoleChar : IEquatable<ConsoleChar>, IEquatable<char>
     {
-        const WORD MASK_FG = 0b_0000_1111;
-        const WORD MASK_BG = 0b_1111_0000;
-        const WORD MASK_COLOR = 0b_1111_1111;
-
         [FieldOffset(0)] public char Char;
         [FieldOffset(2)] public WORD Attributes;
 
         public byte Color
         {
-            readonly get => (byte)(Attributes & MASK_COLOR);
-            set => Attributes = (ushort)((Attributes & ~MASK_COLOR) | (value & MASK_COLOR));
+            readonly get => (byte)(Attributes & ByteColor.MASK_COLOR);
+            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_COLOR) | (value & ByteColor.MASK_COLOR));
         }
 
         public byte Foreground
         {
-            readonly get => (byte)(Attributes & MASK_FG);
-            set => Attributes = (ushort)((Attributes & ~MASK_BG) | (value & MASK_FG));
+            readonly get => (byte)(Attributes & ByteColor.MASK_FG);
+            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_BG) | (value & ByteColor.MASK_FG));
         }
 
         public byte Background
         {
             readonly get => (byte)(Attributes >> 4);
-            set => Attributes = (ushort)((Attributes & ~MASK_FG) | ((value << 4) & MASK_BG));
+            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_FG) | ((value << 4) & ByteColor.MASK_BG));
         }
 
         public static ConsoleChar Empty => new(' ', (WORD)0);
@@ -68,10 +64,10 @@ namespace Win32
             Attributes = (WORD)attributes;
         }
 
-        public ConsoleChar(char @char, byte foreground, byte background) : this(@char, (WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)))
+        public ConsoleChar(char @char, byte foreground, byte background) : this(@char, ByteColor.Make(background, foreground))
         { }
 
-        public ConsoleChar(char @char, ConsoleForegroundColor foreground, ConsoleBackgroundColor background) : this(@char, (WORD)(((byte)foreground & MASK_FG) | ((byte)background & MASK_BG)))
+        public ConsoleChar(char @char, ConsoleForegroundColor foreground, ConsoleBackgroundColor background) : this(@char, ByteColor.Make((byte)background, (byte)foreground))
         { }
 
         public ConsoleChar(char @char) : this(@char, (WORD)0)

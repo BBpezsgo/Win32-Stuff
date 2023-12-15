@@ -12,10 +12,10 @@
     public enum ConsoleForegroundColor : WORD
     {
         Black = 0,
-        DarkGray = ConsoleCharAttributes.ForegroundBright,
-        Gray = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBlue,
+        Gray = ConsoleCharAttributes.ForegroundBright,
+        Silver = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBlue,
         White = ConsoleCharAttributes.ForegroundRed | ConsoleCharAttributes.ForegroundGreen | ConsoleCharAttributes.ForegroundBlue | ConsoleCharAttributes.ForegroundBright,
-        Default = Gray,
+        Default = Silver,
 
         DarkRed = ConsoleCharAttributes.ForegroundRed,
         DarkGreen = ConsoleCharAttributes.ForegroundGreen,
@@ -35,8 +35,8 @@
     public enum ConsoleBackgroundColor : WORD
     {
         Black = 0,
-        DarkGray = ConsoleCharAttributes.BackgroundBright,
-        Gray = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBlue,
+        Gray = ConsoleCharAttributes.BackgroundBright,
+        Silver = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBlue,
         White = ConsoleCharAttributes.BackgroundRed | ConsoleCharAttributes.BackgroundGreen | ConsoleCharAttributes.BackgroundBlue | ConsoleCharAttributes.BackgroundBright,
         Default = Black,
 
