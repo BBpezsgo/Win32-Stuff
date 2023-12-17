@@ -7,6 +7,27 @@ namespace Win32.LowLevel
     public static partial class User32
     {
         [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL SetLayeredWindowAttributes(
+          [In] HWND hwnd,
+          [In] COLORREF crKey,
+          [In] BYTE bAlpha,
+          [In] DWORD dwFlags
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        unsafe public static extern BOOL UpdateLayeredWindow(
+          [In] HWND hWnd,
+          [In, Optional] HDC hdcDst,
+          [In, Optional] POINT* pptDst,
+          [In, Optional] SIZE* psize,
+          [In, Optional] HDC hdcSrc,
+          [In, Optional] POINT* pptSrc,
+          [In] COLORREF crKey,
+          [In, Optional] BLENDFUNCTION* pblend,
+          [In] DWORD dwFlags
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
         unsafe public static extern UINT RealGetWindowClassW(
           [In] HWND hwnd,
           [Out] WCHAR* ptszClassName,

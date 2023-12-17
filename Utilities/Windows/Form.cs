@@ -10,8 +10,9 @@ namespace Win32
     public class Form : Window, IDisposable
     {
         unsafe public delegate void ResizeEventHandler(Form sender, RECT* rect);
-        unsafe public delegate void PaintEventHandler(Form sender);
-        unsafe public delegate void MouseEventHandler(Form sender, ushort x, ushort y, uint flags);
+        public unsafe delegate void PaintEventHandler(Form sender);
+        public unsafe delegate void MouseEventHandler(Form sender, ushort x, ushort y, uint flags);
+        public unsafe delegate void WindowClassSetter(ref WindowClassEx windowClass);
 
         static int ActiveForms;
 
@@ -77,14 +78,19 @@ namespace Win32
 
         internal readonly Dictionary<ushort, Control> Controls;
 
-        unsafe public static delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> DefaultWindowProcess => &WinProc;
+        public static unsafe delegate*<HWND, uint, WPARAM, LPARAM, LRESULT> DefaultWindowProcess => &WinProc;
 
         /// <exception cref="WindowsException"/>
-        unsafe public Form(string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
+        public unsafe Form(
+            string title,
+            int width = CreateWindowFlags.USEDEFAULT,
+            int height = CreateWindowFlags.USEDEFAULT,
+            Menu? menu = null,
+            uint styles = DefaultStyles,
+            uint exStyles = 0,
+            WindowClassSetter? windowClassSetter = null) : base()
         {
             HINSTANCE hInstance = System.Diagnostics.Process.GetCurrentProcess().Handle;
-
-            uint exStyles = 0;
 
             WNDCLASSEXW windowClass = WNDCLASSEXW.Create();
 
@@ -106,7 +112,9 @@ namespace Win32
                     windowClass.ClassName = classNamePtr;
                     windowClass.MenuName = null;
                     windowClass.Style = 0;
-                    windowClass.WindowProcedure = &WinProc;
+                    windowClass.WindowProcedure = DefaultWindowProcess;
+
+                    windowClassSetter?.Invoke(ref windowClass);
 
                     Class = Win32Class.Register(&windowClass);
 
@@ -281,10 +289,10 @@ namespace Win32
                 case WindowMessage.WM_ERASEBKGND: break;
                 case WindowMessage.WM_NCPAINT: break;
                 case WindowMessage.WM_PAINT:
-                    {
-                        OnPaint?.Invoke(this);
-                        break;
-                    }
+                {
+                    OnPaint?.Invoke(this);
+                    break;
+                }
                 case WindowMessage.WM_PRINT: break;
                 case WindowMessage.WM_PRINTCLIENT: break;
                 case WindowMessage.WM_SETREDRAW: break;
@@ -319,16 +327,16 @@ namespace Win32
                     }
                     break;
                 case WindowMessage.WM_CONTEXTMENU:
+                {
+                    ushort x = Macros.LOWORD(lParam);
+                    ushort y = Macros.HIWORD(lParam);
+                    if (OnContextMenu != null)
                     {
-                        ushort x = Macros.LOWORD(lParam);
-                        ushort y = Macros.HIWORD(lParam);
-                        if (OnContextMenu != null)
-                        {
-                            OnContextMenu.Invoke(this, new Window((HWND)(void*)wParam), new POINT(x, y));
-                            return 0;
-                        }
-                        break;
+                        OnContextMenu.Invoke(this, new Window((HWND)(void*)wParam), new POINT(x, y));
+                        return 0;
                     }
+                    break;
+                }
                 case WindowMessage.WM_ENTERMENULOOP: break;
                 case WindowMessage.WM_EXITMENULOOP: break;
                 case WindowMessage.WM_GETTITLEBARINFOEX: break;
@@ -397,11 +405,11 @@ namespace Win32
                 case WindowMessage.WM_SHOWWINDOW: break;
                 case WindowMessage.WM_SIZE: break;
                 case WindowMessage.WM_SIZING:
-                    {
-                        RECT* rect = (RECT*)lParam.ToPointer();
-                        OnResize?.Invoke(this, rect);
-                        return (LRESULT)1;
-                    }
+                {
+                    RECT* rect = (RECT*)lParam.ToPointer();
+                    OnResize?.Invoke(this, rect);
+                    return (LRESULT)1;
+                }
                 case WindowMessage.WM_STYLECHANGED: break;
                 case WindowMessage.WM_STYLECHANGING: break;
                 case WindowMessage.WM_THEMECHANGED: break;
@@ -546,5 +554,16 @@ namespace Win32
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public bool IsValid => User32.IsWindow(Handle) != FALSE;
+
+        /// <exception cref="WindowsException"/>
+        public void SetLayeredWindowAttributes(COLORREF key, byte alpha, LWA flags = LWA.ALPHA | LWA.COLORKEY)
+        {
+            if (User32.SetLayeredWindowAttributes(Handle, key, alpha, (DWORD)flags) == FALSE)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public void SetLayeredWindowAttributes(ValueTuple<byte, byte, byte> key, byte alpha, LWA flags = LWA.ALPHA | LWA.COLORKEY)
+            => this.SetLayeredWindowAttributes(Macros.RGB(key.Item1, key.Item2, key.Item3), alpha, flags);
     }
 }

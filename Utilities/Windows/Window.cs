@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
-    [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Window :
         IEquatable<Window?>,
         IEquatable<HWND>
@@ -163,6 +163,8 @@ namespace Win32
         }
 
         public override string ToString() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+
+        string GetDebuggerDisplay() => $"{ClassName} ({ToString()})";
 
         /// <exception cref="WindowsException"/>
         public void Animate(uint time, AnimateWindowFlags flags)
@@ -617,6 +619,24 @@ namespace Win32
             }
         }
 
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        unsafe public string RealClassName
+        {
+            get
+            {
+                const int BufferSize = 64;
+                fixed (WCHAR* bufferPtr = new string('\0', BufferSize))
+                {
+                    UINT n;
+                    n = User32.RealGetWindowClassW(_handle, bufferPtr, (UINT)BufferSize);
+                    if (n == 0)
+                    { throw WindowsException.Get(); }
+                    return new string(bufferPtr, 0, (int)n);
+                }
+            }
+        }
+
         public static bool operator ==(Window? window, HWND handle)
         {
             if (window is null) return handle == 0;
@@ -755,25 +775,6 @@ namespace Win32
         {
             if (User32.EndTask(window, FALSE, force ? TRUE : FALSE) == FALSE)
             { throw WindowsException.Get(); }
-        }
-
-        /// <exception cref="WindowsException"/>
-        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string RealClassName
-        {
-            get
-            {
-                const int BufferSize = 64;
-                fixed (WCHAR* bufferPtr = new string('\0', BufferSize))
-                {
-                    UINT n;
-                    n = User32.RealGetWindowClassW(_handle, bufferPtr, (UINT)BufferSize);
-                    /// <exception cref="WindowsException"/>
-                    if (n == 0)
-                    { throw WindowsException.Get(); }
-                    return new string(bufferPtr, 0, (int)n);
-                }
-            }
         }
 
         public static Window[] ConvertArray(HWND[] handles)

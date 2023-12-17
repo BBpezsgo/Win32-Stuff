@@ -56,19 +56,10 @@ namespace Win32
         }
     }
 
-    public static class Memory
+    public static class VirtualMemory
     {
         /// <exception cref="WindowsException"/>
-        public static GlobalObject GlobalAlloc(uint flags, uint size)
-        {
-            HGLOBAL handle = Kernel32.GlobalAlloc(flags, (UIntPtr)size);
-            if (handle == HGLOBAL.Zero)
-            { throw WindowsException.Get(); }
-            return new GlobalObject(handle);
-        }
-
-        /// <exception cref="WindowsException"/>
-        unsafe public static void* VirtualAlloc(uint size, DWORD protect, DWORD allocationType)
+        unsafe public static void* Alloc(uint size, DWORD protect, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
         {
             void* address = Kernel32.VirtualAlloc(null, size, allocationType, protect);
             if (address == null)
@@ -77,19 +68,60 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static void VirtualFree(void* address, uint size, DWORD freeType)
+        unsafe public static T* Alloc<T>(DWORD protect, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
+            where T : unmanaged
+        {
+            void* address = Kernel32.VirtualAlloc(null, (uint)sizeof(T), allocationType, protect);
+            if (address == null)
+            { throw WindowsException.Get(); }
+            return (T*)address;
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static void Free(void* address, uint size, DWORD freeType)
         {
             if (Kernel32.VirtualFree(address, size, freeType) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static DWORD VirtualProtect(void* address, uint size, DWORD protect)
+        unsafe public static void Free(void* address)
+        {
+            if (Kernel32.VirtualFree(address, 0, MEM.MEM_RELEASE) == 0)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        unsafe public static DWORD Protect(void* address, uint size, DWORD protect)
         {
             DWORD oldProtect = default;
             if (Kernel32.VirtualProtect(address, size, protect, &oldProtect) == 0)
             { throw WindowsException.Get(); }
             return oldProtect;
+        }
+    }
+
+    public static class GlobalMemory
+    {
+        public static HANDLE LRUNewest(HANDLE h) => h;
+        public static HANDLE LRUOldest(HANDLE h) => h;
+
+        /// <exception cref="WindowsException"/>
+        public static HGLOBAL Discard(HGLOBAL h)
+        {
+            HGLOBAL handle = Kernel32.GlobalReAlloc(h, SIZE_T.Zero, GMEM.Moveable);
+            if (handle == HGLOBAL.Zero)
+            { throw WindowsException.Get(); }
+            return handle;
+        }
+
+        /// <exception cref="WindowsException"/>
+        public static GlobalObject Alloc(UINT size, UINT flags)
+        {
+            HGLOBAL handle = Kernel32.GlobalAlloc(flags, size);
+            if (handle == HGLOBAL.Zero)
+            { throw WindowsException.Get(); }
+            return new GlobalObject(handle);
         }
     }
 }

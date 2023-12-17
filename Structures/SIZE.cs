@@ -40,6 +40,7 @@ namespace Win32.Common
 
         public static implicit operator SIZE(System.Drawing.Size size) => new(size.Width, size.Height);
         public static implicit operator System.Drawing.Size(SIZE size) => new(size.Width, size.Height);
+        public static implicit operator System.Numerics.Vector2(SIZE size) => new(size.Width, size.Height);
 
         public static implicit operator SIZE(ValueTuple<LONG, LONG> size) => new(size.Item1, size.Item2);
         public static implicit operator ValueTuple<LONG, LONG>(SIZE size) => new(size.Width, size.Height);

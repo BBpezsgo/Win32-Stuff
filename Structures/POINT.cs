@@ -47,6 +47,7 @@ namespace Win32.Common
 
         public static implicit operator POINT(System.Drawing.Point size) => new(size.X, size.Y);
         public static implicit operator System.Drawing.Point(POINT size) => new(size.X, size.Y);
+        public static implicit operator System.Numerics.Vector2(POINT size) => new(size.X, size.Y);
 
         public static implicit operator POINT(ValueTuple<LONG, LONG> size) => new(size.Item1, size.Item2);
         public static implicit operator ValueTuple<LONG, LONG>(POINT size) => new(size.X, size.Y);

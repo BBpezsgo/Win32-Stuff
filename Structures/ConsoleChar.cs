@@ -6,51 +6,62 @@ namespace Win32
     [Flags]
     public enum ConsoleCharAttributes : WORD
     {
-        ForegroundBlue = 0b_0000_0001,      // File color contains blue.
-        ForegroundGreen = 0b_0000_0010,     // File color contains green.
-        ForegroundRed = 0b_0000_0100,       // File color contains red.
-        ForegroundBright = 0b_0000_1000,    // File color is intensified.
+        ForegroundBlue = 0b_0000_0001,
+        ForegroundGreen = 0b_0000_0010,
+        ForegroundRed = 0b_0000_0100,
+        ForegroundBright = 0b_0000_1000,
 
-        BackgroundBlue = 0b_0001_0000,      // Background color contains blue.
-        BackgroundGreen = 0b_0010_0000,     // Background color contains green.
-        BackgroundRed = 0b_0100_0000,       // Background color contains red.
-        BackgroundBright = 0b_1000_0000,    // Background color is intensified.
+        BackgroundBlue = 0b_0001_0000,
+        BackgroundGreen = 0b_0010_0000,
+        BackgroundRed = 0b_0100_0000,
+        BackgroundBright = 0b_1000_0000,
 
-        CommonLVBLeadingByte = 0b_0000_0001_0000_0000,      // Leading byte.
-        CommonLVBTrailingByte = 0b_0000_0010_0000_0000,     // Trailing byte.
-        CommonLVBGridHorizontal = 0b_0000_0100_0000_0000,   // Top horizontal.
-        CommonLVBGridLVertical = 0b_0000_1000_0000_0000,    // Left vertical.
-        CommonLVBGridRVertical = 0b_0001_0000_0000_0000,    // Right vertical.
-        CommonLVBReverseVideo = 0b_0100_0000_0000_0000,     // Reverse foreground and background attribute.
-        CommonLVBUnderscore = 0b_1000_0000_0000_0000,       // Underscore.
+        /// <summary> Leading byte. </summary>
+        CommonLVBLeadingByte = 0b_0000_0001_0000_0000,
+        /// <summary> Trailing byte. </summary>
+        CommonLVBTrailingByte = 0b_0000_0010_0000_0000,
+        /// <summary> Top horizontal. </summary>
+        CommonLVBGridHorizontal = 0b_0000_0100_0000_0000,
+        /// <summary> Left vertical. </summary>
+        CommonLVBGridLVertical = 0b_0000_1000_0000_0000,
+        /// <summary> Right vertical. </summary>
+        CommonLVBGridRVertical = 0b_0001_0000_0000_0000,
+        /// <summary> Reverse foreground and background attribute. </summary>
+        CommonLVBReverseVideo = 0b_0100_0000_0000_0000,
+        /// <summary> Underscore. </summary>
+        CommonLVBUnderscore = 0b_1000_0000_0000_0000,
     }
 
     [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public struct ConsoleChar : IEquatable<ConsoleChar>, IEquatable<char>
+    public struct ConsoleChar :
+        IEquatable<ConsoleChar>,
+        IEquatable<char>,
+        System.Numerics.IEqualityOperators<ConsoleChar, ConsoleChar, bool>,
+        System.Numerics.IEqualityOperators<ConsoleChar, char, bool>
     {
+        public static ConsoleChar Empty => new(' ', (WORD)0);
+
         [FieldOffset(0)] public char Char;
         [FieldOffset(2)] public WORD Attributes;
 
         public byte Color
         {
-            readonly get => (byte)(Attributes & ByteColor.MASK_COLOR);
-            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_COLOR) | (value & ByteColor.MASK_COLOR));
+            readonly get => (byte)(Attributes & ConsoleColor.MASK_COLOR);
+            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_COLOR) | (value & ConsoleColor.MASK_COLOR));
         }
 
         public byte Foreground
         {
-            readonly get => (byte)(Attributes & ByteColor.MASK_FG);
-            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_BG) | (value & ByteColor.MASK_FG));
+            readonly get => (byte)(Attributes & ConsoleColor.MASK_FG);
+            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_BG) | (value & ConsoleColor.MASK_FG));
         }
 
         public byte Background
         {
             readonly get => (byte)(Attributes >> 4);
-            set => Attributes = (ushort)((Attributes & ~ByteColor.MASK_FG) | ((value << 4) & ByteColor.MASK_BG));
+            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_FG) | ((value << 4) & ConsoleColor.MASK_BG));
         }
-
-        public static ConsoleChar Empty => new(' ', (WORD)0);
 
         public ConsoleChar(char @char, WORD attributes)
         {
@@ -64,14 +75,23 @@ namespace Win32
             Attributes = (WORD)attributes;
         }
 
-        public ConsoleChar(char @char, byte foreground, byte background) : this(@char, ByteColor.Make(background, foreground))
-        { }
+        public ConsoleChar(char @char, byte foreground, byte background, ConsoleCharAttributes attributes)
+        {
+            Char = @char;
+            Attributes = (WORD)(ConsoleColor.Make(background, foreground) | (WORD)attributes);
+        }
 
-        public ConsoleChar(char @char, ConsoleForegroundColor foreground, ConsoleBackgroundColor background) : this(@char, ByteColor.Make((byte)background, (byte)foreground))
-        { }
+        public ConsoleChar(char @char, byte foreground, byte background)
+        {
+            Char = @char;
+            Attributes = ConsoleColor.Make(background, foreground);
+        }
 
-        public ConsoleChar(char @char) : this(@char, (WORD)0)
-        { }
+        public ConsoleChar(char @char)
+        {
+            Char = @char;
+            Attributes = 0;
+        }
 
         public override readonly bool Equals(object? obj) => obj is ConsoleChar charInfo && Equals(charInfo);
         public readonly bool Equals(ConsoleChar other) => Attributes == other.Attributes && Char == other.Char;

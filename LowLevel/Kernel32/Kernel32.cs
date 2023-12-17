@@ -754,7 +754,7 @@ namespace Win32.LowLevel
         public static extern HANDLE GetStdHandle(
             [In] DWORD nStdHandle);
 
-        [DllImport("kernel32.dll", EntryPoint = "CreateFile", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true, CharSet = CharSet.Unicode)]
         unsafe public static extern SafeFileHandle CreateFileSafe(
             [In] WCHAR* lpFileName,
             [In] DWORD dwDesiredAccess,

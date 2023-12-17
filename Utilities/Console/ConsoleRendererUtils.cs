@@ -12,9 +12,9 @@ namespace Win32
 
             public static ButtonStyle Default => new()
             {
-                Normal = ByteColor.Make(ByteColor.Gray, ByteColor.White),
-                Hover = ByteColor.Make(ByteColor.Silver, ByteColor.Black),
-                Down = ByteColor.Make(ByteColor.White, ByteColor.Black),
+                Normal = ConsoleColor.Make(ConsoleColor.Gray, ConsoleColor.White),
+                Hover = ConsoleColor.Make(ConsoleColor.Silver, ConsoleColor.Black),
+                Down = ConsoleColor.Make(ConsoleColor.White, ConsoleColor.Black),
             };
         }
 
@@ -25,27 +25,21 @@ namespace Win32
 
             public static TextFieldStyle Default => new()
             {
-                Normal = ByteColor.Make(ByteColor.Gray, ByteColor.White),
-                Active = ByteColor.Make(ByteColor.Silver, ByteColor.Black),
+                Normal = ConsoleColor.Make(ConsoleColor.Gray, ConsoleColor.White),
+                Active = ConsoleColor.Make(ConsoleColor.Silver, ConsoleColor.Black),
             };
         }
 
         public void Text(COORD point, string text)
-            => Text(point.X, point.Y, text, ByteColor.Silver, ByteColor.Black);
+            => Text(point.X, point.Y, text, ConsoleColor.Silver, ConsoleColor.Black);
 
         public void Text(int x, int y, string text)
-            => Text(x, y, text, ByteColor.Silver, ByteColor.Black);
+            => Text(x, y, text, ConsoleColor.Silver, ConsoleColor.Black);
 
-        public void Text(COORD point, string text, ConsoleForegroundColor foreground, ConsoleBackgroundColor background = ConsoleBackgroundColor.Black)
-            => Text(point.X, point.Y, text, (byte)foreground, (byte)background);
-      
-        public void Text(int x, int y, string text, ConsoleForegroundColor foreground, ConsoleBackgroundColor background = ConsoleBackgroundColor.Black)
-            => Text(x, y, text, (byte)foreground, (byte)background);
-
-        public void Text(COORD point, string text, byte foreground, byte background = ByteColor.Black)
+        public void Text(COORD point, string text, byte foreground, byte background = ConsoleColor.Black)
             => Text(point.X, point.Y, text, foreground, background);
 
-        public void Text(int x, int y, string text, byte foreground, byte background = ByteColor.Black)
+        public void Text(int x, int y, string text, byte foreground, byte background = ConsoleColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 
@@ -60,10 +54,8 @@ namespace Win32
         }
 
         public void Text(ref int x, int y, string text)
-            => Text(ref x, y, text, ByteColor.Silver, ByteColor.Black);
-        public void Text(ref int x, int y, string text, ConsoleForegroundColor foreground, ConsoleBackgroundColor background = ConsoleBackgroundColor.Black)
-            => Text(ref x, y, text, (byte)foreground, (byte)background);
-        public void Text(ref int x, int y, string text, byte foreground, byte background = ByteColor.Black)
+            => Text(ref x, y, text, ConsoleColor.Silver, ConsoleColor.Black);
+        public void Text(ref int x, int y, string text, byte foreground, byte background = ConsoleColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 

@@ -8,6 +8,24 @@ namespace Win32.Gdi32.LowLevel
 {
     public static class Gdi32
     {
+        public const uint GDI_ERROR = unchecked((uint)0xFFFFFFFFL);
+        public static readonly nint HGDI_ERROR = unchecked((nint)GDI_ERROR);
+
+        /// <summary>
+        /// The GdiFlush function flushes the calling thread's current batch.
+        /// </summary>
+        /// <returns>
+        /// <para>
+        /// If all functions in the current batch succeed, the return value is nonzero.
+        /// </para>
+        /// <para>
+        /// If not all functions in the current batch succeed, the return value is zero,
+        /// indicating that at least one function returned an error.
+        /// </para>
+        /// </returns>
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern BOOL GdiFlush();
+
         [DllImport("Gdi32.dll", SetLastError = true)]
         public static extern BOOL Ellipse(
           [In] HDC hdc,

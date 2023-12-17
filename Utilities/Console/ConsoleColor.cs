@@ -1,6 +1,8 @@
-﻿namespace Win32
+﻿using System.Runtime.CompilerServices;
+
+namespace Win32
 {
-    public struct ByteColor
+    public struct ConsoleColor
     {
         public const byte Red = 0b_0100;
         public const byte Green = 0b_0010;
@@ -26,5 +28,11 @@
         public const WORD MASK_COLOR = 0b_1111_1111;
 
         public static WORD Make(byte background, byte foreground) => unchecked((WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte Bg2Fg(byte backgroundColor) => unchecked((byte)(backgroundColor >> 4));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte Fg2Bg(byte foregroundColor) => unchecked((byte)(foregroundColor << 4));
     }
 }

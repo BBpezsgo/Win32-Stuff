@@ -25,7 +25,14 @@ namespace Win32.Gdi32
 
         public static implicit operator HRGN(Region region) => region.Handle;
 
-        public void Use(HDC deviceContext) => Gdi32.SelectObject(deviceContext, Handle);
+        /// <exception cref="GdiException"/>
+        public int Use(HDC deviceContext)
+        {
+            HGDIOBJ result = Gdi32.SelectObject(deviceContext, Handle);
+            if (result == 0 || result == Gdi32.HGDI_ERROR)
+            { throw new GdiException($"Failed to select object {this} into DC {deviceContext} (error {result})"); }
+            return (int)result;
+        }
 
         public bool Contains(int x, int y) => Gdi32.PtInRegion(Handle, x, y) != FALSE;
         public bool Contains(POINT point) => Gdi32.PtInRegion(Handle, point.X, point.Y) != FALSE;

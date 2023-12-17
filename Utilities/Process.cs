@@ -253,7 +253,7 @@ namespace Win32
             SecurityAttributes processAttributes,
             SecurityAttributes threadAttributes,
             DWORD creationFlags,
-            void* enviroment,
+            void* environment,
             string? currentDirectory,
             STARTUPINFOW startupInfo
             )
@@ -270,7 +270,7 @@ namespace Win32
                     &threadAttributes,
                     FALSE,
                     creationFlags,
-                    enviroment,
+                    environment,
                     currentDirectoryPtr,
                     &startupInfo,
                     &result

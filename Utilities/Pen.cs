@@ -24,8 +24,14 @@ namespace Win32.Gdi32
 
         public static implicit operator HPEN(Pen pen) => pen.Handle;
 
-        public void Use(HDC deviceContext) => Gdi32.SelectObject(deviceContext, Handle);
-
+        /// <exception cref="GdiException"/>
+        public HGDIOBJ Use(HDC deviceContext)
+        {
+            HGDIOBJ prevObj = Gdi32.SelectObject(deviceContext, Handle);
+            if (prevObj == 0 || prevObj == Gdi32.HGDI_ERROR)
+            { throw new GdiException($"Failed to select object {this} into DC {deviceContext} (error {prevObj})"); }
+            return prevObj;
+        }
         /// <exception cref="GdiException"/>
         public void Dispose()
         {

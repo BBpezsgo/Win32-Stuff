@@ -39,13 +39,13 @@ namespace Win32
 
         public SHORT Width
         {
-            readonly get => (short)(right - left + 1);
-            set => right = (short)(left + value);
+            readonly get => (SHORT)(right - left + 1);
+            set => right = (SHORT)(left + value);
         }
         public SHORT Height
         {
-            readonly get => (short)(bottom - top + 1);
-            set => bottom = (short)(top + value);
+            readonly get => (SHORT)(bottom - top + 1);
+            set => bottom = (SHORT)(top + value);
         }
 
         public SHORT Top
@@ -99,8 +99,8 @@ namespace Win32
             readonly get => new(Width, Height);
             set
             {
-                Width = (short)value.Width;
-                Height = (short)value.Height;
+                Width = (SHORT)value.Width;
+                Height = (SHORT)value.Height;
             }
         }
 
@@ -112,8 +112,9 @@ namespace Win32
             right = (SHORT)(x + width);
         }
 
-        public static implicit operator SMALL_RECT(System.Drawing.Rectangle rectangle) => new((SHORT)rectangle.X, (SHORT)rectangle.Y, (SHORT)rectangle.Width, (SHORT)rectangle.Height);
+        public static explicit operator SMALL_RECT(System.Drawing.Rectangle rectangle) => new((SHORT)rectangle.X, (SHORT)rectangle.Y, (SHORT)rectangle.Width, (SHORT)rectangle.Height);
         public static implicit operator System.Drawing.Rectangle(SMALL_RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        public static implicit operator System.Drawing.RectangleF(SMALL_RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
 
         public static bool operator ==(SMALL_RECT a, SMALL_RECT b) => a.Equals(b);
         public static bool operator !=(SMALL_RECT a, SMALL_RECT b) => !a.Equals(b);

@@ -3,7 +3,7 @@
 namespace Win32.Gdi32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct BITMAP
+    public struct BitmapObject
     {
         public LONG Type;
         public LONG Width;
