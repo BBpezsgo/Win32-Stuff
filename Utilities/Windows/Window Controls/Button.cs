@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class Button : Control
     {
         public delegate void ClickEventHandler(Button sender);

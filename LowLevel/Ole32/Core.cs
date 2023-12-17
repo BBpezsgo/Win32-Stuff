@@ -4,6 +4,7 @@
 
 namespace Win32.COM.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Ole32
     {
         [DllImport("Ole32.dll", SetLastError = true)]

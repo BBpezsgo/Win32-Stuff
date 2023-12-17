@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct HeapSnapshot :
         IEnumerable<HeapList>,
         IDisposable,
@@ -37,6 +38,7 @@ namespace Win32
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public class HeapSnapshotEnumerator : IEnumerator<HeapList>
     {
         readonly HANDLE Handle;

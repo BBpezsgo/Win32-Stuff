@@ -3,6 +3,7 @@
 namespace Win32.COM
 {
     [Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe")]
+    [SupportedOSPlatform("windows")]
     public interface IShellItem
     {
         unsafe abstract HRESULT BindToHandler(

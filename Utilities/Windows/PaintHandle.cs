@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Win32.Gdi32
 {
+    [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public readonly struct PaintHandle : IDisposable
     {

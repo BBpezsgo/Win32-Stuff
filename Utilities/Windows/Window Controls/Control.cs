@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public partial class Control : Window
     {
         public delegate void SimpleEventHandler<T>(T sender);

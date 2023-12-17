@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Window :
         IEquatable<Window?>,

@@ -3,6 +3,7 @@
     using LowLevel;
 
     /// <summary>Memory Device Context</summary>
+    [SupportedOSPlatform("windows")]
     public class MemoryDC : DC
     {
         internal MemoryDC(HDC handle) : base(handle)

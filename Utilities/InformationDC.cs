@@ -3,6 +3,7 @@
     using LowLevel;
 
     /// <summary>Information Device Context</summary>
+    [SupportedOSPlatform("windows")]
     public class InformationDC : DC
     {
         InformationDC(HDC handle) : base(handle)

@@ -10,6 +10,7 @@ namespace Win32
         Separator = MFT.SEPARATOR,
     }
 
+    [SupportedOSPlatform("windows")]
     public class MenuItem
     {
         readonly HMENU _parentHandle;

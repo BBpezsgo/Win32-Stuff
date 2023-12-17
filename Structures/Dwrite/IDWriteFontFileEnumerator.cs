@@ -9,6 +9,7 @@ namespace Win32.DWrite
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("72755049-5ff7-435d-8348-4be97cfa6c7c")]
+    [SupportedOSPlatform("windows")]
     public interface IDWriteFontFileEnumerator
     {
         /// <summary>

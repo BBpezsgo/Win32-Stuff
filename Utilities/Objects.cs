@@ -5,6 +5,7 @@ namespace Win32.Gdi32
 {
     using LowLevel;
 
+    [SupportedOSPlatform("windows")]
     public static class Objects
     {
         /// <exception cref="GdiException"/>

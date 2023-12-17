@@ -4,6 +4,7 @@
 
 namespace Win32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static partial class User32
     {
         /// <summary>

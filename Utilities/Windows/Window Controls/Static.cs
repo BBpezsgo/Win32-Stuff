@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class StaticControl : Control
     {
         public SimpleEventHandler<StaticControl>? OnClick;

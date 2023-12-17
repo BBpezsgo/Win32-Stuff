@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct ProcessSnapshot :
         IEnumerable<ProcessEntry>,
         IDisposable,
@@ -29,6 +30,7 @@ namespace Win32
         public static bool operator !=(ProcessSnapshot left, ProcessSnapshot right) => !left.Equals(right);
     }
 
+    [SupportedOSPlatform("windows")]
     public class ProcessSnapshotEnumerator : IEnumerator<ProcessEntry>
     {
         readonly HANDLE Handle;

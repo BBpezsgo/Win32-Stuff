@@ -9,6 +9,7 @@ namespace Win32
         Paused = 0x0003,
     }
 
+    [SupportedOSPlatform("windows")]
     public class ProgressBar : Control
     {
         public ProgressBar(

@@ -5,6 +5,7 @@ namespace Win32.COM
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("00000109-0000-0000-C000-000000000046")]
+    [SupportedOSPlatform("windows")]
     public interface IPersistStream : IPersist
     {
         abstract HRESULT IsDirty();

@@ -36,18 +36,21 @@
             this.message = message;
         }
 
+        [SupportedOSPlatform("windows")]
         unsafe public static WindowsException Get()
         {
             uint errorCode = Kernel32.GetLastError();
             return WindowsException.Get(errorCode);
         }
 
+        [SupportedOSPlatform("windows")]
         unsafe public static WindowsException Get(uint errorCode)
         {
             string? result = WindowsException.GetMessage(errorCode);
             return new WindowsException(result, errorCode);
         }
 
+        [SupportedOSPlatform("windows")]
         unsafe public static WindowsException Get(IReadOnlyDictionary<uint, string> messages)
         {
             uint errorCode = Kernel32.GetLastError();
@@ -59,6 +62,7 @@
 
         const int MESSAGE_BUFFER_SIZE = 255;
 
+        [SupportedOSPlatform("windows")]
         unsafe public static string? GetMessage(uint errorCode)
         {
             fixed (char* buffer = new string('\0', MESSAGE_BUFFER_SIZE))
@@ -81,6 +85,7 @@
             }
         }
 
+        [SupportedOSPlatform("windows")]
         public void ShowMessageBox() => User32.MessageBox(HWND.Zero, Message, $"Win32 Exception", (uint)MessageBoxIcon.MB_ICONERROR | (uint)MessageBoxButton.MB_OK);
     }
 

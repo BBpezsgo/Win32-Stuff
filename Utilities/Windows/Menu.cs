@@ -10,6 +10,7 @@ namespace Win32
         Grayed,
     }
 
+    [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public class Menu : IDisposable
     {

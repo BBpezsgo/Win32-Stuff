@@ -150,6 +150,7 @@ namespace Win32.Common
             y < Height;
 
         /// <exception cref="GeneralException"/>
+        [SupportedOSPlatform("windows")]
         public unsafe static void SetRect(ref RECT rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect((RECT*)Unsafe.AsPointer(ref rect), left, top, right, bottom) == 0)
@@ -157,6 +158,7 @@ namespace Win32.Common
         }
 
         /// <exception cref="GeneralException"/>
+        [SupportedOSPlatform("windows")]
         public unsafe static void SetRect(RECT* rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect(rect, left, top, right, bottom) == 0)

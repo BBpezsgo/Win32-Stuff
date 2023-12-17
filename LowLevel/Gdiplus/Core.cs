@@ -4,6 +4,7 @@
 
 namespace Win32.Gdi32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Gdiplus
     {
         [DllImport("Gdiplus.dll", SetLastError = true)]

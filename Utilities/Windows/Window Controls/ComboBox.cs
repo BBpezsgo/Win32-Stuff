@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public partial class ComboBox : Control
     {
         public delegate LRESULT? SelectionChangedHandler(ComboBox sender, Window parent);

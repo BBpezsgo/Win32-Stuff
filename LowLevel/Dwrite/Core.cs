@@ -4,6 +4,7 @@
 
 namespace Win32.DWrite.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Dwrite
     {
         [DllImport("Dwrite.dll", SetLastError = true)]

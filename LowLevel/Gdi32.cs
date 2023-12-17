@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32.Gdi32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Gdi32
     {
         public const uint GDI_ERROR = unchecked((uint)0xFFFFFFFFL);

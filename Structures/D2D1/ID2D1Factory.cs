@@ -8,6 +8,7 @@ namespace Win32.D2D1
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("06152247-6f50-465a-9245-118bfd3b6007")]
+    [SupportedOSPlatform("windows")]
     public interface ID2D1Factory
     {
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class IpAddress : Control
     {
         public IpAddress(

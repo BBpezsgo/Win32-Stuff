@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct ModuleSnapshot :
         IEnumerable<ModuleEntry>,
         IDisposable,
@@ -37,6 +38,7 @@ namespace Win32
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public class ModuleSnapshotEnumerator : IEnumerator<ModuleEntry>
     {
         readonly HANDLE Handle;

@@ -27,6 +27,7 @@ namespace Win32
         readonly string GetDebuggerDisplay() => ToString();
 
         /// <exception cref="HResultException"/>
+        [SupportedOSPlatform("windows")]
         public HResult Throw()
         {
             if (IsSucceeded) return this;
@@ -41,6 +42,7 @@ namespace Win32
 
         const int MESSAGE_BUFFER_SIZE = 255;
 
+        [SupportedOSPlatform("windows")]
         unsafe public string? Message
         {
             get

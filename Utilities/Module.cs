@@ -5,6 +5,7 @@ using System.Globalization;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
     public readonly struct Module :
         IEquatable<Module>,

@@ -47,6 +47,7 @@ namespace Win32.Gdi32
         RGB_COLORS = 0, /* color table in RGBs */
     }
 
+    [SupportedOSPlatform("windows")]
     public readonly struct Brush :
         IDisposable,
         IEquatable<Brush>

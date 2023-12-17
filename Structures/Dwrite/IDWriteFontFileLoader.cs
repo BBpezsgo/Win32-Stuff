@@ -14,6 +14,7 @@ namespace Win32.DWrite
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("727cad4e-d6af-4c9e-8a08-d695b11caa49")]
+    [SupportedOSPlatform("windows")]
     public interface IDWriteFontFileLoader
     {
         /// <summary>

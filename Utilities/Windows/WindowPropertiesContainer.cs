@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class WindowPropertiesContainer
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

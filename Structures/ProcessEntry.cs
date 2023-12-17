@@ -71,9 +71,12 @@ namespace Win32
 
         public override readonly string ToString() => ProcessID.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
+        [SupportedOSPlatform("windows")]
         public readonly ModuleSnapshot SnapModules() => ModuleSnapshot.CreateSnapshot(ProcessID);
+        [SupportedOSPlatform("windows")]
         public readonly HeapSnapshot SnapHeap() => HeapSnapshot.CreateSnapshot(ProcessID);
 
+        [SupportedOSPlatform("windows")]
         public readonly Process Open(ProcessAccessRights accessRights) => Process.Open(accessRights, ProcessID);
     }
 }

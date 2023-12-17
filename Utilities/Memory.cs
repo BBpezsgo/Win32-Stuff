@@ -2,6 +2,7 @@
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct GlobalObject :
         IDisposable,
         IEquatable<GlobalObject>
@@ -56,6 +57,7 @@ namespace Win32
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public static class VirtualMemory
     {
         /// <exception cref="WindowsException"/>
@@ -101,6 +103,7 @@ namespace Win32
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public static class GlobalMemory
     {
         public static HANDLE LRUNewest(HANDLE h) => h;

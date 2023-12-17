@@ -2,6 +2,7 @@
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public static class Cursor
     {
         /// <summary>
@@ -17,6 +18,7 @@ namespace Win32
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public struct MouseMetrics
     {
         public static int MouseButtonCount => User32.GetSystemMetrics(SystemMetricsFlags.CMOUSEBUTTONS);
@@ -25,6 +27,7 @@ namespace Win32
         public static bool IsMouseVWheelPresent => User32.GetSystemMetrics(SystemMetricsFlags.MOUSEWHEELPRESENT) != 0;
     }
 
+    [SupportedOSPlatform("windows")]
     public struct DisplayMetrics
     {
         public static int DisplayMonitorCount => User32.GetSystemMetrics(SystemMetricsFlags.CMONITORS);
@@ -35,6 +38,7 @@ namespace Win32
         public static RECT Rect => new(0, 0, Width, Height);
     }
 
+    [SupportedOSPlatform("windows")]
     public struct WindowMetrics
     {
         public static int BorderWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXBORDER);
@@ -59,6 +63,7 @@ namespace Win32
         public static SIZE MinimizedSize => new(MinimizedWidth, MinimizedHeight);
     }
 
+    [SupportedOSPlatform("windows")]
     public struct SystemMetrics
     {
         public static int FullScreenWidth => User32.GetSystemMetrics(SystemMetricsFlags.CXFULLSCREEN);
@@ -78,6 +83,7 @@ namespace Win32
         public static bool IsSlowMachine => User32.GetSystemMetrics(SystemMetricsFlags.SLOWMACHINE) != 0;
     }
 
+    [SupportedOSPlatform("windows")]
     public static class Utils
     {
         public const DebuggerBrowsableState GlobalDebuggerBrowsable = DebuggerBrowsableState.Collapsed;

@@ -4,6 +4,7 @@
 
 namespace Win32.D2D1.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class D2D1
     {
         /// <summary>

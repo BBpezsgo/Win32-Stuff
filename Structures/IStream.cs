@@ -5,6 +5,7 @@ namespace Win32.COM
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("0000000c-0000-0000-C000-000000000046")]
+    [SupportedOSPlatform("windows")]
     public interface IStream : ISequentialStream
     {
         unsafe abstract HRESULT Seek(

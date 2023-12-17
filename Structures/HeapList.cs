@@ -29,7 +29,9 @@ namespace Win32
 
         public static unsafe HeapList Create() => new((SIZE_T)sizeof(HeapList));
 
+        [SupportedOSPlatform("windows")]
         public IEnumerator<HeapEntry> GetEnumerator() => new HeapListEnumerator(ProcessId, HeapId);
+        [SupportedOSPlatform("windows")]
         IEnumerator IEnumerable.GetEnumerator() => new HeapListEnumerator(ProcessId, HeapId);
 
         public override bool Equals(object? obj) => obj is HeapList list && Equals(list);
@@ -42,6 +44,7 @@ namespace Win32
         public static bool operator !=(HeapList left, HeapList right) => !(left == right);
     }
 
+    [SupportedOSPlatform("windows")]
     public class HeapListEnumerator : IEnumerator<HeapEntry>
     {
         readonly uint ProcessId;

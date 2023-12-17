@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class MenuItemContainer : IEnumerable<MenuItem>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

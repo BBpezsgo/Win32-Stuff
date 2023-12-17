@@ -2,6 +2,7 @@
 {
     public delegate void ConsoleEvent<T>(T e);
 
+    [SupportedOSPlatform("windows")]
     public static class ConsoleListener
     {
         public static event ConsoleEvent<MouseEvent>? MouseEvent;

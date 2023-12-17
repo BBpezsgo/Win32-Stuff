@@ -7,6 +7,7 @@ namespace Win32
     public delegate void MenuItemEventHandler(Form sender, ushort menuItemId);
     public delegate void ContextMenuEventHandler(Form sender, Window context, POINT position);
 
+    [SupportedOSPlatform("windows")]
     public class Form : Window, IDisposable
     {
         unsafe public delegate void ResizeEventHandler(Form sender, RECT* rect);

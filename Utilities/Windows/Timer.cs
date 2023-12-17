@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct Timer : IDisposable
     {
         static readonly Dictionary<UINT_PTR, Timer> TimerIds = new();

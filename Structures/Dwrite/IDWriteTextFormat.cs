@@ -11,6 +11,7 @@ namespace Win32.DWrite
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("9c906818-31d7-4fd3-a151-7c5e225db55a")]
+    [SupportedOSPlatform("windows")]
     public interface IDWriteTextFormat
     {
         /// <summary>

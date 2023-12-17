@@ -5,6 +5,7 @@ namespace Win32
     public static partial class Mouse
     {
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public static Window? CapturedBy
         {
@@ -30,6 +31,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public static UINT DoubleClickTime
         {
@@ -42,6 +44,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         public static POINT Position
         {
             get
@@ -58,6 +61,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         unsafe public static Span<MouseMovePoint> GetMovePoints(MouseMovePoint lppt, int count, bool highResolution = false)
         {
             MouseMovePoint[] buffer = new MouseMovePoint[count];

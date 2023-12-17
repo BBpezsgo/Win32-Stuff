@@ -43,6 +43,7 @@ namespace Win32.Gdi32
         STRETCH_ORSCANS = WHITEONBLACK,
     }
 
+    [SupportedOSPlatform("windows")]
     public abstract class DC : IDisposable, IEquatable<DC?>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

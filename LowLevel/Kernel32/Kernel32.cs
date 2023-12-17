@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Microsoft.Win32.SafeHandles;
 
 #pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
 namespace Win32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Kernel32
     {
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);

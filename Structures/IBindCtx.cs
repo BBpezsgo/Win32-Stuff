@@ -7,6 +7,7 @@ namespace Win32.COM
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("0000000e-0000-0000-C000-000000000046")]
+    [SupportedOSPlatform("windows")]
     public interface IBindCtx
     {
         abstract HRESULT RegisterObjectBound(

@@ -4,6 +4,7 @@
 
 namespace Win32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static  class UxTheme
     {
         [DllImport("UxTheme.dll", CharSet = CharSet.Unicode, SetLastError = true)]

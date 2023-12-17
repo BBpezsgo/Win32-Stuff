@@ -8,6 +8,7 @@ namespace Win32.DWrite
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("b859ee5a-d838-4b5b-a2e8-1adc7d93db48")]
+    [SupportedOSPlatform("windows")]
     unsafe public interface IDWriteFactory
     {
         /// <summary>

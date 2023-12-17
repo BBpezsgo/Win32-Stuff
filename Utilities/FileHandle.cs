@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public readonly struct FileHandle :
         IDisposable,
         IEquatable<FileHandle>,

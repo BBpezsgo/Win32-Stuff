@@ -8,6 +8,7 @@ namespace Win32.DWrite
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("a84cee02-3eea-4eee-a827-87c1a02a0fcc")]
+    [SupportedOSPlatform("windows")]
     public interface IDWriteFontCollection
     {
         /// <summary>

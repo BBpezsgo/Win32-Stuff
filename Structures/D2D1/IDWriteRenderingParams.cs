@@ -8,6 +8,7 @@ namespace Win32.COM
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("2f0da53a-2add-47cd-82ee-d9ec34688e75")]
+    [SupportedOSPlatform("windows")]
     public interface IDWriteRenderingParams
     {
     }

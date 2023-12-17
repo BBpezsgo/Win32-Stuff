@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class Win32Class : IEquatable<Win32Class?>
     {
         readonly string _className;

@@ -55,6 +55,7 @@ namespace Win32
         public static bool operator ==(ThreadEntry left, ThreadEntry right) => left.Equals(right);
         public static bool operator !=(ThreadEntry left, ThreadEntry right) => !left.Equals(right);
 
+        [SupportedOSPlatform("windows")]
         public Thread Open(ThreadAccessRights accessRights) => Thread.Open(accessRights, ThreadId);
     }
 }

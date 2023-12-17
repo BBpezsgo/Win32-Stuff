@@ -8,6 +8,7 @@
         SHIELD_ICON = -4,
     }
 
+    [SupportedOSPlatform("windows")]
     public static class TaskDialog
     {
         unsafe public static int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, TaskDialogIcon icon)

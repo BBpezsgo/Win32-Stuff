@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public partial class ConsoleRenderer
     {
         protected HANDLE Handle;

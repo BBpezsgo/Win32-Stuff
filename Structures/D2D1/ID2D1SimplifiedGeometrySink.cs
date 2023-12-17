@@ -5,6 +5,7 @@ namespace Win32.D2D1
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("2cd9069e-12e2-11dc-9fed-001143a055f9")]
+    [SupportedOSPlatform("windows")]
     public interface ID2D1SimplifiedGeometrySink
     {
         abstract void SetFillMode(

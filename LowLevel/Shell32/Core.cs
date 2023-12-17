@@ -4,6 +4,7 @@
 
 namespace Win32.COM.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Shell32
     {
         [DllImport("Shell32.dll", SetLastError = true)]

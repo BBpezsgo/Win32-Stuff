@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+    [SupportedOSPlatform("windows")]
     public class PopupMenu : Menu
     {
         public PopupMenu(HMENU handle) : base(handle) { }

@@ -4,6 +4,7 @@
 
 namespace Win32.LowLevel
 {
+    [SupportedOSPlatform("windows")]
     public static class Native
     {
         [DllImport("ntdll.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]

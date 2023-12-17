@@ -3,6 +3,7 @@
     using LowLevel;
 
     /// <summary>Display Device Context</summary>
+    [SupportedOSPlatform("windows")]
     public class DisplayDC : DC
     {
         readonly HWND Window;
