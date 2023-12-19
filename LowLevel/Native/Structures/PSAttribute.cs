@@ -7,7 +7,7 @@ namespace Win32.LowLevel
     {
         public ULONG_PTR Attribute;
         public SIZE_T Size;
-        unsafe public void* ValuePtr;
-        unsafe public SIZE_T* ReturnLength;
+        public unsafe void* ValuePtr;
+        public unsafe SIZE_T* ReturnLength;
     }
 }

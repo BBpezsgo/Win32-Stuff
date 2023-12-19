@@ -29,7 +29,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void CreateEnumeratorFromKey(
+        abstract unsafe void CreateEnumeratorFromKey(
             [In, MarshalAs(UnmanagedType.IUnknown)] IDWriteFactory factory,
             void* collectionKey,
             UINT32 collectionKeySize,

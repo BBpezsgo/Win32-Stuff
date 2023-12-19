@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.LowLevel
 {
     [SupportedOSPlatform("windows")]
@@ -115,7 +113,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("Comctl32.dll", SetLastError = true)]
-        unsafe public static extern HRESULT TaskDialog(
+        public static extern unsafe HRESULT TaskDialog(
           [In] HWND hwndOwner,
           [In] HINSTANCE hInstance,
           [In] WCHAR* pszWindowTitle,

@@ -11,6 +11,6 @@ namespace Win32.COM
         abstract HRESULT IsDirty();
         abstract HRESULT Load([In, MarshalAs(UnmanagedType.IUnknown)] IStream pStm);
         abstract HRESULT Save([In, MarshalAs(UnmanagedType.IUnknown)] IStream pStm, [In] BOOL fClearDirty);
-        unsafe abstract HRESULT GetSizeMax([Out] UINT64* pcbSize);
+        abstract unsafe HRESULT GetSizeMax([Out] UINT64* pcbSize);
     }
 }

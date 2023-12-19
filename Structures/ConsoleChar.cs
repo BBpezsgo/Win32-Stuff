@@ -47,20 +47,20 @@ namespace Win32
 
         public byte Color
         {
-            readonly get => (byte)(Attributes & ConsoleColor.MASK_COLOR);
-            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_COLOR) | (value & ConsoleColor.MASK_COLOR));
+            readonly get => (byte)(Attributes & CharColor.MASK_COLOR);
+            set => Attributes = (ushort)((Attributes & ~CharColor.MASK_COLOR) | (value & CharColor.MASK_COLOR));
         }
 
         public byte Foreground
         {
-            readonly get => (byte)(Attributes & ConsoleColor.MASK_FG);
-            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_BG) | (value & ConsoleColor.MASK_FG));
+            readonly get => (byte)(Attributes & CharColor.MASK_FG);
+            set => Attributes = (ushort)((Attributes & ~CharColor.MASK_BG) | (value & CharColor.MASK_FG));
         }
 
         public byte Background
         {
             readonly get => (byte)(Attributes >> 4);
-            set => Attributes = (ushort)((Attributes & ~ConsoleColor.MASK_FG) | ((value << 4) & ConsoleColor.MASK_BG));
+            set => Attributes = (ushort)((Attributes & ~CharColor.MASK_FG) | ((value << 4) & CharColor.MASK_BG));
         }
 
         public ConsoleChar(char @char, WORD attributes)
@@ -78,13 +78,13 @@ namespace Win32
         public ConsoleChar(char @char, byte foreground, byte background, ConsoleCharAttributes attributes)
         {
             Char = @char;
-            Attributes = (WORD)(ConsoleColor.Make(background, foreground) | (WORD)attributes);
+            Attributes = (WORD)(CharColor.Make(background, foreground) | (WORD)attributes);
         }
 
         public ConsoleChar(char @char, byte foreground, byte background)
         {
             Char = @char;
-            Attributes = ConsoleColor.Make(background, foreground);
+            Attributes = CharColor.Make(background, foreground);
         }
 
         public ConsoleChar(char @char)

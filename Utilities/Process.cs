@@ -1,8 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace Win32
 {
+    public unsafe delegate DWORD ThreadProc();
+    public unsafe delegate DWORD ThreadProc<T>(T* parameter) where T : unmanaged;
+
     [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
     public readonly struct Process :
@@ -15,14 +19,16 @@ namespace Win32
 
         Process(HANDLE handle) => Handle = handle;
 
-        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public static Process CurrentProcess => new(Kernel32.GetCurrentProcess());
+        #region Static stuff
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public static DWORD CurrentProcessId => Kernel32.GetCurrentProcessId();
+        public static unsafe Process CurrentProcess => new(Kernel32.GetCurrentProcess());
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static unsafe DWORD CurrentProcessId => Kernel32.GetCurrentProcessId();
 
         /// <exception cref="WindowsException"/>
-        unsafe public static DWORD[] GetProcesses(int maxCount = 128)
+        public static unsafe DWORD[] GetProcesses(int maxCount = 128)
         {
             DWORD* processes = stackalloc DWORD[maxCount];
             int got = GetProcesses(processes, maxCount);
@@ -33,21 +39,21 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static int GetProcesses(DWORD[] buffer)
+        public static unsafe int GetProcesses(DWORD[] buffer)
         {
             fixed (DWORD* bufferPtr = buffer)
             { return GetProcesses(bufferPtr, buffer.Length); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static int GetProcesses(Span<DWORD> buffer)
+        public static unsafe int GetProcesses(Span<DWORD> buffer)
         {
             fixed (DWORD* bufferPtr = buffer)
             { return GetProcesses(bufferPtr, buffer.Length); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static int GetProcesses(DWORD* buffer, int bufferLength)
+        public static unsafe int GetProcesses(DWORD* buffer, int bufferLength)
         {
             DWORD got = default;
             if (Kernel32.EnumProcesses(buffer, (uint)bufferLength * sizeof(DWORD), &got) == 0)
@@ -73,10 +79,17 @@ namespace Win32
             return new Process(handle);
         }
 
+        #endregion
+
         public readonly ModuleSnapshot SnapModules() => ModuleSnapshot.CreateSnapshot(Id);
         public readonly HeapSnapshot SnapHeap() => HeapSnapshot.CreateSnapshot(Id);
 
-        public void Dispose() => _ = Kernel32.CloseHandle(Handle);
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+        }
 
         public static explicit operator Process(HANDLE handle) => new(handle);
         public static implicit operator HANDLE(Process handle) => handle.Handle;
@@ -84,18 +97,87 @@ namespace Win32
         public static bool operator ==(Process a, Process b) => a.Equals(b);
         public static bool operator !=(Process a, Process b) => !a.Equals(b);
 
-        /// <exception cref="WindowsException"/>
-        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, out uint threadId)
-            => CreateThread(startAddress, null, out threadId);
+        #region Thread stuff
 
         /// <exception cref="WindowsException"/>
-        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, void* parameter = null)
-            => CreateThread(startAddress, parameter, out _);
+        /// <exception cref="NotSupportedException"/>
+        public unsafe Thread CreateThread(ThreadProc startAddress)
+            => CreateThread(startAddress, out _);
 
         /// <exception cref="WindowsException"/>
-        unsafe public Thread CreateThread(delegate*<void*, uint> startAddress, void* parameter, out uint threadId)
+        /// <exception cref="NotSupportedException"/>
+        public unsafe Thread CreateThread(ThreadProc startAddress, out DWORD threadId)
         {
-            uint _threadId = default;
+            System.Reflection.MethodInfo method = startAddress.Method;
+
+            if (method is System.Reflection.Emit.DynamicMethod)
+            { throw new NotSupportedException($"Dynamic method not supported"); }
+
+            delegate*<void*, DWORD> functionPtr = (delegate*<void*, DWORD>)method.MethodHandle.GetFunctionPointer();
+
+            if (startAddress.Target is { } || !method.IsStatic)
+            {
+                GCHandle gcHandle = GCHandle.Alloc(startAddress.Target, GCHandleType.WeakTrackResurrection);
+                void* targetPtr = (void*)GCHandle.ToIntPtr(gcHandle);
+
+                return CreateThread(functionPtr, out threadId, targetPtr);
+            }
+            else
+            {
+                return CreateThread(functionPtr, out threadId, null);
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        /// <exception cref="NotSupportedException"/>
+        public unsafe Thread CreateThread<T>(ThreadProc<T> startAddress, T* parameter)
+            where T : unmanaged
+            => CreateThread(startAddress, out _, parameter);
+
+        /// <exception cref="WindowsException"/>
+        /// <exception cref="NotSupportedException"/>
+        public unsafe Thread CreateThread<T>(ThreadProc<T> startAddress, out DWORD threadId, T* parameter)
+            where T : unmanaged
+        {
+            System.Reflection.MethodInfo method = startAddress.Method;
+
+            if (method is System.Reflection.Emit.DynamicMethod)
+            { throw new NotSupportedException($"Dynamic method not supported"); }
+
+            delegate*<void*, DWORD> functionPtr = (delegate*<void*, DWORD>)method.MethodHandle.GetFunctionPointer();
+
+            if (startAddress.Target is { } || !method.IsStatic)
+            { throw new NotSupportedException($"Non-static method not supported when passing a parameter"); }
+
+            return CreateThread(functionPtr, out threadId, parameter);
+        }
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread(delegate*<DWORD> startAddress)
+            => CreateThread((delegate*<void*, DWORD>)startAddress, out _, null);
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread(delegate*<void*, DWORD> startAddress, void* parameter)
+            => CreateThread(startAddress, out _, parameter);
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread<T>(delegate*<T*, DWORD> startAddress, T* parameter)
+            where T : unmanaged
+            => CreateThread((delegate*<void*, DWORD>)startAddress, out _, parameter);
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread(delegate*<DWORD> startAddress, out DWORD threadId)
+            => CreateThread((delegate*<void*, DWORD>)startAddress, out threadId, null);
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread<T>(delegate*<T*, DWORD> startAddress, out DWORD threadId, T* parameter)
+            where T : unmanaged
+            => CreateThread((delegate*<void*, DWORD>)startAddress, out threadId, parameter);
+
+        /// <exception cref="WindowsException"/>
+        public unsafe Thread CreateThread(delegate*<void*, DWORD> startAddress, out DWORD threadId, void* parameter)
+        {
+            DWORD _threadId = default;
             HANDLE handle = Kernel32.CreateRemoteThreadEx(
                     Handle,
                     null,
@@ -113,22 +195,26 @@ namespace Win32
             return (Thread)handle;
         }
 
+        #endregion
+
+        #region Memory stuff
+
         /// <exception cref="WindowsException"/>
-        unsafe public uint WriteMemory<T>(IntPtr address, ReadOnlySpan<T> buffer) where T : unmanaged
+        public unsafe uint WriteMemory<T>(IntPtr address, ReadOnlySpan<T> buffer) where T : unmanaged
         {
             fixed (T* bufferPtr = buffer)
             { return this.WriteMemory(address, bufferPtr, (uint)(buffer.Length * sizeof(T))); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public uint WriteMemory<T>(IntPtr address, T[] buffer) where T : unmanaged
+        public unsafe uint WriteMemory<T>(IntPtr address, T[] buffer) where T : unmanaged
         {
             fixed (T* bufferPtr = buffer)
             { return this.WriteMemory(address, bufferPtr, (uint)(buffer.Length * sizeof(T))); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public uint WriteMemory(IntPtr address, void* buffer, uint size)
+        public unsafe uint WriteMemory(IntPtr address, void* buffer, uint size)
         {
             nuint bytesWrote = default;
             if (Kernel32.WriteProcessMemory(
@@ -142,7 +228,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public IntPtr VirtualAlloc(uint size, DWORD protect, DWORD allocationType = MEM.MEM_RESERVE | MEM.MEM_COMMIT)
+        public unsafe IntPtr VirtualAlloc(uint size, DWORD protect, DWORD allocationType = MEM.MEM_RESERVE | MEM.MEM_COMMIT)
         {
             IntPtr buffer = (IntPtr)Kernel32.VirtualAllocEx(
                 Handle,
@@ -156,7 +242,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void VirtualFree(IntPtr address, uint size, DWORD freeType)
+        public unsafe void VirtualFree(IntPtr address, uint size, DWORD freeType)
         {
             if (Kernel32.VirtualFreeEx(
                 Handle,
@@ -167,7 +253,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public DWORD VirtualProtect(IntPtr address, uint size, DWORD protect)
+        public unsafe DWORD VirtualProtect(IntPtr address, uint size, DWORD protect)
         {
             DWORD oldProtect = default;
             if (Kernel32.VirtualProtectEx(
@@ -180,9 +266,24 @@ namespace Win32
             return oldProtect;
         }
 
+        #endregion
+
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public Module[] Modules
+        public unsafe DWORD ExitCode
+        {
+            get
+            {
+                DWORD exitCode = default;
+                if (Kernel32.GetExitCodeProcess(Handle, &exitCode) == FALSE)
+                { throw WindowsException.Get(); }
+                return exitCode;
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public unsafe IReadOnlyCollection<Module> Modules
         {
             get
             {
@@ -220,7 +321,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public DWORD HandleCount
+        public unsafe DWORD HandleCount
         {
             get
             {
@@ -233,7 +334,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string FullProcessImageName
+        public unsafe string FullProcessImageName
         {
             get
             {
@@ -248,7 +349,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static ProcessInformation Create(
+        public static unsafe ProcessInformation Create(
             string applicationName,
             string commandLine,
             SecurityAttributes processAttributes,

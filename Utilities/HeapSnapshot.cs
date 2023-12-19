@@ -16,7 +16,12 @@ namespace Win32
 
         HeapSnapshot(HANDLE handle) => Handle = handle;
 
-        public void Dispose() => _ = Kernel32.CloseHandle(Handle);
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+        }
 
         public readonly IEnumerator<HeapList> GetEnumerator() => new HeapSnapshotEnumerator(Handle);
         readonly IEnumerator IEnumerable.GetEnumerator() => new HeapSnapshotEnumerator(Handle);
@@ -29,6 +34,7 @@ namespace Win32
         public static bool operator ==(HeapSnapshot left, HeapSnapshot right) => left.Equals(right);
         public static bool operator !=(HeapSnapshot left, HeapSnapshot right) => !left.Equals(right);
 
+        /// <exception cref="WindowsException"/>
         public static HeapSnapshot CreateSnapshot(uint processId)
         {
             HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPHEAPLIST, processId);
@@ -55,9 +61,11 @@ namespace Win32
         object IEnumerator.Current => current;
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public void Reset()
+        /// <exception cref="WindowsException"/>
+        public unsafe void Reset()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(HeapSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
+
             IsStarted = true;
 
             HeapList heapList = HeapList.Create();
@@ -80,9 +88,10 @@ namespace Win32
         }
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public bool MoveNext()
+        /// <exception cref="WindowsException"/>
+        public unsafe bool MoveNext()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(HeapSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
 
             HeapList heapList = HeapList.Create();
 
@@ -113,13 +122,19 @@ namespace Win32
             return true;
         }
 
+        /// <exception cref="WindowsException"/>
         void ActualDispose()
         {
             if (IsDisposed) return;
-            _ = Kernel32.CloseHandle(Handle);
+
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+
             IsDisposed = true;
         }
+        /// <exception cref="WindowsException"/>
         ~HeapSnapshotEnumerator() { ActualDispose(); }
+        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
             ActualDispose();

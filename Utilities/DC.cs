@@ -84,7 +84,7 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public SIZE MeasureText(string text)
+        public unsafe SIZE MeasureText(string text)
         {
             SIZE size = default;
             fixed (WCHAR* textPtr = text)
@@ -96,42 +96,42 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public void MoveTo(POINT point)
+        public unsafe void MoveTo(POINT point)
         {
             if (Gdi32.MoveToEx(Handle, point.X, point.Y, null) == FALSE)
             { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
         }
         /// <exception cref="GdiException"/>
-        unsafe public void MoveTo(int x, int y)
+        public unsafe void MoveTo(int x, int y)
         {
             if (Gdi32.MoveToEx(Handle, x, y, null) == 0)
             { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public void LineTo(POINT point)
+        public unsafe void LineTo(POINT point)
         {
             if (Gdi32.LineTo(Handle, point.X, point.Y) == FALSE)
             { throw new GdiException($"{nameof(Gdi32.LineTo)} has failed"); }
         }
         /// <exception cref="GdiException"/>
-        unsafe public void LineTo(int x, int y)
+        public unsafe void LineTo(int x, int y)
         {
             if (Gdi32.LineTo(Handle, x, y) == FALSE)
             { throw new GdiException($"{nameof(Gdi32.LineTo)} has failed"); }
         }
 
-        unsafe public void DrawText(string text, RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
+        public unsafe void DrawText(string text, RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, &rect, format); }
         }
-        unsafe public void DrawText(string text, RECT* rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
+        public unsafe void DrawText(string text, RECT* rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, rect, format); }
         }
-        unsafe public void DrawText(string text, ref RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
+        public unsafe void DrawText(string text, ref RECT rect, uint format = DrawTextFormat.CENTER | DrawTextFormat.NOCLIP)
         {
             fixed (WCHAR* textPtr = text)
             { _ = User32.DrawTextW(Handle, textPtr, text.Length, (RECT*)Unsafe.AsPointer(ref rect), format); }
@@ -141,13 +141,13 @@ namespace Win32.Gdi32
         public static void SelectObject(HDC dc, HGDIOBJ obj) => Gdi32.SelectObject(dc, obj);
 
         /// <exception cref="GdiException"/>
-        unsafe public void DrawRect(RECT rect)
+        public unsafe void DrawRect(RECT rect)
         {
             if (Gdi32.Rectangle(Handle, rect.Left, rect.Top, rect.Right, rect.Bottom) == 0)
             { throw new GdiException($"{nameof(Gdi32.Rectangle)} has failed"); }
         }
         /// <exception cref="GdiException"/>
-        unsafe public void DrawRect(int left, int top, int right, int bottom)
+        public unsafe void DrawRect(int left, int top, int right, int bottom)
         {
             if (Gdi32.Rectangle(Handle, left, top, right, bottom) == 0)
             { throw new GdiException($"{nameof(Gdi32.Rectangle)} has failed"); }

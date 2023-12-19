@@ -1,8 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Microsoft.Win32.SafeHandles;
-
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
 namespace Win32.LowLevel
 {
@@ -12,7 +9,19 @@ namespace Win32.LowLevel
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HRESULT SetThreadDescription(
+        public static extern unsafe BOOL GetExitCodeThread(
+          [In] HANDLE hThread,
+          [Out] DWORD* lpExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL GetExitCodeProcess(
+          [In] HANDLE hProcess,
+          [Out] DWORD* lpExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe HRESULT SetThreadDescription(
           [In] HANDLE hThread,
           [In] WCHAR* lpThreadDescription
         );
@@ -25,7 +34,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HANDLE CreateThread(
+        public static extern unsafe HANDLE CreateThread(
           [In, Optional] SecurityAttributes* lpThreadAttributes,
           [In] SIZE_T dwStackSize,
           [In] delegate*<void*, DWORD> lpStartAddress,
@@ -35,7 +44,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Toolhelp32ReadProcessMemory(
+        public static extern unsafe BOOL Toolhelp32ReadProcessMemory(
           [In] DWORD th32ProcessID,
           [In] void* lpBaseAddress,
           [Out] void* lpBuffer,
@@ -44,61 +53,61 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Thread32Next(
+        public static extern unsafe BOOL Thread32Next(
           [In] HANDLE hSnapshot,
           [Out] ThreadEntry* lpte
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Thread32First(
+        public static extern unsafe BOOL Thread32First(
           [In] HANDLE hSnapshot,
           [In, Out] ThreadEntry* lpte
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Heap32Next(
+        public static extern unsafe BOOL Heap32Next(
           [Out] HeapEntry* lphe
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Heap32ListNext(
+        public static extern unsafe BOOL Heap32ListNext(
           [In] HANDLE hSnapshot,
           [Out] HeapList* lphl
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Heap32ListFirst(
+        public static extern unsafe BOOL Heap32ListFirst(
           [In] HANDLE hSnapshot,
           [In, Out] HeapList* lphl
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Heap32First(
+        public static extern unsafe BOOL Heap32First(
           [In, Out] HeapEntry* lphe,
           [In] DWORD th32ProcessID,
           [In] ULONG_PTR th32HeapID
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Module32NextW(
+        public static extern unsafe BOOL Module32NextW(
           [In] HANDLE hSnapshot,
           [Out] ModuleEntry* lpme
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Module32FirstW(
+        public static extern unsafe BOOL Module32FirstW(
           [In] HANDLE hSnapshot,
           [In, Out] ModuleEntry* lpme
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetThreadIdealProcessorEx(
+        public static extern unsafe BOOL GetThreadIdealProcessorEx(
           [In] HANDLE hThread,
           [Out] ProcessorNumber* lpIdealProcessor
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetThreadGroupAffinity(
+        public static extern unsafe BOOL GetThreadGroupAffinity(
           [In] HANDLE hThread,
           [Out] GroupAffinity* GroupAffinity
         );
@@ -114,25 +123,19 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HRESULT GetThreadDescription(
+        public static extern unsafe HRESULT GetThreadDescription(
           [In] HANDLE hThread,
           [Out] WCHAR** ppszThreadDescription
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetExitCodeThread(
-          [In] HANDLE hThread,
-          [Out] DWORD* lpExitCode
-        );
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Process32NextW(
+        public static extern unsafe BOOL Process32NextW(
           [In] HANDLE hSnapshot,
           [Out] ProcessEntry* lppe
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL Process32FirstW(
+        public static extern unsafe BOOL Process32FirstW(
           [In] HANDLE hSnapshot,
           [In, Out] ProcessEntry* lppe
         );
@@ -144,34 +147,34 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern delegate*<INT_PTR> GetProcAddress(
+        public static extern unsafe delegate*<INT_PTR> GetProcAddress(
           [In] HMODULE hModule,
           [In] CHAR* lpProcName
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern DWORD GetDeviceDriverFileNameW(
+        public static extern unsafe DWORD GetDeviceDriverFileNameW(
           [In] void* ImageBase,
           [Out] WCHAR* lpFilename,
           [In] DWORD nSize
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern DWORD GetDeviceDriverBaseNameW(
+        public static extern unsafe DWORD GetDeviceDriverBaseNameW(
           [In] void* ImageBase,
                WCHAR* lpFilename,
           [In] DWORD nSize
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL EnumDeviceDrivers(
+        public static extern unsafe BOOL EnumDeviceDrivers(
           [Out] void** lpImageBase,
           [In] DWORD cb,
           [Out] DWORD* lpcbNeeded
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetModuleInformation(
+        public static extern unsafe BOOL GetModuleInformation(
           [In] HANDLE hProcess,
           [In] HMODULE hModule,
           [Out] ModuleInfo* lpmodinfo,
@@ -179,7 +182,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern DWORD GetModuleBaseNameW(
+        public static extern unsafe DWORD GetModuleBaseNameW(
           [In] HANDLE hProcess,
           [In, Optional] HMODULE hModule,
           [Out] WCHAR* lpBaseName,
@@ -187,7 +190,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern DWORD GetModuleFileNameExW(
+        public static extern unsafe DWORD GetModuleFileNameExW(
           [In] HANDLE hProcess,
           [In, Optional] HMODULE hModule,
           [Out] WCHAR* lpFilename,
@@ -195,7 +198,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL CreateProcessW(
+        public static extern unsafe BOOL CreateProcessW(
           [In, Optional] WCHAR* lpApplicationName,
           [In, Out, Optional] WCHAR* lpCommandLine,
           [In, Optional] SecurityAttributes* lpProcessAttributes,
@@ -209,7 +212,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL QueryFullProcessImageNameW(
+        public static extern unsafe BOOL QueryFullProcessImageNameW(
           [In] HANDLE hProcess,
           [In] DWORD dwFlags,
           [Out] WCHAR* lpExeName,
@@ -222,7 +225,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetProcessHandleCount(
+        public static extern unsafe BOOL GetProcessHandleCount(
           [In] HANDLE hProcess,
           [In, Out] DWORD* pdwHandleCount
         );
@@ -256,7 +259,7 @@ namespace Win32.LowLevel
         public static extern HANDLE GetCurrentProcess();
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL EnumProcessModules(
+        public static extern unsafe BOOL EnumProcessModules(
           [In] HANDLE hProcess,
           [Out] HMODULE* lphModule,
           [In] DWORD cb,
@@ -264,21 +267,21 @@ namespace Win32.LowLevel
         );
 
         [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL EnumProcesses(
+        public static extern unsafe BOOL EnumProcesses(
           [Out] DWORD* lpidProcess,
           [In] DWORD cb,
           [Out] DWORD* lpcbNeeded
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL VirtualFree(
+        public static extern unsafe BOOL VirtualFree(
           [In] void* lpAddress,
           [In] SIZE_T dwSize,
           [In] DWORD dwFreeType
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern void* VirtualAlloc(
+        public static extern unsafe void* VirtualAlloc(
           [In, Optional] void* lpAddress,
           [In] SIZE_T dwSize,
           [In] DWORD flAllocationType,
@@ -286,7 +289,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL VirtualProtect(
+        public static extern unsafe BOOL VirtualProtect(
           [In] void* lpAddress,
           [In] SIZE_T dwSize,
           [In] DWORD flNewProtect,
@@ -294,7 +297,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL VirtualProtectEx(
+        public static extern unsafe BOOL VirtualProtectEx(
           [In] HANDLE hProcess,
           [In] void* lpAddress,
           [In] SIZE_T dwSize,
@@ -303,7 +306,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL VirtualFreeEx(
+        public static extern unsafe BOOL VirtualFreeEx(
           [In] HANDLE hProcess,
           [In] void* lpAddress,
           [In] SIZE_T dwSize,
@@ -317,7 +320,18 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HANDLE CreateRemoteThreadEx(
+        public static extern unsafe HANDLE CreateRemoteThread(
+          [In] HANDLE hProcess,
+          [In] SecurityAttributes* lpThreadAttributes,
+          [In] SIZE_T dwStackSize,
+          [In] delegate*<void*, DWORD>* lpStartAddress,
+          [In] void* lpParameter,
+          [In] DWORD dwCreationFlags,
+          [Out] DWORD* lpThreadId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe HANDLE CreateRemoteThreadEx(
           [In] HANDLE hProcess,
           [In, Optional] SecurityAttributes* lpThreadAttributes,
           [In] SIZE_T dwStackSize,
@@ -329,7 +343,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL WriteProcessMemory(
+        public static extern unsafe BOOL WriteProcessMemory(
           [In] HANDLE hProcess,
           [In] void* lpBaseAddress,
           [In] void* lpBuffer,
@@ -338,7 +352,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern void* VirtualAllocEx(
+        public static extern unsafe void* VirtualAllocEx(
           [In] HANDLE hProcess,
           [In, Optional] void* lpAddress,
           [In] SIZE_T dwSize,
@@ -379,7 +393,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL SetConsoleWindowInfo(
+        public static extern unsafe BOOL SetConsoleWindowInfo(
           [In] HANDLE hConsoleOutput,
           [In] BOOL bAbsolute,
           [In] SMALL_RECT* lpConsoleWindow
@@ -420,13 +434,13 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL GetConsoleScreenBufferInfo(
+        public static extern unsafe BOOL GetConsoleScreenBufferInfo(
            [In] HANDLE hConsoleOutput,
            [Out] ConsoleScreenBufferInfo* lpConsoleScreenBufferInfo
          );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HGLOBAL GlobalReAlloc(
+        public static extern unsafe HGLOBAL GlobalReAlloc(
           [In] HGLOBAL hMem,
           [In] SIZE_T dwBytes,
           [In] UINT uFlags
@@ -448,7 +462,7 @@ namespace Win32.LowLevel
         /// <param name="lpOverlapped"></param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern BOOL WriteFile(
+        public static extern unsafe BOOL WriteFile(
           [In] HANDLE hFile,
           [In] void* lpBuffer,
           [In] DWORD nNumberOfBytesToWrite,
@@ -533,7 +547,7 @@ namespace Win32.LowLevel
         /// <param name="hTemplateFile"></param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern HANDLE CreateFileW(
+        public static extern unsafe HANDLE CreateFileW(
           [In] WCHAR* lpFileName,
           [In] DWORD dwDesiredAccess,
           [In] DWORD dwShareMode,
@@ -558,7 +572,7 @@ namespace Win32.LowLevel
         /// <param name="hMem"></param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern void* GlobalLock(
+        public static extern unsafe void* GlobalLock(
           [In] HGLOBAL hMem
         );
 
@@ -693,7 +707,7 @@ namespace Win32.LowLevel
         /// be <c>NULL</c>. Using <c>NULL</c> will result in an access violation.
         /// </param>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern void GetSystemTime(
+        public static extern unsafe void GetSystemTime(
           [Out] SystemTime* lpSystemTime
         );
 
@@ -706,7 +720,7 @@ namespace Win32.LowLevel
         /// system date and time in UTC format.
         /// </param>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        unsafe public static extern void GetSystemTimeAsFileTime(
+        public static extern unsafe void GetSystemTimeAsFileTime(
           [Out] FileTime* lpSystemTimeAsFileTime
         );
 
@@ -757,7 +771,7 @@ namespace Win32.LowLevel
             [In] DWORD nStdHandle);
 
         [DllImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true, CharSet = CharSet.Unicode)]
-        unsafe public static extern SafeFileHandle CreateFileSafe(
+        public static extern unsafe SafeFileHandle CreateFileSafe(
             [In] WCHAR* lpFileName,
             [In] DWORD dwDesiredAccess,
             [In] DWORD dwShareMode,
@@ -767,7 +781,7 @@ namespace Win32.LowLevel
             [In, Optional] HANDLE hTemplateFile);
 
         [DllImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true, CharSet = CharSet.Unicode)]
-        unsafe public static extern HANDLE CreateFile(
+        public static extern unsafe HANDLE CreateFile(
             [In] WCHAR* lpFileName,
             [In] DWORD dwDesiredAccess,
             [In] DWORD dwShareMode,
@@ -809,7 +823,7 @@ namespace Win32.LowLevel
         public static extern DWORD GetLastError();
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern DWORD FormatMessage(
+        public static extern unsafe DWORD FormatMessage(
             [In] DWORD dwFlags,
             [In, Optional] IntPtr lpSource,
             [In] DWORD dwMessageId,

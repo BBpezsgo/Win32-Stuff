@@ -26,11 +26,11 @@ namespace Win32.D2D1
             [In, MarshalAs(UnmanagedType.IUnknown)] ID2D1GeometrySink geometrySink
         );
 
-        unsafe abstract HRESULT GetSegmentCount(
+        abstract unsafe HRESULT GetSegmentCount(
             [Out] UINT32* count
         );
 
-        unsafe abstract HRESULT GetFigureCount(
+        abstract unsafe HRESULT GetFigureCount(
             [Out] UINT32* count
         );
     }

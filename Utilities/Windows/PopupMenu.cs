@@ -17,7 +17,7 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void Show(HWND window, int x, int y)
+        public unsafe void Show(HWND window, int x, int y)
         {
             if (User32.TrackPopupMenu(Handle, 0, x, y, 0, window, null) == 0)
             {
@@ -28,14 +28,14 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public bool Show(HWND window, int x, int y, out int selectedId)
+        public unsafe bool Show(HWND window, int x, int y, out int selectedId)
         {
             selectedId = User32.TrackPopupMenu(Handle, TrackPopupMenuFlags.RETURNCMD, x, y, 0, window, null);
             return selectedId != 0;
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void Show(HWND window, int x, int y, RECT exclude)
+        public unsafe void Show(HWND window, int x, int y, RECT exclude)
         {
             TrackPopupMenuParams @params = TrackPopupMenuParams.Create();
             @params.Exclude = exclude;
@@ -44,7 +44,7 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public bool Show(HWND window, int x, int y, RECT exclude, out int selectedId)
+        public unsafe bool Show(HWND window, int x, int y, RECT exclude, out int selectedId)
         {
             TrackPopupMenuParams @params = TrackPopupMenuParams.Create();
             @params.Exclude = exclude;

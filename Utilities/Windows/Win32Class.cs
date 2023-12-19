@@ -15,10 +15,10 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static Win32Class Register(WNDCLASSEXW* info) => Win32Class.Register(info, out _);
+        public static unsafe Win32Class Register(WNDCLASSEXW* info) => Win32Class.Register(info, out _);
 
         /// <exception cref="WindowsException"/>
-        unsafe public static Win32Class Register(WNDCLASSEXW* info, out ushort id)
+        public static unsafe Win32Class Register(WNDCLASSEXW* info, out ushort id)
         {
             id = User32.RegisterClassExW(info);
             if (id == 0)
@@ -27,7 +27,7 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void Unregister()
+        public unsafe void Unregister()
         {
             fixed (WCHAR* classNamePtr = _className)
             {
@@ -37,7 +37,7 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public WNDCLASSEXW GetInfo()
+        public unsafe WNDCLASSEXW GetInfo()
         {
             WNDCLASSEXW result = WNDCLASSEXW.Create();
             fixed (WCHAR* namePtr = _className)

@@ -50,6 +50,6 @@ namespace Win32
 
         WindowInfo(DWORD structSize) : this() => this.StructSize = structSize;
 
-        unsafe public static WindowInfo Create() => new((DWORD)sizeof(WindowInfo));
+        public static unsafe WindowInfo Create() => new((DWORD)sizeof(WindowInfo));
     }
 }

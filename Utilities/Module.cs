@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 
-#pragma warning disable CA1716 // Identifiers should not match keywords
-
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
@@ -28,7 +26,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string FileName
+        public unsafe string FileName
         {
             get
             {
@@ -44,7 +42,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string BaseName
+        public unsafe string BaseName
         {
             get
             {
@@ -60,7 +58,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public ModuleInfo Info
+        public unsafe ModuleInfo Info
         {
             get
             {

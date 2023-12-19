@@ -13,6 +13,6 @@ namespace Win32.COM
 
         BindOptions(uint cbStruct) : this() => this.StructSize = cbStruct;
 
-        unsafe public static BindOptions Create() => new((uint)sizeof(BindOptions));
+        public static unsafe BindOptions Create() => new((uint)sizeof(BindOptions));
     }
 }

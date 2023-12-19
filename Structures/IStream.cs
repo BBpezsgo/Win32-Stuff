@@ -8,7 +8,7 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IStream : ISequentialStream
     {
-        unsafe abstract HRESULT Seek(
+        abstract unsafe HRESULT Seek(
             [In] INT64 dlibMove,
             [In] DWORD dwOrigin,
             [Out, Optional] UINT64* plibNewPosition);
@@ -16,7 +16,7 @@ namespace Win32.COM
         abstract HRESULT SetSize(
             [In] UINT64 libNewSize);
 
-        unsafe abstract HRESULT CopyTo(
+        abstract unsafe HRESULT CopyTo(
             [In, MarshalAs(UnmanagedType.IUnknown)] IStream pstm,
             [In] UINT64 cb,
             [Out, Optional] UINT64* pcbRead,
@@ -37,7 +37,7 @@ namespace Win32.COM
             [In] UINT64 cb,
             [In] DWORD dwLockType);
 
-        unsafe abstract HRESULT Stat(
+        abstract unsafe HRESULT Stat(
             [Out] StgStatistic* pstatstg,
             [In] DWORD grfStatFlag);
 

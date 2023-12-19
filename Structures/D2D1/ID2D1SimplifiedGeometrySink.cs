@@ -21,12 +21,12 @@ namespace Win32.D2D1
             D2D1_FIGURE_BEGIN figureBegin
         );
 
-        unsafe abstract void AddLines(
+        abstract unsafe void AddLines(
             D2D1_POINT_2F* points,
             UINT32 pointsCount
         );
 
-        unsafe abstract void AddBeziers(
+        abstract unsafe void AddBeziers(
             D2D1_BEZIER_SEGMENT* beziers,
             UINT32 beziersCount
         );

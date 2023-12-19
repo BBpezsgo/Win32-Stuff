@@ -25,7 +25,7 @@ namespace Win32.DWrite
         /// IMPORTANT: ReadFileFragment() implementations must check whether the requested file fragment
         /// is within the file bounds. Otherwise, an error should be returned from ReadFileFragment.
         /// </remarks>
-        unsafe abstract void ReadFileFragment(
+        abstract unsafe void ReadFileFragment(
             void** fragmentStart,
             UINT64 fileOffset,
             UINT64 fragmentSize,
@@ -36,7 +36,7 @@ namespace Win32.DWrite
         /// Releases a fragment from a file.
         /// </summary>
         /// <param name="fragmentContext">The client defined context of a font fragment returned from ReadFileFragment.</param>
-        unsafe abstract void ReleaseFileFragment(
+        abstract unsafe void ReleaseFileFragment(
             void* fragmentContext
         );
 
@@ -53,7 +53,7 @@ namespace Win32.DWrite
         /// either require complete font file to be loaded (e.g., copying a font file) or need to make
         /// decisions based on the value of the file size (e.g., validation against a persisted file size).
         /// </remarks>
-        unsafe abstract void GetFileSize(
+        abstract unsafe void GetFileSize(
             [Out] UINT64* fileSize
         );
 
@@ -67,7 +67,7 @@ namespace Win32.DWrite
         /// Standard HRESULT error code. For resources that don't have a concept of the last modified time, the implementation of
         /// GetLastWriteTime should return E_NOTIMPL.
         /// </returns>
-        unsafe abstract void GetLastWriteTime(
+        abstract unsafe void GetLastWriteTime(
             [Out] UINT64* lastWriteTime
         );
     }

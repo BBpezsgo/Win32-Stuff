@@ -12,7 +12,7 @@ namespace Win32
         public GlobalObject(HGLOBAL handle) => this._handle = handle;
 
         /// <exception cref="WindowsException"/>
-        unsafe public void* Lock()
+        public unsafe void* Lock()
         {
             void* result = Kernel32.GlobalLock(_handle);
             if (result == null)
@@ -21,7 +21,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public T* Lock<T>() where T : unmanaged
+        public unsafe T* Lock<T>() where T : unmanaged
         {
             void* result = Kernel32.GlobalLock(_handle);
             if (result == null)
@@ -30,7 +30,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void Unlock()
+        public unsafe void Unlock()
         {
             int lockCount = Kernel32.GlobalUnlock(_handle);
             if (lockCount == 0)
@@ -61,7 +61,7 @@ namespace Win32
     public static class VirtualMemory
     {
         /// <exception cref="WindowsException"/>
-        unsafe public static void* Alloc(uint size, DWORD protect, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
+        public static unsafe void* Alloc(uint size, DWORD protect = MemoryProtectionFlags.ReadWrite, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
         {
             void* address = Kernel32.VirtualAlloc(null, size, allocationType, protect);
             if (address == null)
@@ -70,7 +70,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static T* Alloc<T>(DWORD protect, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
+        public static unsafe T* Alloc<T>(DWORD protect = MemoryProtectionFlags.ReadWrite, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
             where T : unmanaged
         {
             void* address = Kernel32.VirtualAlloc(null, (uint)sizeof(T), allocationType, protect);
@@ -80,21 +80,21 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static void Free(void* address, uint size, DWORD freeType)
+        public static unsafe void Free(void* address, uint size, DWORD freeType)
         {
             if (Kernel32.VirtualFree(address, size, freeType) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static void Free(void* address)
+        public static unsafe void Free(void* address)
         {
             if (Kernel32.VirtualFree(address, 0, MEM.MEM_RELEASE) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static DWORD Protect(void* address, uint size, DWORD protect)
+        public static unsafe DWORD Protect(void* address, uint size, DWORD protect)
         {
             DWORD oldProtect = default;
             if (Kernel32.VirtualProtect(address, size, protect, &oldProtect) == 0)

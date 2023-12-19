@@ -19,6 +19,6 @@ namespace Win32.Gdi32
         public DWORD ClrImportant;
 
         BitmapInfoHeader(DWORD structSize) : this() => StructSize = structSize;
-        unsafe public static BitmapInfoHeader Create() => new((uint)sizeof(BitmapInfoHeader));
+        public static unsafe BitmapInfoHeader Create() => new((uint)sizeof(BitmapInfoHeader));
     }
 }

@@ -8,7 +8,7 @@ namespace Win32.Gdi32
     public readonly struct PaintHandle : IDisposable
     {
         readonly DisplayDC dc;
-        unsafe readonly PaintStruct* paint;
+        readonly unsafe PaintStruct* paint;
 
         public DisplayDC DeviceContext => dc;
 
@@ -23,7 +23,7 @@ namespace Win32.Gdi32
 
         public override string ToString() => dc.ToString();
 
-        unsafe public static PaintHandle Begin(HWND window, out PaintStruct paint)
+        public static unsafe PaintHandle Begin(HWND window, out PaintStruct paint)
         {
             paint = default;
             PaintStruct* paintPtr = (PaintStruct*)Unsafe.AsPointer(ref paint);
@@ -31,6 +31,6 @@ namespace Win32.Gdi32
             return new PaintHandle(new DisplayDC(dcHandle, window), paintPtr);
         }
 
-        unsafe public void Dispose() => _ = User32.EndPaint(dc, paint);
+        public unsafe void Dispose() => _ = User32.EndPaint(dc, paint);
     }
 }

@@ -44,7 +44,7 @@ namespace Win32
 
         public ThreadEntry(DWORD structSize) : this() => this.StructSize = structSize;
 
-        public unsafe static ThreadEntry Create() => new((DWORD)sizeof(ThreadEntry));
+        public static unsafe ThreadEntry Create() => new((DWORD)sizeof(ThreadEntry));
 
         public override bool Equals(object? obj) => obj is ThreadEntry entry && Equals(entry);
         public bool Equals(ThreadEntry other) =>

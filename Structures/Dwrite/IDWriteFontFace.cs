@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable CA1716 // Identifiers should not match keywords
-
 namespace Win32.DWrite
 {
     /// <summary>
@@ -30,7 +28,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe extern void GetFiles(
+        extern unsafe void GetFiles(
             [In, Out] UINT32* numberOfFiles,
             [MarshalAs(UnmanagedType.IUnknown)] ref IDWriteFontFile fontFiles
         );
@@ -57,7 +55,7 @@ namespace Win32.DWrite
         /// </summary>
         /// <param name="fontFaceMetrics">Points to a DWRITE_FONT_METRICS structure to fill in.
         /// The metrics returned by this function are in font design units.</param>
-        unsafe extern void GetMetrics(
+        extern unsafe void GetMetrics(
             [Out] DWRITE_FONT_METRICS* fontFaceMetrics
         );
 
@@ -80,7 +78,7 @@ namespace Win32.DWrite
         /// Standard HRESULT error code. If any of the input glyph indices are outside of the valid glyph index range
         /// for the current font face, E_INVALIDARG will be returned.
         /// </returns>
-        unsafe extern void GetDesignGlyphMetrics(
+        extern unsafe void GetDesignGlyphMetrics(
             UINT16* glyphIndices,
             UINT32 glyphCount,
             DWRITE_GLYPH_METRICS* glyphMetrics,
@@ -101,7 +99,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe extern void GetGlyphIndices(
+        extern unsafe void GetGlyphIndices(
             UINT32* codePoints,
             UINT32 codePointCount,
             UINT16* glyphIndices
@@ -141,7 +139,7 @@ namespace Win32.DWrite
         /// The context for the same tag may be different for each call,
         /// so each one must be held and released separately.
         /// </remarks>
-        unsafe extern void TryGetFontTable(
+        extern unsafe void TryGetFontTable(
             [In] UINT32 openTypeTableTag,
             void** tableData,
             [Out] UINT32* tableSize,
@@ -153,7 +151,7 @@ namespace Win32.DWrite
         /// Releases the table obtained earlier from TryGetFontTable.
         /// </summary>
         /// <param name="tableContext">Opaque context from TryGetFontTable.</param>
-        unsafe extern void ReleaseFontTable(
+        extern unsafe void ReleaseFontTable(
             [In] void* tableContext
         );
 
@@ -174,7 +172,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe extern void GetGlyphRunOutline(
+        extern unsafe void GetGlyphRunOutline(
             FLOAT emSize,
             UINT16* glyphIndices,
             FLOAT* glyphAdvances,
@@ -204,7 +202,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe extern void GetRecommendedRenderingMode(
+        extern unsafe void GetRecommendedRenderingMode(
             FLOAT emSize,
             FLOAT pixelsPerDip,
             DWRITE_MEASURING_MODE measuringMode,
@@ -223,7 +221,7 @@ namespace Win32.DWrite
         /// scaling specified by the font size and pixelsPerDip.</param>
         /// <param name="fontFaceMetrics">Points to a DWRITE_FONT_METRICS structure to fill in.
         /// The metrics returned by this function are in font design units.</param>
-        unsafe extern void GetGdiCompatibleMetrics(
+        extern unsafe void GetGdiCompatibleMetrics(
             FLOAT emSize,
             FLOAT pixelsPerDip,
             [In, Optional] DWRITE_MATRIX* transform,
@@ -255,7 +253,7 @@ namespace Win32.DWrite
         /// Standard HRESULT error code. If any of the input glyph indices are outside of the valid glyph index range
         /// for the current font face, E_INVALIDARG will be returned.
         /// </returns>
-        unsafe extern void GetGdiCompatibleGlyphMetrics(
+        extern unsafe void GetGdiCompatibleGlyphMetrics(
             FLOAT emSize,
             FLOAT pixelsPerDip,
             [In, Optional]

@@ -6,7 +6,7 @@ namespace Win32.Gdi32
     /// Output structure for <see cref="LowLevel.Gdiplus.GdiplusStartup"/>
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    unsafe public struct GdiplusStartupOutput
+    public unsafe struct GdiplusStartupOutput
     {
         // The following 2 fields are NULL if SuppressBackgroundThread is FALSE.
         // Otherwise, they are functions which must be called appropriately to

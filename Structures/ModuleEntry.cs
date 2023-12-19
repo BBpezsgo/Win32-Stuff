@@ -37,7 +37,7 @@ namespace Win32
         /// <summary>
         /// The base address of the module in the context of the owning process.
         /// </summary>
-        unsafe public readonly BYTE* ModuleBaseAddress;
+        public readonly unsafe BYTE* ModuleBaseAddress;
         /// <summary>
         /// The size of the module, in bytes.
         /// </summary>
@@ -46,10 +46,10 @@ namespace Win32
         /// A handle to the module in the context of the owning process.
         /// </summary>
         public readonly HMODULE ModuleHandle;
-        unsafe public fixed WCHAR ModulePtr[MAX_MODULE_NAME32 + 1];
-        unsafe public fixed WCHAR ExePathPtr[MAX_PATH];
+        public unsafe fixed WCHAR ModulePtr[MAX_MODULE_NAME32 + 1];
+        public unsafe fixed WCHAR ExePathPtr[MAX_PATH];
 
-        unsafe public string Module
+        public unsafe string Module
         {
             get
             {
@@ -58,7 +58,7 @@ namespace Win32
             }
         }
 
-        unsafe public string ExePath
+        public unsafe string ExePath
         {
             get
             {

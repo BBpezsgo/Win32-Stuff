@@ -11,7 +11,7 @@
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="GeneralException"/>
-        unsafe public Timer(HWND window, uint timeoutMs, Action callback)
+        public unsafe Timer(HWND window, uint timeoutMs, Action callback)
         {
             UINT_PTR id = GenerateId();
             UINT_PTR result = User32.SetTimer(window, id, timeoutMs, &TimerCallback);

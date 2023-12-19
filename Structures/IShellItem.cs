@@ -6,7 +6,7 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IShellItem
     {
-        unsafe abstract HRESULT BindToHandler(
+        abstract unsafe HRESULT BindToHandler(
              [In, MarshalAs(UnmanagedType.IUnknown)] IBindCtx? pbc,
              [In] Guid bhid,
              [In] REFIID riid,
@@ -17,17 +17,17 @@ namespace Win32.COM
             [Out, MarshalAs(UnmanagedType.IUnknown)] out IShellItem? ppsi
         );
 
-        unsafe abstract HRESULT GetDisplayName(
+        abstract unsafe HRESULT GetDisplayName(
             [In] SIGDN sigdnName,
             [Out] WCHAR** ppszName
         );
 
-        unsafe abstract HRESULT GetAttributes(
+        abstract unsafe HRESULT GetAttributes(
             [In] ULONG sfgaoMask,
             [Out] ULONG* psfgaoAttribs
         );
 
-        unsafe abstract HRESULT Compare(
+        abstract unsafe HRESULT Compare(
             [In, MarshalAs(UnmanagedType.IUnknown)] IShellItem psi,
             [In] DWORD hint,
             [Out] int* piOrder

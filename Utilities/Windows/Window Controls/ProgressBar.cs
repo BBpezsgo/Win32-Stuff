@@ -53,7 +53,7 @@ namespace Win32
             => User32.SendMessage(Handle, ProgressBarControlMessage.GETRANGE, (WPARAM)FALSE, LPARAM.Zero).ToInt32();
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public PBRANGE Range
+        public unsafe PBRANGE Range
         {
             get
             {

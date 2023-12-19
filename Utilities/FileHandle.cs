@@ -27,7 +27,7 @@ namespace Win32
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
 
         /// <exception cref="WindowsException"/>
-        unsafe public static FileHandle Create(
+        public static unsafe FileHandle Create(
             string fileName,
             DWORD desiredAccess,
             DWORD shareMode,
@@ -57,22 +57,22 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public DWORD Write<T>(ref T data, Overlapped* overlapped = null)
+        public unsafe DWORD Write<T>(ref T data, Overlapped* overlapped = null)
             where T : unmanaged
             => this.Write(Unsafe.AsPointer(ref data), sizeof(T), overlapped);
 
         /// <exception cref="WindowsException"/>
-        unsafe public DWORD Write<T>(T* data, Overlapped* overlapped = null)
+        public unsafe DWORD Write<T>(T* data, Overlapped* overlapped = null)
             where T : unmanaged
             => this.Write(data, sizeof(T), overlapped);
 
         /// <exception cref="WindowsException"/>
-        unsafe public DWORD Write<T>(T data, Overlapped* overlapped = null)
+        public unsafe DWORD Write<T>(T data, Overlapped* overlapped = null)
             where T : unmanaged
             => this.Write(&data, sizeof(T), overlapped);
 
         /// <exception cref="WindowsException"/>
-        unsafe public DWORD Write(void* buffer, int byteCount, Overlapped* overlapped = null)
+        public unsafe DWORD Write(void* buffer, int byteCount, Overlapped* overlapped = null)
         {
             DWORD bytesWritten = default;
             int res = Kernel32.WriteFile(Handle, buffer, (DWORD)byteCount, &bytesWritten, overlapped);

@@ -16,7 +16,12 @@ namespace Win32
 
         public ThreadSnapshot(HANDLE handle) => Handle = handle;
 
-        public void Dispose() => _ = Kernel32.CloseHandle(Handle);
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+        }
 
         public readonly IEnumerator<ThreadEntry> GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
         readonly IEnumerator IEnumerable.GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
@@ -29,6 +34,7 @@ namespace Win32
         public static bool operator ==(ThreadSnapshot left, ThreadSnapshot right) => left.Equals(right);
         public static bool operator !=(ThreadSnapshot left, ThreadSnapshot right) => !left.Equals(right);
 
+        /// <exception cref="WindowsException"/>
         public static ThreadSnapshot CreateSnapshot()
         {
             HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPTHREAD, default);
@@ -55,9 +61,11 @@ namespace Win32
         object IEnumerator.Current => current;
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public void Reset()
+        /// <exception cref="WindowsException"/>
+        public unsafe void Reset()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ThreadSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
+
             IsStarted = true;
 
             ThreadEntry threadEntry = ThreadEntry.Create();
@@ -80,9 +88,10 @@ namespace Win32
         }
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public bool MoveNext()
+        /// <exception cref="WindowsException"/>
+        public unsafe bool MoveNext()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ThreadSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
 
             ThreadEntry threadEntry = ThreadEntry.Create();
 
@@ -113,13 +122,19 @@ namespace Win32
             return true;
         }
 
+        /// <exception cref="WindowsException"/>
         void ActualDispose()
         {
             if (IsDisposed) return;
-            _ = Kernel32.CloseHandle(Handle);
+
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+
             IsDisposed = true;
         }
+        /// <exception cref="WindowsException"/>
         ~ThreadSnapshotEnumerator() { ActualDispose(); }
+        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
             ActualDispose();

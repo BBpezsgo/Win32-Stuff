@@ -50,7 +50,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public MENUINFO Info
+        public unsafe MENUINFO Info
         {
             get
             {
@@ -83,14 +83,14 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void AppendSeparator()
+        public unsafe void AppendSeparator()
         {
             if (User32.AppendMenuW(_handle, MenuFlags.SEPARATOR, UINT_PTR.Zero, null) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void AppendMenu(int id, string label)
+        public unsafe void AppendMenu(int id, string label)
         {
             fixed (char* labelPtr = label)
             {
@@ -100,25 +100,25 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void AppendMenu(int id, HBITMAP bitmap)
+        public unsafe void AppendMenu(int id, HBITMAP bitmap)
         {
             if (User32.AppendMenuW(_handle, MenuFlags.BITMAP, (UINT_PTR)id, (char*)bitmap) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void AppendMenu(int id, void* data)
+        public unsafe void AppendMenu(int id, void* data)
         {
             if (User32.AppendMenuW(_handle, MenuFlags.OWNERDRAW, (UINT_PTR)id, (char*)data) == 0)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void InsertMenuItem(uint id, MENUITEMINFOW info)
+        public unsafe void InsertMenuItem(uint id, MENUITEMINFOW info)
             => InsertMenuItem(id, &info);
 
         /// <exception cref="WindowsException"/>
-        unsafe public void InsertMenuItem(uint id, MENUITEMINFOW* info)
+        public unsafe void InsertMenuItem(uint id, MENUITEMINFOW* info)
         {
             if (User32.InsertMenuItemW(_handle, id, FALSE, info) == 0)
             { throw WindowsException.Get(); }

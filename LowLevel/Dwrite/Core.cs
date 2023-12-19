@@ -1,27 +1,25 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.DWrite.LowLevel
 {
     [SupportedOSPlatform("windows")]
     public static class Dwrite
     {
         [DllImport("Dwrite.dll", SetLastError = true)]
-        unsafe public static extern HRESULT DWriteCreateFactory(
+        public static extern unsafe HRESULT DWriteCreateFactory(
           [In] DWriteFactoryType factoryType,
           [In] REFIID iid,
           [Out] void** factory
         );
 
         [DllImport("Dwrite.dll", SetLastError = true)]
-        unsafe public static extern HRESULT DWriteCreateFactory(
+        public static extern unsafe HRESULT DWriteCreateFactory(
           [In] DWriteFactoryType factoryType,
           [In] REFIID iid,
           [Out, MarshalAs(UnmanagedType.IUnknown)] out object factory
         );
 
-        unsafe public static HRESULT DWriteCreateFactory<T>(
+        public static unsafe HRESULT DWriteCreateFactory<T>(
             DWriteFactoryType factoryType,
             REFIID iid,
             out T? factory
@@ -38,7 +36,7 @@ namespace Win32.DWrite.LowLevel
         /// <param name=""></param>
         /// <returns></returns>
         [DllImport("Dwrite.dll", SetLastError = true)]
-        unsafe public static extern HRESULT CreateTextFormat(
+        public static extern unsafe HRESULT CreateTextFormat(
           [In] WCHAR* fontFamilyName,
           [MarshalAs(UnmanagedType.IUnknown)] IDWriteFontCollection fontCollection,
                 DWRITE_FONT_WEIGHT fontWeight,

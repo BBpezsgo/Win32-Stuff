@@ -183,6 +183,4 @@ dotnet_diagnostic.CA1715.severity = suggestion
 dotnet_diagnostic.CA1720.severity = silent
 dotnet_diagnostic.CA1050.severity = silent
 
-# IDE0003: Remove qualification
-dotnet_diagnostic.IDE0003.severity = silent
 dotnet_style_prefer_collection_expression = false:suggestion

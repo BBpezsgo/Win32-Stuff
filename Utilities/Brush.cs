@@ -93,7 +93,7 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public static Brush CreateDIBPattern(void* packedDIB, DIBType type)
+        public static unsafe Brush CreateDIBPattern(void* packedDIB, DIBType type)
         {
             HBRUSH brush = Gdi32.CreateDIBPatternBrushPt(packedDIB, (uint)type);
             if (brush == HBRUSH.Zero)

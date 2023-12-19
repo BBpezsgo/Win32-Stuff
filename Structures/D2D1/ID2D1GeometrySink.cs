@@ -12,7 +12,7 @@ namespace Win32.D2D1
             D2D1_POINT_2F point
         );
 
-        unsafe abstract void AddBezier(
+        abstract unsafe void AddBezier(
             [In] D2D1_BEZIER_SEGMENT* bezier
         );
 

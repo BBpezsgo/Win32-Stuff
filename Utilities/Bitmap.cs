@@ -18,7 +18,7 @@ namespace Win32.Gdi32
 
         /// <exception cref="GdiException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public BitmapObject Info => Objects.GetObject<BitmapObject>(Handle);
+        public unsafe BitmapObject Info => Objects.GetObject<BitmapObject>(Handle);
 
         /// <exception cref="GdiException"/>
         public static Bitmap CreateCompatibleBitmap(HDC hdc, int width, int height)
@@ -30,7 +30,7 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public static Bitmap Create(int width, int height, uint planes, uint bitCount, void* bits)
+        public static unsafe Bitmap Create(int width, int height, uint planes, uint bitCount, void* bits)
         {
             HBITMAP handle = Gdi32.CreateBitmap(width, height, planes, bitCount, bits);
             if (handle == HANDLE.Zero)
@@ -39,7 +39,7 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static Bitmap LoadFromFile(string file, int width = 0, int height = 0)
+        public static unsafe Bitmap LoadFromFile(string file, int width = 0, int height = 0)
         {
             string fullPath;
 
@@ -70,7 +70,7 @@ namespace Win32.Gdi32
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="GdiException"/>
-        unsafe public void SaveToFile(HDC dc, string fileName)
+        public unsafe void SaveToFile(HDC dc, string fileName)
         {
             BitmapObject bmpScreen = this.Info;
 

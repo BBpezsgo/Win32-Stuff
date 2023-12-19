@@ -7,7 +7,7 @@
 
         public Control(HWND handle) : base(handle) { }
 
-        unsafe public Control(
+        public unsafe Control(
             Form parent,
             string? name,
             string @class,

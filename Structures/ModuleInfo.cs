@@ -3,7 +3,7 @@
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
-    unsafe public struct ModuleInfo
+    public unsafe struct ModuleInfo
     {
         public void* BaseOfDll;
         public DWORD SizeOfImage;

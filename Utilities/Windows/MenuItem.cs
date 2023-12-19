@@ -39,7 +39,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public string Text
+        public unsafe string Text
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public MenuItemType Type
+        public unsafe MenuItemType Type
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public MENUITEMINFOW Info
+        public unsafe MENUITEMINFOW Info
         {
             get
             {
@@ -132,7 +132,7 @@ namespace Win32
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public Menu? SubMenu
+        public unsafe Menu? SubMenu
         {
             get
             {

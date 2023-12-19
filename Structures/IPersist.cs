@@ -8,6 +8,6 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IPersist
     {
-        unsafe abstract HRESULT GetClassID([Out] Guid* pClassID);
+        abstract unsafe HRESULT GetClassID([Out] Guid* pClassID);
     }
 }

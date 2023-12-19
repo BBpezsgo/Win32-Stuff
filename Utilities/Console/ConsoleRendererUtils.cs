@@ -12,9 +12,9 @@ namespace Win32
 
             public static ButtonStyle Default => new()
             {
-                Normal = ConsoleColor.Make(ConsoleColor.Gray, ConsoleColor.White),
-                Hover = ConsoleColor.Make(ConsoleColor.Silver, ConsoleColor.Black),
-                Down = ConsoleColor.Make(ConsoleColor.White, ConsoleColor.Black),
+                Normal = CharColor.Make(CharColor.Gray, CharColor.White),
+                Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
+                Down = CharColor.Make(CharColor.White, CharColor.Black),
             };
         }
 
@@ -25,21 +25,21 @@ namespace Win32
 
             public static TextFieldStyle Default => new()
             {
-                Normal = ConsoleColor.Make(ConsoleColor.Gray, ConsoleColor.White),
-                Active = ConsoleColor.Make(ConsoleColor.Silver, ConsoleColor.Black),
+                Normal = CharColor.Make(CharColor.Gray, CharColor.White),
+                Active = CharColor.Make(CharColor.Silver, CharColor.Black),
             };
         }
 
         public void Text(COORD point, string text)
-            => Text(point.X, point.Y, text, ConsoleColor.Silver, ConsoleColor.Black);
+            => Text(point.X, point.Y, text, CharColor.Silver, CharColor.Black);
 
         public void Text(int x, int y, string text)
-            => Text(x, y, text, ConsoleColor.Silver, ConsoleColor.Black);
+            => Text(x, y, text, CharColor.Silver, CharColor.Black);
 
-        public void Text(COORD point, string text, byte foreground, byte background = ConsoleColor.Black)
+        public void Text(COORD point, string text, byte foreground, byte background = CharColor.Black)
             => Text(point.X, point.Y, text, foreground, background);
 
-        public void Text(int x, int y, string text, byte foreground, byte background = ConsoleColor.Black)
+        public void Text(int x, int y, string text, byte foreground, byte background = CharColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 
@@ -54,8 +54,8 @@ namespace Win32
         }
 
         public void Text(ref int x, int y, string text)
-            => Text(ref x, y, text, ConsoleColor.Silver, ConsoleColor.Black);
-        public void Text(ref int x, int y, string text, byte foreground, byte background = ConsoleColor.Black)
+            => Text(ref x, y, text, CharColor.Silver, CharColor.Black);
+        public void Text(ref int x, int y, string text, byte foreground, byte background = CharColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 

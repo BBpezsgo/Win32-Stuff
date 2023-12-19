@@ -7,18 +7,18 @@ namespace Win32
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
     public readonly struct DeviceDriver : IEquatable<DeviceDriver>
     {
-        unsafe readonly void* ImageBase;
+        readonly unsafe void* ImageBase;
 
         unsafe DeviceDriver(void* imageBase) => ImageBase = imageBase;
 
-        unsafe public static implicit operator void*(DeviceDriver module) => module.ImageBase;
-        unsafe public static implicit operator nint(DeviceDriver module) => (nint)module.ImageBase;
+        public static unsafe implicit operator void*(DeviceDriver module) => module.ImageBase;
+        public static unsafe implicit operator nint(DeviceDriver module) => (nint)module.ImageBase;
 
         public static bool operator ==(DeviceDriver left, DeviceDriver right) => left.Equals(right);
         public static bool operator !=(DeviceDriver left, DeviceDriver right) => !left.Equals(right);
 
         /// <exception cref="WindowsException"/>
-        unsafe public static DeviceDriver[] GetDeviceDrivers()
+        public static unsafe DeviceDriver[] GetDeviceDrivers()
         {
             void** deviceDrivers = stackalloc void*[128];
             DWORD got = default;
@@ -33,7 +33,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string FileName
+        public unsafe string FileName
         {
             get
             {
@@ -49,7 +49,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string BaseName
+        public unsafe string BaseName
         {
             get
             {
@@ -64,9 +64,9 @@ namespace Win32
         }
 
         public override bool Equals(object? obj) => obj is DeviceDriver module && Equals(module);
-        unsafe public bool Equals(DeviceDriver other) => ImageBase == other.ImageBase;
-        unsafe public override int GetHashCode() => ((nint)ImageBase).GetHashCode();
-        unsafe public override string ToString() => "0x" + ((nint)ImageBase).ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+        public unsafe bool Equals(DeviceDriver other) => ImageBase == other.ImageBase;
+        public override unsafe int GetHashCode() => ((nint)ImageBase).GetHashCode();
+        public override unsafe string ToString() => "0x" + ((nint)ImageBase).ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         /// <exception cref="WindowsException"/>
         string DebuggerDisplay() => $"{BaseName} ({ToString()})";
     }

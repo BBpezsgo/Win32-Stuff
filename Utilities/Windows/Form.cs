@@ -4,13 +4,14 @@ using System.Text;
 
 namespace Win32
 {
+
     public delegate void MenuItemEventHandler(Form sender, ushort menuItemId);
     public delegate void ContextMenuEventHandler(Form sender, Window context, POINT position);
 
     [SupportedOSPlatform("windows")]
     public class Form : Window, IDisposable
     {
-        unsafe public delegate void ResizeEventHandler(Form sender, RECT* rect);
+        public unsafe delegate void ResizeEventHandler(Form sender, RECT* rect);
         public unsafe delegate void PaintEventHandler(Form sender);
         public unsafe delegate void MouseEventHandler(Form sender, ushort x, ushort y, uint flags);
         public unsafe delegate void WindowClassSetter(ref WindowClassEx windowClass);
@@ -143,6 +144,7 @@ namespace Win32
             catch
             {
                 GCHandle.Free();
+                throw;
             }
 
             IsDisposed = false;
@@ -150,7 +152,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public Form(Win32Class @class, string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
+        public unsafe Form(Win32Class @class, string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
         {
             HINSTANCE hInstance = System.Diagnostics.Process.GetCurrentProcess().Handle;
 
@@ -184,6 +186,7 @@ namespace Win32
             catch
             {
                 GCHandle.Free();
+                throw;
             }
 
             IsDisposed = false;
@@ -195,22 +198,22 @@ namespace Win32
             WindowStyles.SYSMENU |
             WindowStyles.VISIBLE;
 
+        /// <exception cref="InvalidOperationException"/>
         public void Dispose()
         {
-            Dispose(disposing: true);
+            ActualDispose();
             GC.SuppressFinalize(this);
         }
-        ~Form() { Dispose(disposing: false); }
-        void Dispose(bool disposing)
+        /// <exception cref="InvalidOperationException"/>
+        ~Form() { ActualDispose(); }
+        /// <exception cref="InvalidOperationException"/>
+        void ActualDispose()
         {
             if (IsDisposed) return;
 
-            if (disposing)
-            {
-                if (Handle != HWND.Zero && User32.IsWindow(Handle) != FALSE)
-                { _ = User32.DestroyWindow(Handle); }
-                Class?.Unregister();
-            }
+            if (Handle != HWND.Zero && User32.IsWindow(Handle) != FALSE)
+            { _ = User32.DestroyWindow(Handle); }
+            Class?.Unregister();
 
             IsDisposed = true;
             Handle = HWND.Zero;
@@ -219,7 +222,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe static LRESULT WinProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
+        static unsafe LRESULT WinProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
         {
             void* userDataPtr;
             if (uMsg == WindowMessage.WM_CREATE)
@@ -281,7 +284,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public LRESULT HandleEvent(uint uMsg, WPARAM wParam, LPARAM lParam)
+        public unsafe LRESULT HandleEvent(uint uMsg, WPARAM wParam, LPARAM lParam)
         {
             switch (uMsg)
             {
@@ -547,7 +550,7 @@ namespace Win32
 
         public void Show(int cmdShow) => _ = User32.ShowWindow(Handle, cmdShow);
 
-        unsafe public static void* GetUserData(HWND hwnd)
+        public static unsafe void* GetUserData(HWND hwnd)
         {
             LONG_PTR ptr = User32.GetWindowLongPtrW(hwnd, GWLP.USERDATA);
             return (void*)ptr;

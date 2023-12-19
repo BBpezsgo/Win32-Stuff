@@ -8,17 +8,9 @@ namespace Win32
         [StructLayout(LayoutKind.Explicit)]
         public struct DUMMYUNION
         {
-            [FieldOffset(0)]
-            public DUMMYSTRUCTNAME DUMMYSTRUC;
-            [FieldOffset(0)]
-            public IntPtr Pointer;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DUMMYSTRUCTNAME
-        {
-            public DWORD Offset;
-            public DWORD OffsetHigh;
+            [FieldOffset(0)] public DWORD Offset;
+            [FieldOffset(0)] public DWORD OffsetHigh;
+            [FieldOffset(0)] public IntPtr Pointer;
         }
 
         public ULONG_PTR Internal;

@@ -16,7 +16,7 @@ namespace Win32.Gdi32
         Region(HRGN handle) => Handle = handle;
 
         /// <exception cref="GdiException"/>
-        unsafe public static Region Create(Rect* rect)
+        public static unsafe Region Create(Rect* rect)
         {
             HRGN region = Gdi32.CreateRectRgnIndirect(rect);
             if (region == HRGN.Zero)
@@ -38,9 +38,9 @@ namespace Win32.Gdi32
         public bool Contains(int x, int y) => Gdi32.PtInRegion(Handle, x, y) != FALSE;
         public bool Contains(POINT point) => Gdi32.PtInRegion(Handle, point.X, point.Y) != FALSE;
 
-        unsafe public bool Overlaps(RECT* rect) => Gdi32.RectInRegion(Handle, rect) != FALSE;
-        unsafe public bool Overlaps(RECT rect) => Gdi32.RectInRegion(Handle, &rect) != FALSE;
-        unsafe public bool Overlaps(ref RECT rect) => Gdi32.RectInRegion(Handle, (RECT*)Unsafe.AsPointer(ref rect)) != FALSE;
+        public unsafe bool Overlaps(RECT* rect) => Gdi32.RectInRegion(Handle, rect) != FALSE;
+        public unsafe bool Overlaps(RECT rect) => Gdi32.RectInRegion(Handle, &rect) != FALSE;
+        public unsafe bool Overlaps(ref RECT rect) => Gdi32.RectInRegion(Handle, (RECT*)Unsafe.AsPointer(ref rect)) != FALSE;
 
         /// <exception cref="GdiException"/>
         public void Dispose()

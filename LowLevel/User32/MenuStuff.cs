@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.LowLevel
 {
     [SupportedOSPlatform("windows")]
@@ -117,7 +115,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL TrackPopupMenuEx(
+        public static extern unsafe BOOL TrackPopupMenuEx(
           [In] HMENU hMenu,
           [In] TrackPopupMenuFlags uFlags,
           [In] int x,
@@ -192,7 +190,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL TrackPopupMenu(
+        public static extern unsafe BOOL TrackPopupMenu(
           [In] HMENU hMenu,
           [In] TrackPopupMenuFlags uFlags,
           [In] int x,
@@ -338,7 +336,7 @@ namespace Win32.LowLevel
         /// </returns>
         [Obsolete($"Use {nameof(SetMenuItemInfoW)} instead")]
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL ModifyMenuW(
+        public static extern unsafe BOOL ModifyMenuW(
           [In] HMENU hMnu,
           [In] UINT uPosition,
           [In] UINT uFlags,
@@ -415,7 +413,7 @@ namespace Win32.LowLevel
         /// </remarks>
         [Obsolete($"Use {nameof(InsertMenuItemW)} instead")]
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL InsertMenuW(
+        public static extern unsafe BOOL InsertMenuW(
           [In] HMENU hMenu,
           [In] UINT uPosition,
           [In] UINT uFlags,
@@ -623,7 +621,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetMenuBarInfo(
+        public static extern unsafe BOOL GetMenuBarInfo(
           [In] HWND hwnd,
           [In] LONG idObject,
           [In] LONG idItem,
@@ -676,7 +674,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetMenuItemInfoW(
+        public static extern unsafe BOOL GetMenuItemInfoW(
           [In] HMENU hmenu,
           [In] UINT item,
           [In] BOOL fByPosition,
@@ -764,7 +762,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SetMenuInfo(
+        public static extern unsafe BOOL SetMenuInfo(
           [In] HMENU hMenu,
           [In] MENUINFO* lpmi
         );
@@ -789,7 +787,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetMenuInfo(
+        public static extern unsafe BOOL GetMenuInfo(
           [In] HMENU hMenu,
           [In, Out] MENUINFO* lpmi
         );
@@ -830,7 +828,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SetMenuItemInfoW(
+        public static extern unsafe BOOL SetMenuItemInfoW(
           [In] HMENU hmenu,
           [In] UINT item,
                BOOL fByPosition,
@@ -948,7 +946,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL AppendMenuW(
+        public static extern unsafe BOOL AppendMenuW(
           [In] HMENU hMenu,
           [In] UINT uFlags,
           [In] UINT_PTR uIDNewItem,
@@ -983,7 +981,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL InsertMenuItemW(
+        public static extern unsafe BOOL InsertMenuItemW(
           [In] HMENU hmenu,
           [In] UINT item,
           [In] BOOL fByPosition,

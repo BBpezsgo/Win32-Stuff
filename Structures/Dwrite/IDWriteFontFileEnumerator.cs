@@ -21,7 +21,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void MoveNext(
+        abstract unsafe void MoveNext(
             [Out] BOOL* hasCurrentFile
         );
 

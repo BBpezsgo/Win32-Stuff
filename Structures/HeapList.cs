@@ -62,7 +62,7 @@ namespace Win32
         public HeapEntry Current => current;
         object IEnumerator.Current => current;
 
-        unsafe public void Reset()
+        public unsafe void Reset()
         {
             IsStarted = true;
 
@@ -85,7 +85,7 @@ namespace Win32
             current = heapEntry;
         }
 
-        unsafe public bool MoveNext()
+        public unsafe bool MoveNext()
         {
             HeapEntry heapEntry = HeapEntry.Create();
 

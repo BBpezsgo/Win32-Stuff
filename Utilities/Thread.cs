@@ -11,14 +11,19 @@ namespace Win32
         System.Numerics.IEqualityOperators<Thread, Thread, bool>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly HANDLE _handle;
+        readonly HANDLE Handle;
 
-        Thread(HANDLE handle) => _handle = handle;
+        Thread(HANDLE handle) => Handle = handle;
 
-        public void Dispose() => _ = Kernel32.CloseHandle(_handle);
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+        }
 
         public static explicit operator Thread(HANDLE handle) => new(handle);
-        public static implicit operator HANDLE(Thread handle) => handle._handle;
+        public static implicit operator HANDLE(Thread handle) => handle.Handle;
 
         public static bool operator ==(Thread a, Thread b) => a.Equals(b);
         public static bool operator !=(Thread a, Thread b) => !a.Equals(b);
@@ -26,7 +31,7 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void WaitFor(uint timeout = uint.MaxValue)
         {
-            DWORD result = Kernel32.WaitForSingleObject(_handle, timeout);
+            DWORD result = Kernel32.WaitForSingleObject(Handle, timeout);
             if (result == 0xFFFFFFFF)
             { throw WindowsException.Get(); }
         }
@@ -34,18 +39,18 @@ namespace Win32
         /// <exception cref="WindowsException"/>
         public void Terminate(DWORD exitCode)
         {
-            if (Kernel32.TerminateThread(_handle, exitCode) == FALSE)
+            if (Kernel32.TerminateThread(Handle, exitCode) == FALSE)
             { throw WindowsException.Get(); }
         }
 
         /// <exception cref="HResultException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string Description
+        public unsafe string Description
         {
             get
             {
                 WCHAR* description = null;
-                HResult result = Kernel32.GetThreadDescription(_handle, &description);
+                HResult result = Kernel32.GetThreadDescription(Handle, &description);
                 result.Throw();
                 return new string(description);
             }
@@ -53,7 +58,7 @@ namespace Win32
             {
                 fixed (WCHAR* description = value)
                 {
-                    HResult result = Kernel32.SetThreadDescription(_handle, description);
+                    HResult result = Kernel32.SetThreadDescription(Handle, description);
                     result.Throw();
                 }
             }
@@ -61,11 +66,11 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public DWORD ProcessId
+        public unsafe DWORD ProcessId
         {
             get
             {
-                DWORD processId = Kernel32.GetProcessIdOfThread(_handle);
+                DWORD processId = Kernel32.GetProcessIdOfThread(Handle);
                 if (processId == 0)
                 { throw WindowsException.Get(); }
                 return processId;
@@ -74,11 +79,11 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public DWORD Id
+        public unsafe DWORD Id
         {
             get
             {
-                DWORD processId = Kernel32.GetThreadId(_handle);
+                DWORD processId = Kernel32.GetThreadId(Handle);
                 if (processId == 0)
                 { throw WindowsException.Get(); }
                 return processId;
@@ -87,12 +92,12 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public ProcessorNumber ThreadIdealProcessor
+        public unsafe ProcessorNumber ThreadIdealProcessor
         {
             get
             {
                 ProcessorNumber result = default;
-                if (Kernel32.GetThreadIdealProcessorEx(_handle, &result) == FALSE)
+                if (Kernel32.GetThreadIdealProcessorEx(Handle, &result) == FALSE)
                 { throw WindowsException.Get(); }
                 return result;
             }
@@ -100,14 +105,27 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public GroupAffinity ThreadGroupAffinity
+        public unsafe GroupAffinity ThreadGroupAffinity
         {
             get
             {
                 GroupAffinity result = default;
-                if (Kernel32.GetThreadGroupAffinity(_handle, &result) == FALSE)
+                if (Kernel32.GetThreadGroupAffinity(Handle, &result) == FALSE)
                 { throw WindowsException.Get(); }
                 return result;
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public unsafe DWORD ExitCode
+        {
+            get
+            {
+                DWORD exitCode = default;
+                if (Kernel32.GetExitCodeThread(Handle, &exitCode) == FALSE)
+                { throw WindowsException.Get(); }
+                return exitCode;
             }
         }
 
@@ -119,10 +137,10 @@ namespace Win32
             return new Thread(handle);
         }
 
-        public override string ToString() => "0x" + _handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+        public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         string DebuggerDisplay() => ToString();
         public override bool Equals(object? obj) => obj is Thread handle && Equals(handle);
-        public bool Equals(Thread other) => _handle == other._handle;
-        public override int GetHashCode() => _handle.GetHashCode();
+        public bool Equals(Thread other) => Handle == other.Handle;
+        public override int GetHashCode() => Handle.GetHashCode();
     }
 }

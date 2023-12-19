@@ -8,13 +8,13 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface ISequentialStream
     {
-        unsafe abstract HRESULT Read(
+        abstract unsafe HRESULT Read(
             void* pv,
             [In] ULONG cb,
             [Out, Optional] ULONG* pcbRead
         );
 
-        unsafe abstract HRESULT Write(
+        abstract unsafe HRESULT Write(
             void* pv,
             [In] ULONG cb,
             [Out, Optional] ULONG* pcbWritten

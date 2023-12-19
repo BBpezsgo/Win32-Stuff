@@ -18,7 +18,7 @@ namespace Win32
     /// </para>
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    unsafe public struct MenuItemInfo
+    public struct MenuItemInfo
     {
         /// <summary>
         /// The size of the structure, in bytes.
@@ -109,7 +109,7 @@ namespace Win32
         /// is set in the <c>Mask</c> member
         /// </para>
         /// </summary>
-        public WCHAR* TypeData;
+        public unsafe WCHAR* TypeData;
         /// <summary>
         /// <para>
         /// The length of the menu item text, in characters,

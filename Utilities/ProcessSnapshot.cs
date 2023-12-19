@@ -16,7 +16,12 @@ namespace Win32
 
         public ProcessSnapshot(HANDLE handle) => Handle = handle;
 
-        public void Dispose() => _ = Kernel32.CloseHandle(Handle);
+        /// <exception cref="WindowsException"/>
+        public void Dispose()
+        {
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+        }
 
         public readonly IEnumerator<ProcessEntry> GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
         readonly IEnumerator IEnumerable.GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
@@ -47,9 +52,11 @@ namespace Win32
         object IEnumerator.Current => current;
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public void Reset()
+        /// <exception cref="WindowsException"/>
+        public unsafe void Reset()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ProcessSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
+
             IsStarted = true;
 
             ProcessEntry processEntry = ProcessEntry.Create();
@@ -72,9 +79,10 @@ namespace Win32
         }
 
         /// <exception cref="ObjectDisposedException"/>
-        unsafe public bool MoveNext()
+        /// <exception cref="WindowsException"/>
+        public unsafe bool MoveNext()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(ProcessSnapshotEnumerator));
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
 
             ProcessEntry processEntry = ProcessEntry.Create();
 
@@ -105,13 +113,19 @@ namespace Win32
             return true;
         }
 
+        /// <exception cref="WindowsException"/>
         void ActualDispose()
         {
             if (IsDisposed) return;
-            _ = Kernel32.CloseHandle(Handle);
+
+            if (Kernel32.CloseHandle(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+
             IsDisposed = true;
         }
+        /// <exception cref="WindowsException"/>
         ~ProcessSnapshotEnumerator() { ActualDispose(); }
+        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
             ActualDispose();

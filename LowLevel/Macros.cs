@@ -8,9 +8,9 @@
             => (((ULONG)_r) >> 16) == 0;
         public static bool IS_INTRESOURCE(ULONG _r)
             => ((_r) >> 16) == 0;
-        unsafe public static CHAR* MAKEINTRESOURCEA(WORD i)
+        public static unsafe CHAR* MAKEINTRESOURCEA(WORD i)
              => (CHAR*)(ULONG_PTR)i;
-        unsafe public static WCHAR* MAKEINTRESOURCEW(WORD i)
+        public static unsafe WCHAR* MAKEINTRESOURCEW(WORD i)
              => (WCHAR*)(ULONG_PTR)i;
 
         public static byte LOBYTE(int w)
@@ -23,25 +23,35 @@
         public static WORD HIWORD(int l)
             => (WORD)(l >> 16);
 
-        public static byte LOBYTE(System.IntPtr w)
+        public static byte LOBYTE(nint w)
             => Macros.LOBYTE(w.ToInt32());
-        public static byte HIBYTE(System.IntPtr w)
+        public static byte HIBYTE(nint w)
             => Macros.HIBYTE(w.ToInt32());
 
-        public static WORD LOWORD(System.IntPtr l)
+        public static WORD LOWORD(nint l)
             => Macros.LOWORD(l.ToInt32());
-        public static WORD HIWORD(System.IntPtr l)
+        public static WORD HIWORD(nint l)
             => Macros.HIWORD(l.ToInt32());
 
-        public static byte LOBYTE(System.UIntPtr w)
+        public static byte LOBYTE(nuint w)
             => Macros.LOBYTE(unchecked((int)w.ToUInt32()));
-        public static byte HIBYTE(System.UIntPtr w)
+        public static byte HIBYTE(nuint w)
             => Macros.HIBYTE(unchecked((int)w.ToUInt32()));
 
-        public static WORD LOWORD(System.UIntPtr l)
+        public static WORD LOWORD(nuint l)
             => Macros.LOWORD(unchecked((int)l.ToUInt32()));
-        public static WORD HIWORD(System.UIntPtr l)
+        public static WORD HIWORD(nuint l)
             => Macros.HIWORD(unchecked((int)l.ToUInt32()));
+
+        public static byte LOBYTE<T>(T w) where T : IConvertible
+            => Macros.LOBYTE(unchecked(w.ToInt32(null)));
+        public static byte HIBYTE<T>(T w) where T : IConvertible
+            => Macros.HIBYTE(unchecked(w.ToInt32(null)));
+
+        public static WORD LOWORD<T>(T l) where T : IConvertible
+            => Macros.LOWORD(unchecked(l.ToInt32(null)));
+        public static WORD HIWORD<T>(T l) where T : IConvertible
+            => Macros.HIWORD(unchecked(l.ToInt32(null)));
 
         public static WORD MAKEWORD(byte low, byte high)
             => (WORD)(((byte)(low & 0xFF)) | ((byte)(high & 0xFF) << 8));

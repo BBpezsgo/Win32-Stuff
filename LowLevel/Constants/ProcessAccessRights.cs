@@ -1,6 +1,9 @@
-﻿namespace Win32
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Win32
 {
     [Flags]
+    [SuppressMessage("Usage", "CA2217:Do not mark enums with FlagsAttribute", Justification = "<Pending>")]
     public enum ProcessAccessRights : DWORD
     {
         /// <summary>

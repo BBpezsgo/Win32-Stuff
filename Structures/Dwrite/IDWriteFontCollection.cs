@@ -14,7 +14,7 @@ namespace Win32.DWrite
         /// <summary>
         /// Gets the number of font families in the collection.
         /// </summary>
-        unsafe abstract UINT32 GetFontFamilyCount();
+        abstract unsafe UINT32 GetFontFamilyCount();
 
         /// <summary>
         /// Creates a font family object given a zero-based font family index.
@@ -24,7 +24,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetFontFamily(
+        abstract unsafe void GetFontFamily(
             UINT32 index,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object fontFamily
         );
@@ -38,7 +38,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code. If the specified family name does not exist, the return value is S_OK, but *index is UINT_MAX and *exists is FALSE.
         /// </returns>
-        unsafe abstract void FindFamilyName(
+        abstract unsafe void FindFamilyName(
             [In] WCHAR* familyName,
             [Out] UINT32* index,
             [Out] BOOL* exists
@@ -53,7 +53,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code. If the specified physical font is not part of the font collection the return value is DWRITE_E_NOFONT.
         /// </returns>
-        unsafe abstract void GetFontFromFontFace(
+        abstract unsafe void GetFontFromFontFace(
             [In, MarshalAs(UnmanagedType.IUnknown)] object fontFace,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object font
         );

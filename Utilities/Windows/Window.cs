@@ -25,7 +25,7 @@ namespace Win32
 
         public Window(HWND handle) => _handle = handle;
 
-        unsafe public Window(
+        public unsafe Window(
             string @class,
             string name,
             DWORD style,
@@ -123,7 +123,7 @@ namespace Win32
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public Window[] Children
+        public unsafe IReadOnlyCollection<Window> Children
         {
             get
             {
@@ -138,7 +138,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public RECT ClientRect
+        public unsafe RECT ClientRect
         {
             get
             {
@@ -182,7 +182,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static RECT CalculatePopupWindowPosition(POINT anchorPoint, SIZE windowSize, uint flags)
+        public static unsafe RECT CalculatePopupWindowPosition(POINT anchorPoint, SIZE windowSize, uint flags)
         {
             RECT result;
             if (User32.CalculatePopupWindowPosition(&anchorPoint, &windowSize, flags, null, &result) != TRUE)
@@ -191,7 +191,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static RECT CalculatePopupWindowPosition(POINT anchorPoint, SIZE windowSize, uint flags, RECT excludeRect)
+        public static unsafe RECT CalculatePopupWindowPosition(POINT anchorPoint, SIZE windowSize, uint flags, RECT excludeRect)
         {
             RECT result;
             if (User32.CalculatePopupWindowPosition(&anchorPoint, &windowSize, flags, &excludeRect, &result) != TRUE)
@@ -214,7 +214,7 @@ namespace Win32
             return TRUE;
         }
 
-        unsafe public static Window[] GetThreadWindows(uint threadId)
+        public static unsafe Window[] GetThreadWindows(uint threadId)
         {
             List<HWND> result = new();
             GCHandle handle = GCHandle.Alloc(result, GCHandleType.Weak);
@@ -252,7 +252,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static Window[] GetWindows()
+        public static unsafe Window[] GetWindows()
         {
             List<HWND> result = new();
             GCHandle handle = GCHandle.Alloc(result, GCHandleType.Weak);
@@ -285,7 +285,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public TITLEBARINFO TitleBarInfo
+        public unsafe TITLEBARINFO TitleBarInfo
         {
             get
             {
@@ -366,7 +366,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public DWORD ThreadId
+        public unsafe DWORD ThreadId
         {
             get
             {
@@ -379,7 +379,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public (DWORD ThreadId, DWORD ProcessId) ThreadProcessId
+        public unsafe (DWORD ThreadId, DWORD ProcessId) ThreadProcessId
         {
             get
             {
@@ -407,7 +407,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public RECT Rect
+        public unsafe RECT Rect
         {
             get
             {
@@ -419,7 +419,7 @@ namespace Win32
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public POINT Position
+        public unsafe POINT Position
         {
             get
             {
@@ -436,7 +436,7 @@ namespace Win32
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public SIZE Size
+        public unsafe SIZE Size
         {
             get
             {
@@ -453,7 +453,7 @@ namespace Win32
         }
 
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string ModuleFileName
+        public unsafe string ModuleFileName
         {
             get
             {
@@ -522,7 +522,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void TileWindows(uint how, HWND[]? windows)
+        public unsafe void TileWindows(uint how, HWND[]? windows)
         {
             if (windows == null)
             {
@@ -540,7 +540,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public void TileWindows(uint how, RECT rect, HWND[]? windows)
+        public unsafe void TileWindows(uint how, RECT rect, HWND[]? windows)
         {
             if (windows == null)
             {
@@ -581,13 +581,13 @@ namespace Win32
             return new Window(handle);
         }
 
-        unsafe public bool ClientToScreen(ref POINT point)
+        public unsafe bool ClientToScreen(ref POINT point)
         {
             int result = User32.ClientToScreen(_handle, (POINT*)Unsafe.AsPointer(ref point));
             return result != FALSE;
         }
 
-        unsafe public bool ScreenToClient(ref POINT point)
+        public unsafe bool ScreenToClient(ref POINT point)
         {
             int result = User32.ScreenToClient(_handle, (POINT*)Unsafe.AsPointer(ref point));
             return result != FALSE;
@@ -605,7 +605,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string ClassName
+        public unsafe string ClassName
         {
             get
             {
@@ -622,7 +622,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public string RealClassName
+        public unsafe string RealClassName
         {
             get
             {
@@ -662,7 +662,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        unsafe public WindowInfo Info
+        public unsafe WindowInfo Info
         {
             get
             {
@@ -675,7 +675,7 @@ namespace Win32
 
         public LRESULT SendMessage(uint msg, WPARAM wParam, LPARAM lParam) => User32.SendMessage(Handle, msg, wParam, lParam);
 
-        unsafe public static Window? Find(string? className, string? windowName)
+        public static unsafe Window? Find(string? className, string? windowName)
         {
             fixed (WCHAR* classNamePtr = className)
             fixed (WCHAR* windowNamePtr = windowName)
@@ -687,7 +687,7 @@ namespace Win32
             }
         }
 
-        unsafe public Window? FindChild(string? className, string? windowName)
+        public unsafe Window? FindChild(string? className, string? windowName)
         {
             fixed (WCHAR* classNamePtr = className)
             fixed (WCHAR* windowNamePtr = windowName)
@@ -715,7 +715,7 @@ namespace Win32
             return TRUE;
         }
 
-        unsafe public void EnumChildren(Action<Window> callback)
+        public unsafe void EnumChildren(Action<Window> callback)
         {
             GCHandle handle = GCHandle.Alloc(callback, GCHandleType.Weak);
             _ = User32.EnumChildWindows(_handle, &EnumChildWindowsProc2, GCHandle.ToIntPtr(handle));
@@ -737,7 +737,7 @@ namespace Win32
             return res ? TRUE : FALSE;
         }
 
-        unsafe public void EnumChildren(Action<Window, bool> callback)
+        public unsafe void EnumChildren(Action<Window, bool> callback)
         {
             GCHandle handle = GCHandle.Alloc(callback, GCHandleType.Weak);
             _ = User32.EnumChildWindows(_handle, &EnumChildWindowsProc3, GCHandle.ToIntPtr(handle));

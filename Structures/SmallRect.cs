@@ -15,7 +15,10 @@ namespace Win32
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct SmallRect : IEquatable<SMALL_RECT>
+    public struct SmallRect :
+        IEquatable<SMALL_RECT>,
+        System.Numerics.IEqualityOperators<SMALL_RECT, SMALL_RECT, bool>,
+        IEquatable<RECT>
     {
         /// <summary>The x-coordinate of the upper-left corner of the rectangle.</summary>
         SHORT left;
@@ -112,9 +115,17 @@ namespace Win32
             right = (SHORT)(x + width);
         }
 
-        public static explicit operator SMALL_RECT(System.Drawing.Rectangle rectangle) => new((SHORT)rectangle.X, (SHORT)rectangle.Y, (SHORT)rectangle.Width, (SHORT)rectangle.Height);
+        public static implicit operator RECT(SMALL_RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         public static implicit operator System.Drawing.Rectangle(SMALL_RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         public static implicit operator System.Drawing.RectangleF(SMALL_RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked SMALL_RECT(System.Drawing.Rectangle rectangle) => new(checked((SHORT)rectangle.X), checked((SHORT)rectangle.Y), checked((SHORT)rectangle.Width), checked((SHORT)rectangle.Height));
+        public static explicit operator SMALL_RECT(System.Drawing.Rectangle rectangle) => new((SHORT)rectangle.X, (SHORT)rectangle.Y, (SHORT)rectangle.Width, (SHORT)rectangle.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked SMALL_RECT(RECT rectangle) => new(checked((SHORT)rectangle.X), checked((SHORT)rectangle.Y), checked((SHORT)rectangle.Width), checked((SHORT)rectangle.Height));
+        public static explicit operator SMALL_RECT(RECT rectangle) => new((SHORT)rectangle.X, (SHORT)rectangle.Y, (SHORT)rectangle.Width, (SHORT)rectangle.Height);
 
         public static bool operator ==(SMALL_RECT a, SMALL_RECT b) => a.Equals(b);
         public static bool operator !=(SMALL_RECT a, SMALL_RECT b) => !a.Equals(b);
@@ -126,7 +137,14 @@ namespace Win32
             top == other.top &&
             right == other.right &&
             bottom == other.bottom;
+        public readonly bool Equals(RECT other) =>
+            left == other.Left &&
+            top == other.Top &&
+            right == other.Right &&
+            bottom == other.Bottom;
         public override readonly int GetHashCode() => HashCode.Combine(left, top, right, bottom);
+
+        #region Contains()
 
         public readonly bool Contains(POINT point) =>
             point.X >= left &&
@@ -140,10 +158,36 @@ namespace Win32
             point.X < right &&
             point.Y < Height;
 
+        public readonly bool Contains(System.Drawing.Point point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
+        public readonly bool Contains(System.Drawing.PointF point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
+        public readonly bool Contains(System.Numerics.Vector2 point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
         public readonly bool Contains(int x, int y) =>
             x >= left &&
             y >= top &&
             x < right &&
             y < Height;
+
+        public readonly bool Contains(float x, float y) =>
+            x >= left &&
+            y >= top &&
+            x < right &&
+            y < Height;
+
+        #endregion
     }
 }

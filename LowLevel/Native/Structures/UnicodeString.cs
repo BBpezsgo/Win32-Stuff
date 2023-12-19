@@ -7,6 +7,6 @@ namespace Win32.LowLevel
     {
         public ushort Length;
         public ushort MaximumLength;
-        unsafe public WCHAR* Buffer;
+        public unsafe WCHAR* Buffer;
     }
 }

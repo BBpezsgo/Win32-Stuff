@@ -2,8 +2,6 @@
 
 using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.Gdi32.LowLevel
 {
     [SupportedOSPlatform("windows")]
@@ -37,7 +35,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern HBRUSH CreateDIBPatternBrushPt(
+        public static extern unsafe HBRUSH CreateDIBPatternBrushPt(
           [In] void* lpPackedDIB,
           [In] UINT iUsage
         );
@@ -69,7 +67,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern BOOL RectInRegion(
+        public static extern unsafe BOOL RectInRegion(
           [In] HRGN hrgn,
           [In] RECT* lprect
         );
@@ -88,7 +86,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetTextExtentPoint32W(
+        public static extern unsafe BOOL GetTextExtentPoint32W(
           [In] HDC hdc,
           [In] WCHAR* lpString,
           [In] int c,
@@ -129,7 +127,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern HRGN CreateRectRgnIndirect(
+        public static extern unsafe HRGN CreateRectRgnIndirect(
           [In] RECT* lprect
         );
 
@@ -152,7 +150,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern BOOL MoveToEx(
+        public static extern unsafe BOOL MoveToEx(
           [In] HDC hdc,
           [In] int x,
           [In] int y,
@@ -160,7 +158,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern HDC CreateICW(
+        public static extern unsafe HDC CreateICW(
           [In] WCHAR* pszDriver,
           [In] WCHAR* pszDevice,
                WCHAR* pszPort,
@@ -192,7 +190,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern int EnumObjects(
+        public static extern unsafe int EnumObjects(
           [In] HDC hdc,
           [In] int nType,
           [In] delegate*<void*, LPARAM, int> lpFunc,
@@ -220,7 +218,7 @@ namespace Win32.Gdi32.LowLevel
         /// <param name="offset"></param>
         /// <returns></returns>
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern HBITMAP CreateDIBSection(
+        public static extern unsafe HBITMAP CreateDIBSection(
           [In] HDC hdc,
 #pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In] BitmapInfo* pbmi,
@@ -244,7 +242,7 @@ namespace Win32.Gdi32.LowLevel
         /// <param name="usage"></param>
         /// <returns></returns>
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern int GetDIBits(
+        public static extern unsafe int GetDIBits(
           [In] HDC hdc,
           [In] HBITMAP hbm,
           [In] UINT start,
@@ -264,7 +262,7 @@ namespace Win32.Gdi32.LowLevel
         /// <param name="pv"></param>
         /// <returns></returns>
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern int GetObject(
+        public static extern unsafe int GetObject(
           [In] HANDLE h,
           [In] int c,
           [Out] void* pv
@@ -415,7 +413,7 @@ namespace Win32.Gdi32.LowLevel
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]
-        unsafe public static extern HBITMAP CreateBitmap(
+        public static extern unsafe HBITMAP CreateBitmap(
           [In] int nWidth,
           [In] int nHeight,
           [In] UINT nPlanes,

@@ -217,7 +217,7 @@ namespace Win32
         /// </summary>
         [FieldOffset(12)] public readonly ControlKeyState ControlKeyState;
 
-        public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0").Replace("\t", "\\t").Replace("\r", "\\r").Replace("\n", "\\n")}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
+        public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0", StringComparison.Ordinal).Replace("\t", "\\t", StringComparison.Ordinal).Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal)}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
     }
 
     /// <summary>

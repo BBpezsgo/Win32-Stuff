@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable CA1716 // Identifiers should not match keywords
-
 namespace Win32.COM
 {
     [ComImport]
@@ -10,7 +8,7 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IEnumMoniker
     {
-        unsafe abstract HRESULT Next(
+        abstract unsafe HRESULT Next(
             [In] ULONG celt,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out IMoniker rgelt,
             [Out, Optional] ULONG* pceltFetched);

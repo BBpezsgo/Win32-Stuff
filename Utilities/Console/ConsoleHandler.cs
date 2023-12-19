@@ -153,7 +153,7 @@
         }
 
         /// <exception cref="WindowsException"/>
-        unsafe public static ConsoleScreenBufferInfo ScreenBufferInfo
+        public static unsafe ConsoleScreenBufferInfo ScreenBufferInfo
         {
             get
             {

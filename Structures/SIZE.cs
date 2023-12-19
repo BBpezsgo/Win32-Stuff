@@ -38,11 +38,20 @@ namespace Win32.Common
         public readonly bool Equals(SIZE other) => Width == other.Width && Height == other.Height;
         public override readonly int GetHashCode() => HashCode.Combine(Width, Height);
 
-        public static implicit operator SIZE(System.Drawing.Size size) => new(size.Width, size.Height);
+        public static implicit operator ValueTuple<LONG, LONG>(SIZE size) => new(size.Width, size.Height);
         public static implicit operator System.Drawing.Size(SIZE size) => new(size.Width, size.Height);
+        public static implicit operator System.Drawing.SizeF(SIZE size) => new(size.Width, size.Height);
         public static implicit operator System.Numerics.Vector2(SIZE size) => new(size.Width, size.Height);
 
         public static implicit operator SIZE(ValueTuple<LONG, LONG> size) => new(size.Item1, size.Item2);
-        public static implicit operator ValueTuple<LONG, LONG>(SIZE size) => new(size.Width, size.Height);
+        public static implicit operator SIZE(System.Drawing.Size size) => new(size.Width, size.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked SIZE(System.Drawing.SizeF size) => new(checked((LONG)size.Width), checked((LONG)size.Height));
+        public static explicit operator SIZE(System.Drawing.SizeF size) => new((LONG)size.Width, (LONG)size.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked SIZE(System.Numerics.Vector2 size) => new(checked((LONG)size.X), checked((LONG)size.Y));
+        public static explicit operator SIZE(System.Numerics.Vector2 size) => new((LONG)size.X, (LONG)size.Y);
     }
 }

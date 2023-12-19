@@ -9,7 +9,7 @@ namespace Win32
         /// Retrieves information about the global cursor.
         /// </summary>
         /// <exception cref="WindowsException"/>
-        unsafe public static CURSORINFO GetCursorInfo()
+        public static unsafe CURSORINFO GetCursorInfo()
         {
             CURSORINFO result = CURSORINFO.Create();
             if (User32.GetCursorInfo(&result) == FALSE)
@@ -96,7 +96,7 @@ namespace Win32
         /// To retrieve this value, use the <see cref="GetWindowThreadProcessId"/> function.
         /// If this parameter is <c>NULL</c>, the function returns information for the foreground thread.
         /// </param>
-        unsafe public static GUITHREADINFO GetGUIThreadInfo(DWORD threadId)
+        public static unsafe GUITHREADINFO GetGUIThreadInfo(DWORD threadId)
         {
             GUITHREADINFO result = GUITHREADINFO.Create();
             if (User32.GetGUIThreadInfo(threadId, &result) == FALSE)

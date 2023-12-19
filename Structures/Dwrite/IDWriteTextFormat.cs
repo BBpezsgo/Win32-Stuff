@@ -104,7 +104,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void SetTrimming(
+        abstract unsafe void SetTrimming(
             [In] DWRITE_TRIMMING* trimmingOptions,
             [In, Optional, MarshalAs(UnmanagedType.IUnknown)] object trimmingSign
         );
@@ -166,7 +166,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetTrimming(
+        abstract unsafe void GetTrimming(
             [Out] DWRITE_TRIMMING* trimmingOptions,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object trimmingSign
         );
@@ -180,7 +180,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetLineSpacing(
+        abstract unsafe void GetLineSpacing(
             [Out] DWRITE_LINE_SPACING_METHOD* lineSpacingMethod,
             [Out] FLOAT* lineSpacing,
             [Out] FLOAT* baseline
@@ -210,7 +210,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetFontFamilyName(
+        abstract unsafe void GetFontFamilyName(
             WCHAR* fontFamilyName,
             UINT32 nameSize
         );
@@ -248,7 +248,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetLocaleName(
+        abstract unsafe void GetLocaleName(
             WCHAR* localeName,
             UINT32 nameSize
         );

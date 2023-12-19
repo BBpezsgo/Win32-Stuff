@@ -54,9 +54,9 @@ namespace Win32
         /// the <see cref="QueryFullProcessImageName"/> function to retrieve the full
         /// path of the executable file for a 64-bit process.
         /// </summary>
-        unsafe public fixed WCHAR ExeFilePtr[260];
+        public unsafe fixed WCHAR ExeFilePtr[260];
 
-        unsafe public readonly string ExeFile
+        public readonly unsafe string ExeFile
         {
             get
             {

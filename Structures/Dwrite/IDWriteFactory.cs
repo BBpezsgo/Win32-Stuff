@@ -9,7 +9,7 @@ namespace Win32.DWrite
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("b859ee5a-d838-4b5b-a2e8-1adc7d93db48")]
     [SupportedOSPlatform("windows")]
-    unsafe public interface IDWriteFactory
+    public unsafe interface IDWriteFactory
     {
         /// <summary>
         /// Gets a font collection representing the set of installed fonts.

@@ -21,22 +21,22 @@ namespace Win32.D2D1
         /// Retrieves the current desktop DPI. To refresh this, call ReloadSystemMetrics.
         /// </summary>
         [Obsolete("Deprecated. Use DisplayInformation::LogicalDpi for Windows Store Apps or GetDpiForWindow for desktop apps.")]
-        unsafe abstract void GetDesktopDpi(
+        abstract unsafe void GetDesktopDpi(
             [Out] FLOAT* dpiX,
             [Out] FLOAT* dpiY
         );
 
-        unsafe abstract HRESULT CreateRectangleGeometry(
+        abstract unsafe HRESULT CreateRectangleGeometry(
             [In] D2D1_RECT_F* rectangle,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object rectangleGeometry
         );
 
-        unsafe abstract HRESULT CreateRoundedRectangleGeometry(
+        abstract unsafe HRESULT CreateRoundedRectangleGeometry(
             [In] D2D1_ROUNDED_RECT* roundedRectangle,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object roundedRectangleGeometry
         );
 
-        unsafe abstract HRESULT CreateEllipseGeometry(
+        abstract unsafe HRESULT CreateEllipseGeometry(
             [In] D2D1_ELLIPSE* ellipse,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object ellipseGeometry
         );
@@ -51,7 +51,7 @@ namespace Win32.D2D1
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object geometryGroup
         );
 
-        unsafe abstract HRESULT CreateTransformedGeometry(
+        abstract unsafe HRESULT CreateTransformedGeometry(
             [In, MarshalAs(UnmanagedType.IUnknown)] ID2D1Geometry sourceGeometry,
             [In] D2D1_MATRIX_3X2_F* transform,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object transformedGeometry
@@ -69,7 +69,7 @@ namespace Win32.D2D1
         /// Allows a non-default stroke style to be specified for a given geometry at draw
         /// time.
         /// </summary>
-        unsafe abstract HRESULT CreateStrokeStyle(
+        abstract unsafe HRESULT CreateStrokeStyle(
             [In] D2D1_STROKE_STYLE_PROPERTIES* strokeStyleProperties,
             FLOAT* dashes,
             UINT32 dashesCount,
@@ -80,7 +80,7 @@ namespace Win32.D2D1
         /// Creates a new drawing state block, this can be used in subsequent
         /// SaveDrawingState and RestoreDrawingState operations on the render target.
         /// </summary>
-        unsafe abstract HRESULT CreateDrawingStateBlock(
+        abstract unsafe HRESULT CreateDrawingStateBlock(
             [In, Optional] D2D1_DRAWING_STATE_DESCRIPTION* drawingStateDescription,
             [In, Optional, MarshalAs(UnmanagedType.IUnknown)] COM.IDWriteRenderingParams textRenderingParams,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object drawingStateBlock
@@ -89,7 +89,7 @@ namespace Win32.D2D1
         /// <summary>
         /// Creates a render target which is a source of bitmaps.
         /// </summary>
-        unsafe abstract HRESULT CreateWicBitmapRenderTarget(
+        abstract unsafe HRESULT CreateWicBitmapRenderTarget(
             [In, MarshalAs(UnmanagedType.IUnknown)] COM.IWICBitmap target,
             [In] D2D1_RENDER_TARGET_PROPERTIES* renderTargetProperties,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object renderTarget
@@ -98,7 +98,7 @@ namespace Win32.D2D1
         /// <summary>
         /// Creates a render target that appears on the display.
         /// </summary>
-        unsafe abstract HRESULT CreateHwndRenderTarget(
+        abstract unsafe HRESULT CreateHwndRenderTarget(
             [In] D2D1_RENDER_TARGET_PROPERTIES* renderTargetProperties,
             [In] D2D1_HWND_RENDER_TARGET_PROPERTIES* hwndRenderTargetProperties,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object hwndRenderTarget
@@ -108,7 +108,7 @@ namespace Win32.D2D1
         /// Creates a render target that draws to a DXGI Surface. The device that owns the
         /// surface is used for rendering.
         /// </summary>
-        unsafe abstract HRESULT CreateDxgiSurfaceRenderTarget(
+        abstract unsafe HRESULT CreateDxgiSurfaceRenderTarget(
             [In, MarshalAs(UnmanagedType.IUnknown)] COM.IDXGISurface dxgiSurface,
             [In] D2D1_RENDER_TARGET_PROPERTIES* renderTargetProperties,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object renderTarget
@@ -117,7 +117,7 @@ namespace Win32.D2D1
         /// <summary>
         /// Creates a render target that draws to a GDI device context.
         /// </summary>
-        unsafe abstract HRESULT CreateDCRenderTarget(
+        abstract unsafe HRESULT CreateDCRenderTarget(
             [In] D2D1_RENDER_TARGET_PROPERTIES* renderTargetProperties,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object dcRenderTarget
         );

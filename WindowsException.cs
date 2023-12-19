@@ -37,21 +37,21 @@
         }
 
         [SupportedOSPlatform("windows")]
-        unsafe public static WindowsException Get()
+        public static unsafe WindowsException Get()
         {
             uint errorCode = Kernel32.GetLastError();
             return WindowsException.Get(errorCode);
         }
 
         [SupportedOSPlatform("windows")]
-        unsafe public static WindowsException Get(uint errorCode)
+        public static unsafe WindowsException Get(uint errorCode)
         {
             string? result = WindowsException.GetMessage(errorCode);
             return new WindowsException(result, errorCode);
         }
 
         [SupportedOSPlatform("windows")]
-        unsafe public static WindowsException Get(IReadOnlyDictionary<uint, string> messages)
+        public static unsafe WindowsException Get(IReadOnlyDictionary<uint, string> messages)
         {
             uint errorCode = Kernel32.GetLastError();
             string? result = WindowsException.GetMessage(errorCode);
@@ -63,7 +63,7 @@
         const int MESSAGE_BUFFER_SIZE = 255;
 
         [SupportedOSPlatform("windows")]
-        unsafe public static string? GetMessage(uint errorCode)
+        public static unsafe string? GetMessage(uint errorCode)
         {
             fixed (char* buffer = new string('\0', MESSAGE_BUFFER_SIZE))
             {

@@ -11,9 +11,9 @@
     [SupportedOSPlatform("windows")]
     public static class TaskDialog
     {
-        unsafe public static int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, TaskDialogIcon icon)
+        public static unsafe int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, TaskDialogIcon icon)
             => Show(windowTitle, mainInstruction, content, buttons, Macros.MAKEINTRESOURCEW(unchecked((WORD)icon)));
-        unsafe public static int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, char* icon)
+        public static unsafe int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, char* icon)
         {
             int nButtonPressed = default;
             HResult result;

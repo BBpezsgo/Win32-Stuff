@@ -8,7 +8,7 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IRunningObjectTable
     {
-        unsafe abstract HRESULT Register(
+        abstract unsafe HRESULT Register(
             [In] DWORD grfFlags,
             [In, MarshalAs(UnmanagedType.IUnknown)] object punkObject,
             [In, MarshalAs(UnmanagedType.IUnknown)] IMoniker pmkObjectName,
@@ -24,11 +24,11 @@ namespace Win32.COM
             [In, MarshalAs(UnmanagedType.IUnknown)] IMoniker pmkObjectName,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object ppunkObject);
 
-        unsafe abstract HRESULT NoteChangeTime(
+        abstract unsafe HRESULT NoteChangeTime(
             [In] DWORD dwRegister,
             [In] FileTime* pfiletime);
 
-        unsafe abstract HRESULT GetTimeOfLastChange(
+        abstract unsafe HRESULT GetTimeOfLastChange(
             [In, MarshalAs(UnmanagedType.IUnknown)] IMoniker pmkObjectName,
             [Out] FileTime* pfiletime);
 

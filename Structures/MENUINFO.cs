@@ -53,6 +53,6 @@ namespace Win32
         public ULONG_PTR MenuData;
 
         MenuInfo(DWORD structSize) : this() => this.StructSize = structSize;
-        unsafe public static MENUINFO Create() => new((DWORD)sizeof(MENUINFO));
+        public static unsafe MENUINFO Create() => new((DWORD)sizeof(MENUINFO));
     }
 }

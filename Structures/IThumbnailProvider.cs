@@ -8,7 +8,7 @@ namespace Win32.COM
     [SupportedOSPlatform("windows")]
     public interface IThumbnailProvider
     {
-        unsafe abstract HRESULT GetThumbnail(
+        abstract unsafe HRESULT GetThumbnail(
             [In] UINT cx,
             [Out] HBITMAP* phbmp,
             [Out] WTS_ALPHATYPE* pdwAlpha);

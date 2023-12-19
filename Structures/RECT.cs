@@ -19,7 +19,9 @@ namespace Win32.Common
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
-    public struct Rect : IEquatable<RECT>
+    public struct Rect :
+        IEquatable<RECT>,
+        System.Numerics.IEqualityOperators<RECT, RECT, bool>
     {
         /// <summary>The x-coordinate of the upper-left corner of the rectangle.</summary>
         LONG left;
@@ -116,8 +118,14 @@ namespace Win32.Common
             bottom = y + height;
         }
 
-        public static implicit operator RECT(System.Drawing.Rectangle rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         public static implicit operator System.Drawing.Rectangle(RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        public static implicit operator System.Drawing.RectangleF(RECT rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+        public static implicit operator RECT(System.Drawing.Rectangle rectangle) => new(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked RECT(System.Drawing.RectangleF rectangle) => new(checked((LONG)rectangle.X), checked((LONG)rectangle.Y), checked((LONG)rectangle.Width), checked((LONG)rectangle.Height));
+        public static explicit operator RECT(System.Drawing.RectangleF rectangle) => new((LONG)rectangle.X, (LONG)rectangle.Y, (LONG)rectangle.Width, (LONG)rectangle.Height);
 
         public static bool operator ==(RECT a, RECT b) => a.Equals(b);
         public static bool operator !=(RECT a, RECT b) => !a.Equals(b);
@@ -131,6 +139,8 @@ namespace Win32.Common
             bottom == other.bottom;
         public override readonly int GetHashCode() => HashCode.Combine(left, top, right, bottom);
 
+        #region Contains()
+
         public readonly bool Contains(POINT point) =>
             point.X >= left &&
             point.Y >= top &&
@@ -143,15 +153,41 @@ namespace Win32.Common
             point.X < right &&
             point.Y < Height;
 
+        public readonly bool Contains(System.Drawing.Point point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
+        public readonly bool Contains(System.Drawing.PointF point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
+        public readonly bool Contains(System.Numerics.Vector2 point) =>
+            point.X >= left &&
+            point.Y >= top &&
+            point.X < right &&
+            point.Y < Height;
+
         public readonly bool Contains(int x, int y) =>
             x >= left &&
             y >= top &&
             x < right &&
             y < Height;
 
+        public readonly bool Contains(float x, float y) =>
+            x >= left &&
+            y >= top &&
+            x < right &&
+            y < Height;
+
+        #endregion
+
         /// <exception cref="GeneralException"/>
         [SupportedOSPlatform("windows")]
-        public unsafe static void SetRect(ref RECT rect, int left, int top, int right, int bottom)
+        public static unsafe void SetRect(ref RECT rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect((RECT*)Unsafe.AsPointer(ref rect), left, top, right, bottom) == 0)
             { throw new GeneralException($"{nameof(User32.SetRect)} has failed"); }
@@ -159,7 +195,7 @@ namespace Win32.Common
 
         /// <exception cref="GeneralException"/>
         [SupportedOSPlatform("windows")]
-        public unsafe static void SetRect(RECT* rect, int left, int top, int right, int bottom)
+        public static unsafe void SetRect(RECT* rect, int left, int top, int right, int bottom)
         {
             if (User32.SetRect(rect, left, top, right, bottom) == 0)
             { throw new GeneralException($"{nameof(User32.SetRect)} has failed"); }

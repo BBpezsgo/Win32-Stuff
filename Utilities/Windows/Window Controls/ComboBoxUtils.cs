@@ -8,7 +8,7 @@
         public static void SetSelectedIndex(HWND handle, int index)
             => User32.SendMessage(handle, ComboBoxControlMessage.SETCURSEL, (WPARAM)index, LPARAM.Zero);
 
-        unsafe public static int AddString(HWND handle, string text)
+        public static unsafe int AddString(HWND handle, string text)
         {
             fixed (char* newElementText = text)
             {
@@ -16,7 +16,7 @@
             }
         }
 
-        unsafe public static string GetString(HWND handle, int index)
+        public static unsafe string GetString(HWND handle, int index)
         {
             int length = User32.SendMessage(handle, ComboBoxControlMessage.GETLBTEXTLEN, (WPARAM)index, (LPARAM)0).ToInt32();
             fixed (char* text = new string(' ', length))

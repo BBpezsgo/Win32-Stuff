@@ -7,9 +7,9 @@ namespace Win32.LowLevel
     {
         public ULONG Length;
         public HANDLE RootDirectory;
-        unsafe public UnicodeString* ObjectName;
+        public unsafe UnicodeString* ObjectName;
         public ULONG Attributes;
-        unsafe public void* SecurityDescriptor; // PSECURITY_DESCRIPTOR;
-        unsafe public void* SecurityQualityOfService; // PSECURITY_QUALITY_OF_SERVICE
+        public unsafe void* SecurityDescriptor; // PSECURITY_DESCRIPTOR;
+        public unsafe void* SecurityQualityOfService; // PSECURITY_QUALITY_OF_SERVICE
     }
 }

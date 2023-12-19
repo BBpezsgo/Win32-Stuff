@@ -18,7 +18,7 @@ namespace Win32.Gdi32
         }
 
         /// <exception cref="GdiException"/>
-        unsafe public static T GetObject<T>(HANDLE handle) where T : unmanaged
+        public static unsafe T GetObject<T>(HANDLE handle) where T : unmanaged
         {
             T obj = default;
             if (Gdi32.GetObject(handle, sizeof(T), &obj) == 0)
@@ -26,10 +26,10 @@ namespace Win32.Gdi32
             return obj;
         }
 
-        unsafe public static bool GetObject<T>(HANDLE handle, ref T obj) where T : unmanaged
+        public static unsafe bool GetObject<T>(HANDLE handle, ref T obj) where T : unmanaged
             => Gdi32.GetObject(handle, sizeof(T), Unsafe.AsPointer(ref obj)) != 0;
 
-        unsafe static int EnumObjectsProc([In] void* lpLogObject, [In] LPARAM lpData)
+        static unsafe int EnumObjectsProc([In] void* lpLogObject, [In] LPARAM lpData)
         {
             GCHandle handle = GCHandle.FromIntPtr(lpData);
 
@@ -56,7 +56,7 @@ namespace Win32.Gdi32
         /// The object type.
         /// This parameter can be <see cref="ObjectType.BRUSH"/> or <see cref="ObjectType.PEN"/>.
         /// </param>
-        unsafe public static void*[] GetObjects(HDC dc, ObjectType type)
+        public static unsafe void*[] GetObjects(HDC dc, ObjectType type)
         {
             List<IntPtr> list = new();
             GCHandle handle = GCHandle.Alloc(list, GCHandleType.Weak);

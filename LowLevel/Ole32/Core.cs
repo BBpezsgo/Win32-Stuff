@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.COM.LowLevel
 {
     [SupportedOSPlatform("windows")]
@@ -11,13 +9,13 @@ namespace Win32.COM.LowLevel
         public static extern void CoUninitialize();
 
         [DllImport("Ole32.dll", SetLastError = true)]
-        unsafe public static extern HRESULT CoInitializeEx(
+        public static extern unsafe HRESULT CoInitializeEx(
           [In, Optional] void* pvReserved,
           [In] COMInit dwCoInit
         );
 
         [DllImport("Ole32.dll", SetLastError = true)]
-        unsafe public static extern HRESULT CoCreateInstance(
+        public static extern unsafe HRESULT CoCreateInstance(
           [In] REFCLSID rclsid,
           [In, Optional] void** pUnkOuter,
           [In] DWORD dwClsContext,
@@ -26,7 +24,7 @@ namespace Win32.COM.LowLevel
         );
 
         [DllImport("Ole32.dll", SetLastError = true)]
-        unsafe public static extern HRESULT CoCreateInstance(
+        public static extern unsafe HRESULT CoCreateInstance(
           [In] REFCLSID rclsid,
           [In, Optional, MarshalAs(UnmanagedType.IUnknown)] in object? pUnkOuter,
           [In] DWORD dwClsContext,
@@ -34,7 +32,7 @@ namespace Win32.COM.LowLevel
           [Out, MarshalAs(UnmanagedType.Interface)] out object? ppv
         );
 
-        unsafe public static HRESULT CoCreateInstance<T>(
+        public static unsafe HRESULT CoCreateInstance<T>(
           REFCLSID rclsid,
           in object? pUnkOuter,
           DWORD dwClsContext,

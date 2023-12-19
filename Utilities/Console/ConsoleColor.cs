@@ -2,7 +2,7 @@
 
 namespace Win32
 {
-    public struct ConsoleColor
+    public struct CharColor
     {
         public const byte Red = 0b_0100;
         public const byte Green = 0b_0010;

@@ -28,7 +28,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void CreateStreamFromKey(
+        abstract unsafe void CreateStreamFromKey(
             void* fontFileReferenceKey,
             UINT32 fontFileReferenceKeySize,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out IDWriteFontFileStream fontFileStream

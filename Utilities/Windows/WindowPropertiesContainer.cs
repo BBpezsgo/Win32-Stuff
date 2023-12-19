@@ -12,7 +12,7 @@ namespace Win32
         public WindowPropertiesContainer(HWND handle) => _handle = handle;
 
         /// <exception cref="WindowsException"/>
-        unsafe public HANDLE this[string property]
+        public unsafe HANDLE this[string property]
         {
             get
             {
@@ -31,7 +31,7 @@ namespace Win32
             }
         }
 
-        unsafe public bool Remove(string property)
+        public unsafe bool Remove(string property)
         {
             HANDLE result;
             fixed (WCHAR* propertyPtr = property)
@@ -39,7 +39,7 @@ namespace Win32
             return result != HANDLE.Zero;
         }
 
-        unsafe static BOOL ToDictionaryProc(HWND hwnd, WCHAR* propName, HANDLE propVal, ULONG_PTR lParam)
+        static unsafe BOOL ToDictionaryProc(HWND hwnd, WCHAR* propName, HANDLE propVal, ULONG_PTR lParam)
         {
             GCHandle handle = GCHandle.FromIntPtr((nint)lParam);
             if (!handle.IsAllocated)
@@ -54,7 +54,7 @@ namespace Win32
             return TRUE;
         }
 
-        unsafe public Dictionary<string, HANDLE> ToDictionary()
+        public unsafe Dictionary<string, HANDLE> ToDictionary()
         {
             Dictionary<string, HANDLE> result = new();
             GCHandle handle = GCHandle.Alloc(result, GCHandleType.Weak);
@@ -63,7 +63,7 @@ namespace Win32
             return result;
         }
 
-        unsafe public bool TryGetValue(string property, out HANDLE value)
+        public unsafe bool TryGetValue(string property, out HANDLE value)
         {
             HANDLE result;
             fixed (WCHAR* propertyPtr = property)

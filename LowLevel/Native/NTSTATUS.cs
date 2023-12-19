@@ -2,7 +2,7 @@
 
 namespace Win32.LowLevel
 {
-    public struct NtStatuses
+    public static class NtStatuses
     {
         public const NTSTATUS Success = 0;
     }

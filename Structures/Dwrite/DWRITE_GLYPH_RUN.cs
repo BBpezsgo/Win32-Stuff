@@ -28,17 +28,17 @@ namespace Win32.DWrite
         /// <summary>
         /// The indices to render.
         /// </summary>    
-        unsafe public UINT16* glyphIndices;
+        public unsafe UINT16* glyphIndices;
 
         /// <summary>
         /// Glyph advance widths.
         /// </summary>
-        unsafe public FLOAT* glyphAdvances;
+        public unsafe FLOAT* glyphAdvances;
 
         /// <summary>
         /// Glyph offsets.
         /// </summary>
-        unsafe public DWRITE_GLYPH_OFFSET* glyphOffsets;
+        public unsafe DWRITE_GLYPH_OFFSET* glyphOffsets;
 
         /// <summary>
         /// If true, specifies that glyphs are rotated 90 degrees to the left and

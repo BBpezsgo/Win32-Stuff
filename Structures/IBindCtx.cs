@@ -20,11 +20,11 @@ namespace Win32.COM
 
         abstract HRESULT ReleaseBoundObjects();
 
-        unsafe abstract HRESULT SetBindOptions(
+        abstract unsafe HRESULT SetBindOptions(
             [In] BindOptions* pbindopts
         );
 
-        unsafe abstract HRESULT GetBindOptions(
+        abstract unsafe HRESULT GetBindOptions(
             [In, Out] BindOptions* pbindopts
         );
 
@@ -32,12 +32,12 @@ namespace Win32.COM
             [Out, MarshalAs(UnmanagedType.IUnknown)] out IRunningObjectTable pprot
         );
 
-        unsafe abstract HRESULT RegisterObjectParam(
+        abstract unsafe HRESULT RegisterObjectParam(
             [In] OLECHAR* pszKey,
             [In, MarshalAs(UnmanagedType.IUnknown)] object punk
         );
 
-        unsafe abstract HRESULT GetObjectParam(
+        abstract unsafe HRESULT GetObjectParam(
             [In] OLECHAR* pszKey,
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object? ppunk
         );
@@ -46,7 +46,7 @@ namespace Win32.COM
             [Out, MarshalAs(UnmanagedType.IUnknown)] out object ppenum // IEnumString
         );
 
-        unsafe abstract HRESULT RevokeObjectParam(
+        abstract unsafe HRESULT RevokeObjectParam(
             [In] OLECHAR* pszKey
         );
     }

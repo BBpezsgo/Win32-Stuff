@@ -43,7 +43,7 @@ namespace Win32
         const int MESSAGE_BUFFER_SIZE = 255;
 
         [SupportedOSPlatform("windows")]
-        unsafe public string? Message
+        public unsafe string? Message
         {
             get
             {

@@ -1,14 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.LowLevel
 {
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int GetMouseMovePointsEx(
+        public static extern unsafe int GetMouseMovePointsEx(
           [In] UINT cbSize,
           [In] MouseMovePoint* lppt,
           [Out] MouseMovePoint* lpptBuf,
@@ -37,14 +35,14 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern UINT SendInput(
+        public static extern unsafe UINT SendInput(
           [In] UINT cInputs,
           [In] InputInfo* pInputs,
           [In] int cbSize
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int ToUnicode(
+        public static extern unsafe int ToUnicode(
           [In] UINT wVirtKey,
           [In] UINT wScanCode,
           [In, Optional] BYTE* lpKeyState,
@@ -60,7 +58,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetKeyboardState(
+        public static extern unsafe BOOL GetKeyboardState(
           [Out] BYTE* lpKeyState
         );
 
@@ -75,7 +73,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SetRect(
+        public static extern unsafe BOOL SetRect(
           [Out] RECT* lprc,
           [In] int xLeft,
           [In] int yTop,
@@ -84,7 +82,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int DrawTextW(
+        public static extern unsafe int DrawTextW(
           [In] HDC hdc,
           [In, Out] WCHAR* lpchText,
           [In] int cchText,
@@ -92,7 +90,7 @@ namespace Win32.LowLevel
           [In] UINT format
         );
 
-        unsafe public static int DrawTextW(
+        public static unsafe int DrawTextW(
            HDC hdc,
            string lpchText,
            int cchText,
@@ -182,7 +180,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int TranslateAcceleratorW(
+        public static extern unsafe int TranslateAcceleratorW(
           [In] HWND hWnd,
           [In] HACCEL hAccTable,
           [In] MSG* lpMsg
@@ -210,7 +208,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HACCEL LoadAcceleratorsW(
+        public static extern unsafe HACCEL LoadAcceleratorsW(
           [In, Optional] HINSTANCE hInstance,
           [In] WCHAR* lpTableName
         );
@@ -234,7 +232,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HANDLE LoadImageW(
+        public static extern unsafe HANDLE LoadImageW(
           [In, Optional] HINSTANCE hInst,
           [In] WCHAR* name,
           [In] UINT type,
@@ -287,7 +285,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL UnregisterClassW(
+        public static extern unsafe BOOL UnregisterClassW(
           [In] WCHAR* lpClassName,
           [In, Optional] HINSTANCE hInstance
         );
@@ -330,7 +328,7 @@ namespace Win32.LowLevel
         /// <see cref="RegisterClassExW"/> function, not the <see cref="GlobalAddAtom"/> function.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetClassInfoExW(
+        public static extern unsafe BOOL GetClassInfoExW(
           [In, Optional] HINSTANCE hInstance,
           [In] WCHAR* lpszClass,
           [Out] WNDCLASSEXW* lpwcx
@@ -363,40 +361,40 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int GetClassNameW(
+        public static extern unsafe int GetClassNameW(
           [In] HWND hWnd,
           [Out] WCHAR* lpClassName,
           [In] int nMaxCount
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SetPropW(
+        public static extern unsafe BOOL SetPropW(
           [In] HWND hWnd,
           [In] WCHAR* lpString,
           [In, Optional] HANDLE hData
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HANDLE RemovePropW(
+        public static extern unsafe HANDLE RemovePropW(
           [In] HWND hWnd,
           [In] WCHAR* lpString
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HANDLE GetPropW(
+        public static extern unsafe HANDLE GetPropW(
           [In] HWND hWnd,
           [In] WCHAR* lpString
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int EnumPropsExW(
+        public static extern unsafe int EnumPropsExW(
           [In] HWND hWnd,
           [In] delegate*<HWND, WCHAR*, HANDLE, ULONG_PTR, BOOL> lpEnumFunc,
           [In] LPARAM lParam
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int EnumPropsW(
+        public static extern unsafe int EnumPropsW(
           [In] HWND hWnd,
           [In] delegate*<HWND, WCHAR*, HANDLE, BOOL> lpEnumFunc
         );
@@ -497,7 +495,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern UINT_PTR SetTimer(
+        public static extern unsafe UINT_PTR SetTimer(
           [In, Optional] HWND hWnd,
           [In] UINT_PTR nIDEvent,
           [In] UINT uElapse,
@@ -559,7 +557,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int FillRect(
+        public static extern unsafe int FillRect(
           [In] HDC hDC,
           [In] RECT* lprc,
           [In] HBRUSH hbr
@@ -609,7 +607,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HANDLE BeginUpdateResourceW(
+        public static extern unsafe HANDLE BeginUpdateResourceW(
           [In] WCHAR* pFileName,
           [In] BOOL bDeleteExistingResources
         );
@@ -701,7 +699,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SystemParametersInfoW(
+        public static extern unsafe BOOL SystemParametersInfoW(
           [In] UINT uiAction,
           [In] UINT uiParam,
           [In, Out] void* pvParam,
@@ -771,7 +769,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetCursorInfo(
+        public static extern unsafe BOOL GetCursorInfo(
           [In, Out] CURSORINFO* pci
         );
 
@@ -869,7 +867,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetGUIThreadInfo(
+        public static extern unsafe BOOL GetGUIThreadInfo(
           [In] DWORD idThread,
           [In, Out] GUITHREADINFO* pgui
         );
@@ -906,14 +904,14 @@ namespace Win32.LowLevel
         /// </param>
         /// <returns></returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern MessageBoxResult MessageBox(
+        public static extern unsafe MessageBoxResult MessageBox(
           [In, Optional] HWND hWnd,
           [In, Optional] char* lpText,
           [In, Optional] char* lpCaption,
           [In] UINT uType
         );
 
-        unsafe public static MessageBoxResult MessageBox(
+        public static unsafe MessageBoxResult MessageBox(
            HWND hWnd,
            string lbText,
            string lpCaption,
@@ -942,20 +940,20 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL InvalidateRect(
+        public static extern unsafe BOOL InvalidateRect(
           [In] HWND hWnd,
           [In] RECT* lpRect,
           [In] BOOL bErase
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern LRESULT DispatchMessageW(
+        public static extern unsafe LRESULT DispatchMessageW(
             [In] MSG* lpMsg
         );
 
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetMessageW(
+        public static extern unsafe BOOL GetMessageW(
               [Out] MSG* lpMsg,
               [In, Optional] HWND hWnd,
               [In] UINT wMsgFilterMin,
@@ -963,7 +961,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL PeekMessageW(
+        public static extern unsafe BOOL PeekMessageW(
               [Out] MSG* lpMsg,
               [In, Optional] HWND hWnd,
               [In] uint wMsgFilterMin,
@@ -972,18 +970,18 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL TranslateMessage(
+        public static extern unsafe BOOL TranslateMessage(
           [In] MSG* lpMsg
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL EndPaint(
+        public static extern unsafe BOOL EndPaint(
               [In] HWND hWnd,
               [In] Win32.Gdi32.PaintStruct* lpPaint
         );
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern HDC BeginPaint(
+        public static extern unsafe HDC BeginPaint(
               [In] HWND hWnd,
               [Out] Win32.Gdi32.PaintStruct* lpPaint
         );
@@ -1025,7 +1023,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern ATOM RegisterClassExW(
+        public static extern unsafe ATOM RegisterClassExW(
             [In] WNDCLASSEXW* unnamedParam1);
     }
 }

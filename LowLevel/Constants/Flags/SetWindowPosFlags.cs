@@ -1,5 +1,6 @@
 ﻿namespace Win32.LowLevel
 {
+    [Flags]
     public enum SetWindowPosFlags : UINT
     {
         /// <summary>

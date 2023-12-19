@@ -3,7 +3,7 @@
 namespace Win32.Gdi32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    unsafe public struct DevMode
+    public struct DevMode
     {
         const int CCHDEVICENAME = 32;
         const int CCHFORMNAME = 32;

@@ -7,7 +7,7 @@ namespace Win32
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct CreateStruct
     {
-        unsafe public void* CreateParams;
+        public unsafe void* CreateParams;
         public HINSTANCE InstanceHandle;
         public HMENU MenuHandle;
         public HWND ParentHandle;
@@ -16,8 +16,8 @@ namespace Win32
         public int PositionY;
         public int PositionX;
         public LONG Style;
-        unsafe public char* Name;
-        unsafe public char* Class;
+        public unsafe char* Name;
+        public unsafe char* Class;
         public DWORD StyleEx;
     }
 }

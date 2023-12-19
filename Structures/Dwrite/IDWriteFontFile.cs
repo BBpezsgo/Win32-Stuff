@@ -20,7 +20,7 @@ namespace Win32.DWrite
         /// <returns>
         /// Standard HRESULT error code.
         /// </returns>
-        unsafe abstract void GetReferenceKey(
+        abstract unsafe void GetReferenceKey(
             void** fontFileReferenceKey,
             [Out] UINT32* fontFileReferenceKeySize
         );
@@ -55,7 +55,7 @@ namespace Win32.DWrite
         /// but will not be able to construct a font face object from it. In such situations, Analyze will set
         /// isSupportedFontType output parameter to FALSE.
         /// </remarks>
-        unsafe abstract void Analyze(
+        abstract unsafe void Analyze(
             [Out] BOOL* isSupportedFontType,
             [Out] DWRITE_FONT_FILE_TYPE* fontFileType,
             [Out, Optional] DWRITE_FONT_FACE_TYPE* fontFaceType,

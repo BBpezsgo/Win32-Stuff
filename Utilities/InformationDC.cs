@@ -36,7 +36,7 @@
         /// </param>
         /// <returns></returns>
         /// <exception cref="GdiException"/>
-        unsafe public static InformationDC Create(string driver, string device, DevMode deviceMode)
+        public static unsafe InformationDC Create(string driver, string device, DevMode deviceMode)
         {
             fixed (WCHAR* driverPtr = driver)
             fixed (WCHAR* devicePtr = device)

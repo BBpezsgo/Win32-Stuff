@@ -11,6 +11,6 @@ namespace Win32.Gdi32
         public LONG WidthBytes;
         public WORD Planes;
         public WORD BitsPixel;
-        unsafe public void* Bits;
+        public unsafe void* Bits;
     }
 }

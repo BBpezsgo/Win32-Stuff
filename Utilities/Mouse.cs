@@ -62,7 +62,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [SupportedOSPlatform("windows")]
-        unsafe public static Span<MouseMovePoint> GetMovePoints(MouseMovePoint lppt, int count, bool highResolution = false)
+        public static unsafe Span<MouseMovePoint> GetMovePoints(MouseMovePoint lppt, int count, bool highResolution = false)
         {
             MouseMovePoint[] buffer = new MouseMovePoint[count];
 

@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
 namespace Win32.LowLevel
 {
     [SupportedOSPlatform("windows")]
@@ -16,7 +14,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL UpdateLayeredWindow(
+        public static extern unsafe BOOL UpdateLayeredWindow(
           [In] HWND hWnd,
           [In, Optional] HDC hdcDst,
           [In, Optional] POINT* pptDst,
@@ -29,7 +27,7 @@ namespace Win32.LowLevel
         );
 
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern UINT RealGetWindowClassW(
+        public static extern unsafe UINT RealGetWindowClassW(
           [In] HWND hwnd,
           [Out] WCHAR* ptszClassName,
           [In] UINT cchClassNameMax
@@ -125,7 +123,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HWND FindWindowExA(
+        public static extern unsafe HWND FindWindowExA(
           [In, Optional] HWND hWndParent,
           [In, Optional] HWND hWndChildAfter,
           [In, Optional] WCHAR* lpszClass,
@@ -181,7 +179,7 @@ namespace Win32.LowLevel
         /// see the Remarks for <see cref="GetWindowTextW"/>.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern HWND FindWindowW(
+        public static extern unsafe HWND FindWindowW(
           [In, Optional] WCHAR* lpClassName,
           [In, Optional] WCHAR* lpWindowName
         );
@@ -208,7 +206,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetWindowInfo(
+        public static extern unsafe BOOL GetWindowInfo(
           [In] HWND hwnd,
           [In, Out] WindowInfo* pwi
         );
@@ -358,7 +356,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL ScreenToClient(
+        public static extern unsafe BOOL ScreenToClient(
           [In] HWND hWnd,
                POINT* lpPoint
         );
@@ -396,7 +394,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL ClientToScreen(
+        public static extern unsafe BOOL ClientToScreen(
           [In] HWND hWnd,
           [In, Out] POINT* lpPoint
         );
@@ -744,7 +742,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern UINT GetWindowModuleFileNameW(
+        public static extern unsafe UINT GetWindowModuleFileNameW(
           [In] HWND hwnd,
           [Out] WCHAR* pszFileName,
           [In] UINT cchFileNameMax
@@ -771,7 +769,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetWindowRect(
+        public static extern unsafe BOOL GetWindowRect(
           [In] HWND hWnd,
           [Out] RECT* lpRect
         );
@@ -939,7 +937,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL SetWindowTextW(
+        public static extern unsafe BOOL SetWindowTextW(
           [In] HWND hWnd,
           [In, Optional] WCHAR* lpString
         );
@@ -1002,7 +1000,7 @@ namespace Win32.LowLevel
         /// Calling <c>TileWindows</c> causes all maximized windows to be restored to their previous size.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern WORD TileWindows(
+        public static extern unsafe WORD TileWindows(
           [In, Optional] HWND hwndParent,
           [In] UINT wHow,
           [In, Optional] RECT* lpRect,
@@ -1081,7 +1079,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern int GetWindowTextW(
+        public static extern unsafe int GetWindowTextW(
           [In] HWND hWnd,
           [Out] WCHAR* lpString,
           [In] int nMaxCount
@@ -1209,7 +1207,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL GetTitleBarInfo(
+        public static extern unsafe BOOL GetTitleBarInfo(
           [In] HWND hwnd,
           [In, Out] TITLEBARINFO* pti
         );
@@ -1293,7 +1291,7 @@ namespace Win32.LowLevel
         /// <see cref="TrackPopupMenuFlags.WORKAREA"/> is supported for the <see cref="TrackPopupMenu"/> and <see cref="TrackPopupMenuEx"/> functions.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
-        unsafe public static extern BOOL CalculatePopupWindowPosition(
+        public static extern unsafe BOOL CalculatePopupWindowPosition(
           [In] POINT* anchorPoint,
           [In] SIZE* windowSize,
           [In] UINT flags,
@@ -1462,7 +1460,7 @@ namespace Win32.LowLevel
         /// information, call <see cref="Kernel32.GetLastError"/>.
         /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern DWORD GetWindowThreadProcessId(
+        public static extern unsafe DWORD GetWindowThreadProcessId(
           [In] HWND hWnd,
           [Out, Optional] DWORD* lpdwProcessId
         );
@@ -1594,7 +1592,7 @@ namespace Win32.LowLevel
         /// the return value is <c>FALSE</c>.
         /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL EnumThreadWindows(
+        public static extern unsafe BOOL EnumThreadWindows(
           [In] DWORD dwThreadId,
           [In] delegate*<HWND, LPARAM, BOOL> lpfn,
           [In] LPARAM lParam
@@ -1645,7 +1643,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL EnumWindows(
+        public static extern unsafe BOOL EnumWindows(
           [In] delegate*<HWND, LPARAM, BOOL> lpEnumFunc,
           [In] LPARAM lParam
         );
@@ -1769,7 +1767,7 @@ namespace Win32.LowLevel
         /// lies immediately outside the rectangle.
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL GetClientRect(
+        public static extern unsafe BOOL GetClientRect(
           [In] HWND hWnd,
           [Out] RECT* lpRect
         );
@@ -1857,7 +1855,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern BOOL EnumChildWindows(
+        public static extern unsafe BOOL EnumChildWindows(
           [In, Optional] HWND hWndParent,
           [In] delegate*<HWND, LPARAM, BOOL> lpEnumFunc,
           [In] LPARAM lParam
@@ -2145,7 +2143,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        unsafe public static extern HWND CreateWindowExW(
+        public static extern unsafe HWND CreateWindowExW(
           [In] DWORD dwExStyle,
           [In, Optional] char* lpClassName,
           [In, Optional] char* lpWindowName,

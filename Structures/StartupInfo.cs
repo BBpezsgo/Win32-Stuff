@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    unsafe public struct StartupInfo
+    public struct StartupInfo
     {
         public DWORD StructSize;
 
-        readonly WCHAR* Reserved;
+        readonly unsafe WCHAR* Reserved;
 
-        public WCHAR* Desktop;
-        public WCHAR* Title;
+        public unsafe WCHAR* Desktop;
+        public unsafe WCHAR* Title;
         public DWORD dwX;
         public DWORD dwY;
         public DWORD dwXSize;
@@ -24,7 +24,7 @@ namespace Win32
         public WORD ShowWindow;
 
         readonly WORD Reserved2;
-        readonly BYTE* Reserved3;
+        readonly unsafe BYTE* Reserved3;
 
         public HANDLE StdInput;
         public HANDLE StdOutput;
