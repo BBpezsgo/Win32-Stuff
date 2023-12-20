@@ -18,4 +18,13 @@
     <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Debug\**" />
+    <Compile Remove="x64\**" />
+    <EmbeddedResource Remove="Debug\**" />
+    <EmbeddedResource Remove="x64\**" />
+    <None Remove="Debug\**" />
+    <None Remove="x64\**" />
+  </ItemGroup>
+
 </Project>

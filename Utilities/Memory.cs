@@ -61,28 +61,31 @@ namespace Win32
     public static class VirtualMemory
     {
         /// <exception cref="WindowsException"/>
-        public static unsafe void* Alloc(uint size, DWORD protect = MemoryProtectionFlags.ReadWrite, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
+        /// <exception cref="OverflowException"/>
+        public static unsafe void* Alloc(int size, DWORD protect = MemoryProtectionFlags.ReadWrite, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
         {
-            void* address = Kernel32.VirtualAlloc(null, size, allocationType, protect);
+            void* address = Kernel32.VirtualAlloc(null, checked((uint)size), allocationType, protect);
             if (address == null)
             { throw WindowsException.Get(); }
             return address;
         }
 
         /// <exception cref="WindowsException"/>
+        /// <exception cref="OverflowException"/>
         public static unsafe T* Alloc<T>(DWORD protect = MemoryProtectionFlags.ReadWrite, DWORD allocationType = MEM.MEM_COMMIT | MEM.MEM_RESERVE)
             where T : unmanaged
         {
-            void* address = Kernel32.VirtualAlloc(null, (uint)sizeof(T), allocationType, protect);
+            void* address = Kernel32.VirtualAlloc(null, checked((uint)sizeof(T)), allocationType, protect);
             if (address == null)
             { throw WindowsException.Get(); }
             return (T*)address;
         }
 
         /// <exception cref="WindowsException"/>
-        public static unsafe void Free(void* address, uint size, DWORD freeType)
+        /// <exception cref="OverflowException"/>
+        public static unsafe void Free(void* address, int size, DWORD freeType)
         {
-            if (Kernel32.VirtualFree(address, size, freeType) == 0)
+            if (Kernel32.VirtualFree(address, checked((uint)size), freeType) == 0)
             { throw WindowsException.Get(); }
         }
 
@@ -94,10 +97,11 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        public static unsafe DWORD Protect(void* address, uint size, DWORD protect)
+        /// <exception cref="OverflowException"/>
+        public static unsafe DWORD Protect(void* address, int size, DWORD protect)
         {
             DWORD oldProtect = default;
-            if (Kernel32.VirtualProtect(address, size, protect, &oldProtect) == 0)
+            if (Kernel32.VirtualProtect(address, checked((uint)size), protect, &oldProtect) == 0)
             { throw WindowsException.Get(); }
             return oldProtect;
         }
@@ -119,9 +123,10 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        public static GlobalObject Alloc(UINT size, UINT flags)
+        /// <exception cref="OverflowException"/>
+        public static GlobalObject Alloc(int size, UINT flags)
         {
-            HGLOBAL handle = Kernel32.GlobalAlloc(flags, size);
+            HGLOBAL handle = Kernel32.GlobalAlloc(flags, checked((uint)size));
             if (handle == HGLOBAL.Zero)
             { throw WindowsException.Get(); }
             return new GlobalObject(handle);

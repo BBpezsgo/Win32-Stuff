@@ -91,7 +91,7 @@ namespace Win32.Gdi32
             // Starting with 32-bit Windows, GlobalAlloc and LocalAlloc are implemented as wrapper functions that 
             // call HeapAlloc using a handle to the process's default heap. Therefore, GlobalAlloc and LocalAlloc 
             // have greater overhead than HeapAlloc.
-            GlobalObject hDIB = GlobalMemory.Alloc((uint)dwBmpSize, GMEM.GHND);
+            GlobalObject hDIB = GlobalMemory.Alloc(dwBmpSize, GMEM.GHND);
             void* lpbitmap = hDIB.Lock();
 
             // Gets the "bits" from the bitmap, and copies them into a buffer 

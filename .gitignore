@@ -1,6 +1,8 @@
 ﻿.vs
 /bin
 /obj
+/Debug
+/x64
 /Win32.sln
 *.user
 *.h
