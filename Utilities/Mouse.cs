@@ -14,7 +14,7 @@ namespace Win32
                 HWND handle = User32.GetCapture();
                 if (handle == HWND.Zero)
                 { return null; }
-                return new Window(handle);
+                return (Window)handle;
             }
             set
             {

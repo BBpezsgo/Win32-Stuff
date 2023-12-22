@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Window Styles
     public static partial class WindowStyles
     {
         public const uint OVERLAPPED = 0x00000000;

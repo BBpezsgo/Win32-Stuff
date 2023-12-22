@@ -2,10 +2,15 @@
 
 namespace Win32.LowLevel
 {
+    /// <summary>
+    /// The <see cref="ObjectAttributes"/> structure specifies attributes that can be
+    /// applied to objects or object handles by routines that create
+    /// objects and/or return handles to objects.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ObjectAttributes
     {
-        public ULONG Length;
+        public ULONG StructSize;
         public HANDLE RootDirectory;
         public unsafe UnicodeString* ObjectName;
         public ULONG Attributes;

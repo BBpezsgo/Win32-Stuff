@@ -21,6 +21,7 @@ namespace Win32.Gdi32
         public static implicit operator HDC(PaintHandle paintHandle) => paintHandle.dc;
         public static implicit operator DisplayDC(PaintHandle paintHandle) => paintHandle.dc;
 
+        /// <inheritdoc/>
         public override string ToString() => dc.ToString();
 
         public static unsafe PaintHandle Begin(HWND window, out PaintStruct paint)

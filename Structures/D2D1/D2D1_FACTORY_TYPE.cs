@@ -20,6 +20,5 @@
         /// from multiple threads.
         /// </summary>
         MULTI_THREADED = 1,
-        FORCE_DWORD = 0xffffffff,
     }
 }

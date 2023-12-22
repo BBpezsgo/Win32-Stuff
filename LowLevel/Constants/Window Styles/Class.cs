@@ -1,8 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    /// <summary>
-    /// Class styles
-    /// </summary>
     public static class ClassStyles
     {
         public const uint VREDRAW = 0x0001;

@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Edit Control Messages
     public static class EditControlMessage
     {
         public const ushort GETSEL = 0x00B0;

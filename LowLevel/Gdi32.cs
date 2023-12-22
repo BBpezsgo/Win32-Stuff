@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace Win32.Gdi32.LowLevel
 {
+    /// <summary>
+    /// Windows GDI
+    /// </summary>
     [SupportedOSPlatform("windows")]
     public static class Gdi32
     {

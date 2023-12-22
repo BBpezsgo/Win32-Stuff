@@ -20,6 +20,5 @@
         /// The D3D device level is DX10 compatible.
         /// </summary>
         _10 = D3D_FEATURE_LEVEL._10_0,
-        FORCE_DWORD = 0xffffffff
     }
 }

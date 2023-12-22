@@ -38,18 +38,29 @@ namespace Win32
             Y = checked((SHORT)y);
         }
 
+        /// <inheritdoc/>
         public static bool operator ==(COORD a, COORD b) => a.Equals(b);
+        /// <inheritdoc/>
         public static bool operator !=(COORD a, COORD b) => !a.Equals(b);
 
+        /// <inheritdoc/>
         public static COORD operator +(COORD a, COORD b) => new((SHORT)(a.X + b.X), (SHORT)(a.Y + b.Y));
+        /// <inheritdoc/>
         public static COORD operator -(COORD a, COORD b) => new((SHORT)(a.X - b.X), (SHORT)(a.Y - b.Y));
+        /// <inheritdoc/>
         public static COORD operator *(COORD a, COORD b) => new((SHORT)(a.X * b.X), (SHORT)(a.Y * b.Y));
+        /// <inheritdoc/>
         public static COORD operator *(COORD a, int b) => new((SHORT)(a.X * b), (SHORT)(a.Y * b));
+        /// <inheritdoc/>
         public static COORD operator /(COORD a, int b) => new((SHORT)(a.X / b), (SHORT)(a.Y / b));
 
+        /// <inheritdoc/>
         public override readonly string ToString() => $"({X}, {Y})";
+        /// <inheritdoc/>
         public override readonly bool Equals(object? obj) => obj is COORD coord && Equals(coord);
+        /// <inheritdoc/>
         public readonly bool Equals(COORD other) => X == other.X && Y == other.Y;
+        /// <inheritdoc/>
         public override readonly int GetHashCode() => HashCode.Combine(X, Y);
 
         public static implicit operator ValueTuple<SHORT, SHORT>(COORD size)

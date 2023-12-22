@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Win32
+﻿namespace Win32
 {
+#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
     [Flags]
-    [SuppressMessage("Usage", "CA2217:Do not mark enums with FlagsAttribute", Justification = "<Pending>")]
     public enum ProcessAccessRights : DWORD
     {
         /// <summary>

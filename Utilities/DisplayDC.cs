@@ -41,7 +41,7 @@
             HWND window = User32.WindowFromDC(Handle);
             if (window == HWND.Zero)
             { return null; }
-            return new Window(window);
+            return (Window)window;
         }
     }
 }

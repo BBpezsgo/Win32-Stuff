@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32.Common
 {
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
     /// <summary>
     /// defines the coordinates of the upper-left and lower-right corners of a rectangle.
     /// </summary>

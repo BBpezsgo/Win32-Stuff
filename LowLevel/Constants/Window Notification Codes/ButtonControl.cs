@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // User Button Notification Codes
     public static class ButtonControlNotifications
     {
         public const ushort CLICKED = 0;

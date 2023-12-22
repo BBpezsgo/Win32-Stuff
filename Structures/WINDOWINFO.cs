@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Win32
 {
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct WindowInfo
     {

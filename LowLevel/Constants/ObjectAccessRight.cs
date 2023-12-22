@@ -11,7 +11,7 @@
         /// Required to read information in the security descriptor for
         /// the object, not including the information in the SACL.
         /// To read or write the SACL, you must request the
-        /// <see cref="ACCESS_SYSTEM_SECURITY"/> access right.
+        /// <c>ACCESS_SYSTEM_SECURITY</c> access right.
         /// For more information, see SACL Access Right.
         /// </summary>
         READ_CONTROL = 0x00020000,

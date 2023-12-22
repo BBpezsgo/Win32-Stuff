@@ -1,8 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    /// <summary>
-    /// Combo box styles
-    /// </summary>
     public static class ComboBoxControlStyles
     {
         public const DWORD SIMPLE = 0x0001;

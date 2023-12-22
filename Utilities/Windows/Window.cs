@@ -21,9 +21,9 @@ namespace Win32
             protected set => _handle = value;
         }
 
-        public Window() => _handle = HWND.Zero;
+        protected Window() => _handle = HWND.Zero;
 
-        public Window(HWND handle) => _handle = handle;
+        protected Window(HWND handle) => _handle = handle;
 
         public unsafe Window(
             string @class,
@@ -646,18 +646,24 @@ namespace Win32
         public static bool operator !=(Window? window, HWND handle) => !(window == handle);
         public static bool operator ==(HWND handle, Window? window) => window == handle;
         public static bool operator !=(HWND handle, Window? window) => !(window == handle);
+        /// <inheritdoc cref="System.Numerics.IEqualityOperators{TSelf, TOther, TResult}.op_Equality"/>
         public static bool operator ==(Window? a, Window? b)
         {
             if (a is null && b is null) return true;
             if (a is null || b is null) return false;
             return a.Equals(b);
         }
+        /// <inheritdoc cref="System.Numerics.IEqualityOperators{TSelf, TOther, TResult}.op_Inequality"/>
         public static bool operator !=(Window? a, Window? b) => !(a == b);
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is Window other && this.Equals(other);
+        /// <inheritdoc/>
         public bool Equals(Window? other) => other is not null && _handle == other._handle;
+        /// <inheritdoc/>
         public bool Equals(HWND other) => _handle == other;
 
+        /// <inheritdoc/>
         public override int GetHashCode() => _handle.GetHashCode();
 
         /// <exception cref="WindowsException"/>
@@ -692,7 +698,7 @@ namespace Win32
             fixed (WCHAR* classNamePtr = className)
             fixed (WCHAR* windowNamePtr = windowName)
             {
-                HWND window = User32.FindWindowExA(_handle, HWND.Zero, classNamePtr, windowNamePtr);
+                HWND window = User32.FindWindowExW(_handle, HWND.Zero, classNamePtr, windowNamePtr);
                 if (window == HWND.Zero)
                 { return null; }
                 return new Window(window);
@@ -744,7 +750,7 @@ namespace Win32
             handle.Free();
         }
 
-        /// <exception cref="GdiException"/>
+        /// <exception cref="Gdi32.GdiException"/>
         public Gdi32.DisplayDC GetDC()
         {
             HDC dc = User32.GetWindowDC(_handle);
@@ -753,7 +759,7 @@ namespace Win32
             return new Gdi32.DisplayDC(dc, _handle);
         }
 
-        /// <exception cref="GdiException"/>
+        /// <exception cref="Gdi32.GdiException"/>
         public Gdi32.DisplayDC GetClientDC()
         {
             HDC dc = User32.GetDC(_handle);
@@ -762,7 +768,7 @@ namespace Win32
             return new Gdi32.DisplayDC(dc, _handle);
         }
 
-        /// <exception cref="GdiException"/>
+        /// <exception cref="Gdi32.GdiException"/>
         public static Gdi32.DisplayDC GetPrimaryDisplayDC()
         {
             HDC dc = User32.GetWindowDC(HWND.Zero);

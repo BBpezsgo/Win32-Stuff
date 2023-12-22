@@ -92,11 +92,11 @@ namespace Win32
         /// To retrieve a menu item of type <see cref="MFT.STRING"/>,
         /// first find the size of the string by setting the
         /// dwTypeData member of <see cref="MENUITEMINFOW"/> to <c>NULL</c> and then calling
-        /// <see cref="User32.GetMenuItemInfo"/>. The value of cch+1 is the size needed.
+        /// <see cref="User32.GetMenuItemInfoW"/>. The value of cch+1 is the size needed.
         /// Then allocate a buffer of this size, place the pointer to the
-        /// buffer in <c>TypeData</c>, increment cch, and call <see cref="User32.GetMenuItemInfo"/>
+        /// buffer in <c>TypeData</c>, increment cch, and call <see cref="User32.GetMenuItemInfoW"/>
         /// once again to fill the buffer with the string. If the retrieved
-        /// menu item is of some other type, then <see cref="User32.GetMenuItemInfo"/> sets the
+        /// menu item is of some other type, then <see cref="User32.GetMenuItemInfoW"/> sets the
         /// <c>TypeData</c> member to a value whose type is specified by the <c>Type</c> member.
         /// </para>
         /// <para>
@@ -120,12 +120,12 @@ namespace Win32
         /// of a menu item is set by calling <see cref="User32.SetMenuItemInfoW"/>.
         /// </para>
         /// <para>
-        /// Note that, before calling <see cref="User32.GetMenuItemInfo"/>, the application must
+        /// Note that, before calling <see cref="User32.GetMenuItemInfoW"/>, the application must
         /// set <c>cch</c> to the length of the buffer pointed to by the <c>TypeData</c> member.
         /// If the retrieved menu item is of type <see cref="MFT.STRING"/> (as indicated by
-        /// the <c>Type</c> member), then <see cref="User32.GetMenuItemInfo"/> changes cch to the length
+        /// the <c>Type</c> member), then <see cref="User32.GetMenuItemInfoW"/> changes cch to the length
         /// of the menu item text. If the retrieved menu item is of some other
-        /// type, <see cref="User32.GetMenuItemInfo"/> sets the <c>cch</c> field to zero.
+        /// type, <see cref="User32.GetMenuItemInfoW"/> sets the <c>cch</c> field to zero.
         /// </para>
         /// <para>
         /// The <c>cch</c> member is used when the <see cref="MenuItemInfoMasks.STRING"/>

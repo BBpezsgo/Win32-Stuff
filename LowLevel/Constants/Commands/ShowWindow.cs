@@ -1,6 +1,8 @@
 ﻿namespace Win32.LowLevel
 {
-    // ShowWindow() Commands
+    /// <summary>
+    /// <see cref="User32.ShowWindow"/> Commands
+    /// </summary>
     public static partial class ShowWindowCommand
     {
         public const int HIDE = 0;

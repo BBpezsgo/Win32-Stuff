@@ -2,6 +2,9 @@
 
 namespace Win32.D2D1.LowLevel
 {
+    /// <summary>
+    /// Direct2D
+    /// </summary>
     [SupportedOSPlatform("windows")]
     public static class D2D1
     {

@@ -4,7 +4,7 @@
     {
         /// <summary>
         /// A bitmap that is drawn by the window that owns the menu.
-        /// The application must process the <see cref="WindowMessage.MEASUREITEM"/> and <see cref="WindowMessage.DRAWITEM"/> messages.
+        /// The application must process the <see cref="WindowMessage.WM_MEASUREITEM"/> and <see cref="WindowMessage.WM_DRAWITEM"/> messages.
         /// </summary>
         public static readonly HBITMAP CALLBACK = (HBITMAP)(-1);
         /// <summary>

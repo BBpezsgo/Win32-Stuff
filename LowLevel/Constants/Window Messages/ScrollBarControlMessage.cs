@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Scroll Bar Messages
     public static class ScrollBarControlMessage
     {
         /** <summary><b> not in win3.1 </b></summary> */

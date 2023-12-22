@@ -2,9 +2,26 @@
 
 namespace Win32.LowLevel
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1574
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HMENU GetSystemMenu(
+          [In] HWND hWnd,
+          [In] BOOL bRevert
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern BOOL SetMenuItemBitmaps(
+          [In] HMENU hMenu,
+          [In] UINT uPosition,
+          [In] UINT uFlags,
+          [In, Optional] HBITMAP hBitmapUnchecked,
+          [In, Optional] HBITMAP hBitmapChecked
+        );
+
         /// <summary>
         /// Retrieves a handle to the drop-down menu or submenu activated by the specified menu item.
         /// </summary>
@@ -43,10 +60,10 @@ namespace Win32.LowLevel
         /// Specifies function options.
         /// </para>
         /// <para>
-        /// For any animation to occur, the <see cref="SystemParametersInfo"/> function must
+        /// For any animation to occur, the <see cref="SystemParametersInfoW"/> function must
         /// set <see cref="SPI.SETMENUANIMATION"/>. Also, all the <see cref="TrackPopupMenuFlags"/>*ANIMATION flags, except
         /// <see cref="TrackPopupMenuFlags.NOANIMATION"/>, are ignored if menu fade animation is on.
-        /// For more information, see the <see cref="SPI.GETMENUFADE"/> flag in <see cref="SystemParametersInfo"/>.
+        /// For more information, see the <see cref="SPI.GETMENUFADE"/> flag in <see cref="SystemParametersInfoW"/>.
         /// </para>
         /// <para>
         /// Use the <see cref="TrackPopupMenuFlags.RECURSE"/> flag to display a menu when another menu is already displayed.
@@ -69,7 +86,7 @@ namespace Win32.LowLevel
         /// <param name="hwnd">
         /// A handle to the window that owns the shortcut menu.
         /// This window receives all messages from the menu.
-        /// The window does not receive a <see cref="WindowMessage.COMMAND"/> message
+        /// The window does not receive a <see cref="WindowMessage.WM_COMMAND"/> message
         /// from the menu until the function returns.
         /// If you specify <see cref="TrackPopupMenuFlags.NONOTIFY"/> in the <paramref name="uFlags"/> parameter,
         /// the function does not send messages to the window
@@ -166,7 +183,7 @@ namespace Win32.LowLevel
         /// <param name="hWnd">
         /// A handle to the window that owns the shortcut menu.
         /// This window receives all messages from the menu.
-        /// The window does not receive a <see cref="WindowMessage.COMMAND"/> message from the
+        /// The window does not receive a <see cref="WindowMessage.WM_COMMAND"/> message from the
         /// menu until the function returns. If you specify <see cref="TrackPopupMenuFlags.NONOTIFY"/>
         /// in the <paramref name="uFlags"/> parameter, the function does not send messages
         /// to the window identified by <paramref name="hWnd"/>. However, you must still
@@ -465,7 +482,7 @@ namespace Win32.LowLevel
         /// Creates a drop-down menu, submenu, or shortcut menu.
         /// The menu is initially empty. You can insert or append
         /// menu items by using the <see cref="InsertMenuItemW"/> function.
-        /// You can also use the <see cref="InsertMenu"/> function to insert
+        /// You can also use the <see cref="InsertMenuW"/> function to insert
         /// menu items and the <see cref="AppendMenuW"/> function to append menu items.
         /// </summary>
         /// <returns>
@@ -643,9 +660,9 @@ namespace Win32.LowLevel
         /// <paramref name="item"/> is a menu item identifier. Otherwise, it is a menu item position.
         /// </param>
         /// <param name="lpmii">
-        /// A pointer to a <see cref="MENUITEMINFO"/> structure that specifies the information to
+        /// A pointer to a <see cref="MENUITEMINFOW"/> structure that specifies the information to
         /// retrieve and receives information about the menu item.
-        /// Note that you must set the <c>cbSize</c> member to <see langword="sizeof"/>(<see cref="MENUITEMINFO"/>) before
+        /// Note that you must set the <c>cbSize</c> member to <see langword="sizeof"/>(<see cref="MENUITEMINFOW"/>) before
         /// calling this function.
         /// </param>
         /// <returns>

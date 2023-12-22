@@ -93,27 +93,38 @@ namespace Win32
             Attributes = 0;
         }
 
+        /// <inheritdoc/>
         public override readonly bool Equals(object? obj) => obj is ConsoleChar charInfo && Equals(charInfo);
+        /// <inheritdoc/>
         public readonly bool Equals(ConsoleChar other) => Attributes == other.Attributes && Char == other.Char;
+        /// <inheritdoc/>
         public readonly bool Equals(char other) => Char == other;
 
+        /// <inheritdoc/>
         public override readonly int GetHashCode() => HashCode.Combine(Attributes, Char);
 
+        /// <inheritdoc/>
         public static bool operator ==(ConsoleChar a, ConsoleChar b) => a.Equals(b);
+        /// <inheritdoc/>
         public static bool operator !=(ConsoleChar a, ConsoleChar b) => !a.Equals(b);
 
+        /// <inheritdoc/>
         public static bool operator ==(ConsoleChar a, char b) => a.Char == b;
+        /// <inheritdoc/>
         public static bool operator !=(ConsoleChar a, char b) => a.Char != b;
 
+        /// <inheritdoc cref="op_Equality(ConsoleChar, char)"/>
         public static bool operator ==(char a, ConsoleChar b) => a == b.Char;
+        /// <inheritdoc cref="op_Inequality(ConsoleChar, char)"/>
         public static bool operator !=(char a, ConsoleChar b) => a != b.Char;
 
         public static explicit operator ConsoleChar(char c) => new(c, 0b_0000_0111);
         public static implicit operator char(ConsoleChar c) => c.Char;
         public static implicit operator ConsoleChar(ValueTuple<char, ushort> c) => new(c.Item1, c.Item2);
 
+        /// <inheritdoc/>
         public override readonly string ToString() => Char.ToString();
-        public readonly string GetDebuggerDisplay()
+        readonly string GetDebuggerDisplay()
              => $"( \'{Char}\' 0b{Convert.ToString(Attributes, 2).PadLeft(8, '0')} )";
     }
 }

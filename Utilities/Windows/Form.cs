@@ -4,7 +4,6 @@ using System.Text;
 
 namespace Win32
 {
-
     public delegate void MenuItemEventHandler(Form sender, ushort menuItemId);
     public delegate void ContextMenuEventHandler(Form sender, Window context, POINT position);
 
@@ -198,14 +197,18 @@ namespace Win32
             WindowStyles.SYSMENU |
             WindowStyles.VISIBLE;
 
+        /// <inheritdoc/>
+        /// <exception cref="WindowsException"/>
         /// <exception cref="InvalidOperationException"/>
         public void Dispose()
         {
             ActualDispose();
             GC.SuppressFinalize(this);
         }
+        /// <exception cref="WindowsException"/>
         /// <exception cref="InvalidOperationException"/>
         ~Form() { ActualDispose(); }
+        /// <exception cref="WindowsException"/>
         /// <exception cref="InvalidOperationException"/>
         void ActualDispose()
         {
@@ -222,6 +225,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        /// <exception cref="InvalidOperationException"/>
         static unsafe LRESULT WinProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
         {
             void* userDataPtr;
@@ -336,7 +340,7 @@ namespace Win32
                     ushort y = Macros.HIWORD(lParam);
                     if (OnContextMenu != null)
                     {
-                        OnContextMenu.Invoke(this, new Window((HWND)(void*)wParam), new POINT(x, y));
+                        OnContextMenu.Invoke(this, (Window)(HWND)wParam, new POINT(x, y));
                         return 0;
                     }
                     break;
@@ -533,6 +537,7 @@ namespace Win32
             { throw WindowsException.Get(); }
         }
 
+        /// <exception cref="WindowsException"/>
         public void Destroy()
         {
             if (Handle == HWND.Zero) return;

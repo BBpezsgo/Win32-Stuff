@@ -58,6 +58,9 @@ dotnet_diagnostic.CA1805.severity = suggestion
 # DV2002: Unmapped types
 dotnet_diagnostic.DV2002.severity = none
 
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = silent
+
 [*.{cs,vb}]
 #### Naming styles ####
 

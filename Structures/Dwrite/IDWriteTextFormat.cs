@@ -58,7 +58,7 @@ namespace Win32.DWrite
         /// The flow direction must be perpendicular to the reading direction.
         /// Setting both to a vertical direction or both to horizontal yields
         /// DWRITE_E_FLOWDIRECTIONCONFLICTS when calling GetMetrics or Draw.
-        /// </remark>
+        /// </remarks>
         abstract void SetReadingDirection(
             DWRITE_READING_DIRECTION readingDirection
         );
@@ -74,7 +74,7 @@ namespace Win32.DWrite
         /// The flow direction must be perpendicular to the reading direction.
         /// Setting both to a vertical direction or both to horizontal yields
         /// DWRITE_E_FLOWDIRECTIONCONFLICTS when calling GetMetrics or Draw.
-        /// </remark>
+        /// </remarks>
         abstract void SetFlowDirection(
             DWRITE_FLOW_DIRECTION flowDirection
         );

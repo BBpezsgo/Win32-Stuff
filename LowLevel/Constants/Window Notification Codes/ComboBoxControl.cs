@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Combo Box Notification Codes
     public static class ComboBoxControlNotification
     {
         public const uint ERRSPACE = uint.MaxValue;

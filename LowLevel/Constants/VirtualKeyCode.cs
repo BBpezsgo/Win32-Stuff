@@ -9,17 +9,17 @@
         public const ushort RBUTTON = 0x02;
         public const ushort CANCEL = 0x03;
         /// <summary>
-        /// NOT contiguous with L & RBUTTON
+        /// NOT contiguous with L &#38; RBUTTON
         /// </summary>
         public const ushort MBUTTON = 0x04;
 
         // #if (_WIN32_WINNT >= 0x0500)
         /// <summary>
-        /// NOT contiguous with L & RBUTTON
+        /// NOT contiguous with L &#38; RBUTTON
         /// </summary>
         public const ushort XBUTTON1 = 0x05;
         /// <summary>
-        /// NOT contiguous with L & RBUTTON
+        /// NOT contiguous with L &#38; RBUTTON
         /// </summary>
         public const ushort XBUTTON2 = 0x06;
         // #endif

@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Button Control Messages
     public static class ButtonControlMessage
     {
         public const uint GETCHECK = 0x00F0;

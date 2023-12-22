@@ -16,8 +16,8 @@
         GDI_CLASSIC,
 
         /// <summary>
-        // Text is measured using the same glyph display metrics as text measured by GDI using a font
-        // created with CLEARTYPE_NATURAL_QUALITY.
+        /// Text is measured using the same glyph display metrics as text measured by GDI using a font
+        /// created with CLEARTYPE_NATURAL_QUALITY.
         /// </summary>
         GDI_NATURAL
     }

@@ -9,6 +9,118 @@ namespace Win32.LowLevel
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe HANDLE CreateFileMappingA(
+          [In] HANDLE hFile,
+          [In, Optional] SecurityAttributes* lpFileMappingAttributes,
+          [In] DWORD flProtect,
+          [In] DWORD dwMaximumSizeHigh,
+          [In] DWORD dwMaximumSizeLow,
+          [In, Optional] CHAR* lpName
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL UpdateResourceW(
+          [In] HANDLE hUpdate,
+          [In] WCHAR* lpType,
+          [In] WCHAR* lpName,
+          [In] WORD wLanguage,
+          [In, Optional] void* lpData,
+          [In] DWORD cb
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe HANDLE CreateFileMappingW(
+          [In] HANDLE hFile,
+          [In, Optional] SecurityAttributes* lpFileMappingAttributes,
+          [In] DWORD flProtect,
+          [In] DWORD dwMaximumSizeHigh,
+          [In] DWORD dwMaximumSizeLow,
+          [In, Optional] WCHAR* lpName
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe DWORD GetFileType(
+          [In] HANDLE hFile
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe void* VirtualAllocExNuma(
+          [In] HANDLE hProcess,
+          [In, Optional] void* lpAddress,
+          [In] SIZE_T dwSize,
+          [In] DWORD flAllocationType,
+          [In] DWORD flProtect,
+          [In] DWORD nndPreferred
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL ReadFile(
+          [In] HANDLE hFile,
+          [Out] void* lpBuffer,
+          [In] DWORD nNumberOfBytesToRead,
+          [Out, Optional] DWORD* lpNumberOfBytesRead,
+          [In, Out, Optional] Overlapped* lpOverlapped
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL FreeConsole();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL AttachConsole(
+          [In] DWORD dwProcessId
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL AllocConsole();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL ReadConsole(
+          [In] HANDLE hConsoleInput,
+          [Out] void* lpBuffer,
+          [In] DWORD nNumberOfCharsToRead,
+          [Out] DWORD* lpNumberOfCharsRead,
+          [In, Optional] void* pInputControl
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SetStdHandle(
+          [In] DWORD nStdHandle,
+          [In] HANDLE hHandle
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL WriteConsole(
+          [In] HANDLE hConsoleOutput,
+          [In] void* lpBuffer,
+          [In] DWORD nNumberOfCharsToWrite,
+          [Out, Optional] DWORD* lpNumberOfCharsWritten,
+          void* lpReserved = null
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe HANDLE CreateFileTransactedW(
+          [In] WCHAR* lpFileName,
+          [In] DWORD dwDesiredAccess,
+          [In] DWORD dwShareMode,
+          [In, Optional] SecurityAttributes* lpSecurityAttributes,
+          [In] DWORD dwCreationDisposition,
+          [In] DWORD dwFlagsAndAttributes,
+          [In, Optional] HANDLE hTemplateFile,
+          [In] HANDLE hTransaction,
+          [In, Optional] ushort* pusMiniVersion,
+                         void* lpExtendedParameter
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL WriteFileEx(
+          [In] HANDLE hFile,
+          [In, Optional] void* lpBuffer,
+          [In] DWORD nNumberOfBytesToWrite,
+          [In, Out] Overlapped* lpOverlapped,
+          [In] void* lpCompletionRoutine // OVERLAPPED_COMPLETION_ROUTINE*
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern unsafe BOOL GetExitCodeThread(
           [In] HANDLE hThread,
           [Out] DWORD* lpExitCode

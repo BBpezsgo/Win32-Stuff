@@ -2,9 +2,15 @@
 
 namespace Win32.LowLevel
 {
+#pragma warning disable CS1574
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern unsafe ATOM RegisterClassW(
+          [In] WNDCLASSW* lpWndClass
+        );
+
         [DllImport("User32.dll", SetLastError = true)]
         public static extern unsafe int GetMouseMovePointsEx(
           [In] UINT cbSize,
@@ -196,7 +202,7 @@ namespace Win32.LowLevel
         /// The name of the accelerator table to be loaded. Alternatively,
         /// this parameter can specify the resource identifier of an accelerator-table
         /// resource in the low-order word and zero in the high-order word.
-        /// To create this value, use the <see cref="Macros.MAKEINTRESOURCE"/> macro.
+        /// To create this value, use the <see cref="Macros.MAKEINTRESOURCEW"/> macro.
         /// </param>
         /// <returns>
         /// <para>
@@ -528,7 +534,7 @@ namespace Win32.LowLevel
         /// </returns>
         /// <remarks>
         /// Set the notification behavior by calling
-        /// <see cref="SystemParametersInfo"/> with the <see cref="SPI.SETSOUNDSENTRY"/> value.
+        /// <see cref="SystemParametersInfoW"/> with the <see cref="SPI.SETSOUNDSENTRY"/> value.
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
         public static extern BOOL SoundSentry();
@@ -564,7 +570,7 @@ namespace Win32.LowLevel
         );
 
         /// <summary>
-        /// Retrieves a handle that can be used by the <see cref="UpdateResourceW"/> function
+        /// Retrieves a handle that can be used by the <see cref="Kernel32.UpdateResourceW"/> function
         /// to add, delete, or replace resources in a binary module.
         /// </summary>
         /// <param name="pFileName">
@@ -577,13 +583,13 @@ namespace Win32.LowLevel
         /// <param name="bDeleteExistingResources">
         /// Indicates whether to delete the <paramref name="pFileName"/> parameter's existing resources.
         /// If this parameter is <c>TRUE</c>, existing resources are deleted and the updated
-        /// file includes only resources added with the <see cref="UpdateResourceW"/> function.
+        /// file includes only resources added with the <see cref="Kernel32.UpdateResourceW"/> function.
         /// If this parameter is <c>FALSE</c>, the updated file includes existing resources
-        /// unless they are explicitly deleted or replaced by using <see cref="UpdateResourceW"/>.
+        /// unless they are explicitly deleted or replaced by using <see cref="Kernel32.UpdateResourceW"/>.
         /// </param>
         /// <returns>
         /// If the function succeeds, the return value is a handle that can be used by
-        /// the <see cref="UpdateResourceW"/> and <see cref="EndUpdateResourceW"/> functions. The return value is
+        /// the <see cref="Kernel32.UpdateResourceW"/> and <see cref="Kernel32.EndUpdateResourceW"/> functions. The return value is
         /// <c>NULL</c> if the specified file is not a PE, the file does not exist, or the
         /// file cannot be opened for writing. To get extended error information,
         /// call <see cref="Kernel32.GetLastError"/>.
@@ -597,13 +603,13 @@ namespace Win32.LowLevel
         /// There are some restrictions on resource updates in files that contain
         /// Resource Configuration(RC Config) data: LN files and the associated .mui files.
         /// Details on which types of resources are allowed to be updated in these files
-        /// are in the Remarks section for the <see cref="UpdateResourceW"/> function.
+        /// are in the Remarks section for the <see cref="Kernel32.UpdateResourceW"/> function.
         /// </para>
         /// <para>
         /// This function can update resources within modules that contain both code and resources.
         /// As noted above, there are restrictions on resource updates in LN files and .mui files,
         /// both of which contain RC Config data;
-        /// details of the restrictions are in the reference for the <see cref="UpdateResourceW"/> function.
+        /// details of the restrictions are in the reference for the <see cref="Kernel32.UpdateResourceW"/> function.
         /// </para>
         /// </remarks>
         [DllImport("User32.dll", SetLastError = true)]
@@ -890,15 +896,15 @@ namespace Win32.LowLevel
         /// A handle to the owner window of the message box to be created.
         /// If this parameter is <c>NULL</c>, the message box has no owner window.
         /// </param>
-        /// <param name="text">
+        /// <param name="lpText">
         /// The message to be displayed. If the string consists of more
         /// than one line, you can separate the lines using a carriage return
         /// and/or linefeed character between each line.
         /// </param>
-        /// <param name="caption">
+        /// <param name="lpCaption">
         /// The dialog box title. If this parameter is <c>NULL</c>, the default title is Error.
         /// </param>
-        /// <param name="type">
+        /// <param name="uType">
         /// The contents and behavior of the dialog box. This parameter can be
         /// a combination of flags from the following groups of flags.
         /// </param>
@@ -999,9 +1005,9 @@ namespace Win32.LowLevel
         /// If the function succeeds, the return value is a class atom that uniquely
         /// identifies the class being registered. This atom can only
         /// be used by the <see cref="CreateWindowW"/>, <see cref="CreateWindowExW"/>,
-        /// <see cref="GetClassInfo"/>,
-        /// <see cref="GetClassInfoEx"/>, <see cref="FindWindow"/>,
-        /// <see cref="FindWindowEx"/>, and <see cref=" UnregisterClass"/>
+        /// <see cref="GetClassInfoW"/>,
+        /// <see cref="GetClassInfoExW"/>, <see cref="FindWindowW"/>,
+        /// <see cref="FindWindowExW"/>, and <see cref="UnregisterClassW"/>
         /// functions and the <c>IActiveIMMap::FilterClientWindows</c> method.
         /// </para>
         /// <para>

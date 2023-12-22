@@ -118,8 +118,10 @@
         /// Designates a simple text field, box, or rectangle used to label,
         /// box, or separate other controls. Static controls take no input and provide no output.
         /// For more information, see Static Controls.
-        /// <para>For a table of the static control styles you can specify in the dwStyle parameter,
+        /// <para>
+        /// For a table of the static control styles you can specify in the dwStyle parameter,
         /// see Static Control Styles.
+        /// </para>
         /// </para>
         /// </summary>
         public const string STATIC = "STATIC";

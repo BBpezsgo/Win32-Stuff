@@ -1,5 +1,6 @@
 ﻿namespace Win32
 {
+#pragma warning disable CS1574
     public static class MemoryProtectionFlags
     {
         #region General
@@ -45,7 +46,7 @@
         public const DWORD WriteCopy = 0x08;
         /// <summary>
         /// <para>Sets all locations in the pages as invalid targets for CFG. Used along with any execute page protection like <see cref="Execute"/>, <see cref="ExecuteRead"/>, <see cref="ExecuteReadWrite"/> and <see cref="ExecuteWriteCopy"/>. Any indirect call to locations in those pages will fail CFG checks and the process will be terminated. The default behavior for executable pages allocated is to be marked valid call targets for CFG.</para>
-        /// <para>This flag is not supported by the <see cref="Kernel32.VirtualProtect"/> or <see cref="Kernel32.CreateFileMapping"/> functions.</para>
+        /// <para>This flag is not supported by the <see cref="Kernel32.VirtualProtect"/> or <see cref="Kernel32.CreateFileMappingA"/> functions.</para>
         /// </summary>
         public const DWORD TargetsInvalid = 0x40000000;
         /// <summary>

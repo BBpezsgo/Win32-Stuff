@@ -14,7 +14,7 @@
   <param name="lpBuffer">
     The data to be written to the console screen buffer.
     This pointer is treated as the origin of a two-dimensional
-    array of <see cref="CharInfo"/> structures whose size is specified by the <paramref name="dwBufferSize"/> parameter.
+    array of <see cref="ConsoleChar"/> structures whose size is specified by the <paramref name="dwBufferSize"/> parameter.
   </param>
   <param name="dwBufferSize">
     The size of the buffer pointed to by the <paramref name="lpBuffer"/> parameter, in character cells.

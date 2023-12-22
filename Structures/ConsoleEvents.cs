@@ -2,6 +2,7 @@
 
 namespace Win32
 {
+#pragma warning disable CS1574
     public enum EventType : WORD
     {
         Key = 0x0001,
@@ -152,6 +153,7 @@ namespace Win32
         /// </summary>
         public readonly MouseEventFlags EventFlags;
 
+        /// <inheritdoc/>
         public override string ToString() => $"{{ Pos: {MousePosition}, State: {Convert.ToString(ButtonState, 2).PadLeft(8, '0')}, Flags: {EventFlags}, Ctrl: {ControlKeyState} }}";
     }
 
@@ -217,6 +219,7 @@ namespace Win32
         /// </summary>
         [FieldOffset(12)] public readonly ControlKeyState ControlKeyState;
 
+        /// <inheritdoc/>
         public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0", StringComparison.Ordinal).Replace("\t", "\\t", StringComparison.Ordinal).Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal)}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
     }
 
@@ -246,7 +249,7 @@ namespace Win32
     }
 
     /// <summary>
-    /// Describes a menu event in a console <see cref="INPUT_RECORD"/> structure.
+    /// Describes a menu event in a console <see cref="InputEvent"/> structure.
     /// These events are used internally and should be ignored.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]

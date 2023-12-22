@@ -2,6 +2,9 @@
 
 namespace Win32.LowLevel
 {
+    /// <summary>
+    /// Common Controls Library
+    /// </summary>
     [SupportedOSPlatform("windows")]
     public static class Comctl32
     {

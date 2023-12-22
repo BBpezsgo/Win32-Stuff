@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
-    public class WindowPropertiesContainer
+    public class WindowPropertiesContainer : IEquatable<WindowPropertiesContainer?>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HWND _handle;
@@ -16,17 +16,19 @@ namespace Win32
         {
             get
             {
-                HANDLE result;
+                HANDLE value;
                 fixed (WCHAR* propertyPtr = property)
-                { result = User32.GetPropW(_handle, propertyPtr); }
-                return result;
+                { value = User32.GetPropW(_handle, propertyPtr); }
+                if (value == HANDLE.Zero)
+                { throw new KeyNotFoundException($"The specified key (\"{property}\") not found in the collection"); }
+                return value;
             }
             set
             {
                 BOOL result;
                 fixed (WCHAR* propertyPtr = property)
                 { result = User32.SetPropW(_handle, propertyPtr, value); }
-                if (result == 0)
+                if (result == FALSE)
                 { throw WindowsException.Get(); }
             }
         }
@@ -39,17 +41,17 @@ namespace Win32
             return result != HANDLE.Zero;
         }
 
-        static unsafe BOOL ToDictionaryProc(HWND hwnd, WCHAR* propName, HANDLE propVal, ULONG_PTR lParam)
+        static unsafe BOOL ToDictionaryProc(HWND handle, WCHAR* property, HANDLE value, ULONG_PTR lParam)
         {
-            GCHandle handle = GCHandle.FromIntPtr((nint)lParam);
-            if (!handle.IsAllocated)
+            GCHandle gcHandle = GCHandle.FromIntPtr((nint)lParam);
+            if (!gcHandle.IsAllocated)
             { return FALSE; }
-            object? obj = handle.Target;
+            object? obj = gcHandle.Target;
             if (obj == null)
             { return FALSE; }
 
             Dictionary<string, HANDLE> childList = (Dictionary<string, HANDLE>)obj;
-            childList.Add(new string(propName), propVal);
+            childList.Add(new string(property), value);
 
             return TRUE;
         }
@@ -71,5 +73,32 @@ namespace Win32
             value = result;
             return value != HANDLE.Zero;
         }
+
+        public unsafe bool Contains(string property)
+        {
+            HANDLE result;
+            fixed (WCHAR* propertyPtr = property)
+            { result = User32.GetPropW(_handle, propertyPtr); }
+            return result != HANDLE.Zero;
+        }
+
+        static unsafe BOOL DelPropProc(
+            HWND handle,
+            WCHAR* property,
+            HANDLE value)
+        {
+            _ = User32.RemovePropW(handle, property);
+            return TRUE;
+        }
+        public unsafe void Clear() => _ = User32.EnumPropsW(_handle, &DelPropProc);
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj) => Equals(obj as WindowPropertiesContainer);
+
+        /// <inheritdoc/>
+        public bool Equals(WindowPropertiesContainer? other) => other is not null && _handle == other._handle;
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => _handle.GetHashCode();
     }
 }

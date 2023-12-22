@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Window Messages
     public static partial class WindowMessage
     {
         public const uint WM_NULL = 0x0000;

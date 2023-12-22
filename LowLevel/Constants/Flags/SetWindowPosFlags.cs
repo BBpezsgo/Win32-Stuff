@@ -1,5 +1,6 @@
 ﻿namespace Win32.LowLevel
 {
+#pragma warning disable CS1574
     [Flags]
     public enum SetWindowPosFlags : UINT
     {
@@ -19,7 +20,7 @@
         /// </summary>
         DRAWFRAME = 0x0020,
         /// <summary>
-        /// Applies new frame styles set using the <see cref="SetWindowLong"/> function.
+        /// Applies new frame styles set using the <see cref="User32.SetWindowLong"/> function.
         /// Sends a <see cref="WindowMessage.WM_NCCALCSIZE"/> message to the window, even if the window's
         /// size is not being changed. If this flag is not specified, <see cref="WindowMessage.WM_NCCALCSIZE"/>
         /// is sent only when the window's size is being changed.

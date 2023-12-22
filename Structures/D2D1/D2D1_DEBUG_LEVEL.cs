@@ -22,6 +22,5 @@
         /// information that can help improve performance to the debug layer.
         /// </summary>
         INFORMATION = 3,
-        FORCE_DWORD = 0xffffffff,
     }
 }

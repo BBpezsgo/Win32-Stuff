@@ -2,6 +2,8 @@
 
 namespace Win32.LowLevel
 {
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1574
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
@@ -22,7 +24,7 @@ namespace Win32.LowLevel
           [In, Optional] HDC hdcSrc,
           [In, Optional] POINT* pptSrc,
           [In] COLORREF crKey,
-          [In, Optional] BLENDFUNCTION* pblend,
+          [In, Optional] BlendFunction* pblend,
           [In] DWORD dwFlags
         );
 
@@ -123,7 +125,7 @@ namespace Win32.LowLevel
         /// </para>
         /// </returns>
         [DllImport("User32.dll", SetLastError = true)]
-        public static extern unsafe HWND FindWindowExA(
+        public static extern unsafe HWND FindWindowExW(
           [In, Optional] HWND hWndParent,
           [In, Optional] HWND hWndChildAfter,
           [In, Optional] WCHAR* lpszClass,
@@ -1088,7 +1090,7 @@ namespace Win32.LowLevel
         /// <summary>
         /// Determines whether a window is arranged.
         /// </summary>
-        /// <param name="hWnd">
+        /// <param name="hwnd">
         /// A handle to the window to be tested.
         /// </param>
         /// <returns>
@@ -1417,9 +1419,9 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// The window procedures for the window and its child windows should
-        /// handle any <see cref="WindowMessage.PRINT"/> or <see cref="WindowMessage.PRINTCLIENT"/> messages. Dialog boxes, controls,
-        /// and common controls already handle <see cref="WindowMessage.PRINTCLIENT"/>.
-        /// The default window procedure already handles <see cref="WindowMessage.PRINT"/>.
+        /// handle any <see cref="WindowMessage.WM_PRINT"/> or <see cref="WindowMessage.WM_PRINTCLIENT"/> messages. Dialog boxes, controls,
+        /// and common controls already handle <see cref="WindowMessage.WM_PRINTCLIENT"/>.
+        /// The default window procedure already handles <see cref="WindowMessage.WM_PRINT"/>.
         /// </para>
         /// <para>
         /// If a child window is displayed partially clipped,
@@ -1978,7 +1980,7 @@ namespace Win32.LowLevel
         /// </para>
         /// <para>
         /// <c>DestroyWindow</c> also destroys modeless dialog boxes created
-        /// by the <see cref="CreateDialog"/> function.
+        /// by the <see cref="CreateDialogW"/> function.
         /// </para>
         /// </summary>
         /// <param name="hWnd">

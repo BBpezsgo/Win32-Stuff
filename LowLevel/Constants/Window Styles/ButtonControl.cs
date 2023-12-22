@@ -1,8 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    /// <summary>
-    /// Button styles
-    /// </summary>
     public static class ButtonControlStyles
     {
         public const DWORD SPLITBUTTON          =0x0000000C;

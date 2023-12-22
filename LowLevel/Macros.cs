@@ -108,14 +108,89 @@
 
     public struct WinErrorMacros
     {
+        /// <summary>
+        /// Creates an <c>HRESULT</c> value from its component pieces.
+        /// </summary>
+        /// <param name="sev">The severity.</param>
+        /// <param name="fac">The facility.</param>
+        /// <param name="code">The code.</param>
+        /// <returns>
+        /// An <c>HRESULT</c> given the severity bit,
+        /// facility code, and error code that comprise the <c>HRESULT</c>.
+        /// </returns>
+        /// <remarks>
+        /// <b>Note:</b> Calling <see cref="MAKE_HRESULT"/> for <see cref="HResult.S_OK"/>
+        /// verification carries a performance penalty.
+        /// You should not routinely use <see cref="MAKE_HRESULT"/> for successful results.
+        /// </remarks>
         public static HRESULT MAKE_HRESULT(ULONG sev, ULONG fac, ULONG code) =>
             (HRESULT)((sev << 31) | (fac << 16) | code);
 
+        /// <summary>
+        /// Extracts the error code portion of the <c>HRESULT</c>.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c> value.</param>
         public static int HRESULT_CODE(HRESULT hr) => hr & 0xFFFF;
-        public static int HRESULT_FACILITY(HRESULT hr) => (hr >> 16) & 0x1fff;
-        public static int HRESULT_SEVERITY(HRESULT hr) => (hr >> 31) & 0x1;
-        public static bool SUCCEEDED(HRESULT hr) => hr >= 0;
-        public static bool FAILED(HRESULT hr) => hr < 0;
-        public static bool IS_ERROR(HRESULT Status) => unchecked((ULONG)Status) >> 31 == 1;
+
+        /// <summary>
+        /// Extracts the facility of the specified <c>HRESULT</c>,
+        /// which indicates what API or framework originated this error.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c> value.</param>
+        public static int HRESULT_FACILITY(HRESULT hr)
+            => (hr >> 16) & 0x1fff;
+
+        /// <summary>
+        /// Extracts the severity bit of the <c>HRESULT</c>.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c>.</param>
+        public static int HRESULT_SEVERITY(HRESULT hr)
+            => (hr >> 31) & 0x1;
+
+        /// <summary>
+        /// Tests the severity bit of the <c>SCODE</c> or <c>HRESULT</c>;
+        /// returns <see langword="true"/> if the severity is zero and <see langword="false"/> if it is one.
+        /// </summary>
+        /// <param name="hr">
+        /// The status code. This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// A non-negative number indicates success.
+        /// </param>
+        public static bool SUCCEEDED(HRESULT hr)
+            => hr >= 0;
+
+        /// <summary>
+        /// Tests the severity bit of the <c>SCODE</c> or <c>HRESULT</c>;
+        /// returns <see langword="true"/> if the severity is one and <see langword="false"/> if it is zero.
+        /// </summary>
+        /// <param name="hr">
+        /// The status code. This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// A negative number indicates failure.
+        /// </param>
+        public static bool FAILED(HRESULT hr)
+            => hr < 0;
+
+        /// <summary>
+        /// Provides a generic test for errors on any status value.
+        /// </summary>
+        /// <param name="status">
+        /// The status code.
+        /// This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// </param>
+        public static bool IS_ERROR(HRESULT status)
+            => unchecked((ULONG)status) >> 31 == 1;
+
+        /// <summary>
+        /// Maps a <see href="https://learn.microsoft.com/en-us/windows/desktop/Debug/system-error-codes">system error code</see> to an <c>HRESULT</c> value.
+        /// </summary>
+        /// <param name="sysError">The system error code.</param>
+        public static int HRESULT_FROM_WIN32(LONG sysError)
+            => (sysError <= 0) ? sysError : unchecked((HRESULT)((sysError & 0x0000FFFF) | (Facility.WIN32 << 16) | 0x80000000));
+
+        /// <summary>
+        /// Maps an NT status value to an <c>HRESULT</c> value.
+        /// </summary>
+        /// <param name="ntStatus">The NT status value.</param>
+        public static int HRESULT_FROM_NT(LONG ntStatus)
+            => unchecked(ntStatus | 0x10000000);  // 0x10000000 = FACILITY_NT_BIT
     }
 }

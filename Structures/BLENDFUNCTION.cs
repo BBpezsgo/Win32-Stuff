@@ -3,7 +3,7 @@
 namespace Win32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct BLENDFUNCTION
+    public struct BlendFunction
     {
         public BYTE BlendOp;
         public BYTE BlendFlags;
