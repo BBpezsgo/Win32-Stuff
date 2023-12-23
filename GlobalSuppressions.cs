@@ -20,3 +20,4 @@
 [assembly: SuppressMessage("Interoperability", "SYSLIB1054:Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time", Justification = "<Pending>")]
 [assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 [assembly: SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>")]
+[assembly: SuppressMessage("Interoperability", "SYSLIB1096:Convert to 'GeneratedComInterface'", Justification = "<Pending>")]

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace Win32.DWrite.LowLevel
 {
@@ -41,6 +42,7 @@ namespace Win32.DWrite.LowLevel
         );
 
         /// <inheritdoc cref="DWriteCreateFactory(DWriteFactoryType, Guid, void**)"/>
+        [RequiresUnreferencedCode("COM interop")]
         public static unsafe HRESULT DWriteCreateFactory<T>(
             DWriteFactoryType factoryType,
             REFIID iid,

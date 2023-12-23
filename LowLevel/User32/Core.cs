@@ -919,8 +919,8 @@ namespace Win32.LowLevel
 
         public static unsafe MessageBoxResult MessageBox(
            HWND hWnd,
-           string lbText,
-           string lpCaption,
+           string? lbText,
+           string? lpCaption,
            UINT uType)
         {
             fixed (char* _lbText = lbText)

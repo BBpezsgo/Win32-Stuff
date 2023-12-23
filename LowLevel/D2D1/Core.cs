@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace Win32.D2D1.LowLevel
 {
@@ -33,6 +34,7 @@ namespace Win32.D2D1.LowLevel
         /// <summary>
         /// Creates a factory object that can be used to create Direct2D resources.
         /// </summary>
+        [RequiresUnreferencedCode("COM interop")]
         public static unsafe HRESULT D2D1CreateFactory<T>(
              D2D1_FACTORY_TYPE factoryType,
              REFIID riid,

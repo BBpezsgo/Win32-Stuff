@@ -147,14 +147,10 @@ namespace Win32
         #endregion
     }
 
-    [Serializable]
     public class HResultException : Exception
     {
         public HResultException() { }
         public HResultException(string message) : base(message) { }
         public HResultException(string message, Exception inner) : base(message, inner) { }
-        protected HResultException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

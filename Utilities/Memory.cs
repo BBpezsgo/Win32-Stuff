@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -188,7 +189,7 @@ namespace Win32
         /// <exception cref="ArgumentOutOfRangeException"/>
         /// <exception cref="MissingMethodException"/>
         /// <exception cref="InvalidOperationException"/>
-        public static unsafe T FromBinaryReader<T>(BinaryReader reader)
+        public static unsafe T FromBinaryReader<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(BinaryReader reader)
             where T : unmanaged
             => Memory.FromBinaryReader<T>(reader, sizeof(T));
 
@@ -205,7 +206,7 @@ namespace Win32
         /// <exception cref="ArgumentOutOfRangeException"/>
         /// <exception cref="MissingMethodException"/>
         /// <exception cref="InvalidOperationException"/>
-        public static T? FromBinaryReader<T>(BinaryReader reader, int size)
+        public static T? FromBinaryReader<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(BinaryReader reader, int size)
         {
             byte[] bytes = reader.ReadBytes(size);
 

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace Win32.COM.LowLevel
 {
@@ -35,6 +36,7 @@ namespace Win32.COM.LowLevel
           [Out, MarshalAs(UnmanagedType.IUnknown)] out object? ppv
         );
 
+        [RequiresUnreferencedCode("COM interop")]
         public static unsafe HRESULT SHCreateItemFromParsingName<T>(
            WCHAR* pszPath,
            IBindCtx? pbc,
