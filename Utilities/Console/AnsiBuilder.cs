@@ -99,6 +99,7 @@ namespace Win32
 
         public void ResetStyle()
         {
+            if (Builder.Length == 0) return;
             currentFgColor = Color.Black;
             currentBgColor = Color.Black;
             currentBold = false;
@@ -125,6 +126,33 @@ namespace Win32
         }
 
         #region Append
+
+        public AnsiBuilder Append(AnsiBuilder? value)
+        {
+            if (value is null) return this;
+
+            Color savedFgColor = currentFgColor;
+            Color savedBgColor = currentBgColor;
+            bool savedBold = currentBold;
+            bool savedUnderline = currentUnderline;
+            bool savedItalics = currentItalics;
+
+            ForegroundColor = value.ForegroundColor;
+            BackgroundColor = value.BackgroundColor;
+            Bold = value.Bold;
+            Underline = value.Underline;
+            Italics = value.Italics;
+
+            Builder.Append(value);
+
+            currentFgColor = savedFgColor;
+            currentBgColor = savedBgColor;
+            currentBold = savedBold;
+            currentUnderline = savedUnderline;
+            currentItalics  = savedItalics;
+
+            return this;
+        }
 
         public AnsiBuilder Append(char value, int repeatCount)
         {
