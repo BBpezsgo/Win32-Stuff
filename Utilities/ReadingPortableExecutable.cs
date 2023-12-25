@@ -840,6 +840,17 @@ namespace Win32
             if (!HasSection(".text"))
             { throw new KeyNotFoundException("Section \".text\" not found"); }
 
+            if (HasSection(".eh_fram"))
+            {
+#if DEBUG
+                string bruh = GetSection(".eh_fram").DataAsStringA();
+#endif
+
+                Memory<byte> data = GetSection(".eh_fram").RawData;
+                if (Memory.HasData<byte>(data.Span))
+                { throw new KeyNotFoundException("Assembly has \".eh_fram\" section"); }
+            }
+
             if (HasSection(".data"))
             {
 #if DEBUG
