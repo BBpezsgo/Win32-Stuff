@@ -92,7 +92,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        public unsafe ProcessorNumber ThreadIdealProcessor
+        public unsafe ProcessorNumber IdealProcessor
         {
             get
             {
@@ -101,11 +101,16 @@ namespace Win32
                 { throw WindowsException.Get(); }
                 return result;
             }
+            set
+            {
+                if (Kernel32.SetThreadIdealProcessorEx(Handle, &value, null) == FALSE)
+                { throw WindowsException.Get(); }
+            }
         }
 
         /// <exception cref="WindowsException"/>
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
-        public unsafe GroupAffinity ThreadGroupAffinity
+        public unsafe GroupAffinity GroupAffinity
         {
             get
             {
@@ -113,6 +118,11 @@ namespace Win32
                 if (Kernel32.GetThreadGroupAffinity(Handle, &result) == FALSE)
                 { throw WindowsException.Get(); }
                 return result;
+            }
+            set
+            {
+                if (Kernel32.SetThreadGroupAffinity(Handle, &value, null) == FALSE)
+                { throw WindowsException.Get(); }
             }
         }
 
@@ -129,6 +139,7 @@ namespace Win32
             }
         }
 
+        /// <exception cref="WindowsException"/>
         public static Thread Open(ThreadAccessRights accessRights, DWORD threadId)
         {
             HANDLE handle = Kernel32.OpenThread((DWORD)accessRights, FALSE, threadId);
@@ -136,6 +147,88 @@ namespace Win32
             { throw WindowsException.Get(); }
             return new Thread(handle);
         }
+
+        /// <exception cref="WindowsException"/>
+        public readonly unsafe void SetAffinityMask(DWORD_PTR value)
+        {
+            if (Kernel32.SetThreadAffinityMask(Handle, value) == FALSE)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public unsafe void SetMemoryPriority(ULONG memoryPriority)
+        {
+            if (Kernel32.SetThreadInformation(Handle, ThreadInformationClass.ThreadMemoryPriority, &memoryPriority, sizeof(ULONG)) == FALSE)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public unsafe void SetPowerThrottling(ThreadPowerThrottlingState powerThrottlingState)
+        {
+            if (Kernel32.SetThreadInformation(Handle, ThreadInformationClass.ThreadPowerThrottling, &powerThrottlingState, (uint)sizeof(ThreadPowerThrottlingState)) == FALSE)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        public unsafe void SetInformation(ThreadInformationClass informationClass, void* information, uint informationSize)
+        {
+            if (Kernel32.SetThreadInformation(Handle, informationClass, information, informationSize) == FALSE)
+            { throw WindowsException.Get(); }
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public int Priority
+        {
+            set
+            {
+                if (Kernel32.SetThreadPriority(Handle, value) == FALSE)
+                { throw WindowsException.Get(); }
+            }
+            get
+            {
+                int result = Kernel32.GetThreadPriority(Handle);
+                if (result == 0x7fffffff)
+                { throw WindowsException.Get(); }
+                return result;
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public unsafe bool PriorityBoost
+        {
+            set
+            {
+                if (Kernel32.SetThreadPriorityBoost(Handle, value ? FALSE : TRUE) == FALSE)
+                { throw WindowsException.Get(); }
+            }
+            get
+            {
+                int result = default;
+                if (Kernel32.GetThreadPriorityBoost(Handle, &result) == FALSE)
+                { throw WindowsException.Get(); }
+                return result == FALSE;
+            }
+        }
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static Thread CurrentThread => new(Kernel32.GetCurrentThread());
+
+        [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
+        public static DWORD CurrentThreadId => Kernel32.GetCurrentThreadId();
+
+        public static void Sleep(uint milliseconds) => Kernel32.Sleep(milliseconds);
+        public static bool Sleep(uint milliseconds, bool alertable) => Kernel32.SleepEx(milliseconds, alertable ? TRUE : FALSE) != 0;
+
+        /// <exception cref="WindowsException"/>
+        public void Suspend()
+        {
+            if (Kernel32.SuspendThread(Handle) == unchecked((DWORD)(-1)))
+            { throw WindowsException.Get(); }
+        }
+
+        public static bool SwitchToThread() => Kernel32.SwitchToThread() != 0;
 
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
         string DebuggerDisplay() => ToString();

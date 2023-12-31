@@ -9,6 +9,134 @@ namespace Win32.LowLevel
         public static readonly HANDLE INVALID_HANDLE_VALUE = (HANDLE)(-1);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL TlsSetValue(
+          [In] DWORD dwTlsIndex,
+          [In, Optional] void* lpTlsValue
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe void* TlsGetValue(
+          [In] DWORD dwTlsIndex
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL TlsFree(
+          [In] DWORD dwTlsIndex
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD TlsAlloc();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD GetCurrentThreadId();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern HANDLE GetCurrentThread();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SwitchToThread();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD SuspendThread(
+          [In] HANDLE hThread
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD SleepEx(
+          [In] DWORD dwMilliseconds,
+          [In] BOOL bAlertable
+        );
+
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern void Sleep(
+          [In] DWORD dwMilliseconds
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SetThreadPriorityBoost(
+          [In] HANDLE hThread,
+          [In] BOOL bDisablePriorityBoost
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern BOOL SetThreadPriority(
+          [In] HANDLE hThread,
+          [In] int nPriority
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL SetThreadInformation(
+          [In] HANDLE hThread,
+          [In] ThreadInformationClass ThreadInformationClass,
+               void* ThreadInformation,
+          [In] DWORD ThreadInformationSize
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL SetThreadIdealProcessorEx(
+          [In] HANDLE hThread,
+          [In] ProcessorNumber* lpIdealProcessor,
+          [Out, Optional] ProcessorNumber* lpPreviousIdealProcessor
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD SetThreadIdealProcessor(
+          [In] HANDLE hThread,
+          [In] DWORD dwIdealProcessor
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL SetThreadGroupAffinity(
+          [In] HANDLE hThread,
+          [In] GroupAffinity* GroupAffinity,
+          [Out, Optional] GroupAffinity* PreviousGroupAffinity
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL GetProcessAffinityMask(
+          [In] HANDLE hProcess,
+          [Out] DWORD_PTR* lpProcessAffinityMask,
+          [Out] DWORD_PTR* lpSystemAffinityMask
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD_PTR SetThreadAffinityMask(
+          [In] HANDLE hThread,
+          [In] DWORD_PTR dwThreadAffinityMask
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern DWORD ResumeThread(
+          [In] HANDLE hThread
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL GetThreadTimes(
+          [In] HANDLE hThread,
+          [Out] FileTime* lpCreationTime,
+          [Out] FileTime* lpExitTime,
+          [Out] FileTime* lpKernelTime,
+          [Out] FileTime* lpUserTime
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern int GetThreadPriority(
+          [In] HANDLE hThread
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern unsafe BOOL GetThreadPriorityBoost(
+          [In] HANDLE hThread,
+          [Out] BOOL* pDisablePriorityBoost
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern void ExitThread(
+          [In] DWORD dwExitCode
+        );
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern unsafe HANDLE CreateFileMappingA(
           [In] HANDLE hFile,
           [In, Optional] SecurityAttributes* lpFileMappingAttributes,
