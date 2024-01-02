@@ -19,8 +19,8 @@ namespace Win32
         Middle = 0x0004,
         Button3 = 0x0008,
         Button4 = 0x0010,
-        ScrollUp = 7864320,
-        ScrollDown = 4287102976,
+        ScrollUp =   0b_0000_0000_0111_1000_0000_0000_0000_0000,
+        ScrollDown = 0b_1111_1111_1000_1000_0000_0000_0000_0000,
     }
 
     [Flags]
