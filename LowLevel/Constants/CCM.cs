@@ -37,6 +37,5 @@
 
         // for tooltips
         public const uint INFOTIPSIZE = 1024;
-
     }
 }

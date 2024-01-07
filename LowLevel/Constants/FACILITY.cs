@@ -6,7 +6,7 @@
         /// The default facility code.
         /// </summary>
         /// <remarks>
-        /// For broadly applicable common status codes such as <see cref="HResult.S_OK"/>.
+        /// For broadly applicable common status codes such as <see cref="HResult.OK"/>.
         /// </remarks>
         public const int NULL = 0;
         /// <summary>

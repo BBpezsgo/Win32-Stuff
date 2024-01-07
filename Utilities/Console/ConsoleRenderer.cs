@@ -20,14 +20,22 @@ namespace Win32
         protected ConsoleChar[] ConsoleBuffer;
         protected SMALL_RECT ConsoleRect;
 
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[Vector2 p] => ref this[((int)MathF.Round(p.Y) * BufferWidth) + (int)MathF.Round(p.X)];
 
+        /// <exception cref="WindowsException"/>
         public ConsoleRenderer() : this(ConsoleHandler.WindowWidth, ConsoleHandler.WindowHeight)
         { }
+
+        /// <exception cref="WindowsException"/>
         public ConsoleRenderer(short bufferWidth, short bufferHeight)
         {
             /*
@@ -51,8 +59,11 @@ namespace Win32
         }
 
         public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
+        public bool IsVisible(COORD position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
+        public bool IsVisible(POINT position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
         public bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
 
+        /// <exception cref="WindowsException"/>
         public void Render()
         {
             if (Kernel32.WriteConsoleOutput(
@@ -66,10 +77,12 @@ namespace Win32
 
         public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
 
+        /// <exception cref="WindowsException"/>
         public void RefreshBufferSize()
         {
-            BufferWidth = ConsoleHandler.WindowWidth;
-            BufferHeight = ConsoleHandler.WindowHeight;
+            ConsoleScreenBufferInfo info = ConsoleHandler.ScreenBufferInfo;
+            BufferWidth = info.Window.Width;
+            BufferHeight = info.Window.Height;
 
             ConsoleBuffer = new ConsoleChar[Size];
             ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);

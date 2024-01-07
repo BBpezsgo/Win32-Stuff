@@ -1,6 +1,5 @@
 ﻿namespace Win32
 {
-#pragma warning disable CS1574
     public static class InputMode
     {
         /// <summary>

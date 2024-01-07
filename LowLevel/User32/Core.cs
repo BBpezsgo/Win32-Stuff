@@ -2,7 +2,6 @@
 
 namespace Win32.LowLevel
 {
-#pragma warning disable CS1574
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {

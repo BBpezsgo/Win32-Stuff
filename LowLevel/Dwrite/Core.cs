@@ -23,7 +23,7 @@ namespace Win32.DWrite.LowLevel
         /// An address of a pointer to the newly created DirectWrite factory object.
         /// </param>
         /// <returns>
-        /// If this function succeeds, it returns <see cref="HResult.S_OK"/>.
+        /// If this function succeeds, it returns <see cref="HResult.OK"/>.
         /// Otherwise, it returns an <c>HRESULT</c> error code.
         /// </returns>
         [DllImport("Dwrite.dll", SetLastError = true)]
@@ -85,7 +85,7 @@ namespace Win32.DWrite.LowLevel
         /// newly created text format object, or <see langword="null"/> in case of failure.
         /// </param>
         /// <returns>
-        /// If this method succeeds, it returns <see cref="HResult.S_OK"/>.
+        /// If this method succeeds, it returns <see cref="HResult.OK"/>.
         /// Otherwise, it returns an <c>HRESULT</c> error code.
         /// </returns>
         [DllImport("Dwrite.dll", SetLastError = true)]

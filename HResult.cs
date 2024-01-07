@@ -48,7 +48,7 @@ namespace Win32
         public HResult Throw()
         {
             if (IsSucceeded) return this;
-            throw new HResultException($"HRESULT ({Code}) ({Facility}) ({Severity}) {Message}");
+            throw new HResultException(this);
         }
 
         /// <inheritdoc cref="System.Numerics.IEqualityOperators{TSelf, TOther, TResult}.op_Equality"/>
@@ -92,65 +92,66 @@ namespace Win32
         /// <summary>
         /// The operation was aborted because of an unspecified error.
         /// </summary>
-        public const HRESULT E_ABORT = unchecked((HRESULT)0x80004004);
+        public const HRESULT ABORT = unchecked((HRESULT)0x80004004);
         /// <summary>
         /// A general access-denied error.
         /// </summary>
-        public const HRESULT E_ACCESSDENIED = unchecked((HRESULT)0x80070005);
+        public const HRESULT ACCESSDENIED = unchecked((HRESULT)0x80070005);
         /// <summary>
         /// An unspecified failure has occurred.
         /// </summary>
-        public const HRESULT E_FAIL = unchecked((HRESULT)0x80004005);
+        public const HRESULT FAIL = unchecked((HRESULT)0x80004005);
         /// <summary>
         /// An invalid handle was used.
         /// </summary>
-        public const HRESULT E_HANDLE = unchecked((HRESULT)0x80070006);
+        public const HRESULT HANDLE = unchecked((HRESULT)0x80070006);
         /// <summary>
         /// One or more arguments are invalid.
         /// </summary>
-        public const HRESULT E_INVALIDARG = unchecked((HRESULT)0x80070057);
+        public const HRESULT INVALIDARG = unchecked((HRESULT)0x80070057);
         /// <summary>
         /// The <c>QueryInterface</c> method did not recognize the requested interface.
         /// The interface is not supported.
         /// </summary>
-        public const HRESULT E_NOINTERFACE = unchecked((HRESULT)0x80004002);
+        public const HRESULT NOINTERFACE = unchecked((HRESULT)0x80004002);
         /// <summary>
         /// The method is not implemented.
         /// </summary>
-        public const HRESULT E_NOTIMPL = unchecked((HRESULT)0x80004001);
+        public const HRESULT NOTIMPL = unchecked((HRESULT)0x80004001);
         /// <summary>
         /// The method failed to allocate necessary memory.
         /// </summary>
-        public const HRESULT E_OUTOFMEMORY = unchecked((HRESULT)0x8007000E);
+        public const HRESULT OUTOFMEMORY = unchecked((HRESULT)0x8007000E);
         /// <summary>
         /// The data necessary to complete the operation is not yet available.
         /// </summary>
-        public const HRESULT E_PENDING = unchecked((HRESULT)0x8000000A);
+        public const HRESULT PENDING = unchecked((HRESULT)0x8000000A);
         /// <summary>
         /// An invalid pointer was used.
         /// </summary>
-        public const HRESULT E_POINTER = unchecked((HRESULT)0x80004003);
+        public const HRESULT INVALID_POINTER = unchecked((HRESULT)0x80004003);
         /// <summary>
         /// A catastrophic failure has occurred.
         /// </summary>
-        public const HRESULT E_UNEXPECTED = unchecked((HRESULT)0x8000FFFF);
+        public const HRESULT UNEXPECTED = unchecked((HRESULT)0x8000FFFF);
         /// <summary>
-        /// The method succeeded and returned the boolean value <see cref="FALSE"/>.
+        /// The method succeeded and returned the boolean value <see cref="Constants.FALSE"/>.
         /// </summary>
-        public const HRESULT S_FALSE = unchecked((HRESULT)0x00000001);
+        public const HRESULT FALSE = unchecked((HRESULT)0x00000001);
         /// <summary>
         /// The method succeeded.
         /// If a boolean return value is expected, the returned value is <see cref="TRUE"/>.
         /// </summary>
-        public const HRESULT S_OK = unchecked((HRESULT)0x00000000);
+        public const HRESULT OK = unchecked((HRESULT)0x00000000);
 
         #endregion
     }
 
     public class HResultException : Exception
     {
-        public HResultException() { }
-        public HResultException(string message) : base(message) { }
-        public HResultException(string message, Exception inner) : base(message, inner) { }
+        [SupportedOSPlatform("windows")]
+        public HResultException(HResult hResult)
+            : base($"HRESULT ({hResult.Code}) ({hResult.Facility}) ({hResult.Severity}) {hResult.Message}")
+        { }
     }
 }

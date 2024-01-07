@@ -2,7 +2,6 @@
 
 namespace Win32
 {
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
     [SupportedOSPlatform("windows")]
     public static class Cursor
     {
@@ -97,6 +96,7 @@ namespace Win32
         /// To retrieve this value, use the <see cref="GetWindowThreadProcessId"/> function.
         /// If this parameter is <c>NULL</c>, the function returns information for the foreground thread.
         /// </param>
+        /// <exception cref="WindowsException"/>
         public static unsafe GUITHREADINFO GetGUIThreadInfo(DWORD threadId)
         {
             GUITHREADINFO result = GUITHREADINFO.Create();

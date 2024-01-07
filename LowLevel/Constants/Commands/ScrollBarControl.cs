@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-    // Scroll Bar Commands
     public static partial class ScrollBarControlConstants
     {
         public const int LINEUP = 0;

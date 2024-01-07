@@ -16,19 +16,19 @@ namespace Win32
         BackgroundRed = 0b_0100_0000,
         BackgroundBright = 0b_1000_0000,
 
-        /// <summary> Leading byte. </summary>
+        /// <summary> Leading byte </summary>
         CommonLVBLeadingByte = 0b_0000_0001_0000_0000,
-        /// <summary> Trailing byte. </summary>
+        /// <summary> Trailing byte </summary>
         CommonLVBTrailingByte = 0b_0000_0010_0000_0000,
-        /// <summary> Top horizontal. </summary>
+        /// <summary> Top horizontal </summary>
         CommonLVBGridHorizontal = 0b_0000_0100_0000_0000,
-        /// <summary> Left vertical. </summary>
+        /// <summary> Left vertical </summary>
         CommonLVBGridLVertical = 0b_0000_1000_0000_0000,
-        /// <summary> Right vertical. </summary>
+        /// <summary> Right vertical </summary>
         CommonLVBGridRVertical = 0b_0001_0000_0000_0000,
-        /// <summary> Reverse foreground and background attribute. </summary>
+        /// <summary> Reverse foreground and background attribute </summary>
         CommonLVBReverseVideo = 0b_0100_0000_0000_0000,
-        /// <summary> Underscore. </summary>
+        /// <summary> Underscore </summary>
         CommonLVBUnderscore = 0b_1000_0000_0000_0000,
     }
 
@@ -63,6 +63,12 @@ namespace Win32
             set => Attributes = (ushort)((Attributes & ~CharColor.MASK_FG) | ((value << 4) & CharColor.MASK_BG));
         }
 
+        public ConsoleChar(char @char)
+        {
+            Char = @char;
+            Attributes = 0;
+        }
+
         public ConsoleChar(char @char, WORD attributes)
         {
             Char = @char;
@@ -75,22 +81,20 @@ namespace Win32
             Attributes = (WORD)attributes;
         }
 
+        /// <param name="foreground"> See <see cref="CharColor"/> for values </param>
+        /// <param name="background"> See <see cref="CharColor"/> for values </param>
         public ConsoleChar(char @char, byte foreground, byte background, ConsoleCharAttributes attributes)
         {
             Char = @char;
             Attributes = (WORD)(CharColor.Make(background, foreground) | (WORD)attributes);
         }
 
+        /// <param name="foreground"> See <see cref="CharColor"/> for values </param>
+        /// <param name="background"> See <see cref="CharColor"/> for values </param>
         public ConsoleChar(char @char, byte foreground, byte background)
         {
             Char = @char;
             Attributes = CharColor.Make(background, foreground);
-        }
-
-        public ConsoleChar(char @char)
-        {
-            Char = @char;
-            Attributes = 0;
         }
 
         /// <inheritdoc/>

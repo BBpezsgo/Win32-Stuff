@@ -15,6 +15,7 @@
         public const int MaxRecordReads = 1;
 
         /// <exception cref="WindowsException"/>
+        /// <exception cref="OutOfMemoryException"/>
         public static void Start()
         {
             if (Run) return;

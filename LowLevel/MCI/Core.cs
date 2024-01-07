@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Win32.LowLevel
 {
@@ -9,14 +8,6 @@ namespace Win32.LowLevel
         public static extern unsafe MCIERROR mciSendStringW(
            WCHAR* lpszCommand,
            WCHAR* lpszReturnString,
-           UINT cchReturn,
-           HANDLE hwndCallback
-        );
-
-        [DllImport("Winmm.dll", CharSet = CharSet.Unicode)]
-        public static extern unsafe MCIERROR mciSendStringW(
-           string lpszCommand,
-           StringBuilder lpszReturnString,
            UINT cchReturn,
            HANDLE hwndCallback
         );

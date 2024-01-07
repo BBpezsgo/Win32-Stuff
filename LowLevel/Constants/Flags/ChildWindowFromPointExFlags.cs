@@ -1,5 +1,8 @@
 ﻿namespace Win32.LowLevel
 {
+    /// <summary>
+    /// Flags for <see cref="User32.ChildWindowFromPointEx"/>
+    /// </summary>
     [Flags]
     public enum ChildWindowFromPointFlags : UINT
     {

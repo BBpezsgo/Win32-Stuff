@@ -164,23 +164,13 @@
             }
         }
 
+        /// <exception cref="WindowsException"/>
         public static short WindowLeft => ScreenBufferInfo.Window.Left;
+        /// <exception cref="WindowsException"/>
         public static short WindowTop => ScreenBufferInfo.Window.Top;
-        public static short WindowWidth
-        {
-            get
-            {
-                ConsoleScreenBufferInfo info = ScreenBufferInfo;
-                return (short)(info.Window.Right - info.Window.Left + 1);
-            }
-        }
-        public static short WindowHeight
-        {
-            get
-            {
-                ConsoleScreenBufferInfo info = ScreenBufferInfo;
-                return (short)(info.Window.Bottom - info.Window.Top + 1);
-            }
-        }
+        /// <exception cref="WindowsException"/>
+        public static short WindowWidth => ScreenBufferInfo.Window.Width;
+        /// <exception cref="WindowsException"/>
+        public static short WindowHeight => ScreenBufferInfo.Window.Height;
     }
 }

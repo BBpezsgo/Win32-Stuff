@@ -1,6 +1,5 @@
 ﻿namespace Win32.LowLevel
 {
-#pragma warning disable CS1574
     public enum TrackPopupMenuFlags : UINT
     {
         /// <summary>

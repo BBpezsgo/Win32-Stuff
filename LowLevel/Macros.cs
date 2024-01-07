@@ -119,7 +119,7 @@
         /// facility code, and error code that comprise the <c>HRESULT</c>.
         /// </returns>
         /// <remarks>
-        /// <b>Note:</b> Calling <see cref="MAKE_HRESULT"/> for <see cref="HResult.S_OK"/>
+        /// <b>Note:</b> Calling <see cref="MAKE_HRESULT"/> for <see cref="HResult.OK"/>
         /// verification carries a performance penalty.
         /// You should not routinely use <see cref="MAKE_HRESULT"/> for successful results.
         /// </remarks>

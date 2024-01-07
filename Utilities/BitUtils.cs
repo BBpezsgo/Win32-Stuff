@@ -7,6 +7,7 @@ namespace Win32
 
         public static void SetBit(ref int segment, int bit, int value)
             => SetBit(ref segment, bit, value != 0);
+
         public static void SetBit(ref int segment, int bit, bool value)
         {
             segment &= ~(1 << bit);
@@ -14,6 +15,7 @@ namespace Win32
             { segment |= 1 << bit; }
         }
 
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool GetBit(int[] segments, int bit)
         {
             int i = bit / 32;
@@ -26,8 +28,11 @@ namespace Win32
             return segment != 0;
         }
 
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public static void SetBit(int[] segments, int bit, int value)
             => SetBit(segments, bit, value != 0);
+
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public static void SetBit(int[] segments, int bit, bool value)
         {
             int i = bit / 32;

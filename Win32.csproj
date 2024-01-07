@@ -6,10 +6,9 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
+    <ApplicationManifest>Manifest.xml</ApplicationManifest>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-all</AnalysisLevel>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <ApplicationManifest>Manifest.xml</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

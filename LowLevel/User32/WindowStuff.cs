@@ -2,8 +2,6 @@
 
 namespace Win32.LowLevel
 {
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-#pragma warning disable CS1574
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
@@ -1699,6 +1697,10 @@ namespace Win32.LowLevel
         /// and any part of the parent window uncovered as a result of
         /// moving a child window.
         /// </param>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="nWidth"></param>
+        /// <param name="nHeight"></param>
         /// <returns>
         /// <para>
         /// If the function succeeds, the return value is nonzero.

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Numerics;
+using System.Text;
 
 namespace Win32
 {
@@ -30,16 +31,22 @@ namespace Win32
             };
         }
 
-        public void Text(COORD point, string text)
-            => Text(point.X, point.Y, text, CharColor.Silver, CharColor.Black);
-
-        public void Text(int x, int y, string text)
-            => Text(x, y, text, CharColor.Silver, CharColor.Black);
-
-        public void Text(COORD point, string text, byte foreground, byte background = CharColor.Black)
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(COORD point, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
             => Text(point.X, point.Y, text, foreground, background);
 
-        public void Text(int x, int y, string text, byte foreground, byte background = CharColor.Black)
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(Vector2 point, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, foreground, background);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(int x, int y, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 
@@ -53,9 +60,10 @@ namespace Win32
             }
         }
 
-        public void Text(ref int x, int y, string text)
-            => Text(ref x, y, text, CharColor.Silver, CharColor.Black);
-        public void Text(ref int x, int y, string text, byte foreground, byte background = CharColor.Black)
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(ref int x, int y, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (y < 0 || y >= BufferHeight) return;
 
@@ -70,6 +78,14 @@ namespace Win32
             }
         }
 
+        /// <remarks>
+        /// <para>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </para>
+        /// <para>
+        /// This uses <see cref="Mouse"/>
+        /// </para>
+        /// </remarks>
         public bool Button(SMALL_RECT rect, string text, ButtonStyle style)
         {
             WORD attributes = style.Normal;
@@ -112,6 +128,14 @@ namespace Win32
         const string Chars = "abcdefghijklmnopqrstuvwxyz0123456789,.-+";
         const string Keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-+";
 
+        /// <remarks>
+        /// <para>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </para>
+        /// <para>
+        /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
+        /// </para>
+        /// </remarks>
         public void InputField(SmallRect rect, TextFieldStyle style, ref bool active, StringBuilder value)
         {
             WORD attributes = style.Normal;

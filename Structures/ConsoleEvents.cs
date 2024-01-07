@@ -2,7 +2,6 @@
 
 namespace Win32
 {
-#pragma warning disable CS1574
     public enum EventType : WORD
     {
         Key = 0x0001,
