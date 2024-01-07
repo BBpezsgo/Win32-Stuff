@@ -1,4 +1,6 @@
-﻿namespace Win32
+﻿using System.Numerics;
+
+namespace Win32
 {
     [SupportedOSPlatform("windows")]
     public partial class ConsoleRenderer
@@ -22,6 +24,7 @@
         public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
         public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
         public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
+        public ref ConsoleChar this[Vector2 p] => ref ConsoleBuffer[((int)MathF.Round(p.X * BufferWidth)) + (int)MathF.Round(p.Y)];
 
         public ConsoleRenderer() : this(ConsoleHandler.WindowWidth, ConsoleHandler.WindowHeight)
         { }
