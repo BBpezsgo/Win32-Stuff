@@ -26,10 +26,10 @@
         static CompactMouse Stage2;
         static CompactMouse Stage3;
 
-        static COORD recordedPosition;
+        static COORD recordedConsolePosition;
         static COORD leftPressedAt;
 
-        public static COORD RecordedPosition => recordedPosition;
+        public static COORD RecordedConsolePosition => recordedConsolePosition;
         public static COORD LeftPressedAt => leftPressedAt;
 
         public static bool IsPressed(MouseButton button) => Accumulated[(uint)button] || Stage1[(uint)button] || Stage2[(uint)button];
@@ -40,13 +40,13 @@
         public static void Feed(MouseEvent e)
         {
             Accumulated.states = e.ButtonState;
-            recordedPosition = e.MousePosition;
+            recordedConsolePosition = e.MousePosition;
         }
 
         public static void Tick()
         {
             if (Accumulated[(DWORD)MouseButton.Left] && !Stage1[(DWORD)MouseButton.Left])
-            { leftPressedAt = recordedPosition; }
+            { leftPressedAt = recordedConsolePosition; }
 
             Stage3 = Stage2;
             Stage2 = Stage1;

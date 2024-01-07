@@ -23,6 +23,8 @@
         public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
         public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.X * BufferWidth) + p.Y];
 
+        public ConsoleRenderer() : this(ConsoleHandler.WindowWidth, ConsoleHandler.WindowHeight)
+        { }
         public ConsoleRenderer(short bufferWidth, short bufferHeight)
         {
             /*

@@ -8,7 +8,7 @@
         static HWND stdoutHandle = Kernel32.INVALID_HANDLE_VALUE;
 
         /// <exception cref="WindowsException"/>
-        public static HWND InputHandle 
+        public static HWND InputHandle
         {
             get
             {
@@ -17,7 +17,7 @@
 
                 if (stdinHandle == Kernel32.INVALID_HANDLE_VALUE)
                 { throw WindowsException.Get(); }
-                
+
                 return stdinHandle;
             }
         }
@@ -166,7 +166,21 @@
 
         public static short WindowLeft => ScreenBufferInfo.Window.Left;
         public static short WindowTop => ScreenBufferInfo.Window.Top;
-        public static short WindowWidth => (short)(ScreenBufferInfo.Window.Right - ScreenBufferInfo.Window.Left + 1);
-        public static short WindowHeight => (short)(ScreenBufferInfo.Window.Bottom - ScreenBufferInfo.Window.Top + 1);
+        public static short WindowWidth
+        {
+            get
+            {
+                ConsoleScreenBufferInfo info = ScreenBufferInfo;
+                return (short)(info.Window.Right - info.Window.Left + 1);
+            }
+        }
+        public static short WindowHeight
+        {
+            get
+            {
+                ConsoleScreenBufferInfo info = ScreenBufferInfo;
+                return (short)(info.Window.Bottom - info.Window.Top + 1);
+            }
+        }
     }
 }

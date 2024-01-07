@@ -45,7 +45,7 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         [SupportedOSPlatform("windows")]
-        public static POINT Position
+        public static POINT ScreenPosition
         {
             get
             {

@@ -74,7 +74,7 @@ namespace Win32
         {
             WORD attributes = style.Normal;
 
-            if (rect.Contains(Mouse.RecordedPosition))
+            if (rect.Contains(Mouse.RecordedConsolePosition))
             { attributes = style.Hover; }
 
             if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
@@ -116,7 +116,7 @@ namespace Win32
         {
             WORD attributes = style.Normal;
 
-            if (active || rect.Contains(Mouse.RecordedPosition))
+            if (active || rect.Contains(Mouse.RecordedConsolePosition))
             { attributes = style.Active; }
 
             if (Mouse.IsPressed(MouseButton.Left))

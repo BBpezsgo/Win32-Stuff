@@ -79,6 +79,13 @@ global using REFIID = System.Guid;
 global using REFCLSID = System.Guid;
 global using ACCESS_MASK = System.UInt32;
 
+#region MCI
+
+global using MCIERROR = System.UInt32;
+global using MCIDEVICEID = System.UInt32;
+
+#endregion
+
 namespace Win32.Common
 {
     public static class Constants
