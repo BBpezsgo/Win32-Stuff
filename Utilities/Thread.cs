@@ -1,11 +1,13 @@
-﻿using System.Diagnostics;
+﻿global using Thread = Win32.Thread_;
+
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
     [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
-    public readonly struct Thread :
+    public readonly struct Thread_ :
         IDisposable,
         IEquatable<Thread>,
         System.Numerics.IEqualityOperators<Thread, Thread, bool>
@@ -13,7 +15,7 @@ namespace Win32
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly HANDLE Handle;
 
-        Thread(HANDLE handle) => Handle = handle;
+        Thread_(HANDLE handle) => Handle = handle;
 
         /// <exception cref="WindowsException"/>
         public void Dispose()
