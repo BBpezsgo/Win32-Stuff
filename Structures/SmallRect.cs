@@ -107,6 +107,14 @@ namespace Win32
             }
         }
 
+        public SmallRect(COORD position, COORD size)
+        {
+            top = position.Y;
+            left = position.X;
+            bottom = (SHORT)(position.Y + size.Y);
+            right = (SHORT)(position.X + size.X);
+        }
+
         public SmallRect(SHORT x, SHORT y, SHORT width, SHORT height)
         {
             top = y;
@@ -150,43 +158,43 @@ namespace Win32
             point.X >= left &&
             point.Y >= top &&
             point.X < right &&
-            point.Y < Height;
+            point.Y < bottom;
 
         public readonly bool Contains(COORD point) =>
             point.X >= left &&
             point.Y >= top &&
             point.X < right &&
-            point.Y < Height;
+            point.Y < bottom;
 
         public readonly bool Contains(System.Drawing.Point point) =>
             point.X >= left &&
             point.Y >= top &&
             point.X < right &&
-            point.Y < Height;
+            point.Y < bottom;
 
         public readonly bool Contains(System.Drawing.PointF point) =>
             point.X >= left &&
             point.Y >= top &&
             point.X < right &&
-            point.Y < Height;
+            point.Y < bottom;
 
         public readonly bool Contains(System.Numerics.Vector2 point) =>
             point.X >= left &&
             point.Y >= top &&
             point.X < right &&
-            point.Y < Height;
+            point.Y < bottom;
 
         public readonly bool Contains(int x, int y) =>
             x >= left &&
             y >= top &&
             x < right &&
-            y < Height;
+            y < bottom;
 
         public readonly bool Contains(float x, float y) =>
             x >= left &&
             y >= top &&
             x < right &&
-            y < Height;
+            y < bottom;
 
         #endregion
     }
