@@ -6,6 +6,14 @@ namespace Win32.LowLevel
     public static partial class User32
     {
         [DllImport("User32.dll", SetLastError = true)]
+        public static extern unsafe BOOL RedrawWindow(
+          [In] HWND hWnd,
+          [In] RECT* lprcUpdate,
+          [In] HRGN hrgnUpdate,
+          [In] UINT flags
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
         public static extern unsafe ATOM RegisterClassW(
           [In] WNDCLASSW* lpWndClass
         );
