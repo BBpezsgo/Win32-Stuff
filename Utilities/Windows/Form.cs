@@ -151,11 +151,9 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
-        public unsafe Form(Win32Class @class, string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles) : base()
+        public unsafe Form(Win32Class @class, string title, int width = CreateWindowFlags.USEDEFAULT, int height = CreateWindowFlags.USEDEFAULT, Menu? menu = null, uint styles = DefaultStyles, uint exStyles = 0) : base()
         {
             HINSTANCE hInstance = System.Diagnostics.Process.GetCurrentProcess().Handle;
-
-            uint exStyles = 0;
 
             GCHandle = GCHandle.Alloc(this, GCHandleType.Normal);
 
@@ -531,19 +529,29 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        public static unsafe void HandleNextEvent(Action<MSG>? before = null)
+        {
+            MSG msg;
+            int res;
+
+            while ((res = User32.PeekMessageW(&msg, HWND.Zero, 0, 0, PeekMessageFlags.REMOVE)) != 0)
+            {
+                if (res == -1)
+                { throw WindowsException.Get(); }
+
+                _ = User32.TranslateMessage(&msg);
+
+                before?.Invoke(msg);
+
+                User32.DispatchMessageW(&msg);
+            }
+        }
+
+        /// <exception cref="WindowsException"/>
         public void Close()
         {
             if (User32.PostMessageW(Handle, WindowMessage.WM_CLOSE, WPARAM.Zero, LPARAM.Zero) == FALSE)
             { throw WindowsException.Get(); }
-        }
-
-        /// <exception cref="WindowsException"/>
-        public void Destroy()
-        {
-            if (Handle == HWND.Zero) return;
-            if (User32.DestroyWindow(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-            Handle = HWND.Zero;
         }
 
         /// <exception cref="WindowsException"/>

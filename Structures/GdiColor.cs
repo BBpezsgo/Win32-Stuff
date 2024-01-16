@@ -15,6 +15,10 @@ namespace Win32.Gdi32
 
         GdiColor(uint v) => this.v = v;
 
+        public GdiColor(byte r, byte g, byte b) => v = Macros.RGB(r, g, b);
+        public GdiColor(int r, int g, int b) => v = Macros.RGB((byte)r, (byte)g, (byte)b);
+        public GdiColor(float r, float g, float b) => v = Macros.RGB((byte)(r * 255f), (byte)(g * 255f), (byte)(b * 255f));
+
         public static implicit operator GdiColor(uint v) => new(v);
         public static implicit operator uint(GdiColor v) => v.v;
         public static implicit operator GdiColor(ValueTuple<byte, byte, byte> v) => new(Macros.RGB(v.Item1, v.Item2, v.Item3));
@@ -34,7 +38,7 @@ namespace Win32.Gdi32
         public override bool Equals(object? obj) => obj is GdiColor color && Equals(color);
         public bool Equals(GdiColor other) => v == other.v;
         public string ToString(string? format, IFormatProvider? formatProvider) => v.ToString(format, formatProvider);
-   
+
         public static GdiColor Parse(string s, IFormatProvider? provider) => uint.Parse(s, provider);
         public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out GdiColor result)
         {

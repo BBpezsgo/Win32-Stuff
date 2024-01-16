@@ -281,6 +281,30 @@ namespace Win32.Gdi32
             { throw new GdiException($"{nameof(Gdi32.SetPixelV)} has failed"); }
         }
 
+        public unsafe int StretchDIBits(
+          int xDest,
+          int yDest,
+          int DestWidth,
+          int DestHeight,
+          int xSrc,
+          int ySrc,
+          int SrcWidth,
+          int SrcHeight,
+          void* lpBits,
+          BitmapInfo* lpbmi,
+          UINT iUsage,
+          DWORD rop) =>
+            Gdi32.StretchDIBits(
+                Handle,
+                xDest, yDest,
+                DestWidth, DestHeight,
+                xSrc, ySrc,
+                SrcWidth, SrcHeight,
+                lpBits,
+                lpbmi,
+                iUsage,
+                rop);
+
         public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
 
         protected abstract void DisposeDC();

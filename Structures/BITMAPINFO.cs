@@ -6,7 +6,6 @@ namespace Win32.Gdi32
     public struct BitmapInfo
     {
         public BitmapInfoHeader Header;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-        public RGBQuad[] Colors;
+        public RGBQuad Colors;
     }
 }

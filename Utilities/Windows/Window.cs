@@ -122,6 +122,15 @@ namespace Win32
             return TRUE;
         }
 
+        /// <exception cref="WindowsException"/>
+        public void Destroy()
+        {
+            if (Handle == HWND.Zero) return;
+            if (User32.DestroyWindow(Handle) == FALSE)
+            { throw WindowsException.Get(); }
+            Handle = HWND.Zero;
+        }
+
         [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
         public unsafe IReadOnlyCollection<Window> Children
         {

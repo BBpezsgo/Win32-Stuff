@@ -13,6 +13,23 @@ namespace Win32.Gdi32.LowLevel
         public const uint GDI_ERROR = unchecked((uint)0xFFFFFFFFL);
         public static readonly nint HGDI_ERROR = unchecked((nint)GDI_ERROR);
 
+        [DllImport("Gdi32.dll", SetLastError = true)]
+        public static extern unsafe int StretchDIBits(
+          [In] HDC hdc,
+          [In] int xDest,
+          [In] int yDest,
+          [In] int DestWidth,
+          [In] int DestHeight,
+          [In] int xSrc,
+          [In] int ySrc,
+          [In] int SrcWidth,
+          [In] int SrcHeight,
+          [In] void* lpBits,
+          [In] BitmapInfo* lpbmi,
+          [In] UINT iUsage,
+          [In] DWORD rop
+        );
+
         /// <summary>
         /// The GdiFlush function flushes the calling thread's current batch.
         /// </summary>

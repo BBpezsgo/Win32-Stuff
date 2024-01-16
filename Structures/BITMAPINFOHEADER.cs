@@ -15,7 +15,7 @@ namespace Win32.Gdi32
         public LONG Height;
         public WORD Planes;
         public WORD BitCount;
-        public DWORD Compression;
+        public BitmapCompression Compression;
         public DWORD SizeImage;
         public LONG PixelsPerMeterX;
         public LONG PixelsPerMeterY;

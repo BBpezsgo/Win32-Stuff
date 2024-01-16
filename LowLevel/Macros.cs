@@ -2,7 +2,7 @@
 {
     public struct Macros
     {
-        public static COLORREF RGB(BYTE r, BYTE g, BYTE b) => unchecked((COLORREF)(r | (g << 8) | (b << 16)));
+        public static COLORREF RGB(BYTE r, BYTE g, BYTE b) => unchecked((COLORREF)(b | (g << 8) | (r << 16)));
 
         public static bool IS_INTRESOURCE(ULONG_PTR _r)
             => (((ULONG)_r) >> 16) == 0;

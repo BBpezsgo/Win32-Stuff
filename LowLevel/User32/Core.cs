@@ -5,6 +5,12 @@ namespace Win32.LowLevel
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern SHORT GetAsyncKeyState(
+          [In] int vKey
+        );
+
         [DllImport("User32.dll", SetLastError = true)]
         public static extern unsafe BOOL RedrawWindow(
           [In] HWND hWnd,

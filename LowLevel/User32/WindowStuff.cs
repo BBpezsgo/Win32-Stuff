@@ -2162,6 +2162,23 @@ namespace Win32.LowLevel
           [In, Optional] void* lpParam
         );
 
+        /// <inheritdoc cref="CreateWindowExW"/>
+        [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern unsafe HWND CreateWindowExA(
+          [In] DWORD dwExStyle,
+          [In, Optional] byte* lpClassName,
+          [In, Optional] byte* lpWindowName,
+          [In] DWORD dwStyle,
+          [In] int X,
+          [In] int Y,
+          [In] int nWidth,
+          [In] int nHeight,
+          [In, Optional] HWND hWndParent,
+          [In, Optional] HMENU hMenu,
+          [In, Optional] HINSTANCE hInstance,
+          [In, Optional] void* lpParam
+        );
+
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern LRESULT DefWindowProcW(
             [In] HWND hWnd,
