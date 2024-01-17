@@ -75,23 +75,9 @@ namespace Win32
             Attributes = attributes;
         }
 
-        public ConsoleChar(char @char, ConsoleCharAttributes attributes)
-        {
-            Char = @char;
-            Attributes = (WORD)attributes;
-        }
-
         /// <param name="foreground"> See <see cref="CharColor"/> for values </param>
         /// <param name="background"> See <see cref="CharColor"/> for values </param>
-        public ConsoleChar(char @char, byte foreground, byte background, ConsoleCharAttributes attributes)
-        {
-            Char = @char;
-            Attributes = (WORD)(CharColor.Make(background, foreground) | (WORD)attributes);
-        }
-
-        /// <param name="foreground"> See <see cref="CharColor"/> for values </param>
-        /// <param name="background"> See <see cref="CharColor"/> for values </param>
-        public ConsoleChar(char @char, byte foreground, byte background)
+        public ConsoleChar(char @char, byte foreground, byte background = CharColor.Black)
         {
             Char = @char;
             Attributes = CharColor.Make(background, foreground);
