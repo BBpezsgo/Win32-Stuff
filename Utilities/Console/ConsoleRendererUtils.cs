@@ -49,21 +49,21 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(COORD point, string? text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public void Text(COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
             => Text(point.X, point.Y, text, foreground, background);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(Vector2 point, string? text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public void Text(Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
             => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, foreground, background);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(int x, int y, string? text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public void Text(int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
-            if (text is null) return;
+            if (text.IsEmpty) return;
             if (y < 0 || y >= BufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
@@ -79,9 +79,9 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(ref int x, int y, string? text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public void Text(ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
-            if (text is null) return;
+            if (text.IsEmpty) return;
             if (y < 0 || y >= BufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
@@ -103,7 +103,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/>
         /// </para>
         /// </remarks>
-        public bool Button(SMALL_RECT rect, string text, ButtonStyle style)
+        public bool Button(SMALL_RECT rect, ReadOnlySpan<char> text, ButtonStyle style)
         {
             WORD attributes = style.Normal;
 
@@ -367,6 +367,27 @@ namespace Win32
 
                     this[actualX, actualY].Char = c;
                     this[actualX, actualY].Attributes = attributes;
+                }
+            }
+        }
+
+        public void Fill(SMALL_RECT box, byte background, byte foreground, char character) => Fill(box, CharColor.Make(background, foreground), character);
+        public void Fill(SMALL_RECT box, ushort attributes, char character)
+        {
+            for (int _y = 0; _y < box.Height; _y++)
+            {
+                int actualY = box.Y + _y;
+                if (actualY >= Height) break;
+                if (actualY < 0) continue;
+
+                for (int _x = 0; _x < box.Width; _x++)
+                {
+                    int actualX = box.X + _x;
+
+                    if (actualX >= Width) break;
+                    if (actualX < 0) continue;
+
+                    this[actualX, actualY] = new ConsoleChar(character, attributes);
                 }
             }
         }
