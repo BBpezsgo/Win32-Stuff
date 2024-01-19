@@ -197,5 +197,45 @@ namespace Win32
             y < bottom;
 
         #endregion
+
+        #region Margin()
+
+        public readonly SMALL_RECT Margin(int all) => Margin((short)all);
+        public readonly SMALL_RECT Margin(short all)
+        {
+            SMALL_RECT result = this;
+
+            result.top += all;
+            result.left += all;
+            result.bottom -= all;
+            result.right -= all;
+
+            SMALL_RECT.Fix(ref result);
+
+            return result;
+        }
+
+        #endregion
+
+        #region Fix()
+
+        static void Fix(ref SMALL_RECT rect)
+        {
+            if (rect.left > rect.right)
+            {
+                short middle = (short)(((int)rect.left + (int)rect.right) / 2);
+                rect.left = middle;
+                rect.right = middle;
+            }
+
+            if (rect.top > rect.bottom)
+            {
+                short middle = (short)(((int)rect.top + (int)rect.bottom) / 2);
+                rect.top = middle;
+                rect.bottom = middle;
+            }
+        }
+
+        #endregion
     }
 }

@@ -96,6 +96,47 @@ namespace Win32
         }
 
         /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Textbox(SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return;
+            if (rect.Top >= BufferHeight) return;
+
+            int x = 0;
+            int y = 0;
+
+            string[] words = text.Split(' ');
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (x + words.Length > rect.Width)
+                {
+                    x = 0;
+                    y++;
+                }
+
+                int actualY = rect.Top + y;
+
+                for (int j = 0; j < words[i].Length; j++)
+                {
+                    int actualX = rect.Left + x;
+
+                    if (actualX >= 0 &&
+                        actualX < BufferWidth &&
+                        actualY >= 0 &&
+                        actualY < BufferHeight)
+                    {
+                        this[actualX, actualY] = new ConsoleChar(words[i][j], foreground, background);
+                    }
+
+                    x++;
+                }
+                x++;
+            }
+        }
+
+        /// <remarks>
         /// <para>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </para>
