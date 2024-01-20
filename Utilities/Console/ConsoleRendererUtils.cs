@@ -3,49 +3,89 @@ using System.Text;
 
 namespace Win32
 {
+    public class ConsoleButtonStyle
+    {
+        public ushort Normal;
+        public ushort Hover;
+        public ushort Down;
+
+        public static ConsoleButtonStyle Default => new()
+        {
+            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
+            Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
+            Down = CharColor.Make(CharColor.White, CharColor.Black),
+        };
+    }
+
+    public class ConsoleDropdownStyle
+    {
+        public ushort Normal;
+        public ushort Hover;
+        public ushort Down;
+        public char ActiveChar;
+        public char InactiveChar;
+
+        public static ConsoleDropdownStyle Default => new()
+        {
+            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
+            Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
+            Down = CharColor.Make(CharColor.White, CharColor.Black),
+            ActiveChar = '▼',
+            InactiveChar = '►',
+        };
+    }
+
+    public class ConsoleInputFieldStyle
+    {
+        public ushort Normal;
+        public ushort Active;
+
+        public static ConsoleInputFieldStyle Default => new()
+        {
+            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
+            Active = CharColor.Make(CharColor.Silver, CharColor.Black),
+        };
+    }
+
+    public class ConsoleDropdown
+    {
+        public bool IsActive;
+
+        public ConsoleDropdown()
+        {
+            IsActive = false;
+        }
+
+        public static bool operator true(ConsoleDropdown consoleDropdown) => consoleDropdown.IsActive;
+        public static bool operator false(ConsoleDropdown consoleDropdown) => !consoleDropdown.IsActive;
+    }
+
+    public class ConsoleInputField
+    {
+        public StringBuilder Value;
+        public bool IsActive;
+        internal int CursorPosition;
+
+        public ConsoleInputField(string? value)
+        {
+            value ??= string.Empty;
+            Value = new(value);
+            IsActive = false;
+            CursorPosition = value.Length;
+        }
+    }
+
+    public class ConsolePanel
+    {
+        public SMALL_RECT Rect;
+        public bool IsActive;
+        public COORD PressedOffset;
+
+        public ConsolePanel(SMALL_RECT rect) => Rect = rect;
+    }
+
     public partial class ConsoleRenderer
     {
-        public struct ButtonStyle
-        {
-            public ushort Normal;
-            public ushort Hover;
-            public ushort Down;
-
-            public static ButtonStyle Default => new()
-            {
-                Normal = CharColor.Make(CharColor.Gray, CharColor.White),
-                Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
-                Down = CharColor.Make(CharColor.White, CharColor.Black),
-            };
-        }
-
-        public struct TextFieldStyle
-        {
-            public ushort Normal;
-            public ushort Active;
-
-            public static TextFieldStyle Default => new()
-            {
-                Normal = CharColor.Make(CharColor.Gray, CharColor.White),
-                Active = CharColor.Make(CharColor.Silver, CharColor.Black),
-            };
-        }
-
-        public struct TextField
-        {
-            public StringBuilder Value;
-            public bool IsActive;
-            internal int CursorPosition;
-
-            public TextField(string? value)
-            {
-                value ??= string.Empty;
-                Value = new(value);
-                IsActive = false;
-                CursorPosition = value.Length;
-            }
-        }
-
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
@@ -73,6 +113,88 @@ namespace Win32
                 if (x_ >= BufferWidth) return;
 
                 this[x_, y] = new ConsoleChar(text[i], foreground, background);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(COORD point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text(point.X, point.Y, text, foreground, background);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(Vector2 point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, foreground, background);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= BufferHeight) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                int x_ = x + i;
+                if (x_ < 0) continue;
+                if (x_ >= BufferWidth) return;
+
+                this[x_, y] = new ConsoleChar((char)text[i], foreground, background);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Dropdown(COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+            => Dropdown(coord.X, coord.Y, dropdown, text, style);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Dropdown(int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= BufferHeight) return;
+
+            short width = (short)(2 + text.Length);
+            SmallRect rect = new(x, y, width, 1);
+
+            WORD attributes = style.Normal;
+
+            if (!Mouse.WasUsed)
+            {
+                if (rect.Contains(Mouse.RecordedConsolePosition))
+                { attributes = style.Hover; }
+
+                if (rect.Contains(Mouse.LeftPressedAt))
+                {
+                    if (Mouse.IsPressed(MouseButton.Left))
+                    {
+                        attributes = style.Down;
+                        Mouse.Use();
+                    }
+
+                    if (Mouse.IsUp(MouseButton.Left))
+                    {
+                        dropdown.IsActive = !dropdown.IsActive;
+                        Mouse.Use();
+                    }
+                }
+            }
+
+            if (x >= 0 && x < BufferWidth)
+            { this[x, y] = new ConsoleChar(dropdown.IsActive ? '▼' : '►', attributes); }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (x + i + 2 < 0) { continue; }
+                if (x + i + 2 >= BufferWidth) return;
+
+                this[x + i + 2, y] = new ConsoleChar(text[i], attributes);
             }
         }
 
@@ -144,17 +266,31 @@ namespace Win32
         /// This uses <see cref="Mouse"/>
         /// </para>
         /// </remarks>
-        public bool Button(SMALL_RECT rect, ReadOnlySpan<char> text, ButtonStyle style)
+        public bool Button(SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
         {
             WORD attributes = style.Normal;
+            bool clicked = false;
 
-            if (rect.Contains(Mouse.RecordedConsolePosition))
-            { attributes = style.Hover; }
+            if (!Mouse.WasUsed)
+            {
+                if (rect.Contains(Mouse.RecordedConsolePosition))
+                { attributes = style.Hover; }
 
-            if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
-            { attributes = style.Down; }
+                if (rect.Contains(Mouse.LeftPressedAt))
+                {
+                    if (Mouse.IsPressed(MouseButton.Left))
+                    {
+                        attributes = style.Down;
+                        Mouse.Use();
+                    }
 
-            bool clicked = Mouse.IsUp(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt);
+                    if (Mouse.IsUp(MouseButton.Left))
+                    {
+                        clicked = true;
+                        Mouse.Use();
+                    }
+                }
+            }
 
             int labelOffsetX = (int)((rect.Width / 2f) - (text.Length / 2f));
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
@@ -195,15 +331,24 @@ namespace Win32
         /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
         /// </para>
         /// </remarks>
-        public void InputField(SmallRect rect, TextFieldStyle style, ref bool active, StringBuilder value)
+        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ref bool active, StringBuilder value)
         {
             WORD attributes = style.Normal;
 
-            if (active || rect.Contains(Mouse.RecordedConsolePosition))
-            { attributes = style.Active; }
+            if (!Mouse.WasUsed)
+            {
+                if (active || rect.Contains(Mouse.RecordedConsolePosition))
+                {
+                    attributes = style.Active;
+                    Mouse.Use();
+                }
 
-            if (Mouse.IsPressed(MouseButton.Left))
-            { active = rect.Contains(Mouse.LeftPressedAt); }
+                if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
+                {
+                    active = true;
+                    Mouse.Use();
+                }
+            }
 
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
 
@@ -259,7 +404,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
         /// </para>
         /// </remarks>
-        public void InputField(SmallRect rect, TextFieldStyle style, ref TextField textField)
+        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ref ConsoleInputField textField)
         {
             WORD attributes = style.Normal;
 
@@ -268,10 +413,11 @@ namespace Win32
 
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
 
-            if (Mouse.IsPressed(MouseButton.Left))
+            if (!Mouse.WasUsed && Mouse.IsPressed(MouseButton.Left))
             {
                 if (textField.IsActive = rect.Contains(Mouse.LeftPressedAt))
                 {
+                    Mouse.Use();
                     textField.CursorPosition = Math.Clamp(Mouse.LeftPressedAt.X - rect.Left, 0, textField.Value.Length);
                 }
             }
@@ -384,32 +530,120 @@ namespace Win32
         public void Box(SMALL_RECT box, byte background, byte foreground, char[] sideCharacters) => Box(box, CharColor.Make(background, foreground), sideCharacters);
         public void Box(SMALL_RECT box, ushort attributes, char[] sideCharacters)
         {
-            for (int _y = 0; _y < box.Height; _y++)
+            int top = box.Top;
+            int left = box.Left;
+            int bottom = box.Bottom;
+            int right = box.Right;
+
+            for (int x = left + 1; x < right; x++)
             {
-                int actualY = box.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
+                if (x < 0 || x >= BufferWidth) continue;
 
-                for (int _x = 0; _x < box.Width; _x++)
+                if (top >= 0 && top < BufferHeight)
+                { this[x, top] = new ConsoleChar(sideCharacters[0b_1000], attributes); }
+
+                if (bottom >= 0 && bottom < BufferHeight)
+                { this[x, bottom] = new ConsoleChar(sideCharacters[0b_0010], attributes); }
+            }
+
+            for (int y = top + 1; y < bottom; y++)
+            {
+                if (y < 0 || y >= BufferHeight) continue;
+
+                if (left >= 0 && left < BufferWidth)
+                { this[left, y] = new ConsoleChar(sideCharacters[0b_0100], attributes); }
+
+                if (right >= 0 && right < BufferWidth)
+                { this[right, y] = new ConsoleChar(sideCharacters[0b_0001], attributes); }
+            }
+
+            if (left >= 0 && left < BufferWidth && top >= 0 && top < BufferHeight)
+            { this[left, top] = new ConsoleChar(sideCharacters[0b_1100], attributes); }
+
+            if (right >= 0 && right < BufferWidth && top >= 0 && top < BufferHeight)
+            { this[right, top] = new ConsoleChar(sideCharacters[0b_1001], attributes); }
+
+            if (left >= 0 && left < BufferWidth && bottom >= 0 && bottom < BufferHeight)
+            { this[left, bottom] = new ConsoleChar(sideCharacters[0b_0110], attributes); }
+
+            if (right >= 0 && right < BufferWidth && bottom >= 0 && bottom < BufferHeight)
+            { this[right, bottom] = new ConsoleChar(sideCharacters[0b_0011], attributes); }
+        }
+
+        public void Panel(ConsolePanel panel, ushort attributes, char[] sideCharacters)
+        {
+            if (!Mouse.WasUsed)
+            {
+                if (Mouse.IsDown(MouseButton.Left) &&
+                    new SmallRect(panel.Rect.X, panel.Rect.Y, panel.Rect.Width, (short)1).Contains(Mouse.RecordedConsolePosition))
                 {
-                    int actualX = box.X + _x;
+                    Mouse.Use();
+                    panel.IsActive = true;
+                    panel.PressedOffset = panel.Rect.Position - Mouse.RecordedConsolePosition;
+                }
+                else if (panel.IsActive)
+                {
+                    Mouse.Use();
+                    if (Mouse.IsHold(MouseButton.Left))
+                    {
+                        int panelWidth = panel.Rect.Width;
+                        int panelHeight = panel.Rect.Height;
 
-                    if (actualX >= Width) break;
-                    if (actualX < 0) continue;
+                        COORD newPosition = Mouse.RecordedConsolePosition + panel.PressedOffset;
 
-                    int size = 0b_0000;
+                        if (newPosition.Y < 0) newPosition.Y = 0;
+                        if (newPosition.X < 0) newPosition.X = 0;
+                        if (newPosition.Y > BufferHeight - panelHeight) newPosition.Y = (short)(BufferHeight - panelHeight);
+                        if (newPosition.X >= BufferWidth - panelWidth) newPosition.X = (short)(BufferWidth - panelWidth - 1);
 
-                    if (_y == 0) size |= 0b_1000; // Top
-                    if (_x == 0) size |= 0b_0100; // Left
-                    if (_y == box.Height - 1) size |= 0b_0010; // Bottom
-                    if (_x == box.Width - 1) size |= 0b_0001; // Right
-
-                    char c = sideCharacters[size];
-
-                    this[actualX, actualY].Char = c;
-                    this[actualX, actualY].Attributes = attributes;
+                        panel.Rect.Position = newPosition;
+                    }
+                    else
+                    {
+                        panel.IsActive = false;
+                        panel.PressedOffset = default;
+                    }
                 }
             }
+
+            int top = panel.Rect.Top;
+            int left = panel.Rect.Left;
+            int bottom = panel.Rect.Bottom;
+            int right = panel.Rect.Right;
+
+            for (int x = left + 1; x < right; x++)
+            {
+                if (x < 0 || x >= BufferWidth) continue;
+
+                if (top >= 0 && top < BufferHeight)
+                { this[x, top] = new ConsoleChar(sideCharacters[0b_1000], attributes); }
+
+                if (bottom >= 0 && bottom < BufferHeight)
+                { this[x, bottom] = new ConsoleChar(sideCharacters[0b_0010], attributes); }
+            }
+
+            for (int y = top + 1; y < bottom; y++)
+            {
+                if (y < 0 || y >= BufferHeight) continue;
+
+                if (left >= 0 && left < BufferWidth)
+                { this[left, y] = new ConsoleChar(sideCharacters[0b_0100], attributes); }
+
+                if (right >= 0 && right < BufferWidth)
+                { this[right, y] = new ConsoleChar(sideCharacters[0b_0001], attributes); }
+            }
+
+            if (left >= 0 && left < BufferWidth && top >= 0 && top < BufferHeight)
+            { this[left, top] = new ConsoleChar(sideCharacters[0b_1100], attributes); }
+
+            if (right >= 0 && right < BufferWidth && top >= 0 && top < BufferHeight)
+            { this[right, top] = new ConsoleChar(sideCharacters[0b_1001], attributes); }
+
+            if (left >= 0 && left < BufferWidth && bottom >= 0 && bottom < BufferHeight)
+            { this[left, bottom] = new ConsoleChar(sideCharacters[0b_0110], attributes); }
+
+            if (right >= 0 && right < BufferWidth && bottom >= 0 && bottom < BufferHeight)
+            { this[right, bottom] = new ConsoleChar(sideCharacters[0b_0011], attributes); }
         }
 
         public void Fill(SMALL_RECT box, byte background, byte foreground, char character) => Fill(box, CharColor.Make(background, foreground), character);
@@ -421,15 +655,37 @@ namespace Win32
                 if (actualY >= Height) break;
                 if (actualY < 0) continue;
 
-                for (int _x = 0; _x < box.Width; _x++)
-                {
-                    int actualX = box.X + _x;
+                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, box.Left);
+                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, box.Right);
+                int length = Math.Max(0, endIndex - startIndex);
 
-                    if (actualX >= Width) break;
-                    if (actualX < 0) continue;
+                Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes), startIndex, length);
 
-                    this[actualX, actualY] = new ConsoleChar(character, attributes);
-                }
+                // for (int _x = 0; _x < box.Width; _x++)
+                // {
+                //     int actualX = box.X + _x;
+                // 
+                //     if (actualX >= Width) break;
+                //     if (actualX < 0) continue;
+                // 
+                //     this[actualX, actualY] = new ConsoleChar(character, attributes);
+                // }
+            }
+        }
+
+        public void Clear(SMALL_RECT box)
+        {
+            for (int _y = 0; _y < box.Height; _y++)
+            {
+                int actualY = box.Y + _y;
+                if (actualY >= Height) break;
+                if (actualY < 0) continue;
+
+                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, box.Left);
+                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, box.Right);
+                int length = Math.Max(0, endIndex - startIndex);
+
+                Array.Clear(ConsoleBuffer, startIndex, length);
             }
         }
     }

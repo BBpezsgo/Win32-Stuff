@@ -93,17 +93,21 @@ namespace Win32
             readonly get => new(left, top);
             set
             {
+                int offsetX = value.X - left;
+                int offsetY = value.Y - top;
                 left = value.X;
                 top = value.Y;
+                bottom = (short)(bottom + offsetY);
+                right = (short)(right + offsetX);
             }
         }
-        public SIZE Size
+        public SmallSize Size
         {
             readonly get => new(Width, Height);
             set
             {
-                Width = (SHORT)value.Width;
-                Height = (SHORT)value.Height;
+                Width = value.Width;
+                Height = value.Height;
             }
         }
 
@@ -115,10 +119,26 @@ namespace Win32
             right = (SHORT)(position.X + size.X);
         }
 
+        public SmallRect(COORD position, SmallSize size)
+        {
+            top = position.Y;
+            left = position.X;
+            bottom = (SHORT)(position.Y + size.Height);
+            right = (SHORT)(position.X + size.Width);
+        }
+
         public SmallRect(SHORT x, SHORT y, SHORT width, SHORT height)
         {
             top = y;
             left = x;
+            bottom = (SHORT)(y + height);
+            right = (SHORT)(x + width);
+        }
+
+        public SmallRect(LONG x, LONG y, LONG width, LONG height)
+        {
+            top = (SHORT)y;
+            left = (SHORT)x;
             bottom = (SHORT)(y + height);
             right = (SHORT)(x + width);
         }

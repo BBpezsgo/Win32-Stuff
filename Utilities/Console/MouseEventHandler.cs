@@ -29,13 +29,18 @@
         static COORD recordedConsolePosition;
         static COORD leftPressedAt;
 
+        static bool wasUsed;
+
         public static COORD RecordedConsolePosition => recordedConsolePosition;
         public static COORD LeftPressedAt => leftPressedAt;
+        public static bool WasUsed => wasUsed;
 
         public static bool IsPressed(MouseButton button) => Accumulated[(uint)button] || Stage1[(uint)button] || Stage2[(uint)button];
         public static bool IsHold(MouseButton button) => Stage2[(uint)button];
         public static bool IsDown(MouseButton button) => Stage1[(uint)button] && !Stage2[(uint)button] && !Stage3[(uint)button];
         public static bool IsUp(MouseButton button) => !Stage1[(uint)button] && !Stage2[(uint)button] && Stage3[(uint)button];
+
+        public static void Use() => wasUsed = true;
 
         public static void Feed(MouseEvent e)
         {
@@ -45,6 +50,8 @@
 
         public static void Tick()
         {
+            wasUsed = false;
+
             if (Accumulated[(DWORD)MouseButton.Left] && !Stage1[(DWORD)MouseButton.Left])
             { leftPressedAt = recordedConsolePosition; }
 

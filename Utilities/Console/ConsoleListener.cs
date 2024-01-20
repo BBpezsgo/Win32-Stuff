@@ -12,7 +12,7 @@
         static bool Run;
         static HANDLE Handle;
 
-        public const int MaxRecordReads = 1;
+        const int MaxRecordReads = 1;
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="OutOfMemoryException"/>

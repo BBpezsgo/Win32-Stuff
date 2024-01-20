@@ -32,5 +32,26 @@ namespace Win32
         internal const WORD MASK_COLOR = 0b_1111_1111;
 
         public static WORD Make(byte background, byte foreground) => unchecked((WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)));
+
+        public static byte Invert(byte color) => color switch
+        {
+            CharColor.Red => CharColor.BrightCyan,
+            CharColor.Green => CharColor.BrightMagenta,
+            CharColor.Blue => CharColor.BrightYellow,
+            CharColor.Yellow => CharColor.BrightBlue,
+            CharColor.Cyan => CharColor.BrightRed,
+            CharColor.Magenta => CharColor.BrightGreen,
+            CharColor.BrightRed => CharColor.Cyan,
+            CharColor.BrightGreen => CharColor.Magenta,
+            CharColor.BrightBlue => CharColor.Yellow,
+            CharColor.BrightYellow => CharColor.Blue,
+            CharColor.BrightCyan => CharColor.Red,
+            CharColor.BrightMagenta => CharColor.Green,
+            CharColor.Black => CharColor.White,
+            CharColor.Silver => CharColor.Gray,
+            CharColor.Gray => CharColor.Silver,
+            CharColor.White => CharColor.Black,
+            _ => 0,
+        };
     }
 }

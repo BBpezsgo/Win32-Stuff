@@ -55,7 +55,7 @@ namespace Win32
 
             ConsoleBuffer = new ConsoleChar[Size];
             Array.Fill(ConsoleBuffer, ConsoleChar.Empty);
-            ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
+            ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
         }
 
         public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
@@ -85,7 +85,7 @@ namespace Win32
             BufferHeight = info.Window.Height;
 
             ConsoleBuffer = new ConsoleChar[Size];
-            ConsoleRect = new SMALL_RECT(0, 0, BufferWidth, BufferHeight);
+            ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
         }
     }
 }
