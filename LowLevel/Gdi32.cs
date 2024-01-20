@@ -240,9 +240,7 @@ namespace Win32.Gdi32.LowLevel
         [DllImport("Gdi32.dll", SetLastError = true)]
         public static extern unsafe HBITMAP CreateDIBSection(
           [In] HDC hdc,
-#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In] BitmapInfo* pbmi,
-#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In] UINT usage,
           [Out] void** ppvBits,
           [In] HANDLE hSection,
@@ -268,9 +266,7 @@ namespace Win32.Gdi32.LowLevel
           [In] UINT start,
           [In] UINT cLines,
           [Out] void* lpvBits,
-#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In, Out] BitmapInfo* lpbmi,
-#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In] UINT usage
         );
 

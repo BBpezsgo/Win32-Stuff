@@ -25,6 +25,8 @@ namespace Win32
         /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
         /// <exception cref="ArgumentOutOfRangeException"/>
+        public ref ConsoleChar this[float x, float y] => ref this[((int)MathF.Round(y) * BufferWidth) + (int)MathF.Round(x)];
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
         /// <exception cref="ArgumentOutOfRangeException"/>
         public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];

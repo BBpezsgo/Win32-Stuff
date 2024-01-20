@@ -34,16 +34,21 @@ namespace Win32.Common
         public static implicit operator System.Drawing.Size(SmallSize size) => new(size.Width, size.Height);
         public static implicit operator System.Drawing.SizeF(SmallSize size) => new(size.Width, size.Height);
         public static implicit operator System.Numerics.Vector2(SmallSize size) => new(size.Width, size.Height);
+        public static implicit operator SIZE(SmallSize size) => new(size.Width, size.Height);
 
         public static implicit operator SmallSize(ValueTuple<SHORT, SHORT> size) => new(size.Item1, size.Item2);
 
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SmallSize(ValueTuple<LONG, LONG> size) => new(checked((SHORT)size.Item1), checked((SHORT)size.Item2));
         public static explicit operator SmallSize(ValueTuple<LONG, LONG> size) => new((SHORT)size.Item1, (SHORT)size.Item2);
-        
+
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SmallSize(System.Drawing.Size size) => new(checked((SHORT)size.Width), checked((SHORT)size.Height));
         public static explicit operator SmallSize(System.Drawing.Size size) => new((SHORT)size.Width, (SHORT)size.Height);
+
+        /// <exception cref="OverflowException"/>
+        public static explicit operator checked SmallSize(SIZE size) => new(checked((SHORT)size.Width), checked((SHORT)size.Height));
+        public static explicit operator SmallSize(SIZE size) => new((SHORT)size.Width, (SHORT)size.Height);
 
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SmallSize(System.Drawing.SizeF size) => new(checked((SHORT)size.Width), checked((SHORT)size.Height));

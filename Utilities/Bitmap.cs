@@ -96,7 +96,6 @@ namespace Win32.Gdi32
 
             // Gets the "bits" from the bitmap, and copies them into a buffer 
             // that's pointed to by lpbitmap.
-#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
             int scanlinesCopied = Gdi32.GetDIBits(
                 dc,
                 this,
@@ -105,7 +104,6 @@ namespace Win32.Gdi32
                 lpbitmap,
                 (BitmapInfo*)&bi,
                 DIBitsUsage.RGB_COLORS);
-#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
             if (scanlinesCopied == 0)
             { throw new GdiException($"Failed to get the bits from the bitmap"); }
 

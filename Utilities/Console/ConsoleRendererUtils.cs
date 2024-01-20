@@ -178,7 +178,7 @@ namespace Win32
                         Mouse.Use();
                     }
 
-                    if (Mouse.IsUp(MouseButton.Left))
+                    if (Mouse.IsUp(MouseButton.Left) && rect.Contains(Mouse.RecordedConsolePosition))
                     {
                         dropdown.IsActive = !dropdown.IsActive;
                         Mouse.Use();
@@ -284,7 +284,7 @@ namespace Win32
                         Mouse.Use();
                     }
 
-                    if (Mouse.IsUp(MouseButton.Left))
+                    if (Mouse.IsUp(MouseButton.Left) && rect.Contains(Mouse.RecordedConsolePosition))
                     {
                         clicked = true;
                         Mouse.Use();
@@ -335,20 +335,28 @@ namespace Win32
         {
             WORD attributes = style.Normal;
 
-            if (!Mouse.WasUsed)
+            if (!Mouse.WasUsed && Mouse.IsPressed(MouseButton.Left))
             {
-                if (active || rect.Contains(Mouse.RecordedConsolePosition))
+                if (active = rect.Contains(Mouse.LeftPressedAt))
                 {
-                    attributes = style.Active;
-                    Mouse.Use();
-                }
-
-                if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
-                {
-                    active = true;
                     Mouse.Use();
                 }
             }
+
+            // if (!Mouse.WasUsed)
+            // {
+            //     if (active || rect.Contains(Mouse.RecordedConsolePosition))
+            //     {
+            //         attributes = style.Active;
+            //         Mouse.Use();
+            //     }
+            // 
+            //     if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
+            //     {
+            //         active = true;
+            //         Mouse.Use();
+            //     }
+            // }
 
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
 
@@ -413,12 +421,17 @@ namespace Win32
 
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
 
-            if (!Mouse.WasUsed && Mouse.IsPressed(MouseButton.Left))
+            if (Mouse.IsPressed(MouseButton.Left))
             {
-                if (textField.IsActive = rect.Contains(Mouse.LeftPressedAt))
+                if (rect.Contains(Mouse.LeftPressedAt) && !Mouse.WasUsed)
                 {
                     Mouse.Use();
+                    textField.IsActive = true;
                     textField.CursorPosition = Math.Clamp(Mouse.LeftPressedAt.X - rect.Left, 0, textField.Value.Length);
+                }
+                else
+                {
+                    textField.IsActive = false;
                 }
             }
 
