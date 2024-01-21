@@ -235,6 +235,21 @@ namespace Win32
             return result;
         }
 
+        public readonly SMALL_RECT Margin(int vertical, int horizontal) => Margin((short)vertical, (short)horizontal);
+        public readonly SMALL_RECT Margin(short vertical, short horizontal)
+        {
+            SMALL_RECT result = this;
+
+            result.top += vertical;
+            result.left += horizontal;
+            result.bottom -= vertical;
+            result.right -= horizontal;
+
+            SMALL_RECT.Fix(ref result);
+
+            return result;
+        }
+
         #endregion
 
         #region Fix()

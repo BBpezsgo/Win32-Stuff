@@ -292,7 +292,7 @@ namespace Win32
                 }
             }
 
-            int labelOffsetX = (int)((rect.Width / 2f) - (text.Length / 2f));
+            int labelOffsetX = (int)MathF.Ceiling((rect.Width / 2f) - (text.Length / 2f));
             int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
 
             for (int y = rect.Top; y < rect.Bottom; y++)
@@ -499,7 +499,7 @@ namespace Win32
                     if (i >= 0 && i < textField.Value.Length && y == labelOffsetY)
                     { c = textField.Value[i]; }
 
-                    if (i == textField.CursorPosition && textField.IsActive)
+                    if (i == textField.CursorPosition && textField.IsActive && (int)(DateTime.UtcNow.TimeOfDay.TotalSeconds * 2) % 2 == 0)
                     {
                         byte fg = (byte)((attributes) & CharColor.MASK_FG);
                         byte bg = (byte)((attributes >> 4) & CharColor.MASK_FG);
