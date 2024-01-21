@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Win32.Common
 {
+    [StructLayout(LayoutKind.Sequential)]
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct SmallSize :
         IEquatable<SmallSize>,

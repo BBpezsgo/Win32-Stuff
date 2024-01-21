@@ -1035,7 +1035,7 @@ namespace Win32.LowLevel
         public static extern BOOL WriteConsoleOutput(
             [In] HANDLE hConsoleOutput,
             [In] ConsoleChar[] lpBuffer,
-            [In] Coord dwBufferSize,
+            [In] SmallSize dwBufferSize,
             [In] Coord dwBufferCoord,
             [In, Out] ref SmallRect lpWriteRegion);
 
@@ -1044,7 +1044,7 @@ namespace Win32.LowLevel
         public static extern BOOL WriteConsoleOutputW(
             SafeFileHandle hConsoleOutput,
             [In] ConsoleChar[] lpBuffer,
-            [In] Coord dwBufferSize,
+            [In] SmallSize dwBufferSize,
             [In] Coord dwBufferCoord,
             [In, Out] ref SmallRect lpWriteRegion);
 

@@ -86,52 +86,42 @@ namespace Win32
 
     public partial class ConsoleRenderer
     {
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Text(COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(point.X, point.Y, text, foreground, background);
-
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Text(Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, foreground, background);
-
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Text(int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-        {
-            if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                int x_ = x + i;
-                if (x_ < 0) continue;
-                if (x_ >= BufferWidth) return;
-
-                this[x_, y] = new ConsoleChar(text[i], foreground, background);
-            }
-        }
+        #region Text()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Text(COORD point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(point.X, point.Y, text, foreground, background);
+            => Text(point.X, point.Y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Text(Vector2 point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, foreground, background);
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Text(int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text(x, y, text, CharColor.Make(background, foreground));
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(COORD point, ReadOnlySpan<byte> text, ushort attributes)
+            => Text(point.X, point.Y, text, attributes);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(Vector2 point, ReadOnlySpan<byte> text, ushort attributes)
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(int x, int y, ReadOnlySpan<byte> text, ushort attributes)
         {
             if (text.IsEmpty) return;
             if (y < 0 || y >= BufferHeight) return;
@@ -142,9 +132,80 @@ namespace Win32
                 if (x_ < 0) continue;
                 if (x_ >= BufferWidth) return;
 
-                this[x_, y] = new ConsoleChar((char)text[i], foreground, background);
+                this[x_, y] = new ConsoleChar((char)text[i], attributes);
             }
         }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text(point.X, point.Y, text, CharColor.Make(background, foreground));
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => Text(x, y, text, CharColor.Make(background, foreground));
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(COORD point, ReadOnlySpan<char> text, ushort attributes)
+            => Text(point.X, point.Y, text, attributes);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(Vector2 point, ReadOnlySpan<char> text, ushort attributes)
+            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(int x, int y, ReadOnlySpan<char> text, ushort attributes)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= BufferHeight) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                int x_ = x + i;
+                if (x_ < 0) continue;
+                if (x_ >= BufferWidth) return;
+
+                this[x_, y] = new ConsoleChar(text[i], attributes);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Text(ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= BufferHeight) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (x < 0) { x++; continue; }
+                if (x >= BufferWidth) return;
+
+                this[x, y] = new ConsoleChar(text[i], foreground, background);
+
+                x++;
+            }
+        }
+
+        #endregion
+
+        #region Dropdown()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
@@ -198,24 +259,9 @@ namespace Win32
             }
         }
 
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Text(ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-        {
-            if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
+        #endregion
 
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (x < 0) { x++; continue; }
-                if (x >= BufferWidth) return;
-
-                this[x, y] = new ConsoleChar(text[i], foreground, background);
-
-                x++;
-            }
-        }
+        #region Textbox()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
@@ -257,6 +303,10 @@ namespace Win32
                 x++;
             }
         }
+
+        #endregion
+
+        #region Button()
 
         /// <remarks>
         /// <para>
@@ -319,6 +369,10 @@ namespace Win32
             return clicked;
         }
 
+        #endregion
+
+        #region InputField()
+
         const string ShiftedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ§'\"+!%/=()?:_-+";
         const string Chars = "abcdefghijklmnopqrstuvwxyz0123456789,.-+";
         const string Keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-+";
@@ -331,88 +385,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
         /// </para>
         /// </remarks>
-        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ref bool active, StringBuilder value)
-        {
-            WORD attributes = style.Normal;
-
-            if (!Mouse.WasUsed && Mouse.IsPressed(MouseButton.Left))
-            {
-                if (active = rect.Contains(Mouse.LeftPressedAt))
-                {
-                    Mouse.Use();
-                }
-            }
-
-            // if (!Mouse.WasUsed)
-            // {
-            //     if (active || rect.Contains(Mouse.RecordedConsolePosition))
-            //     {
-            //         attributes = style.Active;
-            //         Mouse.Use();
-            //     }
-            // 
-            //     if (Mouse.IsPressed(MouseButton.Left) && rect.Contains(Mouse.LeftPressedAt))
-            //     {
-            //         active = true;
-            //         Mouse.Use();
-            //     }
-            // }
-
-            int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
-
-            if (active)
-            {
-                if (Keyboard.IsKeyDown(VirtualKeyCode.BACK))
-                {
-                    if (value.Length > 0)
-                    { value.Remove(value.Length - 1, 1); }
-                }
-                else
-                {
-                    for (int i = 0; i < Keys.Length; i++)
-                    {
-                        if (!Keyboard.IsKeyDown(Keys[i]))
-                        { continue; }
-
-                        if (Keyboard.IsKeyPressed(VirtualKeyCode.SHIFT))
-                        { value.Append(ShiftedChars[i]); }
-                        else
-                        { value.Append(Chars[i]); }
-                    }
-                }
-            }
-
-            for (int y = rect.Top; y < rect.Bottom; y++)
-            {
-                if (y >= BufferHeight) break;
-                if (y < 0) continue;
-
-                for (int x = rect.Left; x < rect.Right; x++)
-                {
-                    if (x >= BufferWidth) break;
-                    if (x < 0) continue;
-
-                    char c = ' ';
-
-                    int i = x - rect.Left;
-
-                    if (i >= 0 && i < value.Length && y == labelOffsetY)
-                    { c = value[i]; }
-
-                    this[x, y] = new ConsoleChar(c, attributes);
-                }
-            }
-        }
-
-        /// <remarks>
-        /// <para>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </para>
-        /// <para>
-        /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
-        /// </para>
-        /// </remarks>
-        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ref ConsoleInputField textField)
+        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
         {
             WORD attributes = style.Normal;
 
@@ -513,35 +486,14 @@ namespace Win32
             }
         }
 
+        #endregion
 
-        public void Box(SMALL_RECT box, char[] sideCharacters)
-        {
-            for (int _y = 0; _y < box.Height; _y++)
-            {
-                int actualY = box.Y + _y;
-                if (actualY >= Height) break;
+        #region Box()
 
-                for (int _x = 0; _x < box.Width; _x++)
-                {
-                    int actualX = box.X + _x;
-
-                    if (actualX >= Width) break;
-
-                    int size = 0b_0000;
-
-                    if (_y == 0) size |= 0b_1000; // Top
-                    if (_x == 0) size |= 0b_0100; // Left
-                    if (_y == box.Height - 1) size |= 0b_0010; // Bottom
-                    if (_x == box.Width - 1) size |= 0b_0001; // Right
-
-                    char c = sideCharacters[size];
-
-                    this[actualX, actualY].Char = c;
-                }
-            }
-        }
-        public void Box(SMALL_RECT box, byte background, byte foreground, char[] sideCharacters) => Box(box, CharColor.Make(background, foreground), sideCharacters);
-        public void Box(SMALL_RECT box, ushort attributes, char[] sideCharacters)
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Box(SMALL_RECT box, in SideCharacters<char> sideCharacters)
         {
             int top = box.Top;
             int left = box.Left;
@@ -550,40 +502,100 @@ namespace Win32
 
             for (int x = left + 1; x < right; x++)
             {
-                if (x < 0 || x >= BufferWidth) continue;
+                if (x < 0) continue;
+                if (x >= BufferWidth) break;
 
                 if (top >= 0 && top < BufferHeight)
-                { this[x, top] = new ConsoleChar(sideCharacters[0b_1000], attributes); }
+                { this[x, top].Char = sideCharacters.Top; }
 
                 if (bottom >= 0 && bottom < BufferHeight)
-                { this[x, bottom] = new ConsoleChar(sideCharacters[0b_0010], attributes); }
+                { this[x, bottom].Char = sideCharacters.Bottom; }
             }
 
             for (int y = top + 1; y < bottom; y++)
             {
-                if (y < 0 || y >= BufferHeight) continue;
+                if (y < 0) continue;
+                if (y >= BufferHeight) break;
 
                 if (left >= 0 && left < BufferWidth)
-                { this[left, y] = new ConsoleChar(sideCharacters[0b_0100], attributes); }
+                { this[left, y].Char = sideCharacters.Left; }
 
                 if (right >= 0 && right < BufferWidth)
-                { this[right, y] = new ConsoleChar(sideCharacters[0b_0001], attributes); }
+                { this[right, y].Char = sideCharacters.Right; }
             }
 
-            if (left >= 0 && left < BufferWidth && top >= 0 && top < BufferHeight)
-            { this[left, top] = new ConsoleChar(sideCharacters[0b_1100], attributes); }
+            if (IsVisible(left, top))
+            { this[left, top].Char = sideCharacters.TopLeft; }
 
-            if (right >= 0 && right < BufferWidth && top >= 0 && top < BufferHeight)
-            { this[right, top] = new ConsoleChar(sideCharacters[0b_1001], attributes); }
+            if (IsVisible(right, top))
+            { this[right, top].Char = sideCharacters.TopRight; }
 
-            if (left >= 0 && left < BufferWidth && bottom >= 0 && bottom < BufferHeight)
-            { this[left, bottom] = new ConsoleChar(sideCharacters[0b_0110], attributes); }
+            if (IsVisible(left, bottom))
+            { this[left, bottom].Char = sideCharacters.BottomLeft; }
 
-            if (right >= 0 && right < BufferWidth && bottom >= 0 && bottom < BufferHeight)
-            { this[right, bottom] = new ConsoleChar(sideCharacters[0b_0011], attributes); }
+            if (IsVisible(right, bottom))
+            { this[right, bottom].Char = sideCharacters.BottomRight; }
+        }
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Box(SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters) => Box(box, CharColor.Make(background, foreground), in sideCharacters);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Box(SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
+        {
+            int top = box.Top;
+            int left = box.Left;
+            int bottom = box.Bottom;
+            int right = box.Right;
+
+            for (int x = left + 1; x < right; x++)
+            {
+                if (x < 0) continue;
+                if (x >= BufferWidth) break;
+
+                if (top >= 0 && top < BufferHeight)
+                { this[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
+
+                if (bottom >= 0 && bottom < BufferHeight)
+                { this[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
+            }
+
+            for (int y = top + 1; y < bottom; y++)
+            {
+                if (y < 0) continue;
+                if (y >= BufferHeight) break;
+
+                if (left >= 0 && left < BufferWidth)
+                { this[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
+
+                if (right >= 0 && right < BufferWidth)
+                { this[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
+            }
+
+            if (IsVisible(left, top))
+            { this[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
+
+            if (IsVisible(right, top))
+            { this[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
+
+            if (IsVisible(left, bottom))
+            { this[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
+
+            if (IsVisible(right, bottom))
+            { this[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
         }
 
-        public void Panel(ConsolePanel panel, ushort attributes, char[] sideCharacters)
+        #endregion
+
+        #region Panel()
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Panel(ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
         {
             if (!Mouse.WasUsed)
             {
@@ -607,7 +619,7 @@ namespace Win32
                         if (newPosition.Y < 0) newPosition.Y = 0;
                         if (newPosition.X < 0) newPosition.X = 0;
                         if (newPosition.Y > BufferHeight - panelHeight) newPosition.Y = (short)(BufferHeight - panelHeight);
-                        if (newPosition.X >= BufferWidth - panelWidth) newPosition.X = (short)(BufferWidth - panelWidth - 1);
+                        if (newPosition.X > BufferWidth - panelWidth) newPosition.X = (short)(BufferWidth - panelWidth);
 
                         panel.Rect.Position = newPosition;
                     }
@@ -626,53 +638,69 @@ namespace Win32
 
             for (int x = left + 1; x < right; x++)
             {
-                if (x < 0 || x >= BufferWidth) continue;
+                if (x < 0) continue;
+                if (x >= BufferWidth) break;
 
                 if (top >= 0 && top < BufferHeight)
-                { this[x, top] = new ConsoleChar(sideCharacters[0b_1000], attributes); }
+                { this[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
 
                 if (bottom >= 0 && bottom < BufferHeight)
-                { this[x, bottom] = new ConsoleChar(sideCharacters[0b_0010], attributes); }
+                { this[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
             }
 
             for (int y = top + 1; y < bottom; y++)
             {
-                if (y < 0 || y >= BufferHeight) continue;
+                if (y < 0) continue;
+                if (y >= BufferHeight) break;
 
                 if (left >= 0 && left < BufferWidth)
-                { this[left, y] = new ConsoleChar(sideCharacters[0b_0100], attributes); }
+                { this[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
 
                 if (right >= 0 && right < BufferWidth)
-                { this[right, y] = new ConsoleChar(sideCharacters[0b_0001], attributes); }
+                { this[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
             }
 
-            if (left >= 0 && left < BufferWidth && top >= 0 && top < BufferHeight)
-            { this[left, top] = new ConsoleChar(sideCharacters[0b_1100], attributes); }
+            if (IsVisible(left, top))
+            { this[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
 
-            if (right >= 0 && right < BufferWidth && top >= 0 && top < BufferHeight)
-            { this[right, top] = new ConsoleChar(sideCharacters[0b_1001], attributes); }
+            if (IsVisible(right, top))
+            { this[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
 
-            if (left >= 0 && left < BufferWidth && bottom >= 0 && bottom < BufferHeight)
-            { this[left, bottom] = new ConsoleChar(sideCharacters[0b_0110], attributes); }
+            if (IsVisible(left, bottom))
+            { this[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
 
-            if (right >= 0 && right < BufferWidth && bottom >= 0 && bottom < BufferHeight)
-            { this[right, bottom] = new ConsoleChar(sideCharacters[0b_0011], attributes); }
+            if (IsVisible(right, bottom))
+            { this[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
         }
 
-        public void Fill(SMALL_RECT box, byte background, byte foreground, char character) => Fill(box, CharColor.Make(background, foreground), character);
-        public void Fill(SMALL_RECT box, ushort attributes, char character)
+        #endregion
+
+        #region Fill()
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Fill(SMALL_RECT rect, byte background, byte foreground, char character) => Fill(rect, CharColor.Make(background, foreground), character);
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Fill(SMALL_RECT rect, ushort attributes, char character) => Fill(rect, new ConsoleChar(character, attributes));
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public void Fill(SMALL_RECT rect, ConsoleChar value)
         {
-            for (int _y = 0; _y < box.Height; _y++)
+            for (int _y = 0; _y < rect.Height; _y++)
             {
-                int actualY = box.Y + _y;
+                int actualY = rect.Y + _y;
                 if (actualY >= Height) break;
                 if (actualY < 0) continue;
 
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, box.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, box.Right);
+                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
+                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
                 int length = Math.Max(0, endIndex - startIndex);
 
-                Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes), startIndex, length);
+                Array.Fill(ConsoleBuffer, value, startIndex, length);
 
                 // for (int _x = 0; _x < box.Width; _x++)
                 // {
@@ -685,6 +713,14 @@ namespace Win32
                 // }
             }
         }
+
+        public void Fill(byte background, byte foreground, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, foreground, background));
+        public void Fill(ushort attributes, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes));
+        public void Fill(ConsoleChar value) => Array.Fill(ConsoleBuffer, value);
+
+        #endregion
+
+        #region Clear()
 
         public void Clear(SMALL_RECT box)
         {
@@ -701,5 +737,7 @@ namespace Win32
                 Array.Clear(ConsoleBuffer, startIndex, length);
             }
         }
+
+        #endregion
     }
 }
