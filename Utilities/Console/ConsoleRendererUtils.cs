@@ -64,14 +64,25 @@ namespace Win32
     {
         public StringBuilder Value;
         public bool IsActive;
+        public bool NeverLoseFocus;
+
         internal int CursorPosition;
 
         public ConsoleInputField(string? value)
         {
             value ??= string.Empty;
+            
             Value = new(value);
             IsActive = false;
+            NeverLoseFocus = false;
+
             CursorPosition = value.Length;
+        }
+
+        public void Clear()
+        {
+            Value.Clear();
+            CursorPosition = 0;
         }
     }
 
@@ -402,7 +413,7 @@ namespace Win32
                     textField.IsActive = true;
                     textField.CursorPosition = Math.Clamp(Mouse.LeftPressedAt.X - rect.Left, 0, textField.Value.Length);
                 }
-                else
+                else if (!textField.NeverLoseFocus)
                 {
                     textField.IsActive = false;
                 }

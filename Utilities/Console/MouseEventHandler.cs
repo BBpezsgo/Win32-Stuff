@@ -1,4 +1,6 @@
-﻿namespace Win32
+﻿using System.Diagnostics;
+
+namespace Win32
 {
     public static partial class Mouse
     {
@@ -29,11 +31,15 @@
         static COORD recordedConsolePosition;
         static COORD leftPressedAt;
 
+        static int scroll;
+        static int scrollDelta;
+
         static bool wasUsed;
 
         public static COORD RecordedConsolePosition => recordedConsolePosition;
         public static COORD LeftPressedAt => leftPressedAt;
         public static bool WasUsed => wasUsed;
+        public static int ScrollDelta => scrollDelta;
 
         public static bool IsPressed(MouseButton button) => Accumulated[(uint)button] || Stage1[(uint)button] || Stage2[(uint)button];
         public static bool IsHold(MouseButton button) => Stage2[(uint)button];
@@ -46,6 +52,15 @@
         {
             Accumulated.states = e.ButtonState;
             recordedConsolePosition = e.MousePosition;
+
+            if (e.EventFlags == MouseEventFlags.MouseWheeled)
+            {
+                short yeah = unchecked((short)Macros.HIWORD(unchecked((int)e.ButtonState)));
+                if (yeah > 0)
+                { scroll++; }
+                else
+                { scroll--; }
+            }
         }
 
         public static void Tick()
@@ -58,6 +73,9 @@
             Stage3 = Stage2;
             Stage2 = Stage1;
             Stage1 = Accumulated;
+
+            scrollDelta = scroll;
+            scroll = 0;
         }
     }
 }
