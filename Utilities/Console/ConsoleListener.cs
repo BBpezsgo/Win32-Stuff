@@ -2,7 +2,6 @@
 {
     public delegate void ConsoleEvent<T>(T e);
 
-    [SupportedOSPlatform("windows")]
     public static class ConsoleListener
     {
         public static event ConsoleEvent<MouseEvent>? MouseEvent;
@@ -16,6 +15,7 @@
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="OutOfMemoryException"/>
+        [SupportedOSPlatform("windows")]
         public static void Start()
         {
             if (Run) return;
@@ -30,6 +30,7 @@
         }
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         static void ThreadJob()
         {
             InputEvent[] records = new InputEvent[MaxRecordReads];

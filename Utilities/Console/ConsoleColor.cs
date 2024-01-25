@@ -53,5 +53,34 @@ namespace Win32
             CharColor.White => CharColor.Black,
             _ => 0,
         };
+
+        static readonly System.Drawing.Color[] ColorValues = new System.Drawing.Color[0b_1_0000]
+        {
+            System.Drawing.Color.FromArgb(0, 0, 0),          // 0b_0000
+            System.Drawing.Color.FromArgb(0, 0, 128),        // 0b_0001
+            System.Drawing.Color.FromArgb(0, 128, 0),        // 0b_0010
+            System.Drawing.Color.FromArgb(0, 128, 128),      // 0b_0011
+            System.Drawing.Color.FromArgb(128, 0, 0),        // 0b_0100
+            System.Drawing.Color.FromArgb(128, 0, 128),      // 0b_0101
+            System.Drawing.Color.FromArgb(128, 128, 0),      // 0b_0110
+            System.Drawing.Color.FromArgb(192, 192, 192),    // 0b_0111
+            System.Drawing.Color.FromArgb(128, 128, 128),    // 0b_1000
+            System.Drawing.Color.FromArgb(0, 0, 255),        // 0b_1001
+            System.Drawing.Color.FromArgb(0, 255, 0),        // 0b_1010
+            System.Drawing.Color.FromArgb(0, 255, 255),      // 0b_1011
+            System.Drawing.Color.FromArgb(255, 0, 0),        // 0b_1100
+            System.Drawing.Color.FromArgb(255, 0, 255),      // 0b_1101
+            System.Drawing.Color.FromArgb(255, 255, 0),      // 0b_1110
+            System.Drawing.Color.FromArgb(255, 255, 255),    // 0b_1111
+        };
+
+        public static System.Drawing.Color GetColor(byte color) => ColorValues[color];
+
+        public static byte GetRandomColor()
+        {
+            Span<byte> result = stackalloc byte[1];
+            Random.Shared.NextBytes(result);
+            return (byte)(result[0] % 0b_1_0000);
+        }
     }
 }

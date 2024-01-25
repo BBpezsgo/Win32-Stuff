@@ -1,214 +1,121 @@
 ﻿using System.Numerics;
-using System.Text;
 
 namespace Win32
 {
-    public class ConsoleButtonStyle
-    {
-        public ushort Normal;
-        public ushort Hover;
-        public ushort Down;
-
-        public static ConsoleButtonStyle Default => new()
-        {
-            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
-            Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
-            Down = CharColor.Make(CharColor.White, CharColor.Black),
-        };
-    }
-
-    public class ConsoleDropdownStyle
-    {
-        public ushort Normal;
-        public ushort Hover;
-        public ushort Down;
-        public char ActiveChar;
-        public char InactiveChar;
-
-        public static ConsoleDropdownStyle Default => new()
-        {
-            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
-            Hover = CharColor.Make(CharColor.Silver, CharColor.Black),
-            Down = CharColor.Make(CharColor.White, CharColor.Black),
-            ActiveChar = '▼',
-            InactiveChar = '►',
-        };
-    }
-
-    public class ConsoleInputFieldStyle
-    {
-        public ushort Normal;
-        public ushort Active;
-
-        public static ConsoleInputFieldStyle Default => new()
-        {
-            Normal = CharColor.Make(CharColor.Gray, CharColor.White),
-            Active = CharColor.Make(CharColor.Silver, CharColor.Black),
-        };
-    }
-
-    public class ConsoleDropdown
-    {
-        public bool IsActive;
-
-        public ConsoleDropdown()
-        {
-            IsActive = false;
-        }
-
-        public static bool operator true(ConsoleDropdown consoleDropdown) => consoleDropdown.IsActive;
-        public static bool operator false(ConsoleDropdown consoleDropdown) => !consoleDropdown.IsActive;
-    }
-
-    public class ConsoleInputField
-    {
-        public StringBuilder Value;
-        public bool IsActive;
-        public bool NeverLoseFocus;
-
-        internal int CursorPosition;
-
-        public ConsoleInputField(string? value)
-        {
-            value ??= string.Empty;
-            
-            Value = new(value);
-            IsActive = false;
-            NeverLoseFocus = false;
-
-            CursorPosition = value.Length;
-        }
-
-        public void Clear()
-        {
-            Value.Clear();
-            CursorPosition = 0;
-        }
-    }
-
-    public class ConsolePanel
-    {
-        public SMALL_RECT Rect;
-        public bool IsActive;
-        public COORD PressedOffset;
-
-        public ConsolePanel(SMALL_RECT rect) => Rect = rect;
-    }
-
-    public partial class ConsoleRenderer
+    public static class IRendererUtils
     {
         #region Text()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(COORD point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(point.X, point.Y, text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(point.X, point.Y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(Vector2 point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(x, y, text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(x, y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(COORD point, ReadOnlySpan<byte> text, ushort attributes)
-            => Text(point.X, point.Y, text, attributes);
+        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<byte> text, ushort attributes)
+            => self.Text(point.X, point.Y, text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(Vector2 point, ReadOnlySpan<byte> text, ushort attributes)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<byte> text, ushort attributes)
+            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(int x, int y, ReadOnlySpan<byte> text, ushort attributes)
+        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, ushort attributes)
         {
             if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
+            if (y < 0 || y >= self.Height) return;
 
             for (int i = 0; i < text.Length; i++)
             {
                 int x_ = x + i;
                 if (x_ < 0) continue;
-                if (x_ >= BufferWidth) return;
+                if (x_ >= self.Width) return;
 
-                this[x_, y] = new ConsoleChar((char)text[i], attributes);
+                self[x_, y] = new ConsoleChar((char)text[i], attributes);
             }
         }
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(point.X, point.Y, text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(point.X, point.Y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => Text(x, y, text, CharColor.Make(background, foreground));
+        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(x, y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(COORD point, ReadOnlySpan<char> text, ushort attributes)
-            => Text(point.X, point.Y, text, attributes);
+        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<char> text, ushort attributes)
+            => self.Text(point.X, point.Y, text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(Vector2 point, ReadOnlySpan<char> text, ushort attributes)
-            => Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<char> text, ushort attributes)
+            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(int x, int y, ReadOnlySpan<char> text, ushort attributes)
+        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
         {
             if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
+            if (y < 0 || y >= self.Height) return;
 
             for (int i = 0; i < text.Length; i++)
             {
                 int x_ = x + i;
                 if (x_ < 0) continue;
-                if (x_ >= BufferWidth) return;
+                if (x_ >= self.Width) return;
 
-                this[x_, y] = new ConsoleChar(text[i], attributes);
+                self[x_, y] = new ConsoleChar(text[i], attributes);
             }
         }
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Text(ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Text(this IRenderer<ConsoleChar> self, ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
+            if (y < 0 || y >= self.Height) return;
 
             for (int i = 0; i < text.Length; i++)
             {
                 if (x < 0) { x++; continue; }
-                if (x >= BufferWidth) return;
+                if (x >= self.Width) return;
 
-                this[x, y] = new ConsoleChar(text[i], foreground, background);
+                self[x, y] = new ConsoleChar(text[i], foreground, background);
 
                 x++;
             }
@@ -221,16 +128,16 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Dropdown(COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
-            => Dropdown(coord.X, coord.Y, dropdown, text, style);
+        public static void Dropdown(this IRenderer<ConsoleChar> self, COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+            => self.Dropdown(coord.X, coord.Y, dropdown, text, style);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Dropdown(int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+        public static void Dropdown(this IRenderer<ConsoleChar> self, int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
         {
             if (text.IsEmpty) return;
-            if (y < 0 || y >= BufferHeight) return;
+            if (y < 0 || y >= self.Height) return;
 
             short width = (short)(2 + text.Length);
             SmallRect rect = new(x, y, width, 1);
@@ -258,15 +165,15 @@ namespace Win32
                 }
             }
 
-            if (x >= 0 && x < BufferWidth)
-            { this[x, y] = new ConsoleChar(dropdown.IsActive ? '▼' : '►', attributes); }
+            if (x >= 0 && x < self.Width)
+            { self[x, y] = new ConsoleChar(dropdown.IsActive ? '▼' : '►', attributes); }
 
             for (int i = 0; i < text.Length; i++)
             {
                 if (x + i + 2 < 0) { continue; }
-                if (x + i + 2 >= BufferWidth) return;
+                if (x + i + 2 >= self.Width) return;
 
-                this[x + i + 2, y] = new ConsoleChar(text[i], attributes);
+                self[x + i + 2, y] = new ConsoleChar(text[i], attributes);
             }
         }
 
@@ -277,10 +184,10 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Textbox(SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Textbox(this IRenderer<ConsoleChar> self, SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (string.IsNullOrWhiteSpace(text)) return;
-            if (rect.Top >= BufferHeight) return;
+            if (rect.Top >= self.Height) return;
 
             int x = 0;
             int y = 0;
@@ -302,11 +209,11 @@ namespace Win32
                     int actualX = rect.Left + x;
 
                     if (actualX >= 0 &&
-                        actualX < BufferWidth &&
+                        actualX < self.Width &&
                         actualY >= 0 &&
-                        actualY < BufferHeight)
+                        actualY < self.Height)
                     {
-                        this[actualX, actualY] = new ConsoleChar(words[i][j], foreground, background);
+                        self[actualX, actualY] = new ConsoleChar(words[i][j], foreground, background);
                     }
 
                     x++;
@@ -327,7 +234,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/>
         /// </para>
         /// </remarks>
-        public bool Button(SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
+        public static bool Button(this IRenderer<ConsoleChar> self, SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
         {
             WORD attributes = style.Normal;
             bool clicked = false;
@@ -358,12 +265,12 @@ namespace Win32
 
             for (int y = rect.Top; y < rect.Bottom; y++)
             {
-                if (y >= BufferHeight) break;
+                if (y >= self.Height) break;
                 if (y < 0) continue;
 
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    if (x >= BufferWidth) break;
+                    if (x >= self.Width) break;
                     if (x < 0) continue;
 
                     char c = ' ';
@@ -373,7 +280,7 @@ namespace Win32
                     if (i >= 0 && i < text.Length && labelOffsetY == y)
                     { c = text[i]; }
 
-                    this[x, y] = new ConsoleChar(c, attributes);
+                    self[x, y] = new ConsoleChar(c, attributes);
                 }
             }
 
@@ -396,7 +303,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
         /// </para>
         /// </remarks>
-        public void InputField(SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
+        public static void InputField(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
         {
             WORD attributes = style.Normal;
 
@@ -468,12 +375,12 @@ namespace Win32
 
             for (int y = rect.Top; y < rect.Bottom; y++)
             {
-                if (y >= BufferHeight) break;
+                if (y >= self.Height) break;
                 if (y < 0) continue;
 
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    if (x >= BufferWidth) break;
+                    if (x >= self.Width) break;
                     if (x < 0) continue;
 
                     char c = ' ';
@@ -487,11 +394,11 @@ namespace Win32
                     {
                         byte fg = (byte)((attributes) & CharColor.MASK_FG);
                         byte bg = (byte)((attributes >> 4) & CharColor.MASK_FG);
-                        this[x, y] = new ConsoleChar(c, CharColor.Make(fg, bg));
+                        self[x, y] = new ConsoleChar(c, CharColor.Make(fg, bg));
                     }
                     else
                     {
-                        this[x, y] = new ConsoleChar(c, attributes);
+                        self[x, y] = new ConsoleChar(c, attributes);
                     }
                 }
             }
@@ -504,7 +411,7 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Box(SMALL_RECT box, in SideCharacters<char> sideCharacters)
+        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, in SideCharacters<char> sideCharacters)
         {
             int top = box.Top;
             int left = box.Left;
@@ -514,48 +421,48 @@ namespace Win32
             for (int x = left + 1; x < right; x++)
             {
                 if (x < 0) continue;
-                if (x >= BufferWidth) break;
+                if (x >= self.Width) break;
 
-                if (top >= 0 && top < BufferHeight)
-                { this[x, top].Char = sideCharacters.Top; }
+                if (top >= 0 && top < self.Height)
+                { self[x, top].Char = sideCharacters.Top; }
 
-                if (bottom >= 0 && bottom < BufferHeight)
-                { this[x, bottom].Char = sideCharacters.Bottom; }
+                if (bottom >= 0 && bottom < self.Height)
+                { self[x, bottom].Char = sideCharacters.Bottom; }
             }
 
             for (int y = top + 1; y < bottom; y++)
             {
                 if (y < 0) continue;
-                if (y >= BufferHeight) break;
+                if (y >= self.Height) break;
 
-                if (left >= 0 && left < BufferWidth)
-                { this[left, y].Char = sideCharacters.Left; }
+                if (left >= 0 && left < self.Width)
+                { self[left, y].Char = sideCharacters.Left; }
 
-                if (right >= 0 && right < BufferWidth)
-                { this[right, y].Char = sideCharacters.Right; }
+                if (right >= 0 && right < self.Width)
+                { self[right, y].Char = sideCharacters.Right; }
             }
 
-            if (IsVisible(left, top))
-            { this[left, top].Char = sideCharacters.TopLeft; }
+            if (self.IsVisible(left, top))
+            { self[left, top].Char = sideCharacters.TopLeft; }
 
-            if (IsVisible(right, top))
-            { this[right, top].Char = sideCharacters.TopRight; }
+            if (self.IsVisible(right, top))
+            { self[right, top].Char = sideCharacters.TopRight; }
 
-            if (IsVisible(left, bottom))
-            { this[left, bottom].Char = sideCharacters.BottomLeft; }
+            if (self.IsVisible(left, bottom))
+            { self[left, bottom].Char = sideCharacters.BottomLeft; }
 
-            if (IsVisible(right, bottom))
-            { this[right, bottom].Char = sideCharacters.BottomRight; }
+            if (self.IsVisible(right, bottom))
+            { self[right, bottom].Char = sideCharacters.BottomRight; }
         }
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Box(SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters) => Box(box, CharColor.Make(background, foreground), in sideCharacters);
+        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters) => self.Box(box, CharColor.Make(background, foreground), in sideCharacters);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Box(SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
+        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
         {
             int top = box.Top;
             int left = box.Left;
@@ -565,38 +472,38 @@ namespace Win32
             for (int x = left + 1; x < right; x++)
             {
                 if (x < 0) continue;
-                if (x >= BufferWidth) break;
+                if (x >= self.Width) break;
 
-                if (top >= 0 && top < BufferHeight)
-                { this[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
+                if (top >= 0 && top < self.Height)
+                { self[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
 
-                if (bottom >= 0 && bottom < BufferHeight)
-                { this[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
+                if (bottom >= 0 && bottom < self.Height)
+                { self[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
             }
 
             for (int y = top + 1; y < bottom; y++)
             {
                 if (y < 0) continue;
-                if (y >= BufferHeight) break;
+                if (y >= self.Height) break;
 
-                if (left >= 0 && left < BufferWidth)
-                { this[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
+                if (left >= 0 && left < self.Width)
+                { self[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
 
-                if (right >= 0 && right < BufferWidth)
-                { this[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
+                if (right >= 0 && right < self.Width)
+                { self[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
             }
 
-            if (IsVisible(left, top))
-            { this[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
+            if (self.IsVisible(left, top))
+            { self[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
 
-            if (IsVisible(right, top))
-            { this[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
+            if (self.IsVisible(right, top))
+            { self[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
 
-            if (IsVisible(left, bottom))
-            { this[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
+            if (self.IsVisible(left, bottom))
+            { self[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
 
-            if (IsVisible(right, bottom))
-            { this[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
+            if (self.IsVisible(right, bottom))
+            { self[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
         }
 
         #endregion
@@ -606,7 +513,7 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Panel(ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
+        public static void Panel(this IRenderer<ConsoleChar> self, ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
         {
             if (!Mouse.WasUsed)
             {
@@ -629,8 +536,8 @@ namespace Win32
 
                         if (newPosition.Y < 0) newPosition.Y = 0;
                         if (newPosition.X < 0) newPosition.X = 0;
-                        if (newPosition.Y > BufferHeight - panelHeight) newPosition.Y = (short)(BufferHeight - panelHeight);
-                        if (newPosition.X > BufferWidth - panelWidth) newPosition.X = (short)(BufferWidth - panelWidth);
+                        if (newPosition.Y > self.Height - panelHeight) newPosition.Y = (short)(self.Height - panelHeight);
+                        if (newPosition.X > self.Width - panelWidth) newPosition.X = (short)(self.Width - panelWidth);
 
                         panel.Rect.Position = newPosition;
                     }
@@ -650,38 +557,38 @@ namespace Win32
             for (int x = left + 1; x < right; x++)
             {
                 if (x < 0) continue;
-                if (x >= BufferWidth) break;
+                if (x >= self.Width) break;
 
-                if (top >= 0 && top < BufferHeight)
-                { this[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
+                if (top >= 0 && top < self.Height)
+                { self[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
 
-                if (bottom >= 0 && bottom < BufferHeight)
-                { this[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
+                if (bottom >= 0 && bottom < self.Height)
+                { self[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
             }
 
             for (int y = top + 1; y < bottom; y++)
             {
                 if (y < 0) continue;
-                if (y >= BufferHeight) break;
+                if (y >= self.Height) break;
 
-                if (left >= 0 && left < BufferWidth)
-                { this[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
+                if (left >= 0 && left < self.Width)
+                { self[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
 
-                if (right >= 0 && right < BufferWidth)
-                { this[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
+                if (right >= 0 && right < self.Width)
+                { self[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
             }
 
-            if (IsVisible(left, top))
-            { this[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
+            if (self.IsVisible(left, top))
+            { self[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
 
-            if (IsVisible(right, top))
-            { this[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
+            if (self.IsVisible(right, top))
+            { self[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
 
-            if (IsVisible(left, bottom))
-            { this[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
+            if (self.IsVisible(left, bottom))
+            { self[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
 
-            if (IsVisible(right, bottom))
-            { this[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
+            if (self.IsVisible(right, bottom))
+            { self[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
         }
 
         #endregion
@@ -691,63 +598,14 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Fill(SMALL_RECT rect, byte background, byte foreground, char character) => Fill(rect, CharColor.Make(background, foreground), character);
+        public static void Fill(this IRenderer<ConsoleChar> self, SMALL_RECT rect, byte background, byte foreground, char character) => self.Fill(rect, CharColor.Make(background, foreground), character);
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public void Fill(SMALL_RECT rect, ushort attributes, char character) => Fill(rect, new ConsoleChar(character, attributes));
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Fill(SMALL_RECT rect, ConsoleChar value)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
+        public static void Fill(this IRenderer<ConsoleChar> self, SMALL_RECT rect, ushort attributes, char character) => self.Fill(rect, new ConsoleChar(character, attributes));
 
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Fill(ConsoleBuffer, value, startIndex, length);
-
-                // for (int _x = 0; _x < box.Width; _x++)
-                // {
-                //     int actualX = box.X + _x;
-                // 
-                //     if (actualX >= Width) break;
-                //     if (actualX < 0) continue;
-                // 
-                //     this[actualX, actualY] = new ConsoleChar(character, attributes);
-                // }
-            }
-        }
-
-        public void Fill(byte background, byte foreground, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, foreground, background));
-        public void Fill(ushort attributes, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes));
-        public void Fill(ConsoleChar value) => Array.Fill(ConsoleBuffer, value);
-
-        #endregion
-
-        #region Clear()
-
-        public void Clear(SMALL_RECT rect)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
-
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Clear(ConsoleBuffer, startIndex, length);
-            }
-        }
+        public static void Fill(this IRenderer<ConsoleChar> self, byte background, byte foreground, char character) => self.Fill(new ConsoleChar(character, foreground, background));
+        public static void Fill(this IRenderer<ConsoleChar> self, ushort attributes, char character) => self.Fill(new ConsoleChar(character, attributes));
 
         #endregion
     }

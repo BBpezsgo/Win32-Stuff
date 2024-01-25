@@ -152,6 +152,14 @@ namespace Win32
         /// </summary>
         public readonly MouseEventFlags EventFlags;
 
+        public MouseEvent(COORD mousePosition, uint buttonState, ControlKeyState controlKeyState, MouseEventFlags eventFlags)
+        {
+            MousePosition = mousePosition;
+            ButtonState = buttonState;
+            ControlKeyState = controlKeyState;
+            EventFlags = eventFlags;
+        }
+
         /// <inheritdoc/>
         public override string ToString() => $"{{ Pos: {MousePosition}, State: {Convert.ToString(ButtonState, 2).PadLeft(8, '0')}, Flags: {EventFlags}, Ctrl: {ControlKeyState} }}";
     }
@@ -217,6 +225,18 @@ namespace Win32
         /// The state of the control keys.
         /// </summary>
         [FieldOffset(12)] public readonly ControlKeyState ControlKeyState;
+
+        public KeyEvent(int isDown, ushort repeatCount, ushort virtualKeyCode, ushort virtualScanCode, char unicodeChar, ControlKeyState controlKeyState) : this()
+        {
+            IsDown = isDown;
+            RepeatCount = repeatCount;
+            VirtualKeyCode = virtualKeyCode;
+            VirtualScanCode = virtualScanCode;
+            UnicodeChar = unicodeChar;
+            ControlKeyState = controlKeyState;
+        }
+
+
 
         /// <inheritdoc/>
         public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0", StringComparison.Ordinal).Replace("\t", "\\t", StringComparison.Ordinal).Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal)}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
