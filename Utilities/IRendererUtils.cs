@@ -289,6 +289,58 @@ namespace Win32
 
         #endregion
 
+        #region SelectBox()
+
+        public static void SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox)
+        {
+            WORD attributes = CharColor.Make(CharColor.Black, CharColor.Silver);
+
+            if (selectBox.IsActive || rect.Contains(Mouse.RecordedConsolePosition))
+            { attributes = CharColor.Make(CharColor.Black, CharColor.BrightCyan); }
+
+            if (self.IsVisible(rect.Position))
+            { self[rect.Position] = new ConsoleChar('<', attributes); }
+
+            if (self.IsVisible(rect.Right - 1, rect.Y))
+            { self[rect.Right - 1, rect.Y] = new ConsoleChar('>', attributes); }
+
+            string labelText = selectBox.SelectedItem?.ToString() ?? "<empty>";
+            self.Text(rect.X + Layout.Center(rect.Width - 2, labelText), rect.Y, labelText, attributes);
+
+            if (selectBox.IsActive)
+            {
+                if (Keyboard.IsKeyDown(VirtualKeyCode.LEFT))
+                {
+                    selectBox.SelectedIndex--;
+                    selectBox.ClampIndex();
+                }
+
+                if (Keyboard.IsKeyDown(VirtualKeyCode.RIGHT))
+                {
+                    selectBox.SelectedIndex++;
+                    selectBox.ClampIndex();
+                }
+            }
+                    
+            if (Mouse.IsDown(MouseButton.Left))
+            {
+                if (rect.Contains(Mouse.LeftPressedAt))
+                {
+                    if (!Mouse.WasUsed)
+                    {
+                        Mouse.Use();
+                        selectBox.IsActive = true;
+                    }
+                }
+                else
+                {
+                    selectBox.IsActive = false;
+                }
+            }
+        }
+
+        #endregion
+
         #region InputField()
 
         const string ShiftedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ§'\"+!%/=()?:_-+";

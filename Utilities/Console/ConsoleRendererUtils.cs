@@ -47,6 +47,30 @@ namespace Win32
         };
     }
 
+    public class ConsoleSelectBox<T>
+    {
+        public bool IsActive;
+        public int SelectedIndex;
+        public T[] Items;
+        public T? SelectedItem => (SelectedIndex < 0 || SelectedIndex >= Items.Length) ? default : Items[SelectedIndex];
+
+        public ConsoleSelectBox(params T[] items)
+        {
+            IsActive = false;
+            SelectedIndex = -1;
+            Items = items;
+        }
+
+        public void ClampIndex()
+        {
+            if (SelectedIndex < 0) SelectedIndex = Items.Length - 1;
+            if (SelectedIndex >= Items.Length) SelectedIndex = 0;
+        }
+
+        public static bool operator true(ConsoleSelectBox<T> consoleSelectBox) => consoleSelectBox.IsActive;
+        public static bool operator false(ConsoleSelectBox<T> consoleSelectBox) => !consoleSelectBox.IsActive;
+    }
+
     public class ConsoleDropdown
     {
         public bool IsActive;
