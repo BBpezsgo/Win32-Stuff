@@ -291,9 +291,10 @@ namespace Win32
 
         #region SelectBox()
 
-        public static void SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox)
+        public static bool SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox)
         {
             WORD attributes = CharColor.Make(CharColor.Black, CharColor.Silver);
+            bool wasModified = false;
 
             if (selectBox.IsActive || rect.Contains(Mouse.RecordedConsolePosition))
             { attributes = CharColor.Make(CharColor.Black, CharColor.BrightCyan); }
@@ -313,12 +314,14 @@ namespace Win32
                 {
                     selectBox.SelectedIndex--;
                     selectBox.ClampIndex();
+                    wasModified = true;
                 }
 
                 if (Keyboard.IsKeyDown(VirtualKeyCode.RIGHT))
                 {
                     selectBox.SelectedIndex++;
                     selectBox.ClampIndex();
+                    wasModified = true;
                 }
             }
                     
@@ -337,6 +340,8 @@ namespace Win32
                     selectBox.IsActive = false;
                 }
             }
+
+            return wasModified;
         }
 
         #endregion
