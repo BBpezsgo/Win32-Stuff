@@ -1,8 +1,10 @@
-﻿.vs
+﻿/.vs
 /bin
 /obj
 /Debug
 /x64
 /Win32.sln
+/Publish/linux-arm64
+
 *.user
 *.h

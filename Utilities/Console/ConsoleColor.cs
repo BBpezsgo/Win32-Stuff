@@ -74,6 +74,29 @@ namespace Win32
             System.Drawing.Color.FromArgb(255, 255, 255),    // 0b_1111
         };
 
+        static readonly int[] ColorAnsiValues = new int[0b_1_0000]
+        {
+            Ansi.ForegroundBlack,           // 0b_0000
+            Ansi.ForegroundBlue,            // 0b_0001
+            Ansi.ForegroundGreen,           // 0b_0010
+            Ansi.ForegroundCyan,            // 0b_0011
+            Ansi.ForegroundRed,             // 0b_0100
+            Ansi.ForegroundMagenta,         // 0b_0101
+            Ansi.ForegroundYellow,          // 0b_0110
+            Ansi.ForegroundWhite,           // 0b_0111
+            Ansi.BrightForegroundBlack,     // 0b_1000
+            Ansi.BrightForegroundBlue,      // 0b_1001
+            Ansi.BrightForegroundGreen,     // 0b_1010
+            Ansi.BrightForegroundCyan,      // 0b_1011
+            Ansi.BrightForegroundRed,       // 0b_1100
+            Ansi.BrightForegroundMagenta,   // 0b_1101
+            Ansi.BrightForegroundYellow,    // 0b_1110
+            Ansi.BrightForegroundWhite,     // 0b_1111
+        };
+
+        public static int GetAnsiForegroundColor(byte color) => ColorAnsiValues[color];
+        public static int GetAnsiBackgroundColor(byte color) => ColorAnsiValues[color] + 10;
+
         public static System.Drawing.Color GetColor(byte color) => ColorValues[color];
 
         public static byte GetRandomColor()
