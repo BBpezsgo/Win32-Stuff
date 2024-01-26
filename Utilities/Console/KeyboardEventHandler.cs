@@ -3,69 +3,71 @@
     public static partial class Keyboard
     {
         static readonly int[] Accumulated = new int[8];
+        static readonly int[] Active = new int[8];
 
-        static int[] Stage1 = new int[8];
-        static int[] Stage2 = new int[8];
-        static int[] Stage3 = new int[8];
+        static int[] Pressing = new int[8];
+        static int[] Holding = new int[8];
+        static int[] Releasing = new int[8];
 
         /// <exception cref="KeyNotFoundException"/>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool IsKeyPressed(char key) => IsKeyPressed(AsciiToKey[key]);
-        /// <param name="key">
-        /// See <see cref="VirtualKeyCode"/> for values
-        /// </param>
+
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public static bool IsKeyPressed(ushort key) => BitUtils.GetBit(Accumulated, key) || BitUtils.GetBit(Stage1, key) || BitUtils.GetBit(Stage2, key);
+        public static bool IsKeyPressed(VirtualKeyCode key) =>
+            BitUtils.GetBit(Accumulated, (int)key) ||
+            BitUtils.GetBit(Pressing, (int)key) ||
+            BitUtils.GetBit(Holding, (int)key);
 
         /// <exception cref="KeyNotFoundException"/>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool IsKeyHold(char key) => IsKeyHold(AsciiToKey[key]);
-        /// <param name="key">
-        /// See <see cref="VirtualKeyCode"/> for values
-        /// </param>
+
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public static bool IsKeyHold(ushort key) => BitUtils.GetBit(Stage2, key);
+        public static bool IsKeyHold(VirtualKeyCode key) => BitUtils.GetBit(Holding, (int)key);
 
         /// <exception cref="KeyNotFoundException"/>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool IsKeyDown(char key) => IsKeyDown(AsciiToKey[key]);
-        /// <param name="key">
-        /// See <see cref="VirtualKeyCode"/> for values
-        /// </param>
+
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public static bool IsKeyDown(ushort key)
-        {
-            bool stage1 = BitUtils.GetBit(Stage1, key);
-            bool stage2 = BitUtils.GetBit(Stage2, key);
-            bool stage3 = BitUtils.GetBit(Stage3, key);
-            return stage1 && !stage2 && !stage3;
-        }
+        public static bool IsKeyDown(VirtualKeyCode key) =>
+            BitUtils.GetBit(Pressing, (int)key) &&
+            !BitUtils.GetBit(Holding, (int)key) &&
+            !BitUtils.GetBit(Releasing, (int)key);
 
         /// <exception cref="KeyNotFoundException"/>
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool IsKeyUp(char key) => IsKeyUp(AsciiToKey[key]);
-        /// <param name="key">
-        /// See <see cref="VirtualKeyCode"/> for values
-        /// </param>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        public static bool IsKeyUp(ushort key)
-        {
-            bool stage1 = BitUtils.GetBit(Stage1, key);
-            bool stage2 = BitUtils.GetBit(Stage2, key);
-            bool stage3 = BitUtils.GetBit(Stage3, key);
-            return !stage1 && !stage2 && stage3;
-        }
 
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public static void Feed(KeyEvent e) => BitUtils.SetBit(Accumulated, e.VirtualKeyCode, e.IsDown != 0);
+        public static bool IsKeyUp(VirtualKeyCode key) =>
+            !BitUtils.GetBit(Pressing, (int)key) &&
+            !BitUtils.GetBit(Holding, (int)key) &&
+            BitUtils.GetBit(Releasing, (int)key);
+
+        /// <exception cref="KeyNotFoundException"/>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public static bool IsActive(char key) => IsActive(AsciiToKey[key]);
+
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public static bool IsActive(VirtualKeyCode key) => BitUtils.GetBit(Active, (int)key);
+
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public static void Feed(KeyEvent e)
+        {
+            BitUtils.SetBit(Accumulated, (int)e.VirtualKeyCode, e.IsDown != 0);
+            BitUtils.SetBit(Active, (int)e.VirtualKeyCode, e.IsDown != 0);
+        }
 
         public static void Tick()
         {
-            int[] savedStage3 = Stage3;
-            Stage3 = Stage2;
-            Stage2 = Stage1;
-            Stage1 = savedStage3;
-            Buffer.BlockCopy(Accumulated, 0, Stage1, 0, 8 * sizeof(int));
+            int[] savedStage3 = Releasing;
+            Releasing = Holding;
+            Holding = Pressing;
+            Pressing = savedStage3;
+            Buffer.BlockCopy(Accumulated, 0, Pressing, 0, 8 * sizeof(int));
+            Array.Clear(Active);
         }
     }
 }

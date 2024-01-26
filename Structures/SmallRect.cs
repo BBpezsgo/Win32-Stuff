@@ -32,12 +32,22 @@ namespace Win32
         public SHORT X
         {
             readonly get => left;
-            set => left = value;
+            set
+            {
+                ushort offset = (ushort)(value - left);
+                left = value;
+                right = (short)(right + offset);
+            }
         }
         public SHORT Y
         {
             readonly get => top;
-            set => top = value;
+            set
+            {
+                ushort offset = (ushort)(value - top);
+                top = value;
+                bottom = (short)(bottom + offset);
+            }
         }
 
         public SHORT Width

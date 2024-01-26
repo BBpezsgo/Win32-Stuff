@@ -67,6 +67,7 @@ namespace Win32
         public bool NeverLoseFocus;
 
         internal int CursorPosition;
+        internal float CursorBlinker;
 
         public ConsoleInputField(string? value)
         {
@@ -93,6 +94,17 @@ namespace Win32
         public COORD PressedOffset;
 
         public ConsolePanel(SMALL_RECT rect) => Rect = rect;
+
+        public void ClampPosition(SmallSize rendererSize)
+        {
+            int panelWidth = Rect.Width;
+            int panelHeight = Rect.Height;
+
+            if (Rect.Y < 0) Rect.Y = 0;
+            if (Rect.X < 0) Rect.X = 0;
+            if (Rect.Y > rendererSize.Height - panelHeight) Rect.Y = (short)(rendererSize.Height - panelHeight);
+            if (Rect.X > rendererSize.Width - panelWidth) Rect.X = (short)(rendererSize.Width - panelWidth);
+        }
     }
 
     public partial class ConsoleRenderer
@@ -412,6 +424,7 @@ namespace Win32
                     Mouse.Use();
                     textField.IsActive = true;
                     textField.CursorPosition = Math.Clamp(Mouse.LeftPressedAt.X - rect.Left, 0, textField.Value.Length);
+                    textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                 }
                 else if (!textField.NeverLoseFocus)
                 {
@@ -429,6 +442,7 @@ namespace Win32
                         textField.Value.Remove(textField.CursorPosition - 1, 1);
                         textField.CursorPosition--;
                     }
+                    textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                 }
                 else if (Keyboard.IsKeyDown(VirtualKeyCode.DELETE))
                 {
@@ -437,6 +451,7 @@ namespace Win32
                         textField.CursorPosition = Math.Clamp(textField.CursorPosition, 0, textField.Value.Length);
                         textField.Value.Remove(textField.CursorPosition, 1);
                     }
+                    textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                 }
                 else
                 {
@@ -457,12 +472,20 @@ namespace Win32
                             textField.Value.Insert(textField.CursorPosition, c);
                         }
                         textField.CursorPosition++;
+                        textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                     }
 
                     if (Keyboard.IsKeyDown(VirtualKeyCode.LEFT))
-                    { textField.CursorPosition = Math.Clamp(textField.CursorPosition - 1, 0, textField.Value.Length); }
+                    {
+                        textField.CursorPosition = Math.Clamp(textField.CursorPosition - 1, 0, textField.Value.Length);
+                        textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
+                    }
+
                     if (Keyboard.IsKeyDown(VirtualKeyCode.RIGHT))
-                    { textField.CursorPosition = Math.Clamp(textField.CursorPosition + 1, 0, textField.Value.Length); }
+                    {
+                        textField.CursorPosition = Math.Clamp(textField.CursorPosition + 1, 0, textField.Value.Length);
+                        textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
+                    }
                 }
             }
 
@@ -483,7 +506,7 @@ namespace Win32
                     if (i >= 0 && i < textField.Value.Length && y == labelOffsetY)
                     { c = textField.Value[i]; }
 
-                    if (i == textField.CursorPosition && textField.IsActive && (int)(DateTime.UtcNow.TimeOfDay.TotalSeconds * 2) % 2 == 0)
+                    if (i == textField.CursorPosition && textField.IsActive && (int)((DateTime.UtcNow.TimeOfDay.TotalSeconds - textField.CursorBlinker) * 2) % 2 == 0)
                     {
                         byte fg = (byte)((attributes) & CharColor.MASK_FG);
                         byte bg = (byte)((attributes >> 4) & CharColor.MASK_FG);

@@ -203,7 +203,7 @@ namespace Win32
         /// <summary>
         /// A <see href="https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes">virtual-key code</see> that identifies the given key in a device-independent manner.
         /// </summary>
-        [FieldOffset(6)] public readonly WORD VirtualKeyCode;
+        [FieldOffset(6)] public readonly VirtualKeyCode VirtualKeyCode;
 
         /// <summary>
         /// The virtual scan code of the given key that represents
@@ -226,7 +226,7 @@ namespace Win32
         /// </summary>
         [FieldOffset(12)] public readonly ControlKeyState ControlKeyState;
 
-        public KeyEvent(int isDown, ushort repeatCount, ushort virtualKeyCode, ushort virtualScanCode, char unicodeChar, ControlKeyState controlKeyState) : this()
+        public KeyEvent(int isDown, ushort repeatCount, VirtualKeyCode virtualKeyCode, ushort virtualScanCode, char unicodeChar, ControlKeyState controlKeyState) : this()
         {
             IsDown = isDown;
             RepeatCount = repeatCount;
@@ -235,8 +235,6 @@ namespace Win32
             UnicodeChar = unicodeChar;
             ControlKeyState = controlKeyState;
         }
-
-
 
         /// <inheritdoc/>
         public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0", StringComparison.Ordinal).Replace("\t", "\\t", StringComparison.Ordinal).Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal)}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
