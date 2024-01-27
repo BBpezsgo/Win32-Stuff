@@ -171,8 +171,8 @@ namespace Win32
 
         public void RefreshPosition(SmallSize rendererSize)
         {
-            int panelWidth = Rect.Width;
-            int panelHeight = Rect.Height;
+            int panelWidth = Rect.Width + 1;
+            int panelHeight = Rect.Height + 1;
 
             if (Rect.Y < 0) Rect.Y = 0;
             if (Rect.X < 0) Rect.X = 0;

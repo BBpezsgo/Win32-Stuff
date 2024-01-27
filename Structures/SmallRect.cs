@@ -52,12 +52,12 @@ namespace Win32
 
         public SHORT Width
         {
-            readonly get => (SHORT)(right - left + 1);
+            readonly get => (SHORT)(right - left);
             set => right = (SHORT)(left + value);
         }
         public SHORT Height
         {
-            readonly get => (SHORT)(bottom - top + 1);
+            readonly get => (SHORT)(bottom - top);
             set => bottom = (SHORT)(top + value);
         }
 

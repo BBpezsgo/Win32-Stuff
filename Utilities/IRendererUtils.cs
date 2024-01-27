@@ -266,29 +266,11 @@ namespace Win32
                 }
             }
 
-            int labelOffsetX = (int)MathF.Ceiling((rect.Width / 2f) - (text.Length / 2f));
-            int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
+            self.Fill(rect, new ConsoleChar(' ', attributes));
 
-            for (int y = rect.Top; y < rect.Bottom; y++)
-            {
-                if (y >= self.Height) break;
-                if (y < 0) continue;
+            COORD labelCoord = Layout.Center(text, rect).Position;
 
-                for (int x = rect.Left; x < rect.Right; x++)
-                {
-                    if (x >= self.Width) break;
-                    if (x < 0) continue;
-
-                    char c = ' ';
-
-                    int i = x - rect.Left - labelOffsetX;
-
-                    if (i >= 0 && i < text.Length && labelOffsetY == y)
-                    { c = text[i]; }
-
-                    self[x, y] = new ConsoleChar(c, attributes);
-                }
-            }
+            self.Text(labelCoord, text, attributes);
 
             return clicked;
         }
@@ -406,7 +388,7 @@ namespace Win32
             { self[rightButtonPos] = new ConsoleChar(style.RightChar, rightButtonAttributes); }
 
             string labelText = selectBox.SelectedItem?.ToString() ?? "<empty>";
-            self.Text(rect.X + Layout.Center(rect.Width - 2, labelText), rect.Y, labelText, labelAttributes);
+            self.Text(labelRect.X + Layout.Center(labelText, labelRect.Width), labelRect.Y, labelText, labelAttributes);
 
             return wasModified;
         }
@@ -434,7 +416,7 @@ namespace Win32
             if (textField.IsActive || rect.Contains(Mouse.RecordedConsolePosition))
             { attributes = style.Active; }
 
-            int labelOffsetY = rect.Top + (rect.Height / 2) - 1;
+            int labelOffsetY = rect.Top + (rect.Height / 2);
 
             if (Mouse.IsPressed(MouseButton.Left))
             {
@@ -683,8 +665,8 @@ namespace Win32
                     Mouse.Use();
                     if (Mouse.IsHold(MouseButton.Left))
                     {
-                        int panelWidth = panel.Rect.Width;
-                        int panelHeight = panel.Rect.Height;
+                        int panelWidth = panel.Rect.Width + 1;
+                        int panelHeight = panel.Rect.Height + 1;
 
                         COORD newPosition = Mouse.RecordedConsolePosition + panel.PressedOffset;
 
