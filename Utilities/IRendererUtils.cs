@@ -87,6 +87,12 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
+        public static void Text(this IRenderer<ConsoleChar> self, SmallRect rect, ReadOnlySpan<char> text, ushort attributes)
+            => self.Text(rect.X, rect.Y, text[..Math.Min(text.Length, rect.Width)], attributes);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
         public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
         {
             if (text.IsEmpty) return;
@@ -350,6 +356,18 @@ namespace Win32
 
             if (selectBox.IsActive)
             {
+                if (Mouse.ScrollDelta < 0)
+                {
+                    selectBox.SelectedIndex--;
+                    wasModified = true;
+                }
+
+                if (Mouse.ScrollDelta > 0)
+                {
+                    selectBox.SelectedIndex++;
+                    wasModified = true;
+                }
+
                 if (Keyboard.IsActive(VirtualKeyCode.LEFT))
                 {
                     selectBox.SelectedIndex--;
@@ -463,7 +481,7 @@ namespace Win32
                         if (!Keyboard.IsActive(Keys[i]))
                         { continue; }
 
-                        char c = Keyboard.IsKeyPressed(VirtualKeyCode.SHIFT) ? ShiftedChars[i] : Chars[i];
+                        char c = (Keyboard.IsKeyPressed(VirtualKeyCode.SHIFT) || Keyboard.IsKeyPressed(VirtualKeyCode.LSHIFT) || Keyboard.IsKeyPressed(VirtualKeyCode.RSHIFT)) ? ShiftedChars[i] : Chars[i];
 
                         if (textField.CursorPosition == textField.Value.Length)
                         {

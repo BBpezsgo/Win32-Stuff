@@ -32,6 +32,9 @@ namespace Win32.Common
         public readonly bool Equals(SmallSize other) => Width == other.Width && Height == other.Height;
         public override readonly int GetHashCode() => HashCode.Combine(Width, Height);
 
+        public static SmallSize operator +(SmallSize left, SmallSize right) => new(left.Width + right.Width, left.Height + right.Height);
+        public static SmallSize operator -(SmallSize left, SmallSize right) => new(left.Width + right.Width, left.Height + right.Height);
+
         public static implicit operator ValueTuple<LONG, LONG>(SmallSize size) => new(size.Width, size.Height);
         public static implicit operator System.Drawing.Size(SmallSize size) => new(size.Width, size.Height);
         public static implicit operator System.Drawing.SizeF(SmallSize size) => new(size.Width, size.Height);

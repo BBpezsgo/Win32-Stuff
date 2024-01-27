@@ -2,6 +2,7 @@
 
 namespace Win32
 {
+    [Flags]
     public enum EventType : WORD
     {
         Key = 0x0001,
@@ -11,6 +12,7 @@ namespace Win32
         Focus = 0x0010,
     }
 
+    [Flags]
     public enum MouseButton : DWORD
     {
         Left = 0x0001,
@@ -18,8 +20,6 @@ namespace Win32
         Middle = 0x0004,
         Button3 = 0x0008,
         Button4 = 0x0010,
-        ScrollUp =   0b_0000_0000_0111_1000_0000_0000_0000_0000,
-        ScrollDown = 0b_1111_1111_1000_1000_0000_0000_0000_0000,
     }
 
     [Flags]
@@ -51,31 +51,6 @@ namespace Win32
         /// If the high word of the dwButtonState member contains a positive value, the wheel was rotated forward, away from the user. Otherwise, the wheel was rotated backward, toward the user.</para>
         /// </summary>
         MouseWheeled = 0x0004,
-    }
-
-    [Flags]
-    public enum MouseButtonState : DWORD
-    {
-        /// <summary>
-        /// The leftmost mouse button.
-        /// </summary>
-        FROM_LEFT_1ST_BUTTON_PRESSED = 0x0001,
-        /// <summary>
-        /// The second button fom the left.
-        /// </summary>
-        FROM_LEFT_2ND_BUTTON_PRESSED = 0x0004,
-        /// <summary>
-        /// The third button from the left.
-        /// </summary>
-        FROM_LEFT_3RD_BUTTON_PRESSED = 0x0008,
-        /// <summary>
-        /// The fourth button from the left.
-        /// </summary>
-        FROM_LEFT_4TH_BUTTON_PRESSED = 0x0010,
-        /// <summary>
-        /// The rightmost mouse button.
-        /// </summary>
-        RIGHTMOST_BUTTON_PRESSED = 0x0002,
     }
 
     /// <summary>
@@ -152,7 +127,7 @@ namespace Win32
         /// </summary>
         public readonly MouseEventFlags EventFlags;
 
-        public MouseEvent(COORD mousePosition, uint buttonState, ControlKeyState controlKeyState, MouseEventFlags eventFlags)
+        public MouseEvent(COORD mousePosition, DWORD buttonState, ControlKeyState controlKeyState, MouseEventFlags eventFlags)
         {
             MousePosition = mousePosition;
             ButtonState = buttonState;
