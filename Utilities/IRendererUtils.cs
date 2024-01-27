@@ -828,5 +828,13 @@ namespace Win32
         public static void Fill(this IRenderer<ConsoleChar> self, ushort attributes, char character) => self.Fill(new ConsoleChar(character, attributes));
 
         #endregion
+
+        #region Image()
+
+        public static void Image(this IRenderer<ConsoleChar> self, COORD position, ConsoleImage image) => self.Image(position, (ConsoleChar[])image, image.Width, image.Height);
+
+        public static void Image(this IRenderer<ConsoleChar> self, COORD position, ConsoleImage image, int widthRatio, int heightRatio) => self.Image(position, (ConsoleChar[])image, image.Width, image.Height, widthRatio, heightRatio);
+
+        #endregion
     }
 }

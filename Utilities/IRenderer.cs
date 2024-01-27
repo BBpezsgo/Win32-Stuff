@@ -38,5 +38,31 @@ namespace Win32
         public void Clear(SMALL_RECT rect);
         public void Fill(T value);
         public void Fill(SMALL_RECT rect, T value);
+
+        public void Image(COORD position, T[] image, int width, int height)
+        {
+            for (int y_ = 0; y_ < height; y_++)
+            {
+                for (int x_ = 0; x_ < width; x_++)
+                {
+                    Coord p = new Coord(x_, y_) + position;
+                    if (!IsVisible(p)) continue;
+                    this[p] = image[x_ + (y_ * width)];
+                }
+            }
+        }
+
+        public void Image(COORD position, T[] image, int width, int height, int widthRatio, int heightRatio)
+        {
+            for (int y_ = 0; y_ < height * heightRatio; y_++)
+            {
+                for (int x_ = 0; x_ < width * widthRatio; x_++)
+                {
+                    Coord p = new Coord(x_, y_) + position;
+                    if (!IsVisible(p)) continue;
+                    this[p] = image[(x_ / widthRatio) + ((y_ / heightRatio) * width)];
+                }
+            }
+        }
     }
 }
