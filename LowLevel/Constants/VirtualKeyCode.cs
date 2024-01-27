@@ -2,6 +2,8 @@
 {
     public enum VirtualKeyCode : WORD
     {
+        NONE = 0x00,
+
         LBUTTON = 0x01,
         RBUTTON = 0x02,
         CANCEL = 0x03,

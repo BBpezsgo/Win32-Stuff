@@ -291,43 +291,81 @@ namespace Win32
 
         #region SelectBox()
 
-        public static bool SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox)
+        public static bool SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox, ConsoleSelectBoxStyle style)
         {
-            WORD attributes = CharColor.Make(CharColor.Black, CharColor.Silver);
+            WORD labelAttributes = style.LabelNormal;
+            WORD leftButtonAttributes = style.ButtonNormal;
+            WORD rightButtonAttributes = style.ButtonNormal;
+
             bool wasModified = false;
 
-            if (selectBox.IsActive || rect.Contains(Mouse.RecordedConsolePosition))
-            { attributes = CharColor.Make(CharColor.Black, CharColor.BrightCyan); }
+            COORD leftButtonPos = rect.Position;
+            COORD rightButtonPos = new(rect.Right - 1, rect.Y);
 
-            if (self.IsVisible(rect.Position))
-            { self[rect.Position] = new ConsoleChar('<', attributes); }
+            SmallRect labelRect = rect.Margin(0, 1);
 
-            if (self.IsVisible(rect.Right - 1, rect.Y))
-            { self[rect.Right - 1, rect.Y] = new ConsoleChar('>', attributes); }
+            if (labelRect.Contains(Mouse.RecordedConsolePosition))
+            { labelAttributes = style.LabelHover; }
 
-            string labelText = selectBox.SelectedItem?.ToString() ?? "<empty>";
-            self.Text(rect.X + Layout.Center(rect.Width - 2, labelText), rect.Y, labelText, attributes);
+            if (selectBox.IsActive)
+            { labelAttributes = style.LabelActive; }
+
+            if (Mouse.IsPressed(MouseButton.Left) &&
+                labelRect.Contains(Mouse.LeftPressedAt))
+            { labelAttributes = style.LabelDown; }
+
+            if (Mouse.RecordedConsolePosition == leftButtonPos)
+            { leftButtonAttributes = style.ButtonHover; }
+
+            if (Mouse.IsPressed(MouseButton.Left) &&
+                Mouse.LeftPressedAt == leftButtonPos)
+            { leftButtonAttributes = style.ButtonDown; }
+
+            if (Mouse.RecordedConsolePosition == rightButtonPos)
+            { rightButtonAttributes = style.ButtonHover; }
+
+            if (Mouse.IsPressed(MouseButton.Left) &&
+                Mouse.LeftPressedAt == rightButtonPos)
+            { rightButtonAttributes = style.ButtonDown; }
+
+            if (!Mouse.WasUsed &&
+                Mouse.IsUp(MouseButton.Left) &&
+                Mouse.LeftPressedAt == leftButtonPos)
+            {
+                Mouse.Use();
+                selectBox.SelectedIndex--;
+                wasModified = true;
+            }
+
+            if (!Mouse.WasUsed &&
+                Mouse.IsUp(MouseButton.Left) &&
+                Mouse.LeftPressedAt == rightButtonPos)
+            {
+                Mouse.Use();
+                selectBox.SelectedIndex++;
+                wasModified = true;
+            }
+
+            if (wasModified) selectBox.ClampIndex();
 
             if (selectBox.IsActive)
             {
-                if (Keyboard.IsKeyDown(VirtualKeyCode.LEFT))
+                if (Keyboard.IsActive(VirtualKeyCode.LEFT))
                 {
                     selectBox.SelectedIndex--;
-                    selectBox.ClampIndex();
                     wasModified = true;
                 }
 
-                if (Keyboard.IsKeyDown(VirtualKeyCode.RIGHT))
+                if (Keyboard.IsActive(VirtualKeyCode.RIGHT))
                 {
                     selectBox.SelectedIndex++;
-                    selectBox.ClampIndex();
                     wasModified = true;
                 }
             }
-                    
+
             if (Mouse.IsDown(MouseButton.Left))
             {
-                if (rect.Contains(Mouse.LeftPressedAt))
+                if (labelRect.Contains(Mouse.LeftPressedAt))
                 {
                     if (!Mouse.WasUsed)
                     {
@@ -340,6 +378,17 @@ namespace Win32
                     selectBox.IsActive = false;
                 }
             }
+
+            if (wasModified) selectBox.ClampIndex();
+
+            if (self.IsVisible(leftButtonPos))
+            { self[leftButtonPos] = new ConsoleChar(style.LeftChar, leftButtonAttributes); }
+
+            if (self.IsVisible(rightButtonPos))
+            { self[rightButtonPos] = new ConsoleChar(style.RightChar, rightButtonAttributes); }
+
+            string labelText = selectBox.SelectedItem?.ToString() ?? "<empty>";
+            self.Text(rect.X + Layout.Center(rect.Width - 2, labelText), rect.Y, labelText, labelAttributes);
 
             return wasModified;
         }
@@ -386,7 +435,7 @@ namespace Win32
 
             if (textField.IsActive)
             {
-                if (Keyboard.IsKeyDown(VirtualKeyCode.BACK))
+                if (Keyboard.IsActive(VirtualKeyCode.BACK))
                 {
                     if (textField.Value.Length > 0 && textField.CursorPosition > 0)
                     {
@@ -397,7 +446,7 @@ namespace Win32
 
                     textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                 }
-                else if (Keyboard.IsKeyDown(VirtualKeyCode.DELETE))
+                else if (Keyboard.IsActive(VirtualKeyCode.DELETE))
                 {
                     if (textField.Value.Length > 0 && textField.CursorPosition < textField.Value.Length)
                     {
@@ -411,7 +460,7 @@ namespace Win32
                 {
                     for (int i = 0; i < Keys.Length; i++)
                     {
-                        if (!Keyboard.IsKeyDown(Keys[i]))
+                        if (!Keyboard.IsActive(Keys[i]))
                         { continue; }
 
                         char c = Keyboard.IsKeyPressed(VirtualKeyCode.SHIFT) ? ShiftedChars[i] : Chars[i];
@@ -430,16 +479,31 @@ namespace Win32
                         textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                     }
 
-                    if (Keyboard.IsKeyDown(VirtualKeyCode.LEFT))
+                    if (Keyboard.IsActive(VirtualKeyCode.UP))
                     {
-                        textField.CursorPosition = Math.Clamp(textField.CursorPosition - 1, 0, textField.Value.Length);
-                       
+                        textField.CursorPosition = 0;
+
                         textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                     }
-                    if (Keyboard.IsKeyDown(VirtualKeyCode.RIGHT))
+
+                    if (Keyboard.IsActive(VirtualKeyCode.LEFT))
+                    {
+                        textField.CursorPosition = Math.Clamp(textField.CursorPosition - 1, 0, textField.Value.Length);
+
+                        textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
+                    }
+
+                    if (Keyboard.IsActive(VirtualKeyCode.DOWN))
+                    {
+                        textField.CursorPosition = textField.Value.Length;
+
+                        textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
+                    }
+
+                    if (Keyboard.IsActive(VirtualKeyCode.RIGHT))
                     {
                         textField.CursorPosition = Math.Clamp(textField.CursorPosition + 1, 0, textField.Value.Length);
-                       
+
                         textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                     }
                 }
@@ -606,10 +670,45 @@ namespace Win32
 
                         COORD newPosition = Mouse.RecordedConsolePosition + panel.PressedOffset;
 
-                        if (newPosition.Y < 0) newPosition.Y = 0;
-                        if (newPosition.X < 0) newPosition.X = 0;
-                        if (newPosition.Y > self.Height - panelHeight) newPosition.Y = (short)(self.Height - panelHeight);
-                        if (newPosition.X > self.Width - panelWidth) newPosition.X = (short)(self.Width - panelWidth);
+                        if (newPosition.Y <= 0)
+                        {
+                            newPosition.Y = 0;
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockTop);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockTop);
+                        }
+
+                        if (newPosition.X <= 0)
+                        {
+                            newPosition.X = 0;
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockLeft);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockLeft);
+                        }
+
+                        if (newPosition.Y >= self.Height - panelHeight)
+                        {
+                            newPosition.Y = (short)(self.Height - panelHeight);
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockBottom);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockBottom);
+                        }
+
+                        if (newPosition.X >= self.Width - panelWidth)
+                        {
+                            newPosition.X = (short)(self.Width - panelWidth);
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockRight);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockRight);
+                        }
 
                         panel.Rect.Position = newPosition;
                     }
@@ -661,6 +760,37 @@ namespace Win32
 
             if (self.IsVisible(right, bottom))
             { self[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
+        }
+
+        #endregion
+
+        #region Panel()
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Line(this IRenderer<ConsoleChar> self, COORD a, COORD b, ushort attributes)
+        {
+            COORD min = COORD.Min(a, b);
+            COORD max = COORD.Max(a, b);
+
+            if (min.X >= 0 && min.X < self.Width)
+            {
+                for (int y = Math.Max((short)0, min.Y); y <= max.Y; y++)
+                {
+                    if (y >= self.Height) break;
+                    self[min.X, y] = new ConsoleChar('|', attributes);
+                }
+            }
+
+            if (max.Y >= 0 && max.Y < self.Height)
+            {
+                for (int x = Math.Max((short)0, min.X); x <= max.X; x++)
+                {
+                    if (x >= self.Width) break;
+                    self[x, max.Y] = new ConsoleChar('-', attributes);
+                }
+            }
         }
 
         #endregion

@@ -115,6 +115,14 @@ namespace Win32
         /// <inheritdoc/>
         public override readonly string ToString() => Char.ToString();
         readonly string GetDebuggerDisplay()
-             => $"( \'{Char}\' 0b{Convert.ToString(Attributes, 2).PadLeft(8, '0')} )";
+             => $"( \'{Char switch
+             {
+                 '\0' => @"\0",
+                 '\r' => @"\r",
+                 '\n' => @"\n",
+                 '\b' => @"\b",
+                 '\v' => @"\v",
+                 _ => Char.ToString(),
+             }}\' 0b{Convert.ToString(Attributes, 2).PadLeft(8, '0')} )";
     }
 }

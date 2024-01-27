@@ -5,6 +5,37 @@ namespace Win32.LowLevel
     [SupportedOSPlatform("windows")]
     public static partial class User32
     {
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern HANDLE GetKeyboardLayout(
+          [In] DWORD idThread
+        );  
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern unsafe HANDLE LoadKeyboardLayoutW(
+          [In] WCHAR* pwszKLID,
+          [In] UINT Flags
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern SHORT VkKeyScanExA(
+          [In] CHAR ch,
+          [In] HANDLE dwhkl
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern unsafe SHORT VkKeyScanExW(
+          [In] WCHAR ch,
+          [In] HANDLE dwhkl
+        );
+
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern unsafe int ToAscii(
+          [In] UINT uVirtKey,
+          [In] UINT uScanCode,
+          [In, Optional] BYTE* lpKeyState,
+          [Out] WORD* lpChar,
+          [In] UINT uFlags
+        );
 
         [DllImport("User32.dll", SetLastError = true)]
         public static extern SHORT GetAsyncKeyState(

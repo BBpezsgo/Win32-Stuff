@@ -17,6 +17,7 @@ namespace Win32
         System.Numerics.IAdditionOperators<COORD, COORD, COORD>,
         System.Numerics.ISubtractionOperators<COORD, COORD, COORD>,
         System.Numerics.IMultiplyOperators<COORD, COORD, COORD>,
+        System.Numerics.IDivisionOperators<COORD, COORD, COORD>,
         System.Numerics.IMultiplyOperators<COORD, int, COORD>,
         System.Numerics.IDivisionOperators<COORD, int, COORD>
     {
@@ -49,6 +50,8 @@ namespace Win32
         public static COORD operator -(COORD a, COORD b) => new((SHORT)(a.X - b.X), (SHORT)(a.Y - b.Y));
         /// <inheritdoc/>
         public static COORD operator *(COORD a, COORD b) => new((SHORT)(a.X * b.X), (SHORT)(a.Y * b.Y));
+        /// <inheritdoc/>
+        public static COORD operator /(COORD a, COORD b) => new((SHORT)(a.X / b.X), (SHORT)(a.Y / b.Y));
         /// <inheritdoc/>
         public static COORD operator *(COORD a, int b) => new((SHORT)(a.X * b), (SHORT)(a.Y * b));
         /// <inheritdoc/>
@@ -84,5 +87,8 @@ namespace Win32
         public static explicit operator COORD(POINT size) => new((SHORT)size.X, (SHORT)size.Y);
         public static explicit operator COORD(System.Drawing.Point size) => new((SHORT)size.X, (SHORT)size.Y);
         public static explicit operator COORD(System.Numerics.Vector2 size) => new((SHORT)size.X, (SHORT)size.Y);
+
+        public static COORD Max(COORD a, COORD b) => new(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
+        public static COORD Min(COORD a, COORD b) => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y));
     }
 }

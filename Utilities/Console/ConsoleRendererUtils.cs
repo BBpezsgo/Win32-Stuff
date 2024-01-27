@@ -35,6 +35,36 @@ namespace Win32
         };
     }
 
+    public class ConsoleSelectBoxStyle
+    {
+        public ushort LabelNormal;
+        public ushort LabelHover;
+        public ushort LabelDown;
+        public ushort LabelActive;
+
+        public ushort ButtonNormal;
+        public ushort ButtonHover;
+        public ushort ButtonDown;
+
+        public char LeftChar;
+        public char RightChar;
+
+        public static ConsoleSelectBoxStyle Default => new()
+        {
+            LabelNormal = CharColor.Make(CharColor.Gray, CharColor.White),
+            LabelHover = CharColor.Make(CharColor.Silver, CharColor.Black),
+            LabelDown = CharColor.Make(CharColor.White, CharColor.Black),
+            LabelActive = CharColor.Make(CharColor.White, CharColor.Black),
+
+            ButtonNormal = CharColor.Make(CharColor.Gray, CharColor.White),
+            ButtonHover = CharColor.Make(CharColor.Silver, CharColor.Black),
+            ButtonDown = CharColor.Make(CharColor.White, CharColor.Black),
+
+            LeftChar = '<',
+            RightChar = '>',
+        };
+    }
+
     public class ConsoleInputFieldStyle
     {
         public ushort Normal;
@@ -52,8 +82,11 @@ namespace Win32
         public bool IsActive;
         public int SelectedIndex;
         public T[] Items;
-        public T? SelectedItem => (SelectedIndex < 0 || SelectedIndex >= Items.Length) ? default : Items[SelectedIndex];
-
+        public T? SelectedItem
+        {
+            get => (SelectedIndex < 0 || SelectedIndex >= Items.Length) ? default : Items[SelectedIndex];
+            set => SelectedIndex = Array.IndexOf(Items, value);
+        }
         public ConsoleSelectBox(params T[] items)
         {
             IsActive = false;
@@ -96,7 +129,7 @@ namespace Win32
         public ConsoleInputField(string? value)
         {
             value ??= string.Empty;
-            
+
             Value = new(value);
             IsActive = false;
             NeverLoseFocus = false;
@@ -113,13 +146,30 @@ namespace Win32
 
     public class ConsolePanel
     {
+        public const byte DockNone = 0b_0000;
+        public const byte DockTop = 0b_1000;
+        public const byte DockLeft = 0b_0100;
+        public const byte DockBottom = 0b_0010;
+        public const byte DockRight = 0b_0001;
+
         public SMALL_RECT Rect;
         public bool IsActive;
         public COORD PressedOffset;
 
-        public ConsolePanel(SMALL_RECT rect) => Rect = rect;
+        public byte Dock;
 
-        public void ClampPosition(SmallSize rendererSize)
+        public ConsolePanel(SMALL_RECT rect)
+        {
+            Rect = rect;
+        }
+
+        public ConsolePanel(SMALL_RECT rect, byte dock)
+        {
+            Rect = rect;
+            Dock = dock;
+        }
+
+        public void RefreshPosition(SmallSize rendererSize)
         {
             int panelWidth = Rect.Width;
             int panelHeight = Rect.Height;
@@ -128,6 +178,11 @@ namespace Win32
             if (Rect.X < 0) Rect.X = 0;
             if (Rect.Y > rendererSize.Height - panelHeight) Rect.Y = (short)(rendererSize.Height - panelHeight);
             if (Rect.X > rendererSize.Width - panelWidth) Rect.X = (short)(rendererSize.Width - panelWidth);
+
+            if ((Dock & DockTop) != 0) Rect.Y = 0;
+            if ((Dock & DockLeft) != 0) Rect.X = 0;
+            if ((Dock & DockBottom) != 0) Rect.Y = (short)(rendererSize.Height - panelHeight);
+            if ((Dock & DockRight) != 0) Rect.X = (short)(rendererSize.Width - panelWidth);
         }
     }
 
@@ -674,10 +729,45 @@ namespace Win32
 
                         COORD newPosition = Mouse.RecordedConsolePosition + panel.PressedOffset;
 
-                        if (newPosition.Y < 0) newPosition.Y = 0;
-                        if (newPosition.X < 0) newPosition.X = 0;
-                        if (newPosition.Y > BufferHeight - panelHeight) newPosition.Y = (short)(BufferHeight - panelHeight);
-                        if (newPosition.X > BufferWidth - panelWidth) newPosition.X = (short)(BufferWidth - panelWidth);
+                        if (newPosition.Y <= 0)
+                        {
+                            newPosition.Y = 0;
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockTop);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockTop);
+                        }
+
+                        if (newPosition.X <= 0)
+                        {
+                            newPosition.X = 0;
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockLeft);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockLeft);
+                        }
+
+                        if (newPosition.Y >= BufferHeight - panelHeight)
+                        {
+                            newPosition.Y = (short)(BufferHeight - panelHeight);
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockBottom);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockBottom);
+                        }
+
+                        if (newPosition.X >= BufferWidth - panelWidth)
+                        {
+                            newPosition.X = (short)(BufferWidth - panelWidth);
+                            BitUtils.SetMask(ref panel.Dock, ConsolePanel.DockRight);
+                        }
+                        else
+                        {
+                            BitUtils.ResetMask(ref panel.Dock, ConsolePanel.DockRight);
+                        }
 
                         panel.Rect.Position = newPosition;
                     }

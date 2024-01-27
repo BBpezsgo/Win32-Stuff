@@ -1,5 +1,7 @@
 ﻿using System.Text;
 
+using Color24 = (byte R, byte G, byte B);
+
 namespace Win32
 {
     public partial struct Ansi
@@ -228,6 +230,117 @@ namespace Win32
 
         #endregion
 
+        #region Color Conversions
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/27165165"/>
+        /// </summary>
+        public static Color24 FromAnsi256(int number)
+        {
+            int index_R = (number - 16) / 36;
+            int r = (index_R > 0) ? (55 + (index_R * 40)) : 0;
+            int index_G = (number - 16) % 36 / 6;
+            int g = (index_G > 0) ? (55 + (index_G * 40)) : 0;
+            int index_B = (number - 16) % 6;
+            int b = (index_B > 0) ? (55 + (index_B * 40)) : 0;
+            return new Color24((byte)r, (byte)g, (byte)b);
+        }
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/27165165"/>
+        /// </summary>
+        public static Color24 FromAnsi256Grayscale(int number)
+        {
+            int v = ((number - 232) * 10) + 8;
+            return new Color24((byte)v, (byte)v, (byte)v);
+        }
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
+        /// </summary>
+        public static byte ToAnsi256Grayscale(byte color)
+        {
+            if (color < 8)
+            { return 16; }
+
+            if (color > 248)
+            { return 231; }
+
+            return (byte)(MathF.Round(((float)color - 8f) / 247f * 24f) + 232f);
+        }
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
+        /// </summary>
+        public static byte ToAnsi256(System.Drawing.Color color) => Ansi.ToAnsi256(color.R, color.G, color.B);
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
+        /// </summary>
+        public static byte ToAnsi256(Color24 color) => Ansi.ToAnsi256(color.R, color.G, color.B);
+
+        /// <summary>
+        /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
+        /// </summary>
+        public static byte ToAnsi256(byte red, byte green, byte blue)
+        {
+            if (red == green && green == blue)
+            { return ToAnsi256Grayscale(red); }
+
+            return (byte)(16
+                + (36 * MathF.Round(red / (float)255 * 5))
+                + (6 * MathF.Round(green / (float)255 * 5))
+                + MathF.Round(blue / (float)255 * 5));
+        }
+
+        #endregion
+
+        public static StringBuilder FromConsoleChar(StringBuilder builder, ConsoleChar consoleChar)
+        {
+            byte foregroundColor = CharColor.GetAnsiForegroundColor(consoleChar.Foreground);
+            byte backgroundColor = CharColor.GetAnsiBackgroundColor(consoleChar.Background);
+
+            Ansi.SetGraphics(builder, foregroundColor);
+            Ansi.SetGraphics(builder, backgroundColor);
+
+            if (consoleChar.Char == '\0')
+            { builder.Append(' '); }
+            else
+            { builder.Append(consoleChar.Char); }
+
+            return builder;
+        }
+
+        public static StringBuilder FromConsoleChar(
+            StringBuilder builder,
+            ConsoleChar consoleChar,
+            ref byte previousForegroundColor,
+            ref byte previousBackgroundColor,
+            bool force)
+        {
+            byte foregroundColor = CharColor.GetAnsiForegroundColor(consoleChar.Foreground);
+            byte backgroundColor = CharColor.GetAnsiBackgroundColor(consoleChar.Background);
+
+            if (force || previousForegroundColor != foregroundColor)
+            {
+                Ansi.SetGraphics(builder, foregroundColor);
+                previousForegroundColor = foregroundColor;
+            }
+
+            if (force || previousBackgroundColor != backgroundColor)
+            {
+                Ansi.SetGraphics(builder, backgroundColor);
+                previousBackgroundColor = backgroundColor;
+            }
+
+            if (consoleChar.Char == '\0')
+            { builder.Append(' '); }
+            else
+            { builder.Append(consoleChar.Char); }
+
+            return builder;
+        }
+
         /// <exception cref="WindowsException"/>
         [SupportedOSPlatform("windows")]
         public static void EnableVirtualTerminalSequences() => ConsoleHandler.OutputFlags |= (uint)0x0004;
@@ -241,6 +354,15 @@ namespace Win32
             builder.Append(ESC);
             builder.Append(CSI);
             builder.AppendJoin(';', modes);
+            builder.Append('m');
+            return builder;
+        }
+
+        public static StringBuilder SetGraphics(StringBuilder builder, uint mode)
+        {
+            builder.Append(ESC);
+            builder.Append(CSI);
+            builder.Append(mode);
             builder.Append('m');
             return builder;
         }
@@ -291,6 +413,7 @@ namespace Win32
             builder.Append('5');
             builder.Append(';');
             builder.Append(colorCode);
+            builder.Append('m');
             return builder;
         }
 
