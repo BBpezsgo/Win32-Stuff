@@ -53,5 +53,11 @@ namespace Win32.Common
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SIZE(System.Numerics.Vector2 size) => new(checked((LONG)size.X), checked((LONG)size.Y));
         public static explicit operator SIZE(System.Numerics.Vector2 size) => new((LONG)size.X, (LONG)size.Y);
+
+        public readonly void Deconstruct(out LONG width, out LONG height)
+        {
+            width = Width;
+            height = Height;
+        }
     }
 }

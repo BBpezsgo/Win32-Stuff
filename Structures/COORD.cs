@@ -26,6 +26,8 @@ namespace Win32
         /// <summary>The vertical coordinate or row value. The units depend on the function call.</summary>
         public SHORT Y;
 
+        public static COORD One => new((SHORT)1, (SHORT)1);
+
         public Coord(SHORT x, SHORT y)
         {
             X = x;
@@ -90,5 +92,11 @@ namespace Win32
 
         public static COORD Max(COORD a, COORD b) => new(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
         public static COORD Min(COORD a, COORD b) => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y));
+
+        public readonly void Deconstruct(out SHORT x, out SHORT y)
+        {
+            x = X;
+            y = Y;
+        }
     }
 }

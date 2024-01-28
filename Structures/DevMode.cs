@@ -44,8 +44,7 @@ namespace Win32.Gdi32
             public DWORD dmNup;
         }
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = CCHDEVICENAME)]
-        public WCHAR[] dmDeviceName;
+        public unsafe fixed WCHAR dmDeviceName[CCHDEVICENAME];
         public WORD dmSpecVersion;
         public WORD dmDriverVersion;
         public WORD dmSize;
@@ -57,8 +56,7 @@ namespace Win32.Gdi32
         public short dmYResolution;
         public short dmTTOption;
         public short dmCollate;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = CCHFORMNAME)]
-        public WCHAR[] dmFormName;
+        public unsafe fixed WCHAR dmFormName[CCHFORMNAME];
         public WORD dmLogPixels;
         public DWORD dmBitsPerPel;
         public DWORD dmPelsWidth;

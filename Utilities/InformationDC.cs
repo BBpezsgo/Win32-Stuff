@@ -41,9 +41,7 @@
             fixed (WCHAR* driverPtr = driver)
             fixed (WCHAR* devicePtr = device)
             {
-#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
                 HDC handle = Gdi32.CreateICW(driverPtr, devicePtr, null, &deviceMode);
-#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
                 if (handle == HDC.Zero)
                 { throw new GdiException($"Failed to create DC ({nameof(Gdi32.CreateICW)})"); }
                 return new InformationDC(handle);

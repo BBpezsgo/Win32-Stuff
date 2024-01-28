@@ -57,5 +57,12 @@ namespace Win32.Gdi32
         public override int GetHashCode() => unchecked((int)v);
         public override bool Equals(object? obj) => obj is GdiColor color && Equals(color);
         public bool Equals(GdiColor other) => v == other.v;
+
+        public readonly void Deconstruct(out byte r, out byte g, out byte b)
+        {
+            r = R;
+            g = G;
+            b = B;
+        }
     }
 }

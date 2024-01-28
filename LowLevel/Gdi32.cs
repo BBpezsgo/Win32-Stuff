@@ -182,9 +182,7 @@ namespace Win32.Gdi32.LowLevel
           [In] WCHAR* pszDriver,
           [In] WCHAR* pszDevice,
                WCHAR* pszPort,
-#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
           [In] DevMode* pdm
-#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
         );
 
         [DllImport("Gdi32.dll", SetLastError = true)]

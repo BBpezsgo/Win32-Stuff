@@ -56,5 +56,11 @@ namespace Win32.Common
         public static explicit operator checked POINT(System.Numerics.Vector2 v) => new(checked((LONG)v.X), checked((LONG)v.Y));
 
         public static explicit operator POINT(System.Numerics.Vector2 v) => new((LONG)v.X, (LONG)v.Y);
+
+        public readonly void Deconstruct(out LONG x, out LONG y)
+        {
+            x = X;
+            y = Y;
+        }
     }
 }

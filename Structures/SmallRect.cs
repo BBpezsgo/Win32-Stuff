@@ -282,5 +282,19 @@ namespace Win32
         }
 
         #endregion
+
+        public readonly void Deconstruct(out SHORT x, out SHORT y, out SHORT width, out SHORT height)
+        {
+            x = X;
+            y = Y;
+            width = Width;
+            height = Height;
+        }
+
+        public readonly void Deconstruct(out COORD position, out SmallSize size)
+        {
+            position = Position;
+            size = Size;
+        }
     }
 }

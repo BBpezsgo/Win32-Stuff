@@ -124,5 +124,18 @@ namespace Win32
                  '\v' => @"\v",
                  _ => Char.ToString(),
              }}\' 0b{Convert.ToString(Attributes, 2).PadLeft(8, '0')} )";
+
+        public readonly void Deconstruct(out WCHAR character, out WORD attributes)
+        {
+            character = Char;
+            attributes = Attributes;
+        }
+
+        public readonly void Deconstruct(out WCHAR character, out BYTE background, out BYTE foreground)
+        {
+            character = Char;
+            background = Background;
+            foreground = Foreground;
+        }
     }
 }

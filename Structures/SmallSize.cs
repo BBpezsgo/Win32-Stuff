@@ -62,5 +62,11 @@ namespace Win32.Common
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SmallSize(System.Numerics.Vector2 size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
         public static explicit operator SmallSize(System.Numerics.Vector2 size) => new((SHORT)size.X, (SHORT)size.Y);
+
+        public readonly void Deconstruct(out SHORT width, out SHORT height)
+        {
+            width = Width;
+            height = Height;
+        }
     }
 }

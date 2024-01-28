@@ -33,5 +33,12 @@ namespace Win32.Gdi32
             Red == other.Red;
         public override readonly int GetHashCode() => HashCode.Combine(Blue, Green, Red);
         public override readonly string ToString() => $"({Red}, {Green}, {Blue})";
+
+        public readonly void Deconstruct(out BYTE r, out BYTE g, out BYTE b)
+        {
+            r = Red;
+            g = Green;
+            b = Blue;
+        }
     }
 }

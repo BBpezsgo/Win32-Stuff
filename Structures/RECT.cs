@@ -200,5 +200,19 @@ namespace Win32.Common
             if (User32.SetRect(rect, left, top, right, bottom) == 0)
             { throw new GeneralException($"{nameof(User32.SetRect)} has failed"); }
         }
+
+        public readonly void Deconstruct(out LONG x, out LONG y, out LONG width, out LONG height)
+        {
+            x = X;
+            y = Y;
+            width = Width;
+            height = Height;
+        }
+
+        public readonly void Deconstruct(out POINT position, out SIZE size)
+        {
+            position = Position;
+            size = Size;
+        }
     }
 }
