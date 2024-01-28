@@ -78,6 +78,12 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
+        public void Put(int x, int y, ReadOnlySpan2D<TPixel> data)
+            => Put(x, y, data.Span, data.Width, data.Height);
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
         public virtual void Put(int x, int y, ReadOnlySpan<TPixel> data, int dataWidth, int dataHeight)
         {
             for (int offsetY = 0; offsetY < dataHeight; offsetY++)

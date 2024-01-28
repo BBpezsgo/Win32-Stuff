@@ -1,0 +1,229 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Win32
+{
+    public readonly ref struct Span2D<T>
+    {
+        public readonly Span<T> Span;
+        public readonly int Width;
+        public readonly int Height;
+
+        public Span2D(Span<T> span, int width, int height)
+        {
+            Span = span;
+            Width = width;
+            Height = height;
+        }
+
+        public Span2D(Span<T> span, int width)
+        {
+            Span = span;
+            Width = width;
+            Height = span.Length / width;
+        }
+
+        public bool Equals(Span2D<T> other) =>
+            Width == other.Width &&
+            Height == other.Height &&
+            Span == other.Span;
+
+        [DoesNotReturn]
+        public override int GetHashCode() => throw new NotSupportedException($"Cannot call {nameof(GetHashCode)} on {nameof(Span<T>)}");
+
+        [DoesNotReturn]
+        public override bool Equals([NotNullWhen(true)] object? obj) => throw new NotSupportedException($"Cannot call {nameof(Equals)} on {nameof(Span<T>)}");
+
+        public static bool operator ==(Span2D<T> left, Span2D<T> right) => left.Equals(right);
+        public static bool operator !=(Span2D<T> left, Span2D<T> right) => !left.Equals(right);
+
+        public override string ToString() => $"( {Width}x{Height} {Span.ToString()} )";
+    }
+
+    public readonly ref struct ReadOnlySpan2D<T>
+    {
+        public readonly ReadOnlySpan<T> Span;
+        public readonly int Width;
+        public readonly int Height;
+
+        public ReadOnlySpan2D(ReadOnlySpan<T> span, int width, int height)
+        {
+            Span = span;
+            Width = width;
+            Height = height;
+        }
+
+        public ReadOnlySpan2D(ReadOnlySpan<T> span, int width)
+        {
+            Span = span;
+            Width = width;
+            Height = span.Length / width;
+        }
+
+        public bool Equals(ReadOnlySpan2D<T> other) =>
+            Width == other.Width &&
+            Height == other.Height &&
+            Span == other.Span;
+
+        [DoesNotReturn]
+        public override int GetHashCode() => throw new NotSupportedException($"Cannot call {nameof(GetHashCode)} on {nameof(Span<T>)}");
+
+        [DoesNotReturn]
+        public override bool Equals([NotNullWhen(true)] object? obj) => throw new NotSupportedException($"Cannot call {nameof(Equals)} on {nameof(Span<T>)}");
+
+        public static bool operator ==(ReadOnlySpan2D<T> left, ReadOnlySpan2D<T> right) => left.Equals(right);
+        public static bool operator !=(ReadOnlySpan2D<T> left, ReadOnlySpan2D<T> right) => !left.Equals(right);
+
+        public override string ToString() => $"( {Width}x{Height} {Span.ToString()} )";
+    }
+
+    public static class BufferUtils
+    {
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Clear<T>(Span2D<T> buffer, SMALL_RECT rect)
+        {
+            for (int _y = 0; _y < rect.Height; _y++)
+            {
+                int actualY = rect.Y + _y;
+                if (actualY >= buffer.Height) break;
+                if (actualY < 0) continue;
+
+                int startIndex = (actualY * buffer.Width) + Math.Max((short)0, rect.Left);
+                int endIndex = (actualY * buffer.Width) + Math.Min(buffer.Width - 1, rect.Right);
+                int length = Math.Max(0, endIndex - startIndex);
+
+                buffer.Span.Slice(startIndex, length).Clear();
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Clear<T>(Span<T> buffer, int bufferWidth, int bufferHeight, SMALL_RECT rect)
+        {
+            for (int _y = 0; _y < rect.Height; _y++)
+            {
+                int actualY = rect.Y + _y;
+                if (actualY >= bufferHeight) break;
+                if (actualY < 0) continue;
+
+                int startIndex = (actualY * bufferWidth) + Math.Max((short)0, rect.Left);
+                int endIndex = (actualY * bufferWidth) + Math.Min(bufferWidth - 1, rect.Right);
+                int length = Math.Max(0, endIndex - startIndex);
+
+                buffer.Slice(startIndex, length).Clear();
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Put<T>(Span2D<T> buffer, int destinationX, int destinationY, ReadOnlySpan2D<T> data)
+        {
+            for (int offsetY = 0; offsetY < data.Height; offsetY++)
+            {
+                if (destinationY + offsetY < 0) continue;
+                if (destinationY + offsetY >= buffer.Height) break;
+
+                ReadOnlySpan<T> row = data.Span.Slice(offsetY * data.Width, data.Width);
+                BufferUtils.PutRow(buffer.Span, buffer.Width, destinationX, destinationY + offsetY, row);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Put<T>(Span<T> buffer, int bufferWidth, int bufferHeight, int destinationX, int destinationY, ReadOnlySpan<T> data, int dataWidth, int dataHeight)
+        {
+            for (int offsetY = 0; offsetY < dataHeight; offsetY++)
+            {
+                if (destinationY + offsetY < 0) continue;
+                if (destinationY + offsetY >= bufferHeight) break;
+
+                ReadOnlySpan<T> row = data.Slice(offsetY * dataWidth, dataWidth);
+                BufferUtils.PutRow(buffer, bufferWidth, destinationX, destinationY + offsetY, row);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void PutRow<T>(Span<T> buffer, int bufferWidth, int destinationX, int destinationY, ReadOnlySpan<T> data)
+        {
+            ReadOnlySpan<T> source = data;
+
+            if (destinationX < 0)
+            {
+                if (-destinationX >= data.Length) return;
+                source = source[-destinationX..];
+                destinationX = 0;
+            }
+
+            if (destinationX + source.Length > bufferWidth)
+            {
+                if (bufferWidth - destinationX <= 0) return;
+                source = source[..(bufferWidth - destinationX)];
+            }
+
+            Span<T> destination = buffer[(destinationX + (destinationY * bufferWidth))..];
+
+            source.CopyTo(destination);
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Fill<T>(Span2D<T> buffer, SMALL_RECT rect, T value)
+        {
+            int rectHeight = rect.Height;
+            int rectWidth = rect.Width;
+            int rectX = rect.X;
+            int rectY = rect.Y;
+
+            for (int offsetY = 0; offsetY < rectHeight; offsetY++)
+            {
+                int y = rectY + offsetY;
+                if (y >= buffer.Height) break;
+                if (y < 0) continue;
+
+                BufferUtils.FillRow(buffer.Span, buffer.Width, rectX, y, value, rectWidth);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Fill<T>(Span<T> buffer, int bufferWidth, int bufferHeight, SMALL_RECT rect, T value)
+        {
+            int rectHeight = rect.Height;
+            int rectWidth = rect.Width;
+            int rectX = rect.X;
+            int rectY = rect.Y;
+
+            for (int offsetY = 0; offsetY < rectHeight; offsetY++)
+            {
+                int y = rectY + offsetY;
+                if (y >= bufferHeight) break;
+                if (y < 0) continue;
+
+                BufferUtils.FillRow(buffer, bufferWidth, rectX, y, value, rectWidth);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void FillRow<T>(Span<T> buffer, int bufferWidth, int destinationX, int destinationY, T data, int dataLength)
+        {
+            int startIndex = (destinationY * bufferWidth) + Math.Max(0, destinationX);
+            int endIndex = (destinationY * bufferWidth) + Math.Min(bufferWidth - 1, destinationX + dataLength);
+
+            if (startIndex >= endIndex) return;
+
+            dataLength = Math.Max(0, endIndex - startIndex);
+
+            buffer.Slice(startIndex, dataLength).Fill(data);
+        }
+    }
+}

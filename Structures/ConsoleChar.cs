@@ -137,5 +137,16 @@ namespace Win32
             background = Background;
             foreground = Foreground;
         }
+
+        public readonly bool IsInvisible
+        {
+            get
+            {
+                if (Attributes == 0) return true;
+                if (Background != 0) return false;
+                if (Char <= ' ') return true;
+                return false;
+            }
+        }
     }
 }

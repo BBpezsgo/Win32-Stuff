@@ -35,7 +35,7 @@ namespace Win32.Gdi32
         public static explicit operator GdiColor(Vector3 v) => new(v.X, v.Y, v.Z);
 
         public static bool operator ==(GdiColor left, GdiColor right) => left.Equals(right);
-        public static bool operator !=(GdiColor left, GdiColor right) => !(left == right);
+        public static bool operator !=(GdiColor left, GdiColor right) => !left.Equals(right);
 
         public static GdiColor operator +(GdiColor a, GdiColor b) => new(a.R + b.R, a.G + b.G, a.B + b.B);
         public static GdiColor operator -(GdiColor a, GdiColor b) => new(a.R - b.R, a.G - b.G, a.B - b.B);

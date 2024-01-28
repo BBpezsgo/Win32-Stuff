@@ -318,7 +318,8 @@ namespace Win32
 
             if (!Mouse.WasUsed &&
                 Mouse.IsUp(MouseButton.Left) &&
-                Mouse.LeftPressedAt == leftButtonPos)
+                Mouse.LeftPressedAt == leftButtonPos &&
+                Mouse.RecordedConsolePosition == leftButtonPos)
             {
                 Mouse.Use();
                 selectBox.SelectedIndex--;
@@ -327,7 +328,8 @@ namespace Win32
 
             if (!Mouse.WasUsed &&
                 Mouse.IsUp(MouseButton.Left) &&
-                Mouse.LeftPressedAt == rightButtonPos)
+                Mouse.LeftPressedAt == rightButtonPos &&
+                Mouse.RecordedConsolePosition == rightButtonPos)
             {
                 Mouse.Use();
                 selectBox.SelectedIndex++;
