@@ -4,7 +4,7 @@ using Win32.Gdi32;
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
-    public unsafe class Renderer : IDisposable
+    public unsafe class WindowRenderer : IDisposable
     {
         readonly unsafe BitmapInfo BitmapInfo;
 
@@ -26,7 +26,7 @@ namespace Win32
             set => Buffer.Memory.Span[x + (y * Width)] = value;
         }
 
-        public Renderer(int width, int height, int windowWidth, int windowHeight)
+        public WindowRenderer(int width, int height, int windowWidth, int windowHeight)
         {
             Width = width;
             Height = height;
@@ -104,7 +104,7 @@ namespace Win32
 
             IsDisposed = true;
         }
-        ~Renderer()
+        ~WindowRenderer()
         { Dispose(disposing: false); }
         public void Dispose()
         {
