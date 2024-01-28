@@ -2,44 +2,44 @@
 
 namespace Win32
 {
-    public static class IRendererUtils
+    public static class RendererUtils
     {
         #region Text()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => self.Text(point.X, point.Y, text, CharColor.Make(background, foreground));
+        public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(position.X, position.Y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
+        public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
             => self.Text(x, y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<byte> text, ushort attributes)
-            => self.Text(point.X, point.Y, text, attributes);
+        public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, ushort attributes)
+            => self.Text(position.X, position.Y, text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<byte> text, ushort attributes)
-            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+        public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, ushort attributes)
+            => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, ushort attributes)
+        public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, ushort attributes)
         {
             if (text.IsEmpty) return;
             if (y < 0 || y >= self.Height) return;
@@ -57,43 +57,43 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => self.Text(point.X, point.Y, text, CharColor.Make(background, foreground));
+        public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text(position.X, position.Y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
-            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, CharColor.Make(background, foreground));
+        public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+            => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
             => self.Text(x, y, text, CharColor.Make(background, foreground));
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, COORD point, ReadOnlySpan<char> text, ushort attributes)
-            => self.Text(point.X, point.Y, text, attributes);
+        public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, ushort attributes)
+            => self.Text(position.X, position.Y, text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, Vector2 point, ReadOnlySpan<char> text, ushort attributes)
-            => self.Text((int)MathF.Round(point.X), (int)MathF.Round(point.Y), text, attributes);
+        public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, ushort attributes)
+            => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, SmallRect rect, ReadOnlySpan<char> text, ushort attributes)
+        public static void Text(this Renderer<ConsoleChar> self, SmallRect rect, ReadOnlySpan<char> text, ushort attributes)
             => self.Text(rect.X, rect.Y, text[..Math.Min(text.Length, rect.Width)], attributes);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
+        public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
         {
             if (text.IsEmpty) return;
             if (y < 0 || y >= self.Height) return;
@@ -111,7 +111,7 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Text(this IRenderer<ConsoleChar> self, ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Text(this Renderer<ConsoleChar> self, ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (text.IsEmpty) return;
             if (y < 0 || y >= self.Height) return;
@@ -134,13 +134,13 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Dropdown(this IRenderer<ConsoleChar> self, COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+        public static void Dropdown(this Renderer<ConsoleChar> self, COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
             => self.Dropdown(coord.X, coord.Y, dropdown, text, style);
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Dropdown(this IRenderer<ConsoleChar> self, int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+        public static void Dropdown(this Renderer<ConsoleChar> self, int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
         {
             if (text.IsEmpty) return;
             if (y < 0 || y >= self.Height) return;
@@ -190,7 +190,7 @@ namespace Win32
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Textbox(this IRenderer<ConsoleChar> self, SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+        public static void Textbox(this Renderer<ConsoleChar> self, SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         {
             if (string.IsNullOrWhiteSpace(text)) return;
             if (rect.Top >= self.Height) return;
@@ -240,7 +240,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/>
         /// </para>
         /// </remarks>
-        public static bool Button(this IRenderer<ConsoleChar> self, SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
+        public static bool Button(this Renderer<ConsoleChar> self, SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
         {
             WORD attributes = style.Normal;
             bool clicked = false;
@@ -279,7 +279,7 @@ namespace Win32
 
         #region SelectBox()
 
-        public static bool SelectBox<T>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<T> selectBox, ConsoleSelectBoxStyle style)
+        public static bool SelectBox<TItem>(this Renderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<TItem> selectBox, ConsoleSelectBoxStyle style)
         {
             WORD labelAttributes = style.LabelNormal;
             WORD leftButtonAttributes = style.ButtonNormal;
@@ -409,7 +409,7 @@ namespace Win32
         /// This uses <see cref="Mouse"/> and <see cref="Keyboard"/>
         /// </para>
         /// </remarks>
-        public static void InputField(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
+        public static void InputField(this Renderer<ConsoleChar> self, SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
         {
             WORD attributes = style.Normal;
 
@@ -544,61 +544,20 @@ namespace Win32
 
         #region Box()
 
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, in SideCharacters<char> sideCharacters)
-        {
-            int top = box.Top;
-            int left = box.Left;
-            int bottom = box.Bottom;
-            int right = box.Right;
+        /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+        public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground)
+            => self.Box(box, CharColor.Make(background, foreground), in SideCharacters.BoxSides);
 
-            for (int x = left + 1; x < right; x++)
-            {
-                if (x < 0) continue;
-                if (x >= self.Width) break;
+        /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+        public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, ushort attributes)
+            => self.Box(box, attributes, in SideCharacters.BoxSides);
 
-                if (top >= 0 && top < self.Height)
-                { self[x, top].Char = sideCharacters.Top; }
+        /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+        public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters)
+            => self.Box(box, CharColor.Make(background, foreground), in sideCharacters);
 
-                if (bottom >= 0 && bottom < self.Height)
-                { self[x, bottom].Char = sideCharacters.Bottom; }
-            }
-
-            for (int y = top + 1; y < bottom; y++)
-            {
-                if (y < 0) continue;
-                if (y >= self.Height) break;
-
-                if (left >= 0 && left < self.Width)
-                { self[left, y].Char = sideCharacters.Left; }
-
-                if (right >= 0 && right < self.Width)
-                { self[right, y].Char = sideCharacters.Right; }
-            }
-
-            if (self.IsVisible(left, top))
-            { self[left, top].Char = sideCharacters.TopLeft; }
-
-            if (self.IsVisible(right, top))
-            { self[right, top].Char = sideCharacters.TopRight; }
-
-            if (self.IsVisible(left, bottom))
-            { self[left, bottom].Char = sideCharacters.BottomLeft; }
-
-            if (self.IsVisible(right, bottom))
-            { self[right, bottom].Char = sideCharacters.BottomRight; }
-        }
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters) => self.Box(box, CharColor.Make(background, foreground), in sideCharacters);
-
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
+        /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+        public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
         {
             int top = box.Top;
             int left = box.Left;
@@ -646,10 +605,14 @@ namespace Win32
 
         #region Panel()
 
+        /// <inheritdoc cref="Panel(Renderer{ConsoleChar}, ConsolePanel, ushort, in SideCharacters{char})"/>
+        public static void Panel(this Renderer<ConsoleChar> self, ConsolePanel panel, ushort attributes)
+            => self.Panel(panel, attributes, in SideCharacters.PanelSides);
+
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Panel(this IRenderer<ConsoleChar> self, ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
+        public static void Panel(this Renderer<ConsoleChar> self, ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
         {
             if (!Mouse.WasUsed)
             {
@@ -720,56 +683,17 @@ namespace Win32
                 }
             }
 
-            int top = panel.Rect.Top;
-            int left = panel.Rect.Left;
-            int bottom = panel.Rect.Bottom;
-            int right = panel.Rect.Right;
-
-            for (int x = left + 1; x < right; x++)
-            {
-                if (x < 0) continue;
-                if (x >= self.Width) break;
-
-                if (top >= 0 && top < self.Height)
-                { self[x, top] = new ConsoleChar(sideCharacters.Top, attributes); }
-
-                if (bottom >= 0 && bottom < self.Height)
-                { self[x, bottom] = new ConsoleChar(sideCharacters.Bottom, attributes); }
-            }
-
-            for (int y = top + 1; y < bottom; y++)
-            {
-                if (y < 0) continue;
-                if (y >= self.Height) break;
-
-                if (left >= 0 && left < self.Width)
-                { self[left, y] = new ConsoleChar(sideCharacters.Left, attributes); }
-
-                if (right >= 0 && right < self.Width)
-                { self[right, y] = new ConsoleChar(sideCharacters.Right, attributes); }
-            }
-
-            if (self.IsVisible(left, top))
-            { self[left, top] = new ConsoleChar(sideCharacters.TopLeft, attributes); }
-
-            if (self.IsVisible(right, top))
-            { self[right, top] = new ConsoleChar(sideCharacters.TopRight, attributes); }
-
-            if (self.IsVisible(left, bottom))
-            { self[left, bottom] = new ConsoleChar(sideCharacters.BottomLeft, attributes); }
-
-            if (self.IsVisible(right, bottom))
-            { self[right, bottom] = new ConsoleChar(sideCharacters.BottomRight, attributes); }
+            self.Box(panel.Rect, attributes, in sideCharacters);
         }
 
         #endregion
 
-        #region Panel()
+        #region Line()
 
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Line(this IRenderer<ConsoleChar> self, COORD a, COORD b, ushort attributes)
+        public static void Line(this Renderer<ConsoleChar> self, COORD a, COORD b, ushort attributes)
         {
             COORD min = COORD.Min(a, b);
             COORD max = COORD.Max(a, b);
@@ -793,29 +717,32 @@ namespace Win32
             }
         }
 
-        #endregion
-
-        #region Fill()
-
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
-        public static void Fill(this IRenderer<ConsoleChar> self, SMALL_RECT rect, byte background, byte foreground, char character) => self.Fill(rect, CharColor.Make(background, foreground), character);
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public static void Fill(this IRenderer<ConsoleChar> self, SMALL_RECT rect, ushort attributes, char character) => self.Fill(rect, new ConsoleChar(character, attributes));
+        public static void Line<TPixel>(this Renderer<TPixel> self, COORD a, COORD b, TPixel v)
+        {
+            COORD min = COORD.Min(a, b);
+            COORD max = COORD.Max(a, b);
 
-        public static void Fill(this IRenderer<ConsoleChar> self, byte background, byte foreground, char character) => self.Fill(new ConsoleChar(character, foreground, background));
-        public static void Fill(this IRenderer<ConsoleChar> self, ushort attributes, char character) => self.Fill(new ConsoleChar(character, attributes));
+            if (min.X >= 0 && min.X < self.Width)
+            {
+                for (int y = Math.Max((short)0, min.Y); y <= max.Y; y++)
+                {
+                    if (y >= self.Height) break;
+                    self[min.X, y] = v;
+                }
+            }
 
-        #endregion
-
-        #region Image()
-
-        public static void Image(this IRenderer<ConsoleChar> self, COORD position, ConsoleImage image) => self.Image(position, (ConsoleChar[])image, image.Width, image.Height);
-
-        public static void Image(this IRenderer<ConsoleChar> self, COORD position, ConsoleImage image, int widthRatio, int heightRatio) => self.Image(position, (ConsoleChar[])image, image.Width, image.Height, widthRatio, heightRatio);
+            if (max.Y >= 0 && max.Y < self.Height)
+            {
+                for (int x = Math.Max((short)0, min.X); x <= max.X; x++)
+                {
+                    if (x >= self.Width) break;
+                    self[x, max.Y] = v;
+                }
+            }
+        }
 
         #endregion
     }

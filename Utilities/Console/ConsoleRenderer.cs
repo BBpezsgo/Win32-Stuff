@@ -3,14 +3,14 @@
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
-    public partial class ConsoleRenderer : IRenderer<ConsoleChar>
+    public partial class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     {
         protected HANDLE Handle;
 
-        public short Width => BufferWidth;
-        public short Height => BufferHeight;
+        public override short Width => BufferWidth;
+        public override short Height => BufferHeight;
 
-        public SmallSize Size => new(BufferWidth, BufferHeight);
+        public override Span<ConsoleChar> Buffer => ConsoleBuffer;
 
         protected short BufferWidth;
         protected short BufferHeight;
@@ -19,17 +19,17 @@ namespace Win32
         protected SMALL_RECT ConsoleRect;
 
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+        public override ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
+        public override ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[float x, float y] => ref ConsoleBuffer[((int)MathF.Round(y) * BufferWidth) + (int)MathF.Round(x)];
+        public override ref ConsoleChar this[float x, float y] => ref ConsoleBuffer[((int)MathF.Round(y) * BufferWidth) + (int)MathF.Round(x)];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
+        public override ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
+        public override ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[Vector2 p] => ref ConsoleBuffer[((int)MathF.Round(p.Y) * BufferWidth) + (int)MathF.Round(p.X)];
+        public override ref ConsoleChar this[Vector2 p] => ref ConsoleBuffer[((int)MathF.Round(p.Y) * BufferWidth) + (int)MathF.Round(p.X)];
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="GeneralException"/>
@@ -62,14 +62,14 @@ namespace Win32
             ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
         }
 
-        public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
-        public bool IsVisible(float x, float y) => MathF.Round(x) >= 0 && MathF.Round(y) >= 0 && MathF.Round(x) < BufferWidth && MathF.Round(y) < BufferHeight;
-        public bool IsVisible(COORD position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
-        public bool IsVisible(POINT position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
-        public bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
+        public override bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
+        public override bool IsVisible(float x, float y) => MathF.Round(x) >= 0 && MathF.Round(y) >= 0 && MathF.Round(x) < BufferWidth && MathF.Round(y) < BufferHeight;
+        public override bool IsVisible(COORD position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
+        public override bool IsVisible(POINT position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
+        public override bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
 
         /// <exception cref="WindowsException"/>
-        public void Render()
+        public override void Render()
         {
             if (Kernel32.WriteConsoleOutput(
                 Handle,
@@ -80,10 +80,8 @@ namespace Win32
             { throw WindowsException.Get(); }
         }
 
-        public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
-
         /// <exception cref="WindowsException"/>
-        public void RefreshBufferSize()
+        public override void RefreshBufferSize()
         {
             ConsoleScreenBufferInfo info = ConsoleHandler.ScreenBufferInfo;
             BufferWidth = info.Window.Width;

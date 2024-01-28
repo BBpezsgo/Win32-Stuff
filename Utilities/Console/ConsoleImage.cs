@@ -13,17 +13,17 @@ namespace Win32
         /// <exception cref="ArgumentOutOfRangeException"/>
         public ConsoleChar this[int x, int y] => Data[x + (y * Width)];
 
-        public ConsoleImage(ConsoleChar[] value, short width, short height)
+        public ConsoleImage(ConsoleChar[] value, int width, int height)
         {
             Data = value;
-            Width = width;
-            Height = height;
+            Width = (short)width;
+            Height = (short)height;
         }
 
-        public ConsoleImage(ConsoleChar[] value, short width)
+        public ConsoleImage(ConsoleChar[] value, int width)
         {
             Data = value;
-            Width = width;
+            Width = (short)width;
             Height = (short)(value.Length / width);
         }
 
@@ -35,7 +35,9 @@ namespace Win32
             Data = new ConsoleChar[l];
             for (int i = 0; i < l; i++)
             {
+#pragma warning disable IDE0017 // Simplify object initialization
                 ConsoleChar c = new();
+#pragma warning restore IDE0017
                 c.Char = reader.ReadChar();
                 c.Attributes = reader.ReadUInt16();
                 Data[i] = c;
@@ -112,6 +114,23 @@ namespace Win32
             };
         }
 
-        public static explicit operator ConsoleChar[](ConsoleImage image) => image.Data;
+        public ReadOnlySpan<ConsoleChar> AsSpan() => new(Data);
+
+        public ConsoleImage Scale(float widthMultiplier, float heightMultiplier)
+        {
+            int newWidth = (int)(Width * widthMultiplier);
+            int newHeight = (int)(Height * heightMultiplier);
+            ConsoleChar[] newData = new ConsoleChar[newWidth * newHeight];
+
+            for (int y = 0; y < newHeight; y++)
+            {
+                for (int x = 0; x < newWidth; x++)
+                {
+                    newData[x + (y * newWidth)] = Data[(int)(x / widthMultiplier) + ((int)(y / heightMultiplier) * Width)];
+                }
+            }
+
+            return new ConsoleImage(newData, newWidth, newHeight);
+        }
     }
 }

@@ -4,38 +4,40 @@ using Win32.Gdi32;
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
-    public unsafe class WindowRenderer : IDisposable
+    public unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
     {
         readonly unsafe BitmapInfo BitmapInfo;
 
-        public readonly int Width;
-        public readonly int Height;
+        public override short Width => (short)BufferWidth;
+        public override short Height => (short)BufferHeight;
 
-        readonly int WindowWidth;
-        readonly int WindowHeight;
+        int BufferWidth;
+        int BufferHeight;
+        IMemoryOwner<uint> _buffer;
+
+        public readonly int WindowWidth;
+        public readonly int WindowHeight;
 
         bool IsDisposed;
 
         public readonly Form Form;
+        
         readonly DC DeviceContext;
-        readonly IMemoryOwner<uint> Buffer;
 
-        public uint this[int x, int y]
-        {
-            get => Buffer.Memory.Span[x + (y * Width)];
-            set => Buffer.Memory.Span[x + (y * Width)] = value;
-        }
+        public override Span<uint> Buffer => _buffer.Memory.Span;
+
+        public override ref uint this[int i] => ref _buffer.Memory.Span[i];
 
         public WindowRenderer(int width, int height, int windowWidth, int windowHeight)
         {
-            Width = width;
-            Height = height;
+            BufferWidth = width;
+            BufferHeight = height;
             WindowWidth = windowWidth;
             WindowHeight = windowHeight;
 
             BitmapInfoHeader bitmapInfoHeader = BitmapInfoHeader.Create();
-            bitmapInfoHeader.Width = Width;
-            bitmapInfoHeader.Height = -Height;
+            bitmapInfoHeader.Width = BufferWidth;
+            bitmapInfoHeader.Height = -BufferHeight;
             bitmapInfoHeader.Planes = 1;
             bitmapInfoHeader.BitCount = 32;
             bitmapInfoHeader.Compression = BitmapCompression.RGB;
@@ -66,9 +68,9 @@ namespace Win32
 
             DeviceContext = Form.GetClientDC();
 
-            Buffer = MemoryPool<uint>.Shared.Rent(width * height);
-            Width = width;
-            Height = height;
+            _buffer = MemoryPool<uint>.Shared.Rent(width * height);
+            BufferWidth = width;
+            BufferHeight = height;
         }
 
         public bool Tick()
@@ -77,16 +79,14 @@ namespace Win32
             return Form != 0;
         }
 
-        public void Render()
+        public override void Render()
         {
             fixed (BitmapInfo* pBmi = &BitmapInfo)
             {
-                using MemoryHandle bufferPtr = Buffer.Memory.Pin();
-                DeviceContext.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, Width, Height, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
+                using MemoryHandle bufferPtr = _buffer.Memory.Pin();
+                DeviceContext.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, BufferWidth, BufferHeight, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
             }
         }
-
-        public void Fill(uint color) => Buffer.Memory.Span.Fill(color);
 
         void Dispose(bool disposing)
         {
@@ -99,7 +99,7 @@ namespace Win32
                     DeviceContext.Dispose();
                     Form.Dispose();
                 }
-                Buffer.Dispose();
+                _buffer.Dispose();
             }
 
             IsDisposed = true;
@@ -110,6 +110,20 @@ namespace Win32
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public override void RefreshBufferSize()
+        {
+            int newWidth = WindowWidth;
+            int newHeight = WindowHeight;
+
+            if (newWidth == BufferWidth && newHeight == BufferHeight) return;
+
+            _buffer.Dispose();
+
+            _buffer = MemoryPool<uint>.Shared.Rent(newWidth * newHeight);
+            BufferWidth = newWidth;
+            BufferHeight = newHeight;
         }
     }
 }

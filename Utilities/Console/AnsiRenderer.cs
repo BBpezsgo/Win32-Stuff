@@ -3,12 +3,10 @@ using System.Text;
 
 namespace Win32
 {
-    public partial class AnsiRenderer : IRenderer<ConsoleChar>
+    public partial class AnsiRenderer : Renderer<ConsoleChar>
     {
-        public short Width => BufferWidth;
-        public short Height => BufferHeight;
-
-        public SmallSize Size => new(BufferWidth, BufferHeight);
+        public override short Width => BufferWidth;
+        public override short Height => BufferHeight;
 
         protected short BufferWidth;
         protected short BufferHeight;
@@ -19,17 +17,18 @@ namespace Win32
         readonly StringBuilder Builder;
 
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+        public override ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
+        public override ref ConsoleChar this[int x, int y] => ref ConsoleBuffer[(y * BufferWidth) + x];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[float x, float y] => ref ConsoleBuffer[((int)MathF.Round(y) * BufferWidth) + (int)MathF.Round(x)];
+        public override ref ConsoleChar this[float x, float y] => ref ConsoleBuffer[((int)MathF.Round(y) * BufferWidth) + (int)MathF.Round(x)];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
+        public override ref ConsoleChar this[COORD p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
+        public override ref ConsoleChar this[POINT p] => ref ConsoleBuffer[(p.Y * BufferWidth) + p.X];
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public ref ConsoleChar this[Vector2 p] => ref ConsoleBuffer[((int)MathF.Round(p.Y) * BufferWidth) + (int)MathF.Round(p.X)];
+        public override ref ConsoleChar this[Vector2 p] => ref ConsoleBuffer[((int)MathF.Round(p.Y) * BufferWidth) + (int)MathF.Round(p.X)];
 
         [UnsupportedOSPlatform("android")]
         [UnsupportedOSPlatform("browser")]
@@ -66,11 +65,11 @@ namespace Win32
             Builder = new StringBuilder(BufferWidth * BufferHeight);
         }
 
-        public bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
-        public bool IsVisible(float x, float y) => MathF.Round(x) >= 0 && MathF.Round(y) >= 0 && MathF.Round(x) < BufferWidth && MathF.Round(y) < BufferHeight;
-        public bool IsVisible(COORD position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
-        public bool IsVisible(POINT position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
-        public bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
+        public override bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < BufferWidth && y < BufferHeight;
+        public override bool IsVisible(float x, float y) => MathF.Round(x) >= 0 && MathF.Round(y) >= 0 && MathF.Round(x) < BufferWidth && MathF.Round(y) < BufferHeight;
+        public override bool IsVisible(COORD position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
+        public override bool IsVisible(POINT position) => position.X >= 0 && position.Y >= 0 && position.X < BufferWidth && position.Y < BufferHeight;
+        public override bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
 
         [UnsupportedOSPlatform("android")]
         [UnsupportedOSPlatform("browser")]
@@ -80,7 +79,7 @@ namespace Win32
         /// <exception cref="IOException"/>
         /// <exception cref="PlatformNotSupportedException"/>
         /// <exception cref="WindowsException"/>
-        public void Render()
+        public override void Render()
         {
             Builder.Clear();
 
@@ -106,8 +105,6 @@ namespace Win32
             Console.SetCursorPosition(0, 0);
         }
 
-        public virtual void ClearBuffer() => Array.Clear(ConsoleBuffer);
-
         [UnsupportedOSPlatform("android")]
         [UnsupportedOSPlatform("browser")]
         [UnsupportedOSPlatform("ios")]
@@ -115,7 +112,8 @@ namespace Win32
         /// <exception cref="ArgumentOutOfRangeException"/>
         /// <exception cref="IOException"/>
         /// <exception cref="PlatformNotSupportedException"/>
-        public void RefreshBufferSize() => RefreshBufferSize(Console.WindowWidth, Console.WindowHeight);
+        public override void RefreshBufferSize() => RefreshBufferSize(Console.WindowWidth, Console.WindowHeight);
+    
         public void RefreshBufferSize(int width, int height)
         {
             BufferWidth = (short)width;
@@ -124,46 +122,6 @@ namespace Win32
             if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
             { ConsoleBuffer = new ConsoleChar[BufferWidth * BufferHeight]; }
             ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
-        }
-
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Clear(SMALL_RECT rect)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
-
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Clear(ConsoleBuffer, startIndex, length);
-            }
-        }
-
-        public void Fill(ConsoleChar value) => Array.Fill(ConsoleBuffer, value);
-
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Fill(SMALL_RECT rect, ConsoleChar value)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
-
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Fill(ConsoleBuffer, value, startIndex, length);
-            }
         }
     }
 }

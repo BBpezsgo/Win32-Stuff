@@ -3,6 +3,8 @@ using System.Text;
 
 namespace Win32
 {
+    #region Elements
+
     public class ConsoleButtonStyle
     {
         public ushort Normal;
@@ -185,6 +187,8 @@ namespace Win32
             if ((Dock & DockRight) != 0) Rect.X = (short)(rendererSize.Width - panelWidth);
         }
     }
+
+    #endregion
 
     public partial class ConsoleRenderer
     {
@@ -829,62 +833,14 @@ namespace Win32
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Fill(SMALL_RECT rect, byte background, byte foreground, char character) => Fill(rect, CharColor.Make(background, foreground), character);
+    
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Fill(SMALL_RECT rect, ushort attributes, char character) => Fill(rect, new ConsoleChar(character, attributes));
-        /// <remarks>
-        /// <b>Note:</b> This checks if the coordinate is out of range
-        /// </remarks>
-        public void Fill(SMALL_RECT rect, ConsoleChar value)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
-
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Fill(ConsoleBuffer, value, startIndex, length);
-
-                // for (int _x = 0; _x < box.Width; _x++)
-                // {
-                //     int actualX = box.X + _x;
-                // 
-                //     if (actualX >= Width) break;
-                //     if (actualX < 0) continue;
-                // 
-                //     this[actualX, actualY] = new ConsoleChar(character, attributes);
-                // }
-            }
-        }
-
+    
         public void Fill(byte background, byte foreground, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, foreground, background));
         public void Fill(ushort attributes, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes));
-        public void Fill(ConsoleChar value) => Array.Fill(ConsoleBuffer, value);
-
-        #endregion
-
-        #region Clear()
-
-        public void Clear(SMALL_RECT rect)
-        {
-            for (int _y = 0; _y < rect.Height; _y++)
-            {
-                int actualY = rect.Y + _y;
-                if (actualY >= Height) break;
-                if (actualY < 0) continue;
-
-                int startIndex = (actualY * BufferWidth) + Math.Max((short)0, rect.Left);
-                int endIndex = (actualY * BufferWidth) + Math.Min(BufferWidth - 1, rect.Right);
-                int length = Math.Max(0, endIndex - startIndex);
-
-                Array.Clear(ConsoleBuffer, startIndex, length);
-            }
-        }
 
         #endregion
     }

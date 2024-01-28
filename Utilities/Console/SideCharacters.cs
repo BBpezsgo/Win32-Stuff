@@ -1,5 +1,13 @@
 ﻿namespace Win32.Common
 {
+    public static class SideCharacters
+    {
+        public static readonly SideCharacters<char> BoxSides = new('┌', '┐', '┘', '└', '─', '│');
+        public static readonly SideCharacters<char> PanelSides = new('╒', '═', '╕', '│', '┘', '─', '└', '│');
+        public static readonly SideCharacters<char> BoxSidesDouble = new('╔', '╗', '╝', '╚', '═', '║');
+        public static readonly SideCharacters<char> BoxSidesShadow = new('┌', '─', '╖', '║', '╝', '═', '╘', '│');
+    }
+
     public readonly struct SideCharacters<T>
     {
         public readonly T TopLeft;
