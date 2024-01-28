@@ -34,9 +34,9 @@ namespace Win32
             readonly get => left;
             set
             {
-                ushort offset = (ushort)(value - left);
+                SHORT width = Width;
                 left = value;
-                right = (short)(right + offset);
+                right = (SHORT)(value + width);
             }
         }
         public SHORT Y
@@ -44,9 +44,9 @@ namespace Win32
             readonly get => top;
             set
             {
-                ushort offset = (ushort)(value - top);
+                SHORT height = Height;
                 top = value;
-                bottom = (short)(bottom + offset);
+                bottom = (SHORT)(value + height);
             }
         }
 
@@ -107,8 +107,8 @@ namespace Win32
                 int offsetY = value.Y - top;
                 left = value.X;
                 top = value.Y;
-                bottom = (short)(bottom + offsetY);
-                right = (short)(right + offsetX);
+                bottom = (SHORT)(bottom + offsetY);
+                right = (SHORT)(right + offsetX);
             }
         }
         public SmallSize Size
@@ -118,6 +118,22 @@ namespace Win32
             {
                 Width = value.Width;
                 Height = value.Height;
+            }
+        }
+
+        public COORD Center
+        {
+            readonly get => new((left + right) / 2, (top + bottom) / 2);
+            set
+            {
+                SHORT width = Width;
+                SHORT height = Height;
+
+                top = (SHORT)(value.Y - (height / 2));
+                bottom = (SHORT)(top + height);
+
+                left = (SHORT)(value.X - (width / 2));
+                right = (SHORT)(left + width);
             }
         }
 
