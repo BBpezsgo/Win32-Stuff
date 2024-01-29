@@ -711,7 +711,7 @@ namespace Win32.LowLevel
         /// so the primary U.S. English layout is named "00000409". Variants of U.S. English layout,
         /// such as the Dvorak layout, are named "00010409", "00020409" and so on.For a list of the
         /// primary language identifiers and sublanguage identifiers that make
-        /// up a language identifier, see the <see cref="LanguageMacros.MAKELANGID"/> macro.
+        /// up a language identifier, see the <see cref="PrimaryLanguage.Make"/> macro.
         /// </para>
         /// <para>
         /// There is a difference between the High Contrast color scheme and

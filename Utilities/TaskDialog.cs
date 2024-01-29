@@ -1,18 +1,18 @@
 ﻿namespace Win32
 {
-    public enum TaskDialogIcon : int
+    public enum TaskDialogIcon : WORD
     {
-        WARNING_ICON = -1,
-        ERROR_ICON = -2,
-        INFORMATION_ICON = -3,
-        SHIELD_ICON = -4,
+        Warning = unchecked((WORD)(-1)),
+        Error = unchecked((WORD)(-2)),
+        Information = unchecked((WORD)(-3)),
+        Shield = unchecked((WORD)(-4)),
     }
 
     [SupportedOSPlatform("windows")]
     public static class TaskDialog
     {
         public static unsafe int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, TaskDialogIcon icon)
-            => Show(windowTitle, mainInstruction, content, buttons, Macros.MAKEINTRESOURCEW(unchecked((WORD)icon)));
+            => Show(windowTitle, mainInstruction, content, buttons, IntResource.MakeW((WORD)icon));
         public static unsafe int Show(string? windowTitle, string? mainInstruction, string? content, int buttons, char* icon)
         {
             int nButtonPressed = default;

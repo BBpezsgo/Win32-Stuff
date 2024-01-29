@@ -58,12 +58,7 @@ namespace Win32.Gdi32
 
         /// <exception cref="GdiException"/>
         public static Brush CreateSolid(byte red, byte green, byte blue)
-        {
-            HBRUSH brush = Gdi32.CreateSolidBrush(Macros.RGB(red, green, blue));
-            if (brush == HBRUSH.Zero)
-            { throw new GdiException($"Failed to create solid brush"); }
-            return new Brush(brush);
-        }
+            => Brush.CreateSolid(GdiColor.Make(red, green, blue));
 
         /// <exception cref="GdiException"/>
         public static Brush CreateSolid(COLORREF color)

@@ -246,7 +246,7 @@ namespace Win32.LowLevel
         /// The name of the accelerator table to be loaded. Alternatively,
         /// this parameter can specify the resource identifier of an accelerator-table
         /// resource in the low-order word and zero in the high-order word.
-        /// To create this value, use the <see cref="Macros.MAKEINTRESOURCEW"/> macro.
+        /// To create this value, use the <see cref="IntResource.MakeW"/> macro.
         /// </param>
         /// <returns>
         /// <para>

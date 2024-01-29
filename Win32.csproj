@@ -21,10 +21,13 @@
 
   <ItemGroup>
     <Compile Remove="Debug\**" />
+    <Compile Remove="Publish\**" />
     <Compile Remove="x64\**" />
     <EmbeddedResource Remove="Debug\**" />
+    <EmbeddedResource Remove="Publish\**" />
     <EmbeddedResource Remove="x64\**" />
     <None Remove="Debug\**" />
+    <None Remove="Publish\**" />
     <None Remove="x64\**" />
   </ItemGroup>
 

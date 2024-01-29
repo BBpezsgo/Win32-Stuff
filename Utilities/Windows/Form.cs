@@ -309,8 +309,8 @@ namespace Win32
                 case WindowMessage.WM_COMMAND:
                     if (lParam != LPARAM.Zero)
                     { // This is a control
-                        ushort controlId = Macros.LOWORD(wParam);
-                        ushort notificationCode = Macros.HIWORD(wParam);
+                        ushort controlId = BitUtils.LowWord(wParam);
+                        ushort notificationCode = BitUtils.HighWord(wParam);
                         if (Controls.TryGetValue(controlId, out Control? control) &&
                             control.Handle == lParam)
                         {
@@ -320,10 +320,10 @@ namespace Win32
                     }
                     else
                     {
-                        ushort subMsg = Macros.HIWORD(wParam);
+                        ushort subMsg = BitUtils.HighWord(wParam);
                         if (subMsg == 0)
                         { // This is a menu
-                            ushort menuItemId = Macros.LOWORD(wParam);
+                            ushort menuItemId = BitUtils.LowWord(wParam);
                             OnMenuItem?.Invoke(this, menuItemId);
                         }
                         else if (subMsg == 1)
@@ -334,8 +334,8 @@ namespace Win32
                     break;
                 case WindowMessage.WM_CONTEXTMENU:
                 {
-                    ushort x = Macros.LOWORD(lParam);
-                    ushort y = Macros.HIWORD(lParam);
+                    ushort x = BitUtils.LowWord(lParam);
+                    ushort y = BitUtils.HighWord(lParam);
                     if (OnContextMenu != null)
                     {
                         OnContextMenu.Invoke(this, (Window)(HWND)wParam, new POINT(x, y));
@@ -430,8 +430,8 @@ namespace Win32
                 case WindowMessage.WM_LBUTTONDOWN:
                     if (OnMouseDown != null)
                     {
-                        ushort x = Macros.LOWORD(lParam);
-                        ushort y = Macros.HIWORD(lParam);
+                        ushort x = BitUtils.LowWord(lParam);
+                        ushort y = BitUtils.HighWord(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseDown.Invoke(this, x, y, flags);
                         return 0;
@@ -440,8 +440,8 @@ namespace Win32
                 case WindowMessage.WM_LBUTTONUP:
                     if (OnMouseUp != null)
                     {
-                        ushort x = Macros.LOWORD(lParam);
-                        ushort y = Macros.HIWORD(lParam);
+                        ushort x = BitUtils.LowWord(lParam);
+                        ushort y = BitUtils.HighWord(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseUp.Invoke(this, x, y, flags);
                         return 0;
@@ -457,8 +457,8 @@ namespace Win32
                 case WindowMessage.WM_MOUSEMOVE:
                     if (OnMouseMove != null)
                     {
-                        ushort x = Macros.LOWORD(lParam);
-                        ushort y = Macros.HIWORD(lParam);
+                        ushort x = BitUtils.LowWord(lParam);
+                        ushort y = BitUtils.HighWord(lParam);
                         uint flags = wParam.ToUInt32();
                         OnMouseMove.Invoke(this, x, y, flags);
                         return 0;
@@ -581,6 +581,6 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         public void SetLayeredWindowAttributes(ValueTuple<byte, byte, byte> key, byte alpha, LWA flags = LWA.ALPHA | LWA.COLORKEY)
-            => this.SetLayeredWindowAttributes(Macros.RGB(key.Item1, key.Item2, key.Item3), alpha, flags);
+            => this.SetLayeredWindowAttributes(Gdi32.GdiColor.Make(key.Item1, key.Item2, key.Item3), alpha, flags);
     }
 }

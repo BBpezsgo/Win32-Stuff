@@ -420,12 +420,18 @@ namespace Win32
 
             int labelOffsetY = rect.Top + (rect.Height / 2);
 
-            if (Mouse.IsPressed(MouseButton.Left))
+            if (Mouse.IsDown(MouseButton.Left))
             {
-                if (rect.Contains(Mouse.LeftPressedAt) && !Mouse.WasUsed)
+                if (rect.Contains(Mouse.RecordedConsolePosition) && !Mouse.WasUsed)
                 {
                     Mouse.Use();
                     textField.IsActive = true;
+                    VirtualKeyboard.Show(textField.Label, (value) =>
+                    {
+                        textField.Value.Clear();
+                        textField.Value.Append(value);
+                        textField.IsActive = false;
+                    }, textField.Value.ToString());
                     textField.CursorPosition = Math.Clamp(Mouse.LeftPressedAt.X - rect.Left, 0, textField.Value.Length);
                     textField.CursorBlinker = (float)DateTime.UtcNow.TimeOfDay.TotalSeconds;
                 }

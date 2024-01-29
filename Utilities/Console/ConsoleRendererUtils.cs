@@ -124,6 +124,7 @@ namespace Win32
         public StringBuilder Value;
         public bool IsActive;
         public bool NeverLoseFocus;
+        public string Label;
 
         internal int CursorPosition;
         internal float CursorBlinker;
@@ -135,6 +136,7 @@ namespace Win32
             Value = new(value);
             IsActive = false;
             NeverLoseFocus = false;
+            Label = string.Empty;
 
             CursorPosition = value.Length;
         }

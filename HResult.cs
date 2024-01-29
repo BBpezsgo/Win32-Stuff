@@ -13,23 +13,23 @@ namespace Win32
 
         HResult(int code) => this.code = code;
 
-        public readonly bool IsSucceeded => WinErrorMacros.SUCCEEDED(code);
-        public readonly bool IsFailed => WinErrorMacros.FAILED(code);
-        public readonly bool IsError => WinErrorMacros.IS_ERROR(code);
+        public readonly bool IsSucceeded => HResult.SUCCEEDED(code);
+        public readonly bool IsFailed => HResult.FAILED(code);
+        public readonly bool IsError => HResult.IS_ERROR(code);
         /// <summary>
         /// A single letter, 'S' or 'E', that indicates whether the function
         /// call succeeded ('S') or produced an error ('E')
         /// </summary>
-        public readonly int Severity => WinErrorMacros.HRESULT_SEVERITY(code);
+        public readonly int Severity => HResult.HRESULT_SEVERITY(code);
         /// <summary>
         /// Indicates the system service responsible for the error.
         /// </summary>
-        public readonly int FacilityId => WinErrorMacros.HRESULT_FACILITY(code);
+        public readonly int FacilityId => HResult.HRESULT_FACILITY(code);
         public readonly string? Facility => LowLevel.Facility.ToString(FacilityId);
         /// <summary>
         /// A unique number that is assigned to represent the error or warning.
         /// </summary>
-        public readonly int Code => WinErrorMacros.HRESULT_CODE(code);
+        public readonly int Code => HResult.HRESULT_CODE(code);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is HResult result && Equals(result);
@@ -73,7 +73,7 @@ namespace Win32
                         FormatMessageAttributes.FORMAT_MESSAGE_IGNORE_INSERTS,
                         IntPtr.Zero,
                         (uint)code,
-                        LanguageMacros.LANG_SYSTEM_DEFAULT,
+                        PrimaryLanguage.SystemDefault,
                         buffer,
                         MESSAGE_BUFFER_SIZE,
                         IntPtr.Zero);
@@ -143,6 +143,87 @@ namespace Win32
         /// If a boolean return value is expected, the returned value is <see cref="TRUE"/>.
         /// </summary>
         public const HRESULT OK = unchecked((HRESULT)0x00000000);
+
+        #endregion
+
+        #region Utils
+
+        /// <summary>
+        /// Extracts the error code portion of the <c>HRESULT</c>.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c> value.</param>
+        static int HRESULT_CODE(HRESULT hr) => hr & 0xFFFF;
+
+        /// <summary>
+        /// Creates an <c>HRESULT</c> value from its component pieces.
+        /// </summary>
+        /// <param name="sev">The severity.</param>
+        /// <param name="fac">The facility.</param>
+        /// <param name="code">The code.</param>
+        /// <returns>
+        /// An <c>HRESULT</c> given the severity bit,
+        /// facility code, and error code that comprise the <c>HRESULT</c>.
+        /// </returns>
+        /// <remarks>
+        /// <b>Note:</b> Calling <see cref="MAKE_HRESULT"/> for <see cref="HResult.OK"/>
+        /// verification carries a performance penalty.
+        /// You should not routinely use <see cref="MAKE_HRESULT"/> for successful results.
+        /// </remarks>
+        static HRESULT MAKE_HRESULT(ULONG sev, ULONG fac, ULONG code) => (HRESULT)((sev << 31) | (fac << 16) | code);
+
+        /// <summary>
+        /// Extracts the facility of the specified <c>HRESULT</c>,
+        /// which indicates what API or framework originated this error.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c> value.</param>
+        static int HRESULT_FACILITY(HRESULT hr) => (hr >> 16) & 0x1fff;
+
+        /// <summary>
+        /// Extracts the severity bit of the <c>HRESULT</c>.
+        /// </summary>
+        /// <param name="hr">The <c>HRESULT</c>.</param>
+        static int HRESULT_SEVERITY(HRESULT hr) => (hr >> 31) & 0x1;
+
+        /// <summary>
+        /// Tests the severity bit of the <c>SCODE</c> or <c>HRESULT</c>;
+        /// returns <see langword="true"/> if the severity is zero and <see langword="false"/> if it is one.
+        /// </summary>
+        /// <param name="hr">
+        /// The status code. This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// A non-negative number indicates success.
+        /// </param>
+        static bool SUCCEEDED(HRESULT hr) => hr >= 0;
+
+        /// <summary>
+        /// Tests the severity bit of the <c>SCODE</c> or <c>HRESULT</c>;
+        /// returns <see langword="true"/> if the severity is one and <see langword="false"/> if it is zero.
+        /// </summary>
+        /// <param name="hr">
+        /// The status code. This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// A negative number indicates failure.
+        /// </param>
+        static bool FAILED(HRESULT hr) => hr < 0;
+
+        /// <summary>
+        /// Provides a generic test for errors on any status value.
+        /// </summary>
+        /// <param name="status">
+        /// The status code.
+        /// This value can be an <c>HRESULT</c> or an <c>SCODE</c>.
+        /// </param>
+        static bool IS_ERROR(HRESULT status) => unchecked((ULONG)status) >> 31 == 1;
+
+        /// <summary>
+        /// Maps a <see href="https://learn.microsoft.com/en-us/windows/desktop/Debug/system-error-codes">system error code</see> to an <c>HRESULT</c> value.
+        /// </summary>
+        /// <param name="sysError">The system error code.</param>
+        public static HResult FromWin32(LONG sysError) => (sysError <= 0) ? (HResult)sysError : (HResult)unchecked((HRESULT)((sysError & 0x0000FFFF) | (LowLevel.Facility.WIN32 << 16) | 0x80000000));
+
+        /// <summary>
+        /// Maps an NT status value to an <c>HRESULT</c> value.
+        /// </summary>
+        /// <param name="ntStatus">The NT status value.</param>
+        public static HResult FromNt(LONG ntStatus) => (HResult)unchecked(ntStatus | 0x10000000);  // 0x10000000 = FACILITY_NT_BIT
 
         #endregion
     }

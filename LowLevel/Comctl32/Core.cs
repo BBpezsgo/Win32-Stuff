@@ -25,20 +25,20 @@ namespace Win32.LowLevel
         /// by the <paramref name="pszWindowTitle"/> and <paramref name="pszMainInstruction"/> members.
         /// If this parameter is <c>NULL</c>, <paramref name="pszIcon"/> must be <c>NULL</c> or a
         /// pointer to a null-terminated, Unicode string that contains
-        /// a system resource identifier, for example, <see cref="TD.ERROR_ICON"/>.
+        /// a system resource identifier.
         /// </param>
         /// <param name="pszWindowTitle">
         /// Pointer to the string to be used for the task dialog title.
         /// This parameter is a null-terminated, Unicode string that
         /// contains either text, or an integer resource identifier
-        /// passed through the <see cref="Macros.MAKEINTRESOURCEW"/> macro. If this parameter
+        /// passed through the <see cref="IntResource.MakeW"/> macro. If this parameter
         /// is <c>NULL</c>, the filename of the executable program is used.
         /// </param>
         /// <param name="pszMainInstruction">
         /// Pointer to the string to be used for the main instruction.
         /// This parameter is a null-terminated, Unicode string that
         /// contains either text, or an integer resource identifier
-        /// passed through the <see cref="Macros.MAKEINTRESOURCEW"/> macro. This parameter
+        /// passed through the <see cref="IntResource.MakeW"/> macro. This parameter
         /// can be <c>NULL</c> if no main instruction is wanted.
         /// </param>
         /// <param name="pszContent">
@@ -46,7 +46,7 @@ namespace Win32.LowLevel
         /// below the main instruction, in a smaller font.
         /// This parameter is a null-terminated, Unicode string
         /// that contains either text, or an integer resource
-        /// identifier passed through the <see cref="Macros.MAKEINTRESOURCEW"/> macro.
+        /// identifier passed through the <see cref="IntResource.MakeW"/> macro.
         /// Can be <c>NULL</c> if no additional text is wanted.
         /// </param>
         /// <param name="dwCommonButtons">

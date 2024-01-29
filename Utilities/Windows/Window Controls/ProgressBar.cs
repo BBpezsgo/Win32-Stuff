@@ -31,7 +31,7 @@ namespace Win32
 
         public void SetRange(ushort min, ushort max)
         {
-            ULONG lParam = Macros.MAKELONG(min, max);
+            ULONG lParam = BitUtils.MakeLong(min, max);
             User32.SendMessage(Handle, ProgressBarControlMessage.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
         }
 
@@ -63,7 +63,7 @@ namespace Win32
             }
             set
             {
-                ULONG lParam = Macros.MAKELONG((ushort)value.Low, (ushort)value.High);
+                ULONG lParam = BitUtils.MakeLong((ushort)value.Low, (ushort)value.High);
                 User32.SendMessage(Handle, ProgressBarControlMessage.SETRANGE, WPARAM.Zero, unchecked((LPARAM)lParam));
             }
         }

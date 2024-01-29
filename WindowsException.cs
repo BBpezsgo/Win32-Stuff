@@ -72,7 +72,7 @@
                     FormatMessageAttributes.FORMAT_MESSAGE_IGNORE_INSERTS,
                     IntPtr.Zero,
                     errorCode,
-                    LanguageMacros.LANG_SYSTEM_DEFAULT,
+                    PrimaryLanguage.SystemDefault,
                     buffer,
                     MESSAGE_BUFFER_SIZE,
                     IntPtr.Zero);

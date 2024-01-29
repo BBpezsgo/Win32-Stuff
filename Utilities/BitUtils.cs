@@ -4,6 +4,47 @@ namespace Win32
 {
     public struct BitUtils
     {
+        #region Make Stuff
+
+        public static WORD MakeWord(BYTE low, BYTE high) => (WORD)(low | (high << 8));
+
+        public static ULONG MakeLong(WORD low, WORD high) => low | (((DWORD)high) << 16);
+
+        public static ULONG MakeLong(short low, short high) => BitUtils.MakeLong(unchecked((WORD)low), unchecked((WORD)high));
+
+        #endregion
+
+        #region LowHighByte
+
+        public static BYTE LowByte(int value) => (BYTE)(value & 0xFF);
+        public static BYTE HighByte(int value) => (BYTE)(value >> 8);
+
+        public static WORD LowWord(int value) => (WORD)(value & 0xFFFF);
+        public static WORD HighWord(int value) => (WORD)(value >> 16);
+
+        public static BYTE LowByte(nint value) => BitUtils.LowByte(value.ToInt32());
+        public static BYTE HighByte(nint value) => BitUtils.HighByte(value.ToInt32());
+
+        public static WORD LowWord(nint value) => BitUtils.LowWord(value.ToInt32());
+        public static WORD HighWord(nint value) => BitUtils.HighWord(value.ToInt32());
+
+        public static BYTE LowByte(nuint value) => BitUtils.LowByte(unchecked((int)value.ToUInt32()));
+        public static BYTE HighByte(nuint value) => BitUtils.HighByte(unchecked((int)value.ToUInt32()));
+
+        public static WORD LowWord(nuint value) => BitUtils.LowWord(unchecked((int)value.ToUInt32()));
+        public static WORD HighWord(nuint value) => BitUtils.HighWord(unchecked((int)value.ToUInt32()));
+
+        public static WORD LowWord(uint value) => BitUtils.LowWord(unchecked((int)value));
+        public static WORD HighWord(uint value) => BitUtils.HighWord(unchecked((int)value));
+
+        public static BYTE LowByte<T>(T value) where T : IConvertible => BitUtils.LowByte(unchecked(value.ToInt32(null)));
+        public static BYTE HighByte<T>(T value) where T : IConvertible => BitUtils.HighByte(unchecked(value.ToInt32(null)));
+
+        public static WORD LowWord<T>(T value) where T : IConvertible => BitUtils.LowWord(unchecked(value.ToInt32(null)));
+        public static WORD HighWord<T>(T value) where T : IConvertible => BitUtils.HighWord(unchecked(value.ToInt32(null)));
+
+        #endregion
+
         #region SetMask
 
         public static void SetMask(ref int bitfield, int mask) => bitfield |= mask;
@@ -95,7 +136,7 @@ namespace Win32
             ArgumentOutOfRangeException.ThrowIfNegative(bit);
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(bit, 8);
 
-            bitfield |= (1 << bit);
+            bitfield |= 1 << bit;
         }
 
         #endregion
