@@ -352,13 +352,19 @@ namespace Win32
                     wasModified = true;
                 }
 
-                if (Keyboard.IsActive(VirtualKeyCode.LEFT))
+                if (Keyboard.IsActive(VirtualKeyCode.LEFT) ||
+                    Keyboard.IsActive(VirtualKeyCode.UP) ||
+                    Keyboard.IsActive(VirtualKeyCode.VK_A) ||
+                    Keyboard.IsActive(VirtualKeyCode.VK_W))
                 {
                     selectBox.SelectedIndex--;
                     wasModified = true;
                 }
 
-                if (Keyboard.IsActive(VirtualKeyCode.RIGHT))
+                if (Keyboard.IsActive(VirtualKeyCode.RIGHT) ||
+                    Keyboard.IsActive(VirtualKeyCode.DOWN) ||
+                    Keyboard.IsActive(VirtualKeyCode.VK_D) ||
+                    Keyboard.IsActive(VirtualKeyCode.VK_S))
                 {
                     selectBox.SelectedIndex++;
                     wasModified = true;
@@ -571,6 +577,9 @@ namespace Win32
             int left = box.Left;
             int bottom = box.Bottom;
             int right = box.Right;
+
+            if (top == bottom && left == right)
+            { return; }
 
             for (int x = left + 1; x < right; x++)
             {

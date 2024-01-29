@@ -312,5 +312,15 @@ namespace Win32
             position = Position;
             size = Size;
         }
+
+        public readonly SMALL_RECT Union(SMALL_RECT other)
+        {
+            SMALL_RECT result = this;
+            result.top = Math.Min(result.top, other.top);
+            result.left = Math.Min(result.left, other.left);
+            result.bottom = Math.Max(result.bottom, other.bottom);
+            result.right = Math.Max(result.right, other.right);
+            return result;
+        }
     }
 }

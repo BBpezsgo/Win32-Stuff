@@ -51,6 +51,26 @@ namespace Win32
         public char LeftChar;
         public char RightChar;
 
+        public ConsoleSelectBoxStyle()
+        {
+
+        }
+
+        public ConsoleSelectBoxStyle(ConsoleSelectBoxStyle other)
+        {
+            this.LabelNormal = other.LabelNormal;
+            this.LabelHover = other.LabelHover;
+            this.LabelDown = other.LabelDown;
+            this.LabelActive = other.LabelActive;
+
+            this.ButtonNormal = other.ButtonNormal;
+            this.ButtonHover = other.ButtonHover;
+            this.ButtonDown = other.ButtonDown;
+
+            this.LeftChar = other.LeftChar;
+            this.RightChar = other.RightChar;
+        }
+
         public static ConsoleSelectBoxStyle Default => new()
         {
             LabelNormal = CharColor.Make(CharColor.Gray, CharColor.White),
@@ -835,12 +855,12 @@ namespace Win32
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Fill(SMALL_RECT rect, byte background, byte foreground, char character) => Fill(rect, CharColor.Make(background, foreground), character);
-    
+
         /// <remarks>
         /// <b>Note:</b> This checks if the coordinate is out of range
         /// </remarks>
         public void Fill(SMALL_RECT rect, ushort attributes, char character) => Fill(rect, new ConsoleChar(character, attributes));
-    
+
         public void Fill(byte background, byte foreground, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, foreground, background));
         public void Fill(ushort attributes, char character) => Array.Fill(ConsoleBuffer, new ConsoleChar(character, attributes));
 
