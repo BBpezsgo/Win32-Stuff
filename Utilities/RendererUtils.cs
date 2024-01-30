@@ -129,6 +129,156 @@ namespace Win32
 
         #endregion
 
+        #region Text() (pixel renderer)
+
+        static Coord CharacterCoord(char @char, int sheetWidth, int sheetHeight, int charWidth, int charHeight)
+        {
+            int cols = sheetWidth / charWidth;
+            int rows = sheetHeight / charHeight;
+
+            int characterX = @char % cols;
+            int characterY = @char / rows;
+
+            return new COORD(characterX * charWidth, characterY * charHeight);
+        }
+
+        static Coord CharacterCoord(byte @char, int sheetWidth, int sheetHeight, int charWidth, int charHeight)
+        {
+            int cols = sheetWidth / charWidth;
+            int rows = sheetHeight / charHeight;
+
+            int characterX = @char % cols;
+            int characterY = @char / rows;
+
+            return new COORD(characterX * charWidth, characterY * charHeight);
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, char @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+        {
+            COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
+
+            for (int offsetY = 0; offsetY < charHeight; offsetY++)
+            {
+                if (y + offsetY < 0) continue;
+                if (y + offsetY >= self.Height) break;
+
+                int i = charCoord.X + ((charCoord.Y + offsetY) * fontSheetHeight);
+                self.Put(x, y + offsetY, fontSheetBuffer.Slice(i, charWidth), charWidth, 1);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, byte @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+        {
+            COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
+
+            for (int offsetY = 0; offsetY < charHeight; offsetY++)
+            {
+                if (y + offsetY < 0) continue;
+                if (y + offsetY >= self.Height) break;
+
+                int i = charCoord.X + ((charCoord.Y + offsetY) * fontSheetHeight);
+                self.Put(x, y + offsetY, fontSheetBuffer.Slice(i, charWidth), charWidth, 1);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= self.Height) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                self.Char(x + (i * fontWidth), y, text[i], fontSheetBuffer, fontSheetWidth, fontSheetHeight, fontWidth, fontHeight);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= self.Height) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                self.Char(x + (i * fontWidth), y, text[i], fontSheetBuffer, fontSheetWidth, fontSheetHeight, fontWidth, fontHeight);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, char @char, BitmapFont<TPixel> font)
+        {
+            COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
+
+            for (int offsetY = 0; offsetY < font.CharHeight; offsetY++)
+            {
+                if (y + offsetY < 0) continue;
+                if (y + offsetY >= self.Height) break;
+
+                int i = charCoord.X + ((charCoord.Y + offsetY) * font.Height);
+                self.Put(x, y + offsetY, font.Buffer.Slice(i, font.CharWidth), font.CharWidth, 1);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, byte @char, BitmapFont<TPixel> font)
+        {
+            COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
+
+            for (int offsetY = 0; offsetY < font.CharHeight; offsetY++)
+            {
+                if (y + offsetY < 0) continue;
+                if (y + offsetY >= self.Height) break;
+
+                int i = charCoord.X + ((charCoord.Y + offsetY) * font.Height);
+                self.Put(x, y + offsetY, font.Buffer.Slice(i, font.CharWidth), font.CharWidth, 1);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, BitmapFont<TPixel> font)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= self.Height) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                self.Char(x + (i * font.CharWidth), y, text[i], font);
+            }
+        }
+
+        /// <remarks>
+        /// <b>Note:</b> This checks if the coordinate is out of range
+        /// </remarks>
+        public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, BitmapFont<TPixel> font)
+        {
+            if (text.IsEmpty) return;
+            if (y < 0 || y >= self.Height) return;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                self.Char(x + (i * font.CharWidth), y, text[i], font);
+            }
+        }
+
+        #endregion
+
         #region Dropdown()
 
         /// <remarks>
