@@ -21,6 +21,15 @@ namespace Win32.Gdi32
         public byte G => (byte)((v >> 8) & byte.MaxValue);
         public byte B => (byte)((v >> 0) & byte.MaxValue);
 
+        public static readonly GdiColor White = new GdiColor(255, 255, 255);
+        public static readonly GdiColor Red = new GdiColor(255, 0, 0);
+        public static readonly GdiColor Green = new GdiColor(0, 255, 0);
+        public static readonly GdiColor Blue = new GdiColor(0, 0, 255);
+        public static readonly GdiColor Yellow = new GdiColor(255, 255, 0);
+        public static readonly GdiColor Cyan = new GdiColor(0, 255, 255);
+        public static readonly GdiColor Magenta = new GdiColor(255, 0, 255);
+        public static readonly GdiColor Black = new GdiColor(0, 0, 0);
+
         GdiColor(COLORREF v) => this.v = v;
 
         public GdiColor(byte r, byte g, byte b) => v = GdiColor.Make(r, g, b);
