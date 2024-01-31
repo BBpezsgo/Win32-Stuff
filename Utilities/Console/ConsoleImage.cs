@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.Buffers.Text;
+using System.Text;
 
 namespace Win32
 {
@@ -46,13 +47,13 @@ namespace Win32
 
         void Serialize(BinaryWriter writer)
         {
-            writer.Write(Width);
-            writer.Write(Height);
+            writer.Write((Int16)Width);
+            writer.Write((Int16)Height);
             int l = Width * Height;
             for (int i = 0; i < l; i++)
             {
-                writer.Write(Data[i].Char);
-                writer.Write(Data[i].Attributes);
+                writer.Write((Char)Data[i].Char);
+                writer.Write((UInt16)Data[i].Attributes);
             }
         }
 
@@ -112,6 +113,85 @@ namespace Win32
                 OperationStatus.InvalidData => throw new FormatException($"Input Base64 string is not formatted correctly"),
                 _ => throw new NotImplementedException(),
             };
+        }
+
+        public string ToCSharp()
+        {
+            ReadOnlySpan<byte> data = ToBytes();
+            StringBuilder builder = new(data.Length * 4);
+            if (true)
+            {
+                builder.Append($"public static readonly {nameof(ConsoleImage)} ImageData = {nameof(ConsoleImage)}.{nameof(FromBytes)}(\r\n    \"");
+                int rowWidth = 0;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    // if (rowWidth >= 32)
+                    // {
+                    //     builder.Append("\"u8");
+                    //     if (rowWidth < 38)
+                    //     { builder.Append(' ', 38 - rowWidth); }
+                    //     builder.Append("+\r\n    \"");
+                    //     rowWidth = 0;
+                    // }
+
+                    byte c = data[i];
+                    if (char.IsAsciiLetterOrDigit((char)c))
+                    {
+                        builder.Append((char)c);
+                        rowWidth++;
+                    }
+                    else
+                    {
+                        switch (c)
+                        {
+                            case (byte)'\0':
+                                builder.Append(@"\0");
+                                rowWidth += 2;
+                                break;
+                            case (byte)'\n':
+                                builder.Append(@"\n");
+                                rowWidth += 2;
+                                break;
+                            case (byte)'\r':
+                                builder.Append(@"\r");
+                                rowWidth += 2;
+                                break;
+                            case (byte)'\v':
+                                builder.Append(@"\v");
+                                rowWidth += 2;
+                                break;
+                            case (byte)'\t':
+                                builder.Append(@"\t");
+                                rowWidth += 2;
+                                break;
+                            default:
+#pragma warning disable CA1305 // Specify IFormatProvider
+                                builder.Append($"\\x0{Convert.ToString(c, 16).PadLeft(2, '0')}");
+#pragma warning restore CA1305
+                                rowWidth += 5;
+                                break;
+                        }
+                    }
+                }
+                builder.Append("\"u8);\r\n");
+            }
+            else
+            {
+                builder.Append("public static readonly byte[] ImageData = new byte[] {\r\n");
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (i > 0 && i % 16 == 0)
+                    {
+                        builder.Append("\r\n");
+                    }
+
+#pragma warning disable CA1305 // Specify IFormatProvider
+                    builder.Append($"0x{Convert.ToString(data[i], 16)}, ");
+#pragma warning restore CA1305
+                }
+                builder.Append("}\r\n");
+            }
+            return builder.ToString();
         }
 
         public ReadOnlySpan<ConsoleChar> AsSpan() => new(Data);
