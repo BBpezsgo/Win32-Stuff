@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Win32
 {
@@ -7,6 +8,9 @@ namespace Win32
         public readonly Span<T> Span;
         public readonly int Width;
         public readonly int Height;
+
+        public ref T this[int x, int y] => ref Span[x + (y * Width)];
+        public ref T this[Coord point] => ref Span[point.X + (point.Y * Width)];
 
         public Span2D(Span<T> span, int width, int height)
         {
@@ -37,6 +41,9 @@ namespace Win32
         public static bool operator !=(Span2D<T> left, Span2D<T> right) => !left.Equals(right);
 
         public override string ToString() => $"( {Width}x{Height} {Span.ToString()} )";
+
+        public bool IsVisible(Vector2 point) => point.X >= 0 && point.X < Width && point.Y >= 0 && point.Y < Height;
+        public bool IsVisible(Coord point) => point.X >= 0 && point.X < Width && point.Y >= 0 && point.Y < Height;
     }
 
     public readonly ref struct ReadOnlySpan2D<T>

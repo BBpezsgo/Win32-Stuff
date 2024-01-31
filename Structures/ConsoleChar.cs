@@ -54,13 +54,13 @@ namespace Win32
         public byte Foreground
         {
             readonly get => (byte)(Attributes & CharColor.MASK_FG);
-            set => Attributes = (ushort)((Attributes & ~CharColor.MASK_BG) | (value & CharColor.MASK_FG));
+            set => Attributes = (ushort)((Attributes & CharColor.MASK_BG) | (value & CharColor.MASK_FG));
         }
 
         public byte Background
         {
             readonly get => (byte)(Attributes >> 4);
-            set => Attributes = (ushort)((Attributes & ~CharColor.MASK_FG) | ((value << 4) & CharColor.MASK_BG));
+            set => Attributes = (ushort)((Attributes & CharColor.MASK_FG) | ((value << 4) & CharColor.MASK_BG));
         }
 
         public ConsoleChar(char @char)
