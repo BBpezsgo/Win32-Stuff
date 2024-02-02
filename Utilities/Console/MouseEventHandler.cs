@@ -55,8 +55,7 @@ namespace Win32
 
             if (e.EventFlags == MouseEventFlags.MouseWheeled)
             {
-                short yeah = unchecked((short)BitUtils.HighWord(e.ButtonState));
-                if (yeah > 0)
+                if (e.Scroll > 0)
                 { scroll++; }
                 else
                 { scroll--; }

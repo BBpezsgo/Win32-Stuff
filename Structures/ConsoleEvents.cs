@@ -127,6 +127,8 @@ namespace Win32
         /// </summary>
         public readonly MouseEventFlags EventFlags;
 
+        public short Scroll => unchecked((short)BitUtils.HighWord(ButtonState));
+
         public MouseEvent(COORD mousePosition, DWORD buttonState, ControlKeyState controlKeyState, MouseEventFlags eventFlags)
         {
             MousePosition = mousePosition;
