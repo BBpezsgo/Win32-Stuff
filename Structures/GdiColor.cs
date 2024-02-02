@@ -11,8 +11,10 @@ namespace Win32.Gdi32
         ISubtractionOperators<GdiColor, GdiColor, GdiColor>,
         IMultiplyOperators<GdiColor, GdiColor, GdiColor>,
         IMultiplyOperators<GdiColor, int, GdiColor>,
+        IMultiplyOperators<GdiColor, byte, GdiColor>,
         IMultiplyOperators<GdiColor, float, GdiColor>,
         IDivisionOperators<GdiColor, int, GdiColor>,
+        IDivisionOperators<GdiColor, byte, GdiColor>,
         IDivisionOperators<GdiColor, float, GdiColor>
     {
         readonly COLORREF v;
@@ -21,14 +23,14 @@ namespace Win32.Gdi32
         public byte G => (byte)((v >> 8) & byte.MaxValue);
         public byte B => (byte)((v >> 0) & byte.MaxValue);
 
-        public static readonly GdiColor White = new GdiColor(255, 255, 255);
-        public static readonly GdiColor Red = new GdiColor(255, 0, 0);
-        public static readonly GdiColor Green = new GdiColor(0, 255, 0);
-        public static readonly GdiColor Blue = new GdiColor(0, 0, 255);
-        public static readonly GdiColor Yellow = new GdiColor(255, 255, 0);
-        public static readonly GdiColor Cyan = new GdiColor(0, 255, 255);
-        public static readonly GdiColor Magenta = new GdiColor(255, 0, 255);
-        public static readonly GdiColor Black = new GdiColor(0, 0, 0);
+        public static readonly GdiColor White = new(255, 255, 255);
+        public static readonly GdiColor Red = new(255, 0, 0);
+        public static readonly GdiColor Green = new(0, 255, 0);
+        public static readonly GdiColor Blue = new(0, 0, 255);
+        public static readonly GdiColor Yellow = new(255, 255, 0);
+        public static readonly GdiColor Cyan = new(0, 255, 255);
+        public static readonly GdiColor Magenta = new(255, 0, 255);
+        public static readonly GdiColor Black = new(0, 0, 0);
 
         GdiColor(COLORREF v) => this.v = v;
 
@@ -50,8 +52,10 @@ namespace Win32.Gdi32
         public static GdiColor operator -(GdiColor a, GdiColor b) => new(a.R - b.R, a.G - b.G, a.B - b.B);
         public static GdiColor operator *(GdiColor a, GdiColor b) => new(a.R * b.R, a.G * b.G, a.B * b.B);
         public static GdiColor operator *(GdiColor a, int b) => new(a.R * b, a.G * b, a.B * b);
+        public static GdiColor operator *(GdiColor a, byte b) => new(a.R * b, a.G * b, a.B * b);
         public static GdiColor operator *(GdiColor a, float b) => new((byte)(a.R * b), (byte)(a.G * b), (byte)(a.B * b));
         public static GdiColor operator /(GdiColor a, int b) => new(a.R / b, a.G / b, a.B / b);
+        public static GdiColor operator /(GdiColor a, byte b) => new(a.R / b, a.G / b, a.B / b);
         public static GdiColor operator /(GdiColor a, float b) => new((byte)(a.R / b), (byte)(a.G / b), (byte)(a.B / b));
 
         public static GdiColor operator <<(GdiColor value, int shiftAmount) => new(value.v << shiftAmount);
@@ -74,6 +78,14 @@ namespace Win32.Gdi32
             r = R;
             g = G;
             b = B;
+        }
+
+        internal static int Distance(GdiColor colorA, GdiColor colorB)
+        {
+            int r = colorA.R - colorB.R;
+            int g = colorA.G - colorB.G;
+            int b = colorA.B - colorB.B;
+            return (r * r) + (g * g) + (b * b);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Text;
-
-using Color24 = (byte R, byte G, byte B);
+using Win32.Gdi32;
 
 namespace Win32
 {
@@ -235,7 +234,7 @@ namespace Win32
         /// <summary>
         /// Source: <see href=""="https://stackoverflow.com/a/27165165"/>
         /// </summary>
-        public static Color24 FromAnsi256(int number)
+        public static GdiColor FromAnsi256(int number)
         {
             int index_R = (number - 16) / 36;
             int r = (index_R > 0) ? (55 + (index_R * 40)) : 0;
@@ -243,16 +242,16 @@ namespace Win32
             int g = (index_G > 0) ? (55 + (index_G * 40)) : 0;
             int index_B = (number - 16) % 6;
             int b = (index_B > 0) ? (55 + (index_B * 40)) : 0;
-            return new Color24((byte)r, (byte)g, (byte)b);
+            return new GdiColor((byte)r, (byte)g, (byte)b);
         }
 
         /// <summary>
         /// Source: <see href=""="https://stackoverflow.com/a/27165165"/>
         /// </summary>
-        public static Color24 FromAnsi256Grayscale(int number)
+        public static GdiColor FromAnsi256Grayscale(int number)
         {
             int v = ((number - 232) * 10) + 8;
-            return new Color24((byte)v, (byte)v, (byte)v);
+            return new GdiColor(v, v, v);
         }
 
         /// <summary>
@@ -277,7 +276,7 @@ namespace Win32
         /// <summary>
         /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
         /// </summary>
-        public static byte ToAnsi256(Color24 color) => Ansi.ToAnsi256(color.R, color.G, color.B);
+        public static byte ToAnsi256(GdiColor color) => Ansi.ToAnsi256(color.R, color.G, color.B);
 
         /// <summary>
         /// Source: <see href=""="https://stackoverflow.com/a/26665998"/>
@@ -367,7 +366,10 @@ namespace Win32
             return builder;
         }
 
-        public static StringBuilder SetForegroundColor(StringBuilder builder, System.Drawing.Color color)
+        public static StringBuilder SetForegroundColor(StringBuilder builder, Gdi32.GdiColor color)
+            => Ansi.SetForegroundColor(builder, color.R, color.G, color.B);
+
+        public static StringBuilder SetForegroundColor(StringBuilder builder, int r, int g, int b)
         {
             builder.Append(ESC);
             builder.Append(CSI);
@@ -376,16 +378,19 @@ namespace Win32
             builder.Append(';');
             builder.Append('2');
             builder.Append(';');
-            builder.Append(color.R);
+            builder.Append(r);
             builder.Append(';');
-            builder.Append(color.G);
+            builder.Append(g);
             builder.Append(';');
-            builder.Append(color.B);
+            builder.Append(b);
             builder.Append('m');
             return builder;
         }
 
-        public static StringBuilder SetBackgroundColor(StringBuilder builder, System.Drawing.Color color)
+        public static StringBuilder SetBackgroundColor(StringBuilder builder, Gdi32.GdiColor color)
+            => Ansi.SetForegroundColor(builder, color.R, color.G, color.B);
+
+        public static StringBuilder SetBackgroundColor(StringBuilder builder, int r, int g, int b)
         {
             builder.Append(ESC);
             builder.Append(CSI);
@@ -394,11 +399,11 @@ namespace Win32
             builder.Append(';');
             builder.Append('2');
             builder.Append(';');
-            builder.Append(color.R);
+            builder.Append(r);
             builder.Append(';');
-            builder.Append(color.G);
+            builder.Append(g);
             builder.Append(';');
-            builder.Append(color.B);
+            builder.Append(b);
             builder.Append('m');
             return builder;
         }

@@ -2,13 +2,26 @@
 
 namespace Win32
 {
-    public abstract class Renderer<TPixel>
+    public abstract class Renderer
     {
         public abstract short Width { get; }
         public abstract short Height { get; }
 
         public SmallSize Size => new(Width, Height);
 
+        public virtual bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
+        public virtual bool IsVisible(float x, float y) => IsVisible((int)MathF.Round(x), (int)MathF.Round(y));
+        public virtual bool IsVisible(COORD position) => IsVisible(position.X, position.Y);
+        public virtual bool IsVisible(POINT position) => IsVisible(position.X, position.Y);
+        public virtual bool IsVisible(Vector2 position) => IsVisible((int)MathF.Round(position.X), (int)MathF.Round(position.Y));
+
+        public abstract void Render();
+
+        public abstract void RefreshBufferSize();
+    }
+
+    public abstract class Renderer<TPixel> : Renderer
+    {
         /// <exception cref="ArgumentOutOfRangeException"/>
         public abstract ref TPixel this[int i] { get; }
 
@@ -22,16 +35,6 @@ namespace Win32
         public virtual ref TPixel this[POINT p] => ref this[(p.Y * Width) + p.X];
         /// <e virtualxception cref="ArgumentOutOfRangeException"/>
         public virtual ref TPixel this[Vector2 p] => ref this[((int)MathF.Round(p.Y) * Width) + (int)MathF.Round(p.X)];
-
-        public virtual bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
-        public virtual bool IsVisible(float x, float y) => IsVisible((int)MathF.Round(x), (int)MathF.Round(y));
-        public virtual bool IsVisible(COORD position) => IsVisible(position.X, position.Y);
-        public virtual bool IsVisible(POINT position) => IsVisible(position.X, position.Y);
-        public virtual bool IsVisible(Vector2 position) => IsVisible((int)MathF.Round(position.X), (int)MathF.Round(position.Y));
-
-        public abstract void Render();
-
-        public abstract void RefreshBufferSize();
 
         public virtual void Clear()
             => Fill(default!);

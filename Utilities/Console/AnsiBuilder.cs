@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Text;
+﻿using System.Text;
+using Win32.Gdi32;
 
 namespace Win32
 {
@@ -13,13 +13,13 @@ namespace Win32
             set => Builder.Length = value;
         }
 
-        Color currentFgColor;
-        Color currentBgColor;
+        GdiColor currentFgColor;
+        GdiColor currentBgColor;
         bool currentBold;
         bool currentUnderline;
         bool currentItalics;
 
-        public Color ForegroundColor
+        public GdiColor ForegroundColor
         {
             get => currentFgColor;
             set
@@ -30,7 +30,7 @@ namespace Win32
             }
         }
 
-        public Color BackgroundColor
+        public GdiColor BackgroundColor
         {
             get => currentBgColor;
             set
@@ -85,8 +85,8 @@ namespace Win32
         public AnsiBuilder(StringBuilder builder)
         {
             Builder = builder;
-            currentFgColor = Color.Black;
-            currentBgColor = Color.Black;
+            currentFgColor = GdiColor.Black;
+            currentBgColor = GdiColor.Black;
             currentBold = false;
             currentUnderline = false;
             currentItalics = false;
@@ -100,8 +100,8 @@ namespace Win32
         public void ResetStyle()
         {
             if (Builder.Length == 0) return;
-            currentFgColor = Color.Black;
-            currentBgColor = Color.Black;
+            currentFgColor = GdiColor.Black;
+            currentBgColor = GdiColor.Black;
             currentBold = false;
             currentUnderline = false;
             currentItalics = false;
@@ -131,8 +131,8 @@ namespace Win32
         {
             if (value is null) return this;
 
-            Color savedFgColor = currentFgColor;
-            Color savedBgColor = currentBgColor;
+            GdiColor savedFgColor = currentFgColor;
+            GdiColor savedBgColor = currentBgColor;
             bool savedBold = currentBold;
             bool savedUnderline = currentUnderline;
             bool savedItalics = currentItalics;

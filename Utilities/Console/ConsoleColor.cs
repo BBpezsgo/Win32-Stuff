@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Win32.Gdi32;
 
 namespace Win32
 {
@@ -54,24 +54,24 @@ namespace Win32
             _ => 0,
         };
 
-        static readonly System.Drawing.Color[] ColorValues = new System.Drawing.Color[0b_1_0000]
+        static readonly GdiColor[] ColorValues = new GdiColor[0b_1_0000]
         {
-            System.Drawing.Color.FromArgb(0, 0, 0),          // 0b_0000
-            System.Drawing.Color.FromArgb(0, 0, 128),        // 0b_0001
-            System.Drawing.Color.FromArgb(0, 128, 0),        // 0b_0010
-            System.Drawing.Color.FromArgb(0, 128, 128),      // 0b_0011
-            System.Drawing.Color.FromArgb(128, 0, 0),        // 0b_0100
-            System.Drawing.Color.FromArgb(128, 0, 128),      // 0b_0101
-            System.Drawing.Color.FromArgb(128, 128, 0),      // 0b_0110
-            System.Drawing.Color.FromArgb(192, 192, 192),    // 0b_0111
-            System.Drawing.Color.FromArgb(128, 128, 128),    // 0b_1000
-            System.Drawing.Color.FromArgb(0, 0, 255),        // 0b_1001
-            System.Drawing.Color.FromArgb(0, 255, 0),        // 0b_1010
-            System.Drawing.Color.FromArgb(0, 255, 255),      // 0b_1011
-            System.Drawing.Color.FromArgb(255, 0, 0),        // 0b_1100
-            System.Drawing.Color.FromArgb(255, 0, 255),      // 0b_1101
-            System.Drawing.Color.FromArgb(255, 255, 0),      // 0b_1110
-            System.Drawing.Color.FromArgb(255, 255, 255),    // 0b_1111
+            new(0, 0, 0),          // 0b_0000
+            new(0, 0, 128),        // 0b_0001
+            new(0, 128, 0),        // 0b_0010
+            new(0, 128, 128),      // 0b_0011
+            new(128, 0, 0),        // 0b_0100
+            new(128, 0, 128),      // 0b_0101
+            new(128, 128, 0),      // 0b_0110
+            new(192, 192, 192),    // 0b_0111
+            new(128, 128, 128),    // 0b_1000
+            new(0, 0, 255),        // 0b_1001
+            new(0, 255, 0),        // 0b_1010
+            new(0, 255, 255),      // 0b_1011
+            new(255, 0, 0),        // 0b_1100
+            new(255, 0, 255),      // 0b_1101
+            new(255, 255, 0),      // 0b_1110
+            new(255, 255, 255),    // 0b_1111
         };
 
         static readonly byte[] AnsiForegroundColorValues = new byte[0b_1_0000]
@@ -117,7 +117,7 @@ namespace Win32
         public static byte GetAnsiForegroundColor(byte color) => AnsiForegroundColorValues[color];
         public static byte GetAnsiBackgroundColor(byte color) => AnsiBackgroundColorValues[color];
 
-        public static System.Drawing.Color GetColor(byte color) => ColorValues[color];
+        public static GdiColor GetColor(byte color) => ColorValues[color];
 
         public static byte GetRandomColor()
         {
@@ -129,35 +129,46 @@ namespace Win32
 
         #region 4bit IRGB
 
-        public static readonly System.Drawing.Color[] Irgb4bitColors = new System.Drawing.Color[0b_1_0000]
+        public static readonly GdiColor[] Irgb4bitColors = new GdiColor[0b_1_0000]
         {
-            System.Drawing.Color.FromArgb(0, 0, 0), // 0b_0000
-            System.Drawing.Color.FromArgb(0, 0, 128), // 0b_0001
-            System.Drawing.Color.FromArgb(0, 128, 0), // 0b_0010
-            System.Drawing.Color.FromArgb(0, 128, 128), // 0b_0011
-            System.Drawing.Color.FromArgb(128, 0, 0), // 0b_0100
-            System.Drawing.Color.FromArgb(128, 0, 128), // 0b_0101
-            System.Drawing.Color.FromArgb(128, 128, 0), // 0b_0110
-            System.Drawing.Color.FromArgb(192, 192, 192), // 0b_0111
-            System.Drawing.Color.FromArgb(128, 128, 128), // 0b_1000
-            System.Drawing.Color.FromArgb(0, 0, 255), // 0b_1001
-            System.Drawing.Color.FromArgb(0, 255, 0), // 0b_1010
-            System.Drawing.Color.FromArgb(0, 255, 255), // 0b_1011
-            System.Drawing.Color.FromArgb(255, 0, 0), // 0b_1100
-            System.Drawing.Color.FromArgb(255, 0, 255), // 0b_1101
-            System.Drawing.Color.FromArgb(255, 255, 0), // 0b_1110
-            System.Drawing.Color.FromArgb(255, 255, 255), // 0b_1111
+            new(0, 0, 0), // 0b_0000
+            new(0, 0, 128), // 0b_0001
+            new(0, 128, 0), // 0b_0010
+            new(0, 128, 128), // 0b_0011
+            new(128, 0, 0), // 0b_0100
+            new(128, 0, 128), // 0b_0101
+            new(128, 128, 0), // 0b_0110
+            new(192, 192, 192), // 0b_0111
+            new(128, 128, 128), // 0b_1000
+            new(0, 0, 255), // 0b_1001
+            new(0, 255, 0), // 0b_1010
+            new(0, 255, 255), // 0b_1011
+            new(255, 0, 0), // 0b_1100
+            new(255, 0, 255), // 0b_1101
+            new(255, 255, 0), // 0b_1110
+            new(255, 255, 255), // 0b_1111
         };
 
-        public static System.Drawing.Color From4bitIRGB(byte irgb) => Irgb4bitColors[irgb];
+        public static GdiColor To24bitColor(byte irgb) => Irgb4bitColors[irgb];
 
-        public static System.Drawing.Color From4bitIRGB(byte r, byte g, byte b, byte i)
-            => From4bitIRGB((byte)((i << 3) | (r << 2) | (g << 1) | (b)));
+        static GdiColor To24bitColor(byte r, byte g, byte b, byte i)
+            => Irgb4bitColors[(byte)((i << 3) | (r << 2) | (g << 1) | (b))];
 
-        static int ColorDistance(System.Drawing.Color a, System.Drawing.Color b)
+        /// <summary>
+        /// <para>
+        /// Find the closest RGBx approximation of a 24-bit RGB color, for x = 0 or 1
+        /// </para>
+        /// <para>
+        /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
+        /// </para>
+        /// </summary>
+        static (byte R, byte G, byte B) RgbxApprox(GdiColor color, byte x)
         {
-            (int R, int G, int B) d = (a.R - b.R, a.G - b.G, a.B - b.B);
-            return (d.R * d.R) + (d.G * d.G) + (d.B * d.B);
+            int threshold = (x + 1) * (byte.MaxValue / 3);
+            byte r = color.R > threshold ? (byte)1 : (byte)0;
+            byte g = color.G > threshold ? (byte)1 : (byte)0;
+            byte b = color.B > threshold ? (byte)1 : (byte)0;
+            return (r, g, b);
         }
 
         /// <summary>
@@ -168,31 +179,29 @@ namespace Win32
         /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
         /// </para>
         /// </summary>
-        public static byte To4bitIRGB(System.Drawing.Color color)
-        {
-            /// <summary>
-            /// Find the closest RGBx approximation of a 24-bit RGB color, for x = 0 or 1
-            /// </summary>
-            static (byte R, byte G, byte B) RgbxApprox(System.Drawing.Color color, byte x)
-            {
-                int threshold = ((x + 1) * byte.MaxValue) / 3;
-                byte r = color.R > threshold ? (byte)1 : (byte)0;
-                byte g = color.G > threshold ? (byte)1 : (byte)0;
-                byte b = color.B > threshold ? (byte)1 : (byte)0;
-                return (r, g, b);
-            }
+        public static byte From24bitColor(int r, int g, int b) => From24bitColor(new GdiColor(r, g, b));
 
+        /// <summary>
+        /// <para>
+        /// Find the closest 4-bit RGBI approximation (by Euclidean distance) to a 24-bit RGB color
+        /// </para>
+        /// <para>
+        /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
+        /// </para>
+        /// </summary>
+        public static byte From24bitColor(GdiColor color)
+        {
             // find best RGB0 and RGB1 approximations:
             (byte r0, byte g0, byte b0) = RgbxApprox(color, 0);
             (byte r1, byte g1, byte b1) = RgbxApprox(color, 1);
 
             // convert them back to 24-bit RGB:
-            System.Drawing.Color color1 = From4bitIRGB(r0, g0, b0, 0);
-            System.Drawing.Color color2 = From4bitIRGB(r1, g1, b1, 1);
+            GdiColor color1 = To24bitColor(r0, g0, b0, 0);
+            GdiColor color2 = To24bitColor(r1, g1, b1, 1);
 
             // return the color closer to the original:
-            int d0 = ColorDistance(color, color1);
-            int d1 = ColorDistance(color, color2);
+            int d0 = GdiColor.Distance(color, color1);
+            int d1 = GdiColor.Distance(color, color2);
 
             byte result = 0b_0000;
 
@@ -218,6 +227,116 @@ namespace Win32
             }
 
             return result;
+        }
+
+        static readonly (char Character, float Intensity)[] ShadeCharacters = new (char Character, float Intensity)[]
+        {
+            ( '░', .25f ),
+            ( '▒', .50f ),
+            ( '▓', .75f ),
+        };
+
+        public static ConsoleChar ToCharacterShaded(GdiColor color)
+        {
+            const byte DarkValue = (byte)(byte.MaxValue * .125f);
+            const byte BrightValue = (byte)(byte.MaxValue * .125f);
+
+            byte shade = Math.Max(color.R, Math.Max(color.G, color.B));
+
+            if (shade < DarkValue)
+            { return ConsoleChar.Empty; }
+
+            byte c = CharColor.From24bitColor(color);
+
+            if (shade > BrightValue)
+            { return new ConsoleChar(' ', (ushort)(c << 4)); }
+
+            return new ConsoleChar(ShadeCharacters[(int)MathF.Round(shade * (ShadeCharacters.Length - 1))].Character, c);
+        }
+
+        public static ConsoleChar ToCharacterColored(GdiColor color)
+        {
+            ConsoleChar result = ConsoleChar.Empty;
+            int smallestDist = int.MaxValue;
+            GdiColor fgC, bgC;
+            int dist;
+            float shade;
+            byte fg, bg;
+
+            for (fg = 0; fg <= CharColor.White; fg++)
+            {
+                fgC = CharColor.Irgb4bitColors[fg];
+
+                {
+                    dist = GdiColor.Distance(fgC, color);
+                    if (smallestDist > dist)
+                    {
+                        smallestDist = dist;
+                        result = new ConsoleChar(' ', 0, fg);
+                    }
+                    if (dist <= float.Epsilon) return result;
+                }
+
+                for (bg = (byte)(fg + 1); bg <= CharColor.White; bg++)
+                {
+                    bgC = CharColor.Irgb4bitColors[bg];
+
+                    for (int i = 0; i < ShadeCharacters.Length; i++)
+                    {
+                        shade = ShadeCharacters[i].Intensity;
+                        dist = GdiColor.Distance((fgC * shade) + (bgC * (1f - shade)), color);
+                        if (smallestDist > dist)
+                        {
+                            smallestDist = dist;
+                            result = new ConsoleChar(ShadeCharacters[i].Character, fg, bg);
+                        }
+                        if (dist <= float.Epsilon) return result;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public static GdiColor FromCharacter(ConsoleChar character)
+        {
+            byte shade = character.Char switch
+            {
+                '░' => 64,
+                '▒' => 127,
+                '▓' => 191,
+                ' ' => 0,
+                '\0' => 0,
+                _ => 127,
+            };
+
+            GdiColor bg = CharColor.To24bitColor(character.Background);
+            GdiColor fg = CharColor.To24bitColor(character.Foreground);
+
+            return (bg * (byte.MaxValue - shade)) + (fg * shade);
+        }
+
+        public static byte To4bitIRGB_BruteForce(GdiColor color, int threshold = 1)
+        {
+            byte closest = 0b_0000;
+            int closestDistance = int.MaxValue;
+
+            for (byte irgb = 0b_0000; irgb <= 0b_1111; irgb++)
+            {
+                GdiColor rgb = CharColor.To24bitColor(irgb);
+                int distance = GdiColor.Distance(rgb, color);
+
+                if (distance <= threshold)
+                { return irgb; }
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = irgb;
+                }
+            }
+
+            return closest;
         }
 
         #endregion

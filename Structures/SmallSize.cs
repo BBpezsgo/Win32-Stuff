@@ -43,6 +43,9 @@ namespace Win32.Common
 
         public static implicit operator SmallSize(ValueTuple<SHORT, SHORT> size) => new(size.Item1, size.Item2);
 
+        public static explicit operator Coord(SmallSize size) => new(size.Width, size.Height);
+        public static explicit operator SmallSize(Coord size) => new(size.X, size.Y);
+
         /// <exception cref="OverflowException"/>
         public static explicit operator checked SmallSize(ValueTuple<LONG, LONG> size) => new(checked((SHORT)size.Item1), checked((SHORT)size.Item2));
         public static explicit operator SmallSize(ValueTuple<LONG, LONG> size) => new((SHORT)size.Item1, (SHORT)size.Item2);
