@@ -912,5 +912,37 @@ namespace Win32
         }
 
         #endregion
+
+        #region Bitfield
+
+        public static void Bitfield(this Renderer<ConsoleChar> renderer, Coord position, int[] bitfield)
+            => renderer.Bitfield(position, bitfield, new ConsoleChar('1', CharColor.BrightBlue, CharColor.Black), new ConsoleChar('1', CharColor.Blue, CharColor.Black));
+
+        public static void Bitfield(this Renderer<ConsoleChar> renderer, Coord position, int bitfield)
+            => renderer.Bitfield(position, bitfield, new ConsoleChar('1', CharColor.BrightBlue, CharColor.Black), new ConsoleChar('1', CharColor.Blue, CharColor.Black));
+
+        public static void Bitfield(this Renderer<char> renderer, Coord position, int[] bitfield)
+            => renderer.Bitfield(position, bitfield, '1', '0');
+
+        public static void Bitfield(this Renderer<char> renderer, Coord position, int bitfield)
+            => renderer.Bitfield(position, bitfield, '1', '0');
+
+        public static void Bitfield<TPixel>(this Renderer<TPixel> renderer, Coord position, int[] bitfield, TPixel one, TPixel zero)
+        {
+            for (int i = 0; i < bitfield.Length; i++)
+            {
+                Bitfield(renderer, new Coord(position.X + (i * 32), position.Y), bitfield[i], one, zero);
+            }
+        }
+
+        public static void Bitfield<TPixel>(this Renderer<TPixel> renderer, Coord position, int bitfield, TPixel one, TPixel zero)
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                renderer[(position.Y * renderer.Width) + position.X + i] = (bitfield & (1 << i)) != 0 ? one : zero;
+            }
+        }
+
+        #endregion
     }
 }
