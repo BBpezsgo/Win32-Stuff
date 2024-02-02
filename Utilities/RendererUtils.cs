@@ -555,9 +555,9 @@ namespace Win32
 
         #region InputField()
 
-        const string ShiftedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ§'\"+!%/=()?:_-+";
-        const string Chars = "abcdefghijklmnopqrstuvwxyz0123456789,.-+";
-        const string Keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-+";
+        const string ShiftedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ§'\"+!%/=()?:_-+ ";
+        const string Chars = "abcdefghijklmnopqrstuvwxyz0123456789,.-+ ";
+        const string Keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-+ ";
 
         /// <remarks>
         /// <para>

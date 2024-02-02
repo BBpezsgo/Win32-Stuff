@@ -3,7 +3,7 @@
 namespace Win32
 {
     [SupportedOSPlatform("windows")]
-    public partial class ConsoleRenderer : BufferedRenderer<ConsoleChar>
+    public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     {
         protected HANDLE Handle;
 
