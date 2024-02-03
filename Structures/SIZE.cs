@@ -17,7 +17,9 @@ namespace Win32.Common
     [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
     public struct Size :
         IEquatable<SIZE>,
-        System.Numerics.IEqualityOperators<SIZE, SIZE, bool>
+        System.Numerics.IEqualityOperators<SIZE, SIZE, bool>,
+        System.Numerics.IMultiplyOperators<SIZE, int, SIZE>,
+        System.Numerics.IDivisionOperators<SIZE, int, SIZE>
     {
         /// <summary>Specifies the rectangle's width. The units depend on which function uses this structure.</summary>
         public LONG Width;
@@ -59,5 +61,8 @@ namespace Win32.Common
             width = Width;
             height = Height;
         }
+
+        public static SIZE operator *(SIZE a, int b) => new(a.Width * b, a.Height * b);
+        public static SIZE operator /(SIZE a, int b) => new(a.Width / b, a.Height / b);
     }
 }
