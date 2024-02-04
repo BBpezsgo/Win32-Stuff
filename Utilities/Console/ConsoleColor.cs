@@ -259,7 +259,7 @@ namespace Win32
         public static ConsoleChar ToCharacterShaded(GdiColor color)
         {
             const byte DarkValue = (byte)(byte.MaxValue * .125f);
-            const byte BrightValue = (byte)(byte.MaxValue * .125f);
+            const byte BrightValue = (byte)(byte.MaxValue * .875f);
 
             byte shade = Math.Max(color.R, Math.Max(color.G, color.B));
 
@@ -271,7 +271,7 @@ namespace Win32
             if (shade > BrightValue)
             { return new ConsoleChar(' ', (ushort)(c << 4)); }
 
-            return new ConsoleChar(ShadeCharacters[(int)MathF.Round(shade * (ShadeCharacters.Length - 1))].Character, c);
+            return new ConsoleChar(ShadeCharacters[shade * (ShadeCharacters.Length - 1) / byte.MaxValue].Character, c);
         }
 
         public static ConsoleChar ToCharacterColored(GdiColor color)

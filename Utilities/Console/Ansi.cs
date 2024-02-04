@@ -388,7 +388,7 @@ namespace Win32
         }
 
         public static StringBuilder SetBackgroundColor(StringBuilder builder, Gdi32.GdiColor color)
-            => Ansi.SetForegroundColor(builder, color.R, color.G, color.B);
+            => Ansi.SetBackgroundColor(builder, color.R, color.G, color.B);
 
         public static StringBuilder SetBackgroundColor(StringBuilder builder, int r, int g, int b)
         {
