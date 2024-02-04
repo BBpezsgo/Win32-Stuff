@@ -179,6 +179,26 @@ namespace Win32
         /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
         /// </para>
         /// </summary>
+        public static byte From24bitColor(ValueTuple<float, float, float> color) => From24bitColor(new GdiColor(color.Item1, color.Item2, color.Item3));
+
+        /// <summary>
+        /// <para>
+        /// Find the closest 4-bit RGBI approximation (by Euclidean distance) to a 24-bit RGB color
+        /// </para>
+        /// <para>
+        /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
+        /// </para>
+        /// </summary>
+        public static byte From24bitColor(ValueTuple<int, int, int> color) => From24bitColor(new GdiColor(color.Item1, color.Item2, color.Item3));
+
+        /// <summary>
+        /// <para>
+        /// Find the closest 4-bit RGBI approximation (by Euclidean distance) to a 24-bit RGB color
+        /// </para>
+        /// <para>
+        /// Source: <see href="https://stackoverflow.com/questions/41644778/convert-24-bit-color-to-4-bit-rgbi"/>
+        /// </para>
+        /// </summary>
         public static byte From24bitColor(int r, int g, int b) => From24bitColor(new GdiColor(r, g, b));
 
         /// <summary>
