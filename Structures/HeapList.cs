@@ -45,7 +45,7 @@ namespace Win32
     }
 
     [SupportedOSPlatform("windows")]
-    public class HeapListEnumerator : IEnumerator<HeapEntry>
+    public struct HeapListEnumerator : IEnumerator<HeapEntry>
     {
         readonly uint ProcessId;
         readonly nuint HeapId;
@@ -59,8 +59,8 @@ namespace Win32
             HeapId = heapId;
         }
 
-        public HeapEntry Current => current;
-        object IEnumerator.Current => current;
+        public readonly HeapEntry Current => current;
+        readonly object IEnumerator.Current => current;
 
         public unsafe void Reset()
         {
@@ -116,8 +116,6 @@ namespace Win32
             return true;
         }
 
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
-        public void Dispose() { }
-#pragma warning restore CA1816
+        public readonly void Dispose() { }
     }
 }

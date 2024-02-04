@@ -2,7 +2,6 @@
 
 namespace Win32
 {
-    [SupportedOSPlatform("windows")]
     public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     {
         protected HANDLE Handle;
@@ -33,11 +32,13 @@ namespace Win32
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="GeneralException"/>
+        [SupportedOSPlatform("windows")]
         public ConsoleRenderer() : this(ConsoleHandler.WindowWidth, ConsoleHandler.WindowHeight)
         { }
 
         /// <exception cref="WindowsException"/>
         /// <exception cref="GeneralException"/>
+        [SupportedOSPlatform("windows")]
         public ConsoleRenderer(short bufferWidth, short bufferHeight)
         {
             /*
@@ -69,6 +70,7 @@ namespace Win32
         public override bool IsVisible(Vector2 position) => MathF.Round(position.X) >= 0 && MathF.Round(position.Y) >= 0 && MathF.Round(position.X) < BufferWidth && MathF.Round(position.Y) < BufferHeight;
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         public override void Render()
         {
             if (Kernel32.WriteConsoleOutput(
@@ -81,6 +83,7 @@ namespace Win32
         }
 
         /// <exception cref="WindowsException"/>
+        [SupportedOSPlatform("windows")]
         public override void RefreshBufferSize()
         {
             ConsoleScreenBufferInfo info = ConsoleHandler.ScreenBufferInfo;

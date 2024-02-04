@@ -165,7 +165,7 @@ namespace Win32
                                 rowWidth += 2;
                                 break;
                             default:
-#pragma warning disable CA1305 // Specify IFormatProvider
+#pragma warning disable CA1305
                                 builder.Append($"\\x0{Convert.ToString(c, 16).PadLeft(2, '0')}");
 #pragma warning restore CA1305
                                 rowWidth += 5;
@@ -185,7 +185,7 @@ namespace Win32
                         builder.Append("\r\n");
                     }
 
-#pragma warning disable CA1305 // Specify IFormatProvider
+#pragma warning disable CA1305
                     builder.Append($"0x{Convert.ToString(data[i], 16)}, ");
 #pragma warning restore CA1305
                 }
