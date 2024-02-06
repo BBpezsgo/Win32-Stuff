@@ -209,8 +209,8 @@ namespace Win32
         public readonly bool Contains(COORD point) =>
             point.X >= left &&
             point.Y >= top &&
-            point.X < right &&
-            point.Y < bottom;
+            point.X <= right &&
+            point.Y <= bottom;
 
         public readonly bool Contains(System.Drawing.Point point) =>
             point.X >= left &&

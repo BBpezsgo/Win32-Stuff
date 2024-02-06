@@ -673,12 +673,12 @@ namespace Win32
                 }
             }
 
-            for (int y = rect.Top; y < rect.Bottom; y++)
+            for (int y = rect.Top; y <= rect.Bottom; y++)
             {
                 if (y >= self.Height) break;
                 if (y < 0) continue;
 
-                for (int x = rect.Left; x < rect.Right; x++)
+                for (int x = rect.Left; x <= rect.Right; x++)
                 {
                     if (x >= self.Width) break;
                     if (x < 0) continue;
