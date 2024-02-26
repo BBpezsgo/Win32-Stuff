@@ -137,12 +137,12 @@ namespace Win32
         /// <summary>
         /// The method succeeded and returned the boolean value <see cref="Constants.FALSE"/>.
         /// </summary>
-        public const HRESULT FALSE = unchecked((HRESULT)0x00000001);
+        public const HRESULT FALSE = 0x00000001;
         /// <summary>
         /// The method succeeded.
         /// If a boolean return value is expected, the returned value is <see cref="TRUE"/>.
         /// </summary>
-        public const HRESULT OK = unchecked((HRESULT)0x00000000);
+        public const HRESULT OK = 0x00000000;
 
         #endregion
 

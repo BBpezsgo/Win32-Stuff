@@ -40,5 +40,5 @@
         /// translation, the function returns 0.
         /// </summary>
         VK_TO_VSC_EX = 4,
-	}
+    }
 }
