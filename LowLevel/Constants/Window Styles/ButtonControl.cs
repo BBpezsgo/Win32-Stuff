@@ -2,9 +2,9 @@
 {
     public static class ButtonControlStyles
     {
-        public const DWORD SPLITBUTTON          =0x0000000C;
-        public const DWORD DEFSPLITBUTTON       =0x0000000D;
-        public const DWORD COMMANDLINK          =0x0000000E;
+        public const DWORD SPLITBUTTON = 0x0000000C;
+        public const DWORD DEFSPLITBUTTON = 0x0000000D;
+        public const DWORD COMMANDLINK = 0x0000000E;
         public const DWORD DEFCOMMANDLINK = 0x0000000F;
 
         public const DWORD PUSHBUTTON = 0x00000000;

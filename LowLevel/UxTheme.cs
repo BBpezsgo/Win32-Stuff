@@ -3,7 +3,7 @@
 namespace Win32.LowLevel
 {
     [SupportedOSPlatform("windows")]
-    public static  class UxTheme
+    public static class UxTheme
     {
         [DllImport("UxTheme.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern unsafe HRESULT SetWindowTheme(
@@ -16,8 +16,8 @@ namespace Win32.LowLevel
           [In] string? pszSubAppName,
           [In] string? pszSubIdList)
         {
-            fixed(WCHAR* pszSubAppNamePtr = pszSubAppName)
-            fixed(WCHAR* pszSubIdListPtr = pszSubIdList)
+            fixed (WCHAR* pszSubAppNamePtr = pszSubAppName)
+            fixed (WCHAR* pszSubIdListPtr = pszSubIdList)
             {
                 return SetWindowTheme(hwnd, pszSubAppNamePtr, pszSubIdListPtr);
             }

@@ -5,7 +5,7 @@
     /// GDI-compatible. This enumeration allows a bitwise combination of its member
     /// values.
     /// </summary>
-    public enum D2D1_RENDER_TARGET_USAGE:DWORD
+    public enum D2D1_RENDER_TARGET_USAGE : DWORD
     {
         NONE = 0x00000000,
 

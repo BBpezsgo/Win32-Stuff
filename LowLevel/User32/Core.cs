@@ -8,7 +8,7 @@ namespace Win32.LowLevel
         [DllImport("User32.dll", SetLastError = true)]
         public static extern HANDLE GetKeyboardLayout(
           [In] DWORD idThread
-        );  
+        );
 
         [DllImport("User32.dll", SetLastError = true)]
         public static extern unsafe HANDLE LoadKeyboardLayoutW(

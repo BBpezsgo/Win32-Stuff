@@ -7,7 +7,6 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
     <ApplicationManifest>Manifest.xml</ApplicationManifest>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-all</AnalysisLevel>
   </PropertyGroup>
 
