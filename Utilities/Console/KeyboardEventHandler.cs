@@ -8,7 +8,7 @@
         static int[] Pressing = new int[8];
         static int[] Holding = new int[8];
         static int[] Releasing = new int[8];
-        static int[] Active = new int[8];
+        static readonly int[] Active = new int[8];
 
         /// <exception cref="ArgumentOutOfRangeException"/>
         public static bool IsKeyPressed(char key) => IsKeyPressed(ToVK(key).Key);
