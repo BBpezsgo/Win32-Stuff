@@ -91,23 +91,6 @@
         /// </summary>
         public const DWORD ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Characters written by the <see cref="Kernel32.WriteFile"/>
         /// or <see cref="Kernel32.WriteConsole"/> function or echoed

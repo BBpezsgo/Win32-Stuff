@@ -27,3 +27,4 @@
 [assembly: SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 [assembly: SuppressMessage("Naming", "CA1720:Identifier contains type name")]
 [assembly: SuppressMessage("Roslynator", "RCS1139:Add summary element to documentation comment")]
+[assembly: SuppressMessage("Roslynator", "RCS1194:Implement exception constructors")]
