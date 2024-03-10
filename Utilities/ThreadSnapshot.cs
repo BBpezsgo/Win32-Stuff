@@ -1,144 +1,130 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Globalization;
 
-namespace Win32
+namespace Win32;
+
+[SupportedOSPlatform("windows")]
+public readonly struct ThreadSnapshot :
+    IEnumerable<ThreadEntry>,
+    IDisposable,
+    IEquatable<ThreadSnapshot>,
+    System.Numerics.IEqualityOperators<ThreadSnapshot, ThreadSnapshot, bool>
 {
-    [SupportedOSPlatform("windows")]
-    public readonly struct ThreadSnapshot :
-        IEnumerable<ThreadEntry>,
-        IDisposable,
-        IEquatable<ThreadSnapshot>,
-        System.Numerics.IEqualityOperators<ThreadSnapshot, ThreadSnapshot, bool>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly HANDLE Handle;
+
+    public ThreadSnapshot(HANDLE handle) => Handle = handle;
+
+    /// <exception cref="WindowsException"/>
+    public void Dispose()
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly HANDLE Handle;
+        if (Kernel32.CloseHandle(Handle) == FALSE)
+        { throw WindowsException.Get(); }
+    }
 
-        public ThreadSnapshot(HANDLE handle) => Handle = handle;
+    public readonly IEnumerator<ThreadEntry> GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
+    readonly IEnumerator IEnumerable.GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
 
-        /// <exception cref="WindowsException"/>
-        public void Dispose()
-        {
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-        }
+    public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+    public override bool Equals(object? obj) => obj is ThreadSnapshot snapshot && Equals(snapshot);
+    public bool Equals(ThreadSnapshot other) => Handle.Equals(other.Handle);
+    public override int GetHashCode() => Handle.GetHashCode();
 
-        public readonly IEnumerator<ThreadEntry> GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
-        readonly IEnumerator IEnumerable.GetEnumerator() => new ThreadSnapshotEnumerator(Handle);
+    public static bool operator ==(ThreadSnapshot left, ThreadSnapshot right) => left.Equals(right);
+    public static bool operator !=(ThreadSnapshot left, ThreadSnapshot right) => !left.Equals(right);
 
-        public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
-        public override bool Equals(object? obj) => obj is ThreadSnapshot snapshot && Equals(snapshot);
-        public bool Equals(ThreadSnapshot other) => Handle.Equals(other.Handle);
-        public override int GetHashCode() => Handle.GetHashCode();
-
-        public static bool operator ==(ThreadSnapshot left, ThreadSnapshot right) => left.Equals(right);
-        public static bool operator !=(ThreadSnapshot left, ThreadSnapshot right) => !left.Equals(right);
-
-        /// <exception cref="WindowsException"/>
-        public static ThreadSnapshot CreateSnapshot()
-        {
-            HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPTHREAD, default);
-            if (Kernel32.INVALID_HANDLE_VALUE == hSnapshot)
-            { throw WindowsException.Get(); }
-            return new ThreadSnapshot(hSnapshot);
-        }
+    /// <exception cref="WindowsException"/>
+    public static ThreadSnapshot CreateSnapshot()
+    {
+        HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPTHREAD, default);
+        if (Kernel32.InvalidHandle == hSnapshot)
+        { throw WindowsException.Get(); }
+        return new ThreadSnapshot(hSnapshot);
     }
 
     [SupportedOSPlatform("windows")]
-    public class ThreadSnapshotEnumerator : IEnumerator<ThreadEntry>
+    public struct ThreadSnapshotEnumerator : IEnumerator<ThreadEntry>
     {
-        readonly HANDLE Handle;
-        ThreadEntry current;
-        bool IsDisposed;
-        bool IsStarted;
+        HANDLE _handle;
+        ThreadEntry _current;
+        bool _isStarted;
 
         public ThreadSnapshotEnumerator(HANDLE handle)
         {
-            Handle = handle;
+            _handle = handle;
         }
 
-        public ThreadEntry Current => current;
-        object IEnumerator.Current => current;
+        public readonly ThreadEntry Current => _current;
+        readonly object IEnumerator.Current => _current;
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe void Reset()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
-            IsStarted = true;
+            _isStarted = true;
 
             ThreadEntry threadEntry = ThreadEntry.Create();
 
-            int result = Kernel32.Thread32First(Handle, &threadEntry);
+            int result = Kernel32.Thread32First(_handle, ref threadEntry);
 
             if (result != TRUE)
             {
                 DWORD error = Kernel32.GetLastError();
                 if (error == 0x12) // ERROR_NO_MORE_FILES
                 {
-                    current = default;
+                    _current = default;
                     return;
                 }
                 Dispose();
                 throw WindowsException.Get(error);
             }
 
-            current = threadEntry;
+            _current = threadEntry;
         }
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe bool MoveNext()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
             ThreadEntry threadEntry = ThreadEntry.Create();
 
-            if (!IsStarted)
+            if (!_isStarted)
             {
-                IsStarted = true;
+                _isStarted = true;
 
-                int result2 = Kernel32.Thread32First(Handle, &threadEntry);
+                int result2 = Kernel32.Thread32First(_handle, ref threadEntry);
 
                 if (result2 != TRUE)
                 {
                     DWORD error = Kernel32.GetLastError();
                     if (error == 0x12) // ERROR_NO_MORE_FILES
                     {
-                        current = default;
+                        _current = default;
                         return false;
                     }
                     Dispose();
                     throw WindowsException.Get(error);
                 }
 
-                current = threadEntry;
+                _current = threadEntry;
             }
 
-            int result = Kernel32.Thread32Next(Handle, &threadEntry);
+            int result = Kernel32.Thread32Next(_handle, out threadEntry);
             if (result != TRUE) return false;
-            current = threadEntry;
+            _current = threadEntry;
             return true;
         }
 
         /// <exception cref="WindowsException"/>
-        void ActualDispose()
-        {
-            if (IsDisposed) return;
-
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-
-            IsDisposed = true;
-        }
-        /// <exception cref="WindowsException"/>
-        ~ThreadSnapshotEnumerator() { ActualDispose(); }
-        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
-            ActualDispose();
-            GC.SuppressFinalize(this);
+            if (Kernel32.CloseHandle(_handle) == FALSE)
+            { throw WindowsException.Get(); }
+            _handle = 0;
         }
     }
 }

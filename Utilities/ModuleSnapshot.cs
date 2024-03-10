@@ -1,112 +1,109 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Globalization;
 
-namespace Win32
+namespace Win32;
+
+[SupportedOSPlatform("windows")]
+public readonly struct ModuleSnapshot :
+    IEnumerable<ModuleEntry>,
+    IDisposable,
+    IEquatable<ModuleSnapshot>,
+    System.Numerics.IEqualityOperators<ModuleSnapshot, ModuleSnapshot, bool>
 {
-    [SupportedOSPlatform("windows")]
-    public readonly struct ModuleSnapshot :
-        IEnumerable<ModuleEntry>,
-        IDisposable,
-        IEquatable<ModuleSnapshot>,
-        System.Numerics.IEqualityOperators<ModuleSnapshot, ModuleSnapshot, bool>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly HANDLE Handle;
+
+    ModuleSnapshot(HANDLE handle) => Handle = handle;
+
+    /// <exception cref="WindowsException"/>
+    public void Dispose()
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly HANDLE Handle;
+        if (Kernel32.CloseHandle(Handle) == FALSE)
+        { throw WindowsException.Get(); }
+    }
 
-        ModuleSnapshot(HANDLE handle) => Handle = handle;
+    public readonly IEnumerator<ModuleEntry> GetEnumerator() => new ModuleSnapshotEnumerator(Handle);
+    readonly IEnumerator IEnumerable.GetEnumerator() => new ModuleSnapshotEnumerator(Handle);
 
-        /// <exception cref="WindowsException"/>
-        public void Dispose()
-        {
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-        }
+    public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+    public override bool Equals(object? obj) => obj is ModuleSnapshot snapshot && Equals(snapshot);
+    public bool Equals(ModuleSnapshot other) => Handle.Equals(other.Handle);
+    public override int GetHashCode() => Handle.GetHashCode();
 
-        public readonly IEnumerator<ModuleEntry> GetEnumerator() => new ModuleSnapshotEnumerator(Handle);
-        readonly IEnumerator IEnumerable.GetEnumerator() => new ModuleSnapshotEnumerator(Handle);
+    public static bool operator ==(ModuleSnapshot left, ModuleSnapshot right) => left.Equals(right);
+    public static bool operator !=(ModuleSnapshot left, ModuleSnapshot right) => !left.Equals(right);
 
-        public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
-        public override bool Equals(object? obj) => obj is ModuleSnapshot snapshot && Equals(snapshot);
-        public bool Equals(ModuleSnapshot other) => Handle.Equals(other.Handle);
-        public override int GetHashCode() => Handle.GetHashCode();
-
-        public static bool operator ==(ModuleSnapshot left, ModuleSnapshot right) => left.Equals(right);
-        public static bool operator !=(ModuleSnapshot left, ModuleSnapshot right) => !left.Equals(right);
-
-        /// <exception cref="WindowsException"/>
-        public static ModuleSnapshot CreateSnapshot(uint processId)
-        {
-            HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPMODULE, processId);
-            if (Kernel32.INVALID_HANDLE_VALUE == hSnapshot)
-            { throw WindowsException.Get(); }
-            return new ModuleSnapshot(hSnapshot);
-        }
+    /// <exception cref="WindowsException"/>
+    public static ModuleSnapshot CreateSnapshot(uint processId)
+    {
+        HANDLE hSnapshot = Kernel32.CreateToolhelp32Snapshot(TH32CS.SNAPMODULE, processId);
+        if (Kernel32.InvalidHandle == hSnapshot)
+        { throw WindowsException.Get(); }
+        return new ModuleSnapshot(hSnapshot);
     }
 
     [SupportedOSPlatform("windows")]
-    public class ModuleSnapshotEnumerator : IEnumerator<ModuleEntry>
+    public struct ModuleSnapshotEnumerator : IEnumerator<ModuleEntry>
     {
-        readonly HANDLE Handle;
-        ModuleEntry current;
-        bool IsDisposed;
-        bool IsStarted;
+        HANDLE _handle;
+        ModuleEntry _current;
+        bool _isStarted;
 
         public ModuleSnapshotEnumerator(HANDLE handle)
         {
-            Handle = handle;
+            _handle = handle;
         }
 
-        public ModuleEntry Current => current;
-        object IEnumerator.Current => current;
+        public readonly ModuleEntry Current => _current;
+        readonly object IEnumerator.Current => _current;
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe void Reset()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
-            IsStarted = true;
+            _isStarted = true;
 
             ModuleEntry moduleEntry = ModuleEntry.Create();
 
-            int result = Kernel32.Module32FirstW(Handle, &moduleEntry);
+            int result = Kernel32.Module32FirstW(_handle, ref moduleEntry);
 
             if (result != TRUE)
             {
                 DWORD error = Kernel32.GetLastError();
                 if (error == 0x12) // ERROR_NO_MORE_FILES
                 {
-                    current = default;
+                    _current = default;
                     return;
                 }
                 Dispose();
                 throw WindowsException.Get(error);
             }
 
-            current = moduleEntry;
+            _current = moduleEntry;
         }
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe bool MoveNext()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
             ModuleEntry moduleEntry = ModuleEntry.Create();
 
-            if (!IsStarted)
+            if (!_isStarted)
             {
-                IsStarted = true;
+                _isStarted = true;
 
-                int result2 = Kernel32.Module32FirstW(Handle, &moduleEntry);
+                int result2 = Kernel32.Module32FirstW(_handle, ref moduleEntry);
 
                 if (result2 != TRUE)
                 {
                     DWORD error = Kernel32.GetLastError();
                     if (error == 0x12) // ERROR_NO_MORE_FILES
                     {
-                        current = default;
+                        _current = default;
                         return false;
                     }
 
@@ -114,32 +111,21 @@ namespace Win32
                     throw WindowsException.Get(error);
                 }
 
-                current = moduleEntry;
+                _current = moduleEntry;
             }
 
-            int result = Kernel32.Module32NextW(Handle, &moduleEntry);
+            int result = Kernel32.Module32NextW(_handle, out moduleEntry);
             if (result != TRUE) return false;
-            current = moduleEntry;
+            _current = moduleEntry;
             return true;
         }
 
         /// <exception cref="WindowsException"/>
-        void ActualDispose()
-        {
-            if (IsDisposed) return;
-
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-
-            IsDisposed = true;
-        }
-        /// <exception cref="WindowsException"/>
-        ~ModuleSnapshotEnumerator() { ActualDispose(); }
-        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
-            ActualDispose();
-            GC.SuppressFinalize(this);
+            if (Kernel32.CloseHandle(_handle) == FALSE)
+            { throw WindowsException.Get(); }
+            _handle = 0;
         }
     }
 }

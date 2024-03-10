@@ -1,12 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace Win32;
 
-namespace Win32
+[StructLayout(LayoutKind.Sequential)]
+public struct SecurityAttributes
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SecurityAttributes
-    {
-        public DWORD Length;
-        public unsafe void* SecurityDescriptor;
-        public BOOL InheritHandle;
-    }
+    public DWORD Length;
+    public unsafe void* SecurityDescriptor;
+    public BOOL InheritHandle;
 }

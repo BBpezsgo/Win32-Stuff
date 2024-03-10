@@ -1,8 +1,6 @@
-﻿namespace Win32.Common
+﻿namespace Win32;
+
+public class GeneralException : Exception
 {
-    public class GeneralException : Exception
-    {
-        public GeneralException(string message) : base(message) { }
-        public GeneralException(string message, Exception inner) : base(message, inner) { }
-    }
+    public GeneralException(string message) : base(message) { }
 }

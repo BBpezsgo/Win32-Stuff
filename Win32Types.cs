@@ -58,7 +58,7 @@ global using ULONGLONG = System.UInt64;
 
 // Boolean Type
 
-global using static Win32.Common.Constants;
+global using static Win32.Constants;
 
 // Pointer Precision Types
 
@@ -72,12 +72,14 @@ global using UINT_PTR = nuint;
 
 global using WCHAR = System.Char;
 global using CHAR = System.Byte;
+global using UCHAR = System.Byte;
 
 // Other
 global using IID = System.Guid;
 global using REFIID = System.Guid;
 global using REFCLSID = System.Guid;
 global using ACCESS_MASK = System.UInt32;
+global using unsafe FARPROC = delegate* unmanaged<nint>;
 
 #region MCI
 
@@ -86,14 +88,30 @@ global using MCIDEVICEID = System.UInt32;
 
 #endregion
 
-namespace Win32.Common
-{
-    public static class Constants
-    {
-        public const BOOL FALSE = 0;
-        public const BOOL TRUE = 1;
+#region OTHER
 
-        public static readonly IID CLSID_WICImagingFactory = new(0x317d06e8, 0x5f24, 0x433d, 0xbd, 0xf7, 0x79, 0xce, 0x68, 0xd8, 0xab, 0xc2);
-        public static readonly IID BHID_ThumbnailHandler = new(0x7b2e650a, 0x8e20, 0x4f4a, 0xb0, 0x9e, 0x65, 0x97, 0xaf, 0xc7, 0x2f, 0xb0);
-    }
+global using VARTYPE = ushort;
+global using USHORT = ushort;
+
+global using OLECHAR = char;
+global using unsafe BSTR = char*;
+global using unsafe LPBSTR = char**;
+
+global using VARIANT_BOOL = short;
+global using DATE = double;
+global using SCODE = int;
+
+#endregion
+
+namespace Win32;
+
+public static class Constants
+{
+    public const BOOL FALSE = 0;
+    public const BOOL TRUE = 1;
+
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+    public static readonly IID CLSID_WICImagingFactory = new(0x317d06e8, 0x5f24, 0x433d, 0xbd, 0xf7, 0x79, 0xce, 0x68, 0xd8, 0xab, 0xc2);
+    public static readonly IID BHID_ThumbnailHandler = new(0x7b2e650a, 0x8e20, 0x4f4a, 0xb0, 0x9e, 0x65, 0x97, 0xaf, 0xc7, 0x2f, 0xb0);
+#pragma warning restore CA1707 // Identifiers should not contain underscores
 }

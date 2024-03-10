@@ -1,12 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace Win32;
 
-namespace Win32
+[StructLayout(LayoutKind.Sequential)]
+public unsafe struct ModuleInfo
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct ModuleInfo
-    {
-        public void* BaseOfDll;
-        public DWORD SizeOfImage;
-        public void* EntryPoint;
-    }
+    public void* BaseOfDll;
+    public DWORD SizeOfImage;
+    public void* EntryPoint;
 }

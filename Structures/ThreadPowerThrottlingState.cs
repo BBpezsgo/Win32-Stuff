@@ -1,12 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace Win32;
 
-namespace Win32
+[StructLayout(LayoutKind.Sequential)]
+public struct ThreadPowerThrottlingState
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ThreadPowerThrottlingState
-    {
-        public ULONG Version;
-        public ULONG ControlMask;
-        public ULONG StateMask;
-    }
+    public ULONG Version;
+    public ULONG ControlMask;
+    public ULONG StateMask;
 }

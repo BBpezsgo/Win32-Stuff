@@ -1,35 +1,30 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace Win32;
 
-namespace Win32
+public static class VirtualKeyboard
 {
-    public static class VirtualKeyboard
+    [MemberNotNullWhen(true, nameof(PromptMessage))]
+    public static bool ShouldShowUp => PromptMessage is not null;
+    public static string? PromptMessage { get; private set; }
+    public static string? DefaultValue { get; private set; }
+
+    static Action<string>? Response;
+
+    public static void Show(string prompt, Action<string> response, string? defaultValue = null)
     {
-        static string? _prompt;
-        static string? _defaultValue;
-        static Action<string>? _response;
+        PromptMessage = prompt;
+        DefaultValue = defaultValue;
+        Response = response;
+    }
 
-        [MemberNotNullWhen(true, nameof(PromptMessage))]
-        public static bool ShouldShowUp => _prompt is not null;
-        public static string? PromptMessage => _prompt;
-        public static string? DefaultValue => _defaultValue;
+    public static void Submit(string value)
+    {
+        Response?.Invoke(value);
+    }
 
-        public static void Show(string prompt, Action<string> response, string? defaultValue = null)
-        {
-            _prompt = prompt;
-            _defaultValue = defaultValue;
-            _response = response;
-        }
-
-        public static void Submit(string value)
-        {
-            _response?.Invoke(value);
-        }
-
-        public static void Hide()
-        {
-            _prompt = null;
-            _defaultValue = null;
-            _response = null;
-        }
+    public static void Hide()
+    {
+        PromptMessage = null;
+        DefaultValue = null;
+        Response = null;
     }
 }

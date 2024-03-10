@@ -1,3 +1,4 @@
-﻿global using System.Runtime.Versioning;
-global using Win32.Common;
-global using Win32.LowLevel;
+﻿global using System.Diagnostics;
+global using System.Diagnostics.CodeAnalysis;
+global using System.Runtime.InteropServices;
+global using System.Runtime.Versioning;

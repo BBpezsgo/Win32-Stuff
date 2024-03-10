@@ -1,135 +1,121 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Globalization;
 
-namespace Win32
+namespace Win32;
+
+[SupportedOSPlatform("windows")]
+public readonly struct ProcessSnapshot :
+    IEnumerable<ProcessEntry>,
+    IDisposable,
+    IEquatable<ProcessSnapshot>,
+    System.Numerics.IEqualityOperators<ProcessSnapshot, ProcessSnapshot, bool>
 {
-    [SupportedOSPlatform("windows")]
-    public readonly struct ProcessSnapshot :
-        IEnumerable<ProcessEntry>,
-        IDisposable,
-        IEquatable<ProcessSnapshot>,
-        System.Numerics.IEqualityOperators<ProcessSnapshot, ProcessSnapshot, bool>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly HANDLE Handle;
+
+    public ProcessSnapshot(HANDLE handle) => Handle = handle;
+
+    /// <exception cref="WindowsException"/>
+    public void Dispose()
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly HANDLE Handle;
-
-        public ProcessSnapshot(HANDLE handle) => Handle = handle;
-
-        /// <exception cref="WindowsException"/>
-        public void Dispose()
-        {
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-        }
-
-        public readonly IEnumerator<ProcessEntry> GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
-        readonly IEnumerator IEnumerable.GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
-
-        public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
-        public override bool Equals(object? obj) => obj is ProcessSnapshot snapshot && Equals(snapshot);
-        public bool Equals(ProcessSnapshot other) => Handle == other.Handle;
-        public override int GetHashCode() => Handle.GetHashCode();
-
-        public static bool operator ==(ProcessSnapshot left, ProcessSnapshot right) => left.Equals(right);
-        public static bool operator !=(ProcessSnapshot left, ProcessSnapshot right) => !left.Equals(right);
+        if (Kernel32.CloseHandle(Handle) == FALSE)
+        { throw WindowsException.Get(); }
     }
 
+    public readonly IEnumerator<ProcessEntry> GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
+    readonly IEnumerator IEnumerable.GetEnumerator() => new ProcessSnapshotEnumerator(Handle);
+
+    public override string ToString() => "0x" + Handle.ToString("x", CultureInfo.InvariantCulture).PadLeft(16, '0');
+    public override bool Equals(object? obj) => obj is ProcessSnapshot snapshot && Equals(snapshot);
+    public bool Equals(ProcessSnapshot other) => Handle == other.Handle;
+    public override int GetHashCode() => Handle.GetHashCode();
+
+    public static bool operator ==(ProcessSnapshot left, ProcessSnapshot right) => left.Equals(right);
+    public static bool operator !=(ProcessSnapshot left, ProcessSnapshot right) => !left.Equals(right);
+
     [SupportedOSPlatform("windows")]
-    public class ProcessSnapshotEnumerator : IEnumerator<ProcessEntry>
+    public struct ProcessSnapshotEnumerator : IEnumerator<ProcessEntry>
     {
-        readonly HANDLE Handle;
-        ProcessEntry current;
-        bool IsDisposed;
-        bool IsStarted;
+        HANDLE _handle;
+        ProcessEntry _current;
+        bool _isStarted;
 
         public ProcessSnapshotEnumerator(HANDLE handle)
         {
-            Handle = handle;
+            _handle = handle;
         }
 
-        public ProcessEntry Current => current;
-        object IEnumerator.Current => current;
+        public readonly ProcessEntry Current => _current;
+        readonly object IEnumerator.Current => _current;
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe void Reset()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
-            IsStarted = true;
+            _isStarted = true;
 
             ProcessEntry processEntry = ProcessEntry.Create();
 
-            int result = Kernel32.Process32FirstW(Handle, &processEntry);
+            int result = Kernel32.Process32FirstW(_handle, ref processEntry);
 
             if (result != TRUE)
             {
                 DWORD error = Kernel32.GetLastError();
                 if (error == 0x12) // ERROR_NO_MORE_FILES
                 {
-                    current = default;
+                    _current = default;
                     return;
                 }
                 Dispose();
                 throw WindowsException.Get(error);
             }
 
-            current = processEntry;
+            _current = processEntry;
         }
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>
         public unsafe bool MoveNext()
         {
-            ObjectDisposedException.ThrowIf(IsDisposed, this);
+            ObjectDisposedException.ThrowIf(_handle == 0, this);
 
             ProcessEntry processEntry = ProcessEntry.Create();
 
-            if (!IsStarted)
+            if (!_isStarted)
             {
-                IsStarted = true;
+                _isStarted = true;
 
-                int result2 = Kernel32.Process32FirstW(Handle, &processEntry);
+                int result2 = Kernel32.Process32FirstW(_handle, ref processEntry);
 
                 if (result2 != TRUE)
                 {
                     DWORD error = Kernel32.GetLastError();
                     if (error == 0x12) // ERROR_NO_MORE_FILES
                     {
-                        current = default;
+                        _current = default;
                         return false;
                     }
                     Dispose();
                     throw WindowsException.Get(error);
                 }
 
-                current = processEntry;
+                _current = processEntry;
             }
 
-            int result = Kernel32.Process32NextW(Handle, &processEntry);
+            int result = Kernel32.Process32NextW(_handle, out processEntry);
             if (result != TRUE) return false;
-            current = processEntry;
+            _current = processEntry;
             return true;
         }
 
         /// <exception cref="WindowsException"/>
-        void ActualDispose()
-        {
-            if (IsDisposed) return;
-
-            if (Kernel32.CloseHandle(Handle) == FALSE)
-            { throw WindowsException.Get(); }
-
-            IsDisposed = true;
-        }
-        /// <exception cref="WindowsException"/>
-        ~ProcessSnapshotEnumerator() { ActualDispose(); }
-        /// <exception cref="WindowsException"/>
         public void Dispose()
         {
-            ActualDispose();
-            GC.SuppressFinalize(this);
+            if (Kernel32.CloseHandle(_handle) == FALSE)
+            { throw WindowsException.Get(); }
+            _handle = 0;
         }
     }
 }

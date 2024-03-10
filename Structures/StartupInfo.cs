@@ -1,33 +1,30 @@
 ﻿global using STARTUPINFOW = Win32.StartupInfo;
 
-using System.Runtime.InteropServices;
+namespace Win32;
 
-namespace Win32
+[StructLayout(LayoutKind.Sequential)]
+public struct StartupInfo
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct StartupInfo
-    {
-        public DWORD StructSize;
+    public DWORD StructSize;
 
-        readonly unsafe WCHAR* Reserved;
+    readonly unsafe WCHAR* Reserved;
 
-        public unsafe WCHAR* Desktop;
-        public unsafe WCHAR* Title;
-        public DWORD dwX;
-        public DWORD dwY;
-        public DWORD dwXSize;
-        public DWORD dwYSize;
-        public DWORD dwXCountChars;
-        public DWORD dwYCountChars;
-        public DWORD FillAttribute;
-        public DWORD Flags;
-        public WORD ShowWindow;
+    public unsafe WCHAR* Desktop;
+    public unsafe WCHAR* Title;
+    public DWORD X;
+    public DWORD Y;
+    public DWORD XSize;
+    public DWORD YSize;
+    public DWORD XCountChars;
+    public DWORD YCountChars;
+    public DWORD FillAttribute;
+    public DWORD Flags;
+    public WORD ShowWindow;
 
-        readonly WORD Reserved2;
-        readonly unsafe BYTE* Reserved3;
+    readonly WORD Reserved2;
+    readonly unsafe BYTE* Reserved3;
 
-        public HANDLE StdInput;
-        public HANDLE StdOutput;
-        public HANDLE StdError;
-    }
+    public HANDLE StdInput;
+    public HANDLE StdOutput;
+    public HANDLE StdError;
 }
