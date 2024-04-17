@@ -371,7 +371,7 @@ public sealed class Form : Window, IDisposable
             case WindowMessage.CCM_SETVERSION: break;
             case WindowMessage.CCM_SETWINDOWTHEME: break;
             case WindowMessage.WM_NOTIFY:
-                NotificationMessageDetails* details = (NotificationMessageDetails*)lParam;
+                // NotificationMessageDetails* details = (NotificationMessageDetails*)lParam;
                 break;
             case WindowMessage.WM_NOTIFYFORMAT: break;
             #endregion

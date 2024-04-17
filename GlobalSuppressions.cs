@@ -30,3 +30,4 @@
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression")]
 [assembly: SuppressMessage("Design", "CA1003:Use generic event handler instances")]
 [assembly: SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
+[assembly: SuppressMessage("Interoperability", "SYSLIB1096:Convert to 'GeneratedComInterface'")]

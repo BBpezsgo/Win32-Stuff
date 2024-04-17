@@ -1,6 +1,7 @@
 ﻿namespace Win32;
 
 [Flags]
+[SuppressMessage("Roslynator", "RCS1234:Duplicate enum value")]
 public enum MemoryProtectionFlags : DWORD
 {
     #region General

@@ -119,78 +119,76 @@ public readonly struct ConsoleImage
     {
         ReadOnlySpan<byte> data = ToBytes();
         StringBuilder builder = new(data.Length * 4);
-        if (true)
+        builder.Append($"public static readonly {nameof(ConsoleImage)} ImageData = {nameof(ConsoleImage)}.{nameof(FromBytes)}(\r\n    \"");
+        int rowWidth = 0;
+        for (int i = 0; i < data.Length; i++)
         {
-            builder.Append($"public static readonly {nameof(ConsoleImage)} ImageData = {nameof(ConsoleImage)}.{nameof(FromBytes)}(\r\n    \"");
-            int rowWidth = 0;
-            for (int i = 0; i < data.Length; i++)
-            {
-                // if (rowWidth >= 32)
-                // {
-                //     builder.Append("\"u8");
-                //     if (rowWidth < 38)
-                //     { builder.Append(' ', 38 - rowWidth); }
-                //     builder.Append("+\r\n    \"");
-                //     rowWidth = 0;
-                // }
+            // if (rowWidth >= 32)
+            // {
+            //     builder.Append("\"u8");
+            //     if (rowWidth < 38)
+            //     { builder.Append(' ', 38 - rowWidth); }
+            //     builder.Append("+\r\n    \"");
+            //     rowWidth = 0;
+            // }
 
-                byte c = data[i];
-                if (char.IsAsciiLetterOrDigit((char)c))
+            byte c = data[i];
+            if (char.IsAsciiLetterOrDigit((char)c))
+            {
+                builder.Append((char)c);
+                rowWidth++;
+            }
+            else
+            {
+                switch (c)
                 {
-                    builder.Append((char)c);
-                    rowWidth++;
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case (byte)'\0':
-                            builder.Append(@"\0");
-                            rowWidth += 2;
-                            break;
-                        case (byte)'\n':
-                            builder.Append(@"\n");
-                            rowWidth += 2;
-                            break;
-                        case (byte)'\r':
-                            builder.Append(@"\r");
-                            rowWidth += 2;
-                            break;
-                        case (byte)'\v':
-                            builder.Append(@"\v");
-                            rowWidth += 2;
-                            break;
-                        case (byte)'\t':
-                            builder.Append(@"\t");
-                            rowWidth += 2;
-                            break;
-                        default:
+                    case (byte)'\0':
+                        builder.Append(@"\0");
+                        rowWidth += 2;
+                        break;
+                    case (byte)'\n':
+                        builder.Append(@"\n");
+                        rowWidth += 2;
+                        break;
+                    case (byte)'\r':
+                        builder.Append(@"\r");
+                        rowWidth += 2;
+                        break;
+                    case (byte)'\v':
+                        builder.Append(@"\v");
+                        rowWidth += 2;
+                        break;
+                    case (byte)'\t':
+                        builder.Append(@"\t");
+                        rowWidth += 2;
+                        break;
+                    default:
 #pragma warning disable CA1305
-                            builder.Append($"\\x0{Convert.ToString(c, 16).PadLeft(2, '0')}");
+                        builder.Append($"\\x0{Convert.ToString(c, 16).PadLeft(2, '0')}");
 #pragma warning restore CA1305
-                            rowWidth += 5;
-                            break;
-                    }
+                        rowWidth += 5;
+                        break;
                 }
             }
-            builder.Append("\"u8);\r\n");
         }
-        else
+        builder.Append("\"u8);\r\n");
+
+        /*
+        builder.Append("public static readonly byte[] ImageData = new byte[] {\r\n");
+        for (int i = 0; i < data.Length; i++)
         {
-            builder.Append("public static readonly byte[] ImageData = new byte[] {\r\n");
-            for (int i = 0; i < data.Length; i++)
+            if (i > 0 && i % 16 == 0)
             {
-                if (i > 0 && i % 16 == 0)
-                {
-                    builder.Append("\r\n");
-                }
+                builder.Append("\r\n");
+            }
 
 #pragma warning disable CA1305
-                builder.Append($"0x{Convert.ToString(data[i], 16)}, ");
+            builder.Append($"0x{Convert.ToString(data[i], 16)}, ");
 #pragma warning restore CA1305
-            }
-            builder.Append("}\r\n");
         }
+        builder.Append("}\r\n");
+        */
+
         return builder.ToString();
     }
 

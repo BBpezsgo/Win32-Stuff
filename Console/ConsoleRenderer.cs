@@ -71,15 +71,18 @@ public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
 
     /// <exception cref="WindowsException"/>
     [SupportedOSPlatform("windows")]
-    public override void Render()
+    public override unsafe void Render()
     {
-        if (Kernel32.WriteConsoleOutput(
-            Handle,
-            ConsoleBuffer,
-            Size,
-            default,
-            ref ConsoleRect) == FALSE)
-        { throw WindowsException.Get(); }
+        fixed (ConsoleChar* consoleBufferPtr = ConsoleBuffer)
+        {
+            if (Kernel32.WriteConsoleOutput(
+                Handle,
+                consoleBufferPtr,
+                Size,
+                default,
+                ref ConsoleRect) == FALSE)
+            { throw WindowsException.Get(); }
+        }
     }
 
     /// <exception cref="WindowsException"/>

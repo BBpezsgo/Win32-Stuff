@@ -47,7 +47,7 @@ public abstract class DC : IDisposable, IEquatable<DC>
         SIZE size = default;
         fixed (WCHAR* textPtr = text)
         {
-            if (Gdi32.GetTextExtentPoint32W(Handle, textPtr, text.Length, &size) == FALSE)
+            if (Gdi32.GetTextExtentPoint32W(Handle, textPtr, text.Length, out size) == FALSE)
             { throw new GdiException($"{nameof(Gdi32.GetTextExtentPoint32W)} has failed"); }
         }
         return size;
@@ -56,13 +56,13 @@ public abstract class DC : IDisposable, IEquatable<DC>
     /// <exception cref="GdiException"/>
     public unsafe void MoveTo(POINT point)
     {
-        if (Gdi32.MoveToEx(Handle, point.X, point.Y, null) == FALSE)
+        if (Gdi32.MoveToEx(Handle, point.X, point.Y, out _) == FALSE)
         { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
     }
     /// <exception cref="GdiException"/>
     public unsafe void MoveTo(int x, int y)
     {
-        if (Gdi32.MoveToEx(Handle, x, y, null) == 0)
+        if (Gdi32.MoveToEx(Handle, x, y, out _) == 0)
         { throw new GdiException($"{nameof(Gdi32.MoveToEx)} has failed"); }
     }
 

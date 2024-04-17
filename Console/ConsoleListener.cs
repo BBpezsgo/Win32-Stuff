@@ -33,7 +33,7 @@ public static class ConsoleListener
 
     /// <exception cref="WindowsException"/>
     [SupportedOSPlatform("windows")]
-    static void ThreadJob()
+    static unsafe void ThreadJob()
     {
         InputEvent[] records = new InputEvent[MaxRecordReads];
 
@@ -43,8 +43,11 @@ public static class ConsoleListener
 
             Array.Clear(records);
 
-            if (Kernel32.ReadConsoleInput(Handle, records, MaxRecordReads, ref numRead) == 0)
-            { throw WindowsException.Get(); }
+            fixed (InputEvent* recordsPtr = records)
+            {
+                if (Kernel32.ReadConsoleInput(Handle, recordsPtr, MaxRecordReads, ref numRead) == 0)
+                { throw WindowsException.Get(); }
+            }
 
             if (!Run) break;
 
@@ -67,7 +70,10 @@ public static class ConsoleListener
 
         {
             uint numWritten = 0;
-            _ = Kernel32.WriteConsoleInput(Handle, records, 1, ref numWritten);
+            fixed (InputEvent* recordsPtr = records)
+            {
+                _ = Kernel32.WriteConsoleInput(Handle, recordsPtr, 1, ref numWritten);
+            }
             System.Console.CursorVisible = true;
         }
     }

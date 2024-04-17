@@ -168,7 +168,7 @@ public static class BufferUtils
 
         if (destinationX + source.Length > bufferWidth)
         {
-            if (bufferWidth - destinationX <= 0) return;
+            if (bufferWidth <= destinationX) return;
             source = source[..(bufferWidth - destinationX)];
         }
 

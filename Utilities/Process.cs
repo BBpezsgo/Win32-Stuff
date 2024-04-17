@@ -335,7 +335,7 @@ public readonly struct Process :
             DWORD bufferSize = 128;
             fixed (WCHAR* buffer = new string('\0', (int)bufferSize))
             {
-                if (Kernel32.QueryFullProcessImageNameW(Handle, 0, buffer, &bufferSize) == FALSE)
+                if (Kernel32.QueryFullProcessImageNameW(Handle, 0, buffer, ref bufferSize) == FALSE)
                 { throw WindowsException.Get(); }
                 return new string(buffer, 0, (int)bufferSize);
             }
@@ -354,7 +354,7 @@ public readonly struct Process :
         STARTUPINFOW startupInfo
         )
     {
-        ProcessInformation result = default;
+        ProcessInformation result;
         fixed (WCHAR* applicationNamePtr = applicationName)
         fixed (WCHAR* commandLinePtr = commandLine)
         fixed (WCHAR* currentDirectoryPtr = currentDirectory)
@@ -369,7 +369,7 @@ public readonly struct Process :
                 environment,
                 currentDirectoryPtr,
                 &startupInfo,
-                &result
+                out result
                 ) == FALSE)
             { throw WindowsException.Get(); }
         }

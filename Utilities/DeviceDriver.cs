@@ -20,8 +20,7 @@ public readonly struct DeviceDriver : IEquatable<DeviceDriver>
     public static unsafe DeviceDriver[] GetDeviceDrivers()
     {
         void** deviceDrivers = stackalloc void*[128];
-        DWORD got = default;
-        if (Kernel32.EnumDeviceDrivers(deviceDrivers, (uint)(128 * sizeof(void*)), &got) == 0)
+        if (Kernel32.EnumDeviceDrivers(deviceDrivers, (uint)(128 * sizeof(void*)), out DWORD got) == 0)
         { throw WindowsException.Get(); }
         got /= (uint)sizeof(void*);
         DeviceDriver[] result = new DeviceDriver[got];

@@ -86,12 +86,12 @@ public static partial class Kernel32
       int nPriority
     );
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe BOOL SetThreadInformation(
-      [In] HANDLE hThread,
-      [In] ThreadInformationClass ThreadInformationClass,
-           void* ThreadInformation,
-      [In] DWORD ThreadInformationSize
+    [LibraryImport("kernel32.dll")]
+    public static unsafe partial BOOL SetThreadInformation(
+      HANDLE hThread,
+      ThreadInformationClass ThreadInformationClass,
+      void* ThreadInformation,
+      DWORD ThreadInformationSize
     );
 
     [LibraryImport("kernel32.dll")]
@@ -413,26 +413,26 @@ public static partial class Kernel32
       CHAR* lpProcName
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe DWORD GetDeviceDriverFileNameW(
-      [In] void* ImageBase,
-      [Out] WCHAR* lpFilename,
-      [In] DWORD nSize
+    [LibraryImport("Psapi.dll")]
+    public static unsafe partial DWORD GetDeviceDriverFileNameW(
+      void* ImageBase,
+      WCHAR* lpFilename, // out
+      DWORD nSize
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe DWORD GetDeviceDriverBaseNameW(
-      [In] void* ImageBase,
-           WCHAR* lpFilename,
-      [In] DWORD nSize
+    [LibraryImport("Psapi.dll")]
+    public static unsafe partial DWORD GetDeviceDriverBaseNameW(
+      void* ImageBase,
+      WCHAR* lpFilename,
+      DWORD nSize
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe BOOL EnumDeviceDrivers(
-      [Out] void** lpImageBase,
-      [In] DWORD cb,
-      [Out] DWORD* lpcbNeeded
-);
+    [LibraryImport("Psapi.dll")]
+    public static unsafe partial BOOL EnumDeviceDrivers(
+      void** lpImageBase,
+      DWORD cb,
+      out DWORD lpcbNeeded
+    );
 
     [LibraryImport("Psapi.dll")]
     public static unsafe partial BOOL GetModuleInformation(
@@ -442,42 +442,42 @@ public static partial class Kernel32
       DWORD cb
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe DWORD GetModuleBaseNameW(
-      [In] HANDLE hProcess,
-      [In, Optional] HMODULE hModule,
-      [Out] WCHAR* lpBaseName,
-      [In] DWORD nSize
+    [LibraryImport("Psapi.dll")]
+    public static unsafe partial DWORD GetModuleBaseNameW(
+      HANDLE hProcess,
+      [Optional] HMODULE hModule,
+      WCHAR* lpBaseName, // out
+      DWORD nSize
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe DWORD GetModuleFileNameExW(
-      [In] HANDLE hProcess,
-      [In, Optional] HMODULE hModule,
-      [Out] WCHAR* lpFilename,
-      [In] DWORD nSize
+    [LibraryImport("Psapi.dll")]
+    public static unsafe partial DWORD GetModuleFileNameExW(
+      HANDLE hProcess,
+      [Optional] HMODULE hModule,
+      WCHAR* lpFilename, // out
+      DWORD nSize
     );
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe BOOL CreateProcessW(
-      [In, Optional] WCHAR* lpApplicationName,
-      [In, Out, Optional] WCHAR* lpCommandLine,
-      [In, Optional] SecurityAttributes* lpProcessAttributes,
-      [In, Optional] SecurityAttributes* lpThreadAttributes,
-      [In] BOOL bInheritHandles,
-      [In] DWORD dwCreationFlags,
-      [In, Optional] void* lpEnvironment,
-      [In, Optional] WCHAR* lpCurrentDirectory,
-      [In] STARTUPINFOW* lpStartupInfo,
-      [Out] ProcessInformation* lpProcessInformation
+    [LibraryImport("kernel32.dll")]
+    public static unsafe partial BOOL CreateProcessW(
+      [Optional] WCHAR* lpApplicationName,
+      [Optional] WCHAR* lpCommandLine, // in out
+      [Optional] SecurityAttributes* lpProcessAttributes,
+      [Optional] SecurityAttributes* lpThreadAttributes,
+      BOOL bInheritHandles,
+      DWORD dwCreationFlags,
+      [Optional] void* lpEnvironment,
+      [Optional] WCHAR* lpCurrentDirectory,
+      STARTUPINFOW* lpStartupInfo,
+      out ProcessInformation lpProcessInformation
     );
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern unsafe BOOL QueryFullProcessImageNameW(
-      [In] HANDLE hProcess,
-      [In] DWORD dwFlags,
-      [Out] WCHAR* lpExeName,
-      [In, Out] DWORD* lpdwSize
+    [LibraryImport("kernel32.dll")]
+    public static unsafe partial BOOL QueryFullProcessImageNameW(
+      HANDLE hProcess,
+      DWORD dwFlags,
+      WCHAR* lpExeName, // out
+      ref DWORD lpdwSize
     );
 
     [LibraryImport("kernel32.dll")]
@@ -501,10 +501,10 @@ public static partial class Kernel32
       HANDLE hProcess
     );
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern BOOL TerminateThread(
-      [In, Out] HANDLE hThread,
-      [In] DWORD dwExitCode
+    [LibraryImport("kernel32.dll")]
+    public static partial BOOL TerminateThread(
+      HANDLE hThread,
+      DWORD dwExitCode
     );
 
     [LibraryImport("kernel32.dll")]
@@ -521,16 +521,16 @@ public static partial class Kernel32
 
     [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
     public static extern unsafe BOOL EnumProcessModules(
-      [In] HANDLE hProcess,
+      HANDLE hProcess,
       [Out] HMODULE* lphModule,
-      [In] DWORD cb,
+      DWORD cb,
       [Out] DWORD* lpcbNeeded
     );
 
     [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
     public static extern unsafe BOOL EnumProcesses(
         [Out] DWORD* lpidProcess,
-        [In] DWORD cb,
+        DWORD cb,
         [Out] DWORD* lpcbNeeded
     );
 
@@ -984,20 +984,22 @@ public static partial class Kernel32
     );
 
     /// <include file="Docs/Kernel32/ReadConsoleInput.xml" path="/*"/>
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern BOOL ReadConsoleInput(
-        [In] HANDLE hConsoleInput,
-        [Out] Console.InputEvent[] lpBuffer,
-        [In] DWORD nLength,
-        ref DWORD lpNumberOfEventsRead);
+    [LibraryImport("kernel32.dll")]
+    public static unsafe partial BOOL ReadConsoleInput(
+      HANDLE hConsoleInput,
+      Console.InputEvent* lpBuffer, // out
+      DWORD nLength,
+      ref DWORD lpNumberOfEventsRead
+    );
 
     /// <include file="Docs/Kernel32/WriteConsoleInput.xml" path="/*"/>
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    public static extern BOOL WriteConsoleInput(
-        [In] HANDLE hConsoleInput,
-        [In] Console.InputEvent[] lpBuffer,
-        [In] DWORD nLength,
-        ref DWORD lpNumberOfEventsWritten);
+    [LibraryImport("kernel32.dll")]
+    public static unsafe partial BOOL WriteConsoleInput(
+      HANDLE hConsoleInput,
+      Console.InputEvent* lpBuffer,
+      DWORD nLength,
+      ref DWORD lpNumberOfEventsWritten
+    );
 
     /// <include file="Docs/Kernel32/GetConsoleCP.xml" path="/*"/>
     [LibraryImport("Kernel32.dll")]
@@ -1035,36 +1037,40 @@ public static partial class Kernel32
 
     [LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true)]
     public static unsafe partial HANDLE CreateFile(
-        WCHAR* lpFileName,
-        DWORD dwDesiredAccess,
-        DWORD dwShareMode,
-        [Optional] SecurityAttributes* lpSecurityAttributes,
-        CreateFileFlags dwCreationDisposition,
-        DWORD dwFlagsAndAttributes,
-        [Optional] HANDLE hTemplateFile);
+      WCHAR* lpFileName,
+      DWORD dwDesiredAccess,
+      DWORD dwShareMode,
+      [Optional] SecurityAttributes* lpSecurityAttributes,
+      CreateFileFlags dwCreationDisposition,
+      DWORD dwFlagsAndAttributes,
+      [Optional] HANDLE hTemplateFile
+    );
 
     /// <include file="Docs/Kernel32/WriteConsoleOutput.xml" path="/*"/>
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-    public static extern BOOL WriteConsoleOutput(
-        [In] HANDLE hConsoleOutput,
-        [In] Console.ConsoleChar[] lpBuffer,
-        [In] Console.SmallSize dwBufferSize,
-        [In] COORD dwBufferCoord,
-        [In, Out] ref SMALL_RECT lpWriteRegion);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static unsafe partial BOOL WriteConsoleOutput(
+      HANDLE hConsoleOutput,
+      Console.ConsoleChar* lpBuffer,
+      Console.SmallSize dwBufferSize,
+      COORD dwBufferCoord,
+      ref SMALL_RECT lpWriteRegion
+    );
 
     /// <include file="Docs/Kernel32/WriteConsoleOutput.xml" path="/*"/>
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-    public static extern BOOL WriteConsoleOutputW(
-        SafeFileHandle hConsoleOutput,
-        [In] Console.ConsoleChar[] lpBuffer,
-        [In] Console.SmallSize dwBufferSize,
-        [In] COORD dwBufferCoord,
-        [In, Out] ref SMALL_RECT lpWriteRegion);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static unsafe partial BOOL WriteConsoleOutputW(
+      SafeFileHandle hConsoleOutput,
+      Console.ConsoleChar* lpBuffer,
+      Console.SmallSize dwBufferSize,
+      COORD dwBufferCoord,
+      ref SMALL_RECT lpWriteRegion
+    );
 
     [LibraryImport("kernel32.dll")]
     public static partial BOOL GetConsoleMode(
-        HANDLE hConsoleInput,
-        out DWORD lpMode);
+      HANDLE hConsoleInput,
+      out DWORD lpMode
+    );
 
     [LibraryImport("kernel32.dll")]
     public static partial BOOL SetConsoleMode(
@@ -1075,13 +1081,14 @@ public static partial class Kernel32
     [LibraryImport("kernel32.dll")]
     public static partial DWORD GetLastError();
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern unsafe DWORD FormatMessage(
-        [In] DWORD dwFlags,
-        [In, Optional] IntPtr lpSource,
-        [In] DWORD dwMessageId,
-        [In] DWORD dwLanguageId,
-        [Out] WCHAR* lpBuffer,
-        [In] DWORD nSize,
-        [In, Optional] IntPtr Arguments);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static unsafe partial DWORD FormatMessage(
+      DWORD dwFlags,
+      [Optional] IntPtr lpSource,
+      DWORD dwMessageId,
+      DWORD dwLanguageId,
+      WCHAR* lpBuffer, // out
+      DWORD nSize,
+      [Optional] IntPtr Arguments
+    );
 }
