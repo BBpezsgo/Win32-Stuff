@@ -45,7 +45,7 @@ public static class ConsoleListener
 
             fixed (InputEvent* recordsPtr = records)
             {
-                if (Kernel32.ReadConsoleInput(Handle, recordsPtr, MaxRecordReads, ref numRead) == 0)
+                if (Kernel32.ReadConsoleInputW(Handle, recordsPtr, MaxRecordReads, ref numRead) == 0)
                 { throw WindowsException.Get(); }
             }
 
@@ -72,7 +72,7 @@ public static class ConsoleListener
             uint numWritten = 0;
             fixed (InputEvent* recordsPtr = records)
             {
-                _ = Kernel32.WriteConsoleInput(Handle, recordsPtr, 1, ref numWritten);
+                _ = Kernel32.WriteConsoleInputW(Handle, recordsPtr, 1, ref numWritten);
             }
             System.Console.CursorVisible = true;
         }

@@ -985,7 +985,7 @@ public static partial class Kernel32
 
     /// <include file="Docs/Kernel32/ReadConsoleInput.xml" path="/*"/>
     [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL ReadConsoleInput(
+    public static unsafe partial BOOL ReadConsoleInputW(
       HANDLE hConsoleInput,
       Console.InputEvent* lpBuffer, // out
       DWORD nLength,
@@ -994,7 +994,7 @@ public static partial class Kernel32
 
     /// <include file="Docs/Kernel32/WriteConsoleInput.xml" path="/*"/>
     [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteConsoleInput(
+    public static unsafe partial BOOL WriteConsoleInputW(
       HANDLE hConsoleInput,
       Console.InputEvent* lpBuffer,
       DWORD nLength,

@@ -3,10 +3,10 @@
 /// <summary>
 /// Describes an input event in the console input buffer.
 /// These records can be read from the input buffer by using
-/// the <see cref="Kernel32.ReadConsoleInput"/> or
+/// the <see cref="Kernel32.ReadConsoleInputW"/> or
 /// <see cref="Kernel32.PeekConsoleInput"/> function, or
 /// written to the input buffer by using
-/// the <see cref="Kernel32.WriteConsoleInput"/> function.
+/// the <see cref="Kernel32.WriteConsoleInputW"/> function.
 /// </summary>
 [StructLayout(LayoutKind.Explicit)]
 public readonly struct InputEvent

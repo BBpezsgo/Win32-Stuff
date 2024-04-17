@@ -33,7 +33,7 @@ public static class InputMode
     /// by mouse movement and button presses are placed in the input
     /// buffer. These events are discarded by <see cref="Kernel32.ReadFile"/>
     /// or <see cref="Kernel32.ReadConsole"/>, even when this mode
-    /// is enabled. The <see cref="Kernel32.ReadConsoleInput"/> function
+    /// is enabled. The <see cref="Kernel32.ReadConsoleInputW"/> function
     /// can be used to read <see cref="MouseEvent"/> input records
     /// from the input buffer.
     /// </summary>
@@ -63,7 +63,7 @@ public static class InputMode
     /// User interactions that change the size of the console screen buffer
     /// are reported in the console's input buffer. Information about these
     /// events can be read from the input buffer by applications using the
-    /// <see cref="Kernel32.ReadConsoleInput"/> function, but not by those
+    /// <see cref="Kernel32.ReadConsoleInputW"/> function, but not by those
     /// using <see cref="Kernel32.ReadFile"/> or
     /// <see cref="Kernel32.ReadConsole"/>.
     /// </summary>
