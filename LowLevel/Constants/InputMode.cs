@@ -169,7 +169,7 @@ public static class InputMode
     /// <summary>
     /// <para>
     /// The APIs for writing character attributes including
-    /// <see cref="Kernel32.WriteConsoleOutput"/> and
+    /// <see cref="Kernel32.WriteConsoleOutputW"/> and
     /// <see cref="Kernel32.WriteConsoleOutputAttribute"/> allow
     /// the usage of flags from character attributes to adjust the
     /// color of the foreground and background of text. Additionally,

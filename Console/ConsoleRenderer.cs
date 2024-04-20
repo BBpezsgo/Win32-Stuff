@@ -75,7 +75,7 @@ public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     {
         fixed (ConsoleChar* consoleBufferPtr = ConsoleBuffer)
         {
-            if (Kernel32.WriteConsoleOutput(
+            if (Kernel32.WriteConsoleOutputW(
                 Handle,
                 consoleBufferPtr,
                 Size,

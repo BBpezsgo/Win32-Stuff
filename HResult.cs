@@ -67,7 +67,7 @@ public readonly struct HResult : IEquatable<HResult>
         {
             fixed (char* buffer = new string('\0', MESSAGE_BUFFER_SIZE))
             {
-                uint messageLength = Kernel32.FormatMessage(
+                uint messageLength = Kernel32.FormatMessageW(
                     FormatMessageAttributes.FormatMessageFromSystem |
                     FormatMessageAttributes.FormatMessageIgnoreInserts,
                     IntPtr.Zero,

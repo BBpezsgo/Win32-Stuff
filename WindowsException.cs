@@ -67,7 +67,7 @@ public class WindowsException : Exception
     {
         fixed (char* buffer = new string('\0', MESSAGE_BUFFER_SIZE))
         {
-            uint messageLength = Kernel32.FormatMessage(
+            uint messageLength = Kernel32.FormatMessageW(
                 FormatMessageAttributes.FormatMessageFromSystem |
                 FormatMessageAttributes.FormatMessageIgnoreInserts,
                 IntPtr.Zero,
@@ -103,7 +103,7 @@ public static class FormatMessageAttributes
     /// </para>
     /// <para>
     /// If the length of the formatted message exceeds 128K bytes,
-    /// then <see cref="Kernel32.FormatMessage"/> will fail and a subsequent
+    /// then <see cref="Kernel32.FormatMessageW"/> will fail and a subsequent
     /// call to <see cref="Kernel32.GetLastError"/> will return <c>ERROR_MORE_DATA</c>.
     /// </para>
     /// <para>
@@ -113,7 +113,7 @@ public static class FormatMessageAttributes
     /// <para>
     /// <b>Windows Server 2003 and Windows XP:</b><br/>
     /// If the length of the formatted message exceeds 128K bytes,
-    /// then <see cref="Kernel32.FormatMessage"/> will not automatically
+    /// then <see cref="Kernel32.FormatMessageW"/> will not automatically
     /// fail with an error of <c>ERROR_MORE_DATA</c>.
     /// </para>
     /// </remarks>

@@ -1048,7 +1048,7 @@ public static partial class Kernel32
 
     /// <include file="Docs/Kernel32/WriteConsoleOutput.xml" path="/*"/>
     [LibraryImport("kernel32.dll", SetLastError = true)]
-    public static unsafe partial BOOL WriteConsoleOutput(
+    public static unsafe partial BOOL WriteConsoleOutputW(
       HANDLE hConsoleOutput,
       Console.ConsoleChar* lpBuffer,
       Console.SmallSize dwBufferSize,
@@ -1082,7 +1082,7 @@ public static partial class Kernel32
     public static partial DWORD GetLastError();
 
     [LibraryImport("kernel32.dll", SetLastError = true)]
-    public static unsafe partial DWORD FormatMessage(
+    public static unsafe partial DWORD FormatMessageW(
       DWORD dwFlags,
       [Optional] IntPtr lpSource,
       DWORD dwMessageId,
