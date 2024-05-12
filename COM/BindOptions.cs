@@ -9,7 +9,7 @@ public struct BindOptions
     public DWORD Mode;
     public DWORD TickCountDeadline;
 
-    BindOptions(uint cbStruct) : this() => this.StructSize = cbStruct;
+    BindOptions(uint structSize) : this() => StructSize = structSize;
 
     public static unsafe BindOptions Create() => new((uint)sizeof(BindOptions));
 }

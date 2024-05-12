@@ -3,7 +3,7 @@ using Win32.Gdi32;
 
 namespace Win32.Console;
 
-public struct Ansi
+public static class Ansi
 {
     public const char ESC = '\x1B';
     public const char CSI = '[';

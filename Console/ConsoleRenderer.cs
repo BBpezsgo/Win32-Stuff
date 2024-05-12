@@ -4,18 +4,16 @@ namespace Win32.Console;
 
 public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
 {
-    protected HANDLE Handle;
-
     public override short Width => BufferWidth;
     public override short Height => BufferHeight;
 
     public override Span<ConsoleChar> Buffer => ConsoleBuffer;
 
-    protected short BufferWidth;
-    protected short BufferHeight;
-
-    protected ConsoleChar[] ConsoleBuffer;
-    protected SMALL_RECT ConsoleRect;
+    readonly HANDLE Handle;
+    short BufferWidth;
+    short BufferHeight;
+    ConsoleChar[] ConsoleBuffer;
+    SMALL_RECT ConsoleRect;
 
     /// <exception cref="ArgumentOutOfRangeException"/>
     public override ref ConsoleChar this[int i] => ref ConsoleBuffer[i];

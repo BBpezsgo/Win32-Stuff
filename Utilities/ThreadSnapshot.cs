@@ -49,13 +49,13 @@ public readonly struct ThreadSnapshot :
         ThreadEntry _current;
         bool _isStarted;
 
+        readonly ThreadEntry IEnumerator<ThreadEntry>.Current => _current;
+        readonly object IEnumerator.Current => _current;
+
         public ThreadSnapshotEnumerator(HANDLE handle)
         {
             _handle = handle;
         }
-
-        public readonly ThreadEntry Current => _current;
-        readonly object IEnumerator.Current => _current;
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>

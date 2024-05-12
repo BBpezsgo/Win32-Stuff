@@ -5,7 +5,7 @@ namespace Win32.Console;
 
 public class AnsiBuilder
 {
-    protected readonly StringBuilder Builder;
+    readonly StringBuilder Builder;
 
     public int Length
     {

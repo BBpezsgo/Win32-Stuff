@@ -49,13 +49,13 @@ public readonly struct HeapSnapshot :
         HeapList _current;
         bool _isStarted;
 
+        readonly HeapList IEnumerator<HeapList>.Current => _current;
+        readonly object IEnumerator.Current => _current;
+
         public HeapSnapshotEnumerator(HANDLE handle)
         {
             _handle = handle;
         }
-
-        public readonly HeapList Current => _current;
-        readonly object IEnumerator.Current => _current;
 
         /// <exception cref="ObjectDisposedException"/>
         /// <exception cref="WindowsException"/>

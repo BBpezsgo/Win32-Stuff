@@ -8,12 +8,9 @@ public class AnsiRenderer : Renderer<ConsoleChar>
     public override short Width => BufferWidth;
     public override short Height => BufferHeight;
 
-    protected short BufferWidth;
-    protected short BufferHeight;
-
-    protected ConsoleChar[] ConsoleBuffer;
-    protected SMALL_RECT ConsoleRect;
-
+    short BufferWidth;
+    short BufferHeight;
+    ConsoleChar[] ConsoleBuffer;
     readonly StringBuilder Builder;
 
     /// <exception cref="ArgumentOutOfRangeException"/>
@@ -56,7 +53,6 @@ public class AnsiRenderer : Renderer<ConsoleChar>
         BufferHeight = bufferHeight;
 
         ConsoleBuffer = new ConsoleChar[BufferWidth * BufferHeight];
-        ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
 
         if (OperatingSystem.IsWindows())
         { Ansi.EnableVirtualTerminalSequences(); }
@@ -121,6 +117,5 @@ public class AnsiRenderer : Renderer<ConsoleChar>
 
         if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
         { ConsoleBuffer = new ConsoleChar[BufferWidth * BufferHeight]; }
-        ConsoleRect = new SMALL_RECT((SHORT)0, (SHORT)0, BufferWidth, BufferHeight);
     }
 }

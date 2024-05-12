@@ -30,21 +30,18 @@ public static class ConsoleMouse
     static COORD leftPressedAt;
 
     static int scroll;
-    static int scrollDelta;
-
-    static bool wasUsed;
 
     public static COORD RecordedConsolePosition => recordedConsolePosition;
     public static COORD LeftPressedAt => leftPressedAt;
-    public static bool WasUsed => wasUsed;
-    public static int ScrollDelta => scrollDelta;
+    public static bool WasUsed { get; private set; }
+    public static int ScrollDelta { get; private set; }
 
     public static bool IsPressed(MouseButton button) => Accumulated[(uint)button] || Stage1[(uint)button] || Stage2[(uint)button];
     public static bool IsHold(MouseButton button) => Stage2[(uint)button];
     public static bool IsDown(MouseButton button) => Stage1[(uint)button] && !Stage2[(uint)button] && !Stage3[(uint)button];
     public static bool IsUp(MouseButton button) => !Stage1[(uint)button] && !Stage2[(uint)button] && Stage3[(uint)button];
 
-    public static void Use() => wasUsed = true;
+    public static void Use() => WasUsed = true;
 
     public static void Feed(MouseEvent e)
     {
@@ -62,7 +59,7 @@ public static class ConsoleMouse
 
     public static void Tick()
     {
-        wasUsed = false;
+        WasUsed = false;
 
         if (Accumulated[(DWORD)MouseButton.Left] && !Stage1[(DWORD)MouseButton.Left])
         { leftPressedAt = recordedConsolePosition; }
@@ -71,7 +68,7 @@ public static class ConsoleMouse
         Stage2 = Stage1;
         Stage1 = Accumulated;
 
-        scrollDelta = scroll;
+        ScrollDelta = scroll;
         scroll = 0;
     }
 }

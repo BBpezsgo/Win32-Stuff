@@ -6,7 +6,7 @@ namespace Win32.Console;
 /// Representation:<br/>
 /// <c>BBBBFFFF</c>
 /// </summary>
-public struct CharColor
+public static class CharColor
 {
     public const byte Red = 0b_0100;
     public const byte Green = 0b_0010;

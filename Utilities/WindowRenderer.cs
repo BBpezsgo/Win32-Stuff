@@ -6,27 +6,23 @@ namespace Win32.Forms;
 [SupportedOSPlatform("windows")]
 public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
 {
-    readonly BitmapInfo BitmapInfo;
-
     public override short Width => (short)BufferWidth;
     public override short Height => (short)BufferHeight;
 
+    public int WindowWidth { get; }
+    public int WindowHeight { get; }
+
+    public Form Form { get; }
+    public override Span<uint> Buffer => MemoryBuffer.Memory.Span;
+
+    public override ref uint this[int i] => ref MemoryBuffer.Memory.Span[i];
+
+    readonly BitmapInfo BitmapInfo;
     int BufferWidth;
     int BufferHeight;
-    IMemoryOwner<uint> _buffer;
-
-    public readonly int WindowWidth;
-    public readonly int WindowHeight;
-
+    IMemoryOwner<uint> MemoryBuffer;
     bool IsDisposed;
-
-    public readonly Form Form;
-
-    readonly DC DeviceContext;
-
-    public override Span<uint> Buffer => _buffer.Memory.Span;
-
-    public override ref uint this[int i] => ref _buffer.Memory.Span[i];
+    readonly DC DC;
 
     public WindowRenderer(int width, int height, int windowWidth, int windowHeight)
     {
@@ -66,9 +62,9 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
             // WindowWidth, WindowHeight);
         }
 
-        DeviceContext = Form.GetClientDC();
+        DC = Form.GetClientDC();
 
-        _buffer = MemoryPool<uint>.Shared.Rent(width * height);
+        MemoryBuffer = MemoryPool<uint>.Shared.Rent(width * height);
         BufferWidth = width;
         BufferHeight = height;
     }
@@ -83,8 +79,8 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
     {
         fixed (BitmapInfo* pBmi = &BitmapInfo)
         {
-            using MemoryHandle bufferPtr = _buffer.Memory.Pin();
-            DeviceContext.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, BufferWidth, BufferHeight, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
+            using MemoryHandle bufferPtr = MemoryBuffer.Memory.Pin();
+            DC.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, BufferWidth, BufferHeight, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
         }
     }
 
@@ -96,10 +92,10 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
         {
             if (Form != 0)
             {
-                DeviceContext.Dispose();
+                DC.Dispose();
                 Form.Dispose();
             }
-            _buffer.Dispose();
+            MemoryBuffer.Dispose();
         }
 
         IsDisposed = true;
@@ -119,9 +115,9 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
 
         if (newWidth == BufferWidth && newHeight == BufferHeight) return;
 
-        _buffer.Dispose();
+        MemoryBuffer.Dispose();
 
-        _buffer = MemoryPool<uint>.Shared.Rent(newWidth * newHeight);
+        MemoryBuffer = MemoryPool<uint>.Shared.Rent(newWidth * newHeight);
         BufferWidth = newWidth;
         BufferHeight = newHeight;
     }

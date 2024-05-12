@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+
+using Microsoft.Win32.SafeHandles;
 
 namespace Win32;
 
