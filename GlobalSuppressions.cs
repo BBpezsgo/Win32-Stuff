@@ -16,6 +16,7 @@
 [assembly: SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 [assembly: SuppressMessage("Security", "CA5392:Use DefaultDllImportSearchPaths attribute for P/Invokes")]
 
+[assembly: SuppressMessage("Interoperability", "SYSLIB1054:Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time")]
 [assembly: SuppressMessage("Interoperability", "SYSLIB1096:Convert to 'GeneratedComInterface'")]
 
 [assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization")]

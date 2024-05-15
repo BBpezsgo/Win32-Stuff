@@ -1,10 +1,10 @@
 ﻿namespace Win32.COM;
 
 [SupportedOSPlatform("windows")]
-public static partial class Shell32
+public static class Shell32
 {
-    [LibraryImport("Shell32.dll", SetLastError = true)]
-    public static unsafe partial WCHAR* CommandLineToArgvW(
+    [DllImport("Shell32.dll", SetLastError = true)]
+    public static extern unsafe WCHAR* CommandLineToArgvW(
       WCHAR* lpCmdLine,
       out int pNumArgs
     );

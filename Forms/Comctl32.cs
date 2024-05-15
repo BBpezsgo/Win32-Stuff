@@ -4,7 +4,7 @@
 /// Common Controls Library
 /// </summary>
 [SupportedOSPlatform("windows")]
-public static partial class Comctl32
+public static class Comctl32
 {
     /// <summary>
     /// The <c>TaskDialog</c> function creates, displays, and operates a task dialog.
@@ -113,8 +113,8 @@ public static partial class Comctl32
     /// </list>
     /// </para>
     /// </returns>
-    [LibraryImport("Comctl32.dll", SetLastError = true)]
-    public static unsafe partial HRESULT TaskDialog(
+    [DllImport("Comctl32.dll", SetLastError = true)]
+    public static extern unsafe HRESULT TaskDialog(
       HWND hwndOwner,
       HINSTANCE hInstance,
       WCHAR* pszWindowTitle,
@@ -125,11 +125,11 @@ public static partial class Comctl32
       out int pnButton
     );
 
-    [LibraryImport("Comctl32.dll", SetLastError = true)]
-    public static partial void InitCommonControls();
+    [DllImport("Comctl32.dll", SetLastError = true)]
+    public static extern void InitCommonControls();
 
-    [LibraryImport("Comctl32.dll", SetLastError = true)]
-    public static unsafe partial BOOL InitCommonControlsEx(
+    [DllImport("Comctl32.dll", SetLastError = true)]
+    public static extern unsafe BOOL InitCommonControlsEx(
       InitCommonControlsEx* picce
     );
 }

@@ -38,7 +38,7 @@ public readonly struct FileHandle :
         HANDLE handle;
         fixed (char* fileNamePtr = fileName)
         {
-            handle = Kernel32.CreateFile(
+            handle = Kernel32.CreateFileW(
                 fileNamePtr,
                 desiredAccess,
                 shareMode,
@@ -55,28 +55,20 @@ public readonly struct FileHandle :
     }
 
     /// <exception cref="WindowsException"/>
+    public unsafe DWORD Write<T>(ReadOnlySpan<T> data, ref Overlapped overlapped) where T : unmanaged
+        => Write(Unsafe.AsPointer(ref MemoryMarshal.GetReference(data)), sizeof(T) * data.Length, ref overlapped);
+
+    /// <exception cref="WindowsException"/>
+    public unsafe DWORD Write<T>(ReadOnlySpan<T> data) where T : unmanaged
+        => Write(Unsafe.AsPointer(ref MemoryMarshal.GetReference(data)), sizeof(T) * data.Length, null);
+
+    /// <exception cref="WindowsException"/>
     public unsafe DWORD Write<T>(ref T data, ref Overlapped overlapped) where T : unmanaged
-        => this.Write(Unsafe.AsPointer(ref data), sizeof(T), ref overlapped);
-
-    /// <exception cref="WindowsException"/>
-    public unsafe DWORD Write<T>(T* data, ref Overlapped overlapped) where T : unmanaged
-        => this.Write(data, sizeof(T), ref overlapped);
-
-    /// <exception cref="WindowsException"/>
-    public unsafe DWORD Write<T>(T data, ref Overlapped overlapped) where T : unmanaged
-        => this.Write(&data, sizeof(T), ref overlapped);
+        => Write(Unsafe.AsPointer(ref data), sizeof(T), ref overlapped);
 
     /// <exception cref="WindowsException"/>
     public unsafe DWORD Write<T>(ref T data) where T : unmanaged
-        => this.Write(Unsafe.AsPointer(ref data), sizeof(T), null);
-
-    /// <exception cref="WindowsException"/>
-    public unsafe DWORD Write<T>(T* data) where T : unmanaged
-        => this.Write(data, sizeof(T), null);
-
-    /// <exception cref="WindowsException"/>
-    public unsafe DWORD Write<T>(T data) where T : unmanaged
-        => this.Write(&data, sizeof(T), null);
+        => Write(Unsafe.AsPointer(ref data), sizeof(T), null);
 
     /// <exception cref="WindowsException"/>
     public unsafe DWORD Write(void* buffer, int byteCount, ref Overlapped overlapped)

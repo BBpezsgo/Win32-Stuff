@@ -171,6 +171,15 @@ public readonly struct GdiColor :
 
     public static COLORREF Make(BYTE r, BYTE g, BYTE b) => unchecked((COLORREF)(b | (g << 8) | (r << 16)));
 
+    public static GdiColor Lerp(GdiColor a, GdiColor b, float t)
+    {
+        t = Math.Clamp(t, 0f, 1f);
+        float _r = (a.R * (1f - t)) + (b.R * t);
+        float _g = (a.G * (1f - t)) + (b.G * t);
+        float _b = (a.B * (1f - t)) + (b.B * t);
+        return new GdiColor(_r, _g, _b);
+    }
+
     public readonly void Deconstruct(out byte r, out byte g, out byte b)
     {
         r = R;

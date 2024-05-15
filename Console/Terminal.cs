@@ -101,7 +101,7 @@ public static class Terminal
     const int FixedWidthTrueType = 54;
 
     /// <exception cref="WindowsException"/>
-    public static ConsoleFontInfoEx Font
+    public static unsafe ConsoleFontInfoEx Font
     {
         set
         {
@@ -112,7 +112,7 @@ public static class Terminal
         {
             ConsoleFontInfoEx fontInfo = ConsoleFontInfoEx.Create();
 
-            if (Kernel32.GetCurrentConsoleFontEx(OutputHandle, FALSE, ref fontInfo) == 0)
+            if (Kernel32.GetCurrentConsoleFontEx(OutputHandle, FALSE, &fontInfo) == 0)
             { throw WindowsException.Get(); }
 
             return fontInfo;
@@ -154,7 +154,8 @@ public static class Terminal
     {
         get
         {
-            if (Kernel32.GetConsoleScreenBufferInfo(OutputHandle, out ConsoleScreenBufferInfo result) == FALSE)
+            ConsoleScreenBufferInfo result;
+            if (Kernel32.GetConsoleScreenBufferInfo(OutputHandle, &result) == FALSE)
             { throw WindowsException.Get(); }
             return result;
         }

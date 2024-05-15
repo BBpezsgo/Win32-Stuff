@@ -95,16 +95,16 @@ public readonly struct Thread_ :
     [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
     public unsafe ProcessorNumber IdealProcessor
     {
+        set
+        {
+            if (Kernel32.SetThreadIdealProcessorEx(Handle, in value, out _) == FALSE)
+            { throw WindowsException.Get(); }
+        }
         get
         {
             if (Kernel32.GetThreadIdealProcessorEx(Handle, out ProcessorNumber result) == FALSE)
             { throw WindowsException.Get(); }
             return result;
-        }
-        set
-        {
-            if (Kernel32.SetThreadIdealProcessorEx(Handle, &value, out _) == FALSE)
-            { throw WindowsException.Get(); }
         }
     }
 
@@ -112,16 +112,16 @@ public readonly struct Thread_ :
     [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
     public unsafe GroupAffinity GroupAffinity
     {
+        set
+        {
+            if (Kernel32.SetThreadGroupAffinity(Handle, in value, out _) == FALSE)
+            { throw WindowsException.Get(); }
+        }
         get
         {
             if (Kernel32.GetThreadGroupAffinity(Handle, out GroupAffinity result) == FALSE)
             { throw WindowsException.Get(); }
             return result;
-        }
-        set
-        {
-            if (Kernel32.SetThreadGroupAffinity(Handle, &value, out _) == FALSE)
-            { throw WindowsException.Get(); }
         }
     }
 

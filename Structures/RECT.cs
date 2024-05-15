@@ -1,9 +1,11 @@
-﻿global using RECT = Win32.Rect;
+﻿#pragma warning disable RCS1085 // Use auto-implemented property
+#pragma warning disable IDE0032 // Use auto property
+
+global using RECT = Win32.Rect;
 using System.Runtime.CompilerServices;
 
 namespace Win32;
 
-#pragma warning disable RCS1085 // Use auto-implemented property
 /// <summary>
 /// defines the coordinates of the upper-left and lower-right corners of a rectangle.
 /// </summary>

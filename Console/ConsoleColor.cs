@@ -326,6 +326,7 @@ public static class CharColor
             '░' => 64,
             '▒' => 127,
             '▓' => 191,
+            '█' => 255,
             ' ' => 0,
             '\0' => 0,
             _ => 127,
@@ -334,7 +335,7 @@ public static class CharColor
         GdiColor bg = CharColor.To24bitColor(character.Background);
         GdiColor fg = CharColor.To24bitColor(character.Foreground);
 
-        return (bg * (byte.MaxValue - shade)) + (fg * shade);
+        return GdiColor.Lerp(bg, fg, shade / 255f);
     }
 
     [SuppressMessage("Naming", "CA1707")]

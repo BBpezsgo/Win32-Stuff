@@ -53,8 +53,7 @@ public readonly struct Process :
     /// <exception cref="WindowsException"/>
     public static unsafe int GetProcesses(DWORD* buffer, int bufferLength)
     {
-        DWORD got = default;
-        if (Kernel32.EnumProcesses(buffer, (uint)bufferLength * sizeof(DWORD), &got) == 0)
+        if (Kernel32.EnumProcesses(buffer, (uint)bufferLength * sizeof(DWORD), out DWORD got) == 0)
         { throw WindowsException.Get(); }
         got /= sizeof(DWORD);
         return (int)got;
@@ -282,8 +281,7 @@ public readonly struct Process :
         get
         {
             HMODULE* modules = stackalloc HMODULE[128];
-            DWORD got = default;
-            if (Kernel32.EnumProcessModules(Handle, modules, 128 * (uint)sizeof(HMODULE), &got) == 0)
+            if (Kernel32.EnumProcessModules(Handle, modules, 128 * (uint)sizeof(HMODULE), out DWORD got) == 0)
             { throw WindowsException.Get(); }
             got /= (uint)sizeof(HMODULE);
             Module[] result = new Module[got];
@@ -369,7 +367,7 @@ public readonly struct Process :
                 environment,
                 currentDirectoryPtr,
                 &startupInfo,
-                out result
+                &result
                 ) == FALSE)
             { throw WindowsException.Get(); }
         }

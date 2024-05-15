@@ -1,633 +1,631 @@
-﻿#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
-using Microsoft.Win32.SafeHandles;
+﻿using Win32.Console;
 
 namespace Win32;
 
 [SupportedOSPlatform("windows")]
-public static partial class Kernel32
+public static class Kernel32
 {
     public static readonly HANDLE InvalidHandle = -1;
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* GetProcAddress(
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* GetProcAddress(
       HMODULE hModule,
       WCHAR* lpProcName
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL FreeLibrary(
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL FreeLibrary(
       HMODULE hLibModule
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HMODULE LoadLibraryExW(
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HMODULE LoadLibraryExW(
       WCHAR* lpLibFileName,
       HANDLE hFile,
       DWORD dwFlags
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HMODULE LoadLibraryW(
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HMODULE LoadLibraryW(
       WCHAR* lpLibFileName
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL TlsSetValue(
-      DWORD dwTlsIndex,
-      [Optional] void* lpTlsValue
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL TlsSetValue(
+      [In] DWORD dwTlsIndex,
+      [In, Optional] void* lpTlsValue
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* TlsGetValue(
-      DWORD dwTlsIndex
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* TlsGetValue(
+      [In] DWORD dwTlsIndex
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL TlsFree(
-      DWORD dwTlsIndex
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL TlsFree(
+      [In] DWORD dwTlsIndex
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD TlsAlloc();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD TlsAlloc();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetCurrentThreadId();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetCurrentThreadId();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE GetCurrentThread();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE GetCurrentThread();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SwitchToThread();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SwitchToThread();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD SuspendThread(
-      HANDLE hThread
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD SuspendThread(
+      [In] HANDLE hThread
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD SleepEx(
-      DWORD dwMilliseconds,
-      BOOL bAlertable
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD SleepEx(
+      [In] DWORD dwMilliseconds,
+      [In] BOOL bAlertable
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial void Sleep(
-      DWORD dwMilliseconds
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern void Sleep(
+      [In] DWORD dwMilliseconds
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetThreadPriorityBoost(
-      HANDLE hThread,
-      BOOL bDisablePriorityBoost
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetThreadPriorityBoost(
+      [In] HANDLE hThread,
+      [In] BOOL bDisablePriorityBoost
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetThreadPriority(
-      HANDLE hThread,
-      int nPriority
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetThreadPriority(
+      [In] HANDLE hThread,
+      [In] int nPriority
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL SetThreadInformation(
-      HANDLE hThread,
-      ThreadInformationClass ThreadInformationClass,
-      void* ThreadInformation,
-      DWORD ThreadInformationSize
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL SetThreadInformation(
+      [In] HANDLE hThread,
+      [In] ThreadInformationClass ThreadInformationClass,
+           void* ThreadInformation,
+      [In] DWORD ThreadInformationSize
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL SetThreadIdealProcessorEx(
-      HANDLE hThread,
-      ProcessorNumber* lpIdealProcessor,
-      [Optional] out ProcessorNumber lpPreviousIdealProcessor
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL SetThreadIdealProcessorEx(
+      [In] HANDLE hThread,
+      [In] in ProcessorNumber lpIdealProcessor,
+      [Out, Optional] out ProcessorNumber lpPreviousIdealProcessor
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD SetThreadIdealProcessor(
-      HANDLE hThread,
-      DWORD dwIdealProcessor
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD SetThreadIdealProcessor(
+      [In] HANDLE hThread,
+      [In] DWORD dwIdealProcessor
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL SetThreadGroupAffinity(
-      HANDLE hThread,
-      GroupAffinity* GroupAffinity,
-      [Optional] out GroupAffinity PreviousGroupAffinity
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL SetThreadGroupAffinity(
+      [In] HANDLE hThread,
+      [In] in GroupAffinity GroupAffinity,
+      [Out, Optional] out GroupAffinity PreviousGroupAffinity
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetProcessAffinityMask(
-      HANDLE hProcess,
-      out DWORD_PTR lpProcessAffinityMask,
-      out DWORD_PTR lpSystemAffinityMask
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetProcessAffinityMask(
+      [In] HANDLE hProcess,
+      [Out] out DWORD_PTR lpProcessAffinityMask,
+      [Out] out DWORD_PTR lpSystemAffinityMask
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD_PTR SetThreadAffinityMask(
-      HANDLE hThread,
-      DWORD_PTR dwThreadAffinityMask
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD_PTR SetThreadAffinityMask(
+      [In] HANDLE hThread,
+      [In] DWORD_PTR dwThreadAffinityMask
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD ResumeThread(
-      HANDLE hThread
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD ResumeThread(
+      [In] HANDLE hThread
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetThreadTimes(
-      HANDLE hThread,
-      out FileTime lpCreationTime,
-      out FileTime lpExitTime,
-      out FileTime lpKernelTime,
-      out FileTime lpUserTime
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetThreadTimes(
+      [In] HANDLE hThread,
+      [Out] out FileTime lpCreationTime,
+      [Out] out FileTime lpExitTime,
+      [Out] out FileTime lpKernelTime,
+      [Out] out FileTime lpUserTime
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial int GetThreadPriority(
-      HANDLE hThread
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern int GetThreadPriority(
+      [In] HANDLE hThread
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetThreadPriorityBoost(
-      HANDLE hThread,
-      out BOOL pDisablePriorityBoost
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetThreadPriorityBoost(
+      [In] HANDLE hThread,
+      [Out] out BOOL pDisablePriorityBoost
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial void ExitThread(
-      DWORD dwExitCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern void ExitThread(
+      [In] DWORD dwExitCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateFileMappingA(
-      HANDLE hFile,
-      [Optional] SecurityAttributes* lpFileMappingAttributes,
-      DWORD flProtect,
-      DWORD dwMaximumSizeHigh,
-      DWORD dwMaximumSizeLow,
-      [Optional] CHAR* lpName
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateFileMappingA(
+      [In] HANDLE hFile,
+      [In, Optional] SecurityAttributes* lpFileMappingAttributes,
+      [In] DWORD flProtect,
+      [In] DWORD dwMaximumSizeHigh,
+      [In] DWORD dwMaximumSizeLow,
+      [In, Optional] CHAR* lpName
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL UpdateResourceW(
-      HANDLE hUpdate,
-      WCHAR* lpType,
-      WCHAR* lpName,
-      WORD wLanguage,
-      [Optional] void* lpData,
-      DWORD cb
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL UpdateResourceW(
+      [In] HANDLE hUpdate,
+      [In] WCHAR* lpType,
+      [In] WCHAR* lpName,
+      [In] WORD wLanguage,
+      [In, Optional] void* lpData,
+      [In] DWORD cb
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateFileMappingW(
-      HANDLE hFile,
-      [Optional] SecurityAttributes* lpFileMappingAttributes,
-      DWORD flProtect,
-      DWORD dwMaximumSizeHigh,
-      DWORD dwMaximumSizeLow,
-      [Optional] WCHAR* lpName
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateFileMappingW(
+      [In] HANDLE hFile,
+      [In, Optional] SecurityAttributes* lpFileMappingAttributes,
+      [In] DWORD flProtect,
+      [In] DWORD dwMaximumSizeHigh,
+      [In] DWORD dwMaximumSizeLow,
+      [In, Optional] WCHAR* lpName
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial DWORD GetFileType(
-      HANDLE hFile
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe DWORD GetFileType(
+      [In] HANDLE hFile
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* VirtualAllocExNuma(
-      HANDLE hProcess,
-      [Optional] void* lpAddress,
-      SIZE_T dwSize,
-      DWORD flAllocationType,
-      DWORD flProtect,
-      DWORD nndPreferred
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* VirtualAllocExNuma(
+      [In] HANDLE hProcess,
+      [In, Optional] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD flAllocationType,
+      [In] DWORD flProtect,
+      [In] DWORD nndPreferred
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL ReadFile(
-      HANDLE hFile,
-      void* lpBuffer,
-      DWORD nNumberOfBytesToRead,
-      [Optional] out DWORD lpNumberOfBytesRead,
-      [Optional] ref Overlapped lpOverlapped
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL ReadFile(
+      [In] HANDLE hFile,
+      [Out] void* lpBuffer,
+      [In] DWORD nNumberOfBytesToRead,
+      [Out, Optional] out DWORD lpNumberOfBytesRead,
+      [In, Out, Optional] Overlapped* lpOverlapped
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL FreeConsole();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL FreeConsole();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL AttachConsole(
-      DWORD dwProcessId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL AttachConsole(
+      [In] DWORD dwProcessId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL AllocConsole();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL AllocConsole();
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL ReadConsole(
-      HANDLE hConsoleInput,
-      void* lpBuffer,
-      DWORD nNumberOfCharsToRead,
-      out DWORD lpNumberOfCharsRead,
-      [Optional] void* pInputControl
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL ReadConsole(
+      [In] HANDLE hConsoleInput,
+      [Out] void* lpBuffer,
+      [In] DWORD nNumberOfCharsToRead,
+      [Out] out DWORD lpNumberOfCharsRead,
+      [In, Optional] void* pInputControl
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetStdHandle(
-      DWORD nStdHandle,
-      HANDLE hHandle
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetStdHandle(
+      [In] DWORD nStdHandle,
+      [In] HANDLE hHandle
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteConsole(
-      HANDLE hConsoleOutput,
-      void* lpBuffer,
-      DWORD nNumberOfCharsToWrite,
-      [Optional] out DWORD lpNumberOfCharsWritten,
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteConsole(
+      [In] HANDLE hConsoleOutput,
+      [In] void* lpBuffer,
+      [In] DWORD nNumberOfCharsToWrite,
+      [Out, Optional] out DWORD lpNumberOfCharsWritten,
       void* lpReserved = null
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateFileTransactedW(
-      WCHAR* lpFileName,
-      DWORD dwDesiredAccess,
-      DWORD dwShareMode,
-      [Optional] SecurityAttributes* lpSecurityAttributes,
-      DWORD dwCreationDisposition,
-      DWORD dwFlagsAndAttributes,
-      [Optional] HANDLE hTemplateFile,
-      HANDLE hTransaction,
-      [Optional] ushort* pusMiniVersion,
-      void* lpExtendedParameter
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateFileTransactedW(
+      [In] WCHAR* lpFileName,
+      [In] DWORD dwDesiredAccess,
+      [In] DWORD dwShareMode,
+      [In, Optional] SecurityAttributes* lpSecurityAttributes,
+      [In] DWORD dwCreationDisposition,
+      [In] DWORD dwFlagsAndAttributes,
+      [In, Optional] HANDLE hTemplateFile,
+      [In] HANDLE hTransaction,
+      [In, Optional] in ushort pusMiniVersion,
+                     void* lpExtendedParameter
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteFileEx(
-      HANDLE hFile,
-      [Optional] void* lpBuffer,
-      DWORD nNumberOfBytesToWrite,
-      ref Overlapped lpOverlapped,
-      void* lpCompletionRoutine // OVERLAPPED_COMPLETION_ROUTINE*
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteFileEx(
+      [In] HANDLE hFile,
+      [In, Optional] void* lpBuffer,
+      [In] DWORD nNumberOfBytesToWrite,
+      [In, Out] ref Overlapped lpOverlapped,
+      [In] delegate*<DWORD, DWORD, ref Overlapped, void> lpCompletionRoutine
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetExitCodeThread(
-      HANDLE hThread,
-      out DWORD lpExitCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetExitCodeThread(
+      [In] HANDLE hThread,
+      [Out] out DWORD lpExitCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetExitCodeProcess(
-      HANDLE hProcess,
-      out DWORD lpExitCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetExitCodeProcess(
+      [In] HANDLE hProcess,
+      [Out] out DWORD lpExitCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HRESULT SetThreadDescription(
-      HANDLE hThread,
-      WCHAR* lpThreadDescription
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HRESULT SetThreadDescription(
+      [In] HANDLE hThread,
+      [In] WCHAR* lpThreadDescription
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE OpenThread(
-      DWORD dwDesiredAccess,
-      BOOL bInheritHandle,
-      DWORD dwThreadId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE OpenThread(
+      [In] DWORD dwDesiredAccess,
+      [In] BOOL bInheritHandle,
+      [In] DWORD dwThreadId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateThread(
-      [Optional] SecurityAttributes* lpThreadAttributes,
-      SIZE_T dwStackSize,
-      delegate*<void*, DWORD> lpStartAddress,
-      [Optional] void* lpParameter,
-      DWORD dwCreationFlags,
-      [Optional] out DWORD lpThreadId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateThread(
+      [In, Optional] SecurityAttributes* lpThreadAttributes,
+      [In] SIZE_T dwStackSize,
+      [In] delegate*<void*, DWORD> lpStartAddress,
+      [In, Optional] void* lpParameter,
+      [In] DWORD dwCreationFlags,
+      [Out, Optional] out DWORD lpThreadId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Toolhelp32ReadProcessMemory(
-      DWORD th32ProcessID,
-      void* lpBaseAddress,
-      void* lpBuffer,
-      SIZE_T cbRead,
-      out SIZE_T lpNumberOfBytesRead
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Toolhelp32ReadProcessMemory(
+      [In] DWORD th32ProcessID,
+      [In] void* lpBaseAddress,
+      [Out] void* lpBuffer,
+      [In] SIZE_T cbRead,
+      [Out] out SIZE_T lpNumberOfBytesRead
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Thread32Next(
-      HANDLE hSnapshot,
-      out ThreadEntry lpte
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Thread32Next(
+      [In] HANDLE hSnapshot,
+      [Out] out ThreadEntry lpte
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Thread32First(
-      HANDLE hSnapshot,
-      ref ThreadEntry lpte
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Thread32First(
+      [In] HANDLE hSnapshot,
+      [In, Out] ref ThreadEntry lpte
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Heap32Next(
-      out HeapEntry lphe
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Heap32Next(
+      [Out] out HeapEntry lphe
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Heap32ListNext(
-      HANDLE hSnapshot,
-      out HeapList lphl
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Heap32ListNext(
+      [In] HANDLE hSnapshot,
+      [Out] out HeapList lphl
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Heap32ListFirst(
-      HANDLE hSnapshot,
-      ref HeapList lphl
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Heap32ListFirst(
+      [In] HANDLE hSnapshot,
+      [In, Out] ref HeapList lphl
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Heap32First(
-      ref HeapEntry lphe,
-      DWORD th32ProcessID,
-      ULONG_PTR th32HeapID
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Heap32First(
+      [In, Out] ref HeapEntry lphe,
+      [In] DWORD th32ProcessID,
+      [In] ULONG_PTR th32HeapID
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Module32NextW(
-      HANDLE hSnapshot,
-      out ModuleEntry lpme
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Module32NextW(
+      [In] HANDLE hSnapshot,
+      [Out] out ModuleEntry lpme
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Module32FirstW(
-      HANDLE hSnapshot,
-      ref ModuleEntry lpme
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Module32FirstW(
+      [In] HANDLE hSnapshot,
+      [In, Out] ref ModuleEntry lpme
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetThreadIdealProcessorEx(
-      HANDLE hThread,
-      out ProcessorNumber lpIdealProcessor
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetThreadIdealProcessorEx(
+      [In] HANDLE hThread,
+      [Out] out ProcessorNumber lpIdealProcessor
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetThreadGroupAffinity(
-      HANDLE hThread,
-      out GroupAffinity GroupAffinity
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetThreadGroupAffinity(
+      [In] HANDLE hThread,
+      [Out] out GroupAffinity GroupAffinity
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetThreadId(
-      HANDLE Thread
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetThreadId(
+      [In] HANDLE Thread
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetProcessIdOfThread(
-      HANDLE Thread
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetProcessIdOfThread(
+      [In] HANDLE Thread
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HRESULT GetThreadDescription(
-      HANDLE hThread,
-      out WCHAR* ppszThreadDescription
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HRESULT GetThreadDescription(
+      [In] HANDLE hThread,
+      [Out] out WCHAR* ppszThreadDescription
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Process32NextW(
-      HANDLE hSnapshot,
-      out ProcessEntry lppe
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Process32NextW(
+      [In] HANDLE hSnapshot,
+      [Out] out ProcessEntry lppe
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL Process32FirstW(
-      HANDLE hSnapshot,
-      ref ProcessEntry lppe
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL Process32FirstW(
+      [In] HANDLE hSnapshot,
+      [In, Out] ref ProcessEntry lppe
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE CreateToolhelp32Snapshot(
-      TH32CS dwFlags,
-      DWORD th32ProcessID
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE CreateToolhelp32Snapshot(
+      [In] TH32CS dwFlags,
+      [In] DWORD th32ProcessID
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial delegate*<INT_PTR> GetProcAddress(
-      HMODULE hModule,
-      CHAR* lpProcName
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe delegate*<INT_PTR> GetProcAddress(
+      [In] HMODULE hModule,
+      [In] CHAR* lpProcName
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial DWORD GetDeviceDriverFileNameW(
-      void* ImageBase,
-      WCHAR* lpFilename, // out
-      DWORD nSize
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe DWORD GetDeviceDriverFileNameW(
+      [In] void* ImageBase,
+      [Out] WCHAR* lpFilename,
+      [In] DWORD nSize
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial DWORD GetDeviceDriverBaseNameW(
-      void* ImageBase,
-      WCHAR* lpFilename,
-      DWORD nSize
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe DWORD GetDeviceDriverBaseNameW(
+      [In] void* ImageBase,
+           WCHAR* lpFilename,
+      [In] DWORD nSize
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial BOOL EnumDeviceDrivers(
-      void** lpImageBase,
-      DWORD cb,
-      out DWORD lpcbNeeded
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe BOOL EnumDeviceDrivers(
+      [Out] void** lpImageBase,
+      [In] DWORD cb,
+      [Out] out DWORD lpcbNeeded
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial BOOL GetModuleInformation(
-      HANDLE hProcess,
-      HMODULE hModule,
-      out ModuleInfo lpmodinfo,
-      DWORD cb
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetModuleInformation(
+      [In] HANDLE hProcess,
+      [In] HMODULE hModule,
+      [Out] out ModuleInfo lpmodinfo,
+      [In] DWORD cb
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial DWORD GetModuleBaseNameW(
-      HANDLE hProcess,
-      [Optional] HMODULE hModule,
-      WCHAR* lpBaseName, // out
-      DWORD nSize
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe DWORD GetModuleBaseNameW(
+      [In] HANDLE hProcess,
+      [In, Optional] HMODULE hModule,
+      [Out] WCHAR* lpBaseName,
+      [In] DWORD nSize
     );
 
-    [LibraryImport("Psapi.dll")]
-    public static unsafe partial DWORD GetModuleFileNameExW(
-      HANDLE hProcess,
-      [Optional] HMODULE hModule,
-      WCHAR* lpFilename, // out
-      DWORD nSize
+    [DllImport("Psapi.dll", SetLastError = true)]
+    public static extern unsafe DWORD GetModuleFileNameExW(
+      [In] HANDLE hProcess,
+      [In, Optional] HMODULE hModule,
+      [Out] WCHAR* lpFilename,
+      [In] DWORD nSize
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL CreateProcessW(
-      [Optional] WCHAR* lpApplicationName,
-      [Optional] WCHAR* lpCommandLine, // in out
-      [Optional] SecurityAttributes* lpProcessAttributes,
-      [Optional] SecurityAttributes* lpThreadAttributes,
-      BOOL bInheritHandles,
-      DWORD dwCreationFlags,
-      [Optional] void* lpEnvironment,
-      [Optional] WCHAR* lpCurrentDirectory,
-      STARTUPINFOW* lpStartupInfo,
-      out ProcessInformation lpProcessInformation
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL CreateProcessW(
+      [In, Optional] WCHAR* lpApplicationName,
+      [In, Out, Optional] WCHAR* lpCommandLine,
+      [In, Optional] SecurityAttributes* lpProcessAttributes,
+      [In, Optional] SecurityAttributes* lpThreadAttributes,
+      [In] BOOL bInheritHandles,
+      [In] DWORD dwCreationFlags,
+      [In, Optional] void* lpEnvironment,
+      [In, Optional] WCHAR* lpCurrentDirectory,
+      [In] STARTUPINFOW* lpStartupInfo,
+      [Out] ProcessInformation* lpProcessInformation
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL QueryFullProcessImageNameW(
-      HANDLE hProcess,
-      DWORD dwFlags,
-      WCHAR* lpExeName, // out
-      ref DWORD lpdwSize
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL QueryFullProcessImageNameW(
+      [In] HANDLE hProcess,
+      [In] DWORD dwFlags,
+      [Out] WCHAR* lpExeName,
+      [In, Out] ref DWORD lpdwSize
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetProcessId(
-      HANDLE Process
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetProcessId(
+      [In] HANDLE Process
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetProcessHandleCount(
-      HANDLE hProcess,
-      ref DWORD pdwHandleCount
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetProcessHandleCount(
+      [In] HANDLE hProcess,
+      [In, Out] ref DWORD pdwHandleCount
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetProcessVersion(
-      DWORD ProcessId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetProcessVersion(
+      [In] DWORD ProcessId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL IsImmersiveProcess(
-      HANDLE hProcess
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL IsImmersiveProcess(
+      [In] HANDLE hProcess
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL TerminateThread(
-      HANDLE hThread,
-      DWORD dwExitCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL TerminateThread(
+      [In, Out] HANDLE hThread,
+      [In] DWORD dwExitCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL TerminateProcess(
-      HANDLE hProcess,
-      UINT uExitCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL TerminateProcess(
+      [In] HANDLE hProcess,
+      [In] UINT uExitCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetCurrentProcessId();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetCurrentProcessId();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE GetCurrentProcess();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE GetCurrentProcess();
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+    [DllImport("Psapi.dll", SetLastError = true)]
     public static extern unsafe BOOL EnumProcessModules(
-      HANDLE hProcess,
+      [In] HANDLE hProcess,
       [Out] HMODULE* lphModule,
-      DWORD cb,
-      [Out] DWORD* lpcbNeeded
+      [In] DWORD cb,
+      [Out] out DWORD lpcbNeeded
     );
 
-    [DllImport("Psapi.dll", CharSet = CharSet.Unicode)]
+    [DllImport("Psapi.dll", SetLastError = true)]
     public static extern unsafe BOOL EnumProcesses(
-        [Out] DWORD* lpidProcess,
-        DWORD cb,
-        [Out] DWORD* lpcbNeeded
+      [Out] DWORD* lpidProcess,
+      [In] DWORD cb,
+      [Out] out DWORD lpcbNeeded
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL VirtualFree(
-      void* lpAddress,
-      SIZE_T dwSize,
-      DWORD dwFreeType
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL VirtualFree(
+      [In] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD dwFreeType
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* VirtualAlloc(
-      [Optional] void* lpAddress,
-      SIZE_T dwSize,
-      DWORD flAllocationType,
-      DWORD flProtect
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* VirtualAlloc(
+      [In, Optional] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD flAllocationType,
+      [In] DWORD flProtect
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL VirtualProtect(
-      void* lpAddress,
-      SIZE_T dwSize,
-      DWORD flNewProtect,
-      out DWORD lpflOldProtect
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL VirtualProtect(
+      [In] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD flNewProtect,
+      [Out] out DWORD lpflOldProtect
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL VirtualProtectEx(
-      HANDLE hProcess,
-      void* lpAddress,
-      SIZE_T dwSize,
-      DWORD flNewProtect,
-      out DWORD lpflOldProtect
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL VirtualProtectEx(
+      [In] HANDLE hProcess,
+      [In] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD flNewProtect,
+      [Out] out DWORD lpflOldProtect
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL VirtualFreeEx(
-      HANDLE hProcess,
-      void* lpAddress,
-      SIZE_T dwSize,
-      DWORD dwFreeType
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL VirtualFreeEx(
+      [In] HANDLE hProcess,
+      [In] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD dwFreeType
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD WaitForSingleObject(
-      HANDLE hHandle,
-      DWORD dwMilliseconds
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD WaitForSingleObject(
+      [In] HANDLE hHandle,
+      [In] DWORD dwMilliseconds
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateRemoteThread(
-      HANDLE hProcess,
-      SecurityAttributes* lpThreadAttributes,
-      SIZE_T dwStackSize,
-      delegate*<void*, DWORD>* lpStartAddress,
-      void* lpParameter,
-      DWORD dwCreationFlags,
-      out DWORD lpThreadId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateRemoteThread(
+      [In] HANDLE hProcess,
+      [In] SecurityAttributes* lpThreadAttributes,
+      [In] SIZE_T dwStackSize,
+      [In] delegate*<void*, DWORD>* lpStartAddress,
+      [In] void* lpParameter,
+      [In] DWORD dwCreationFlags,
+      [Out] out DWORD lpThreadId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateRemoteThreadEx(
-      HANDLE hProcess,
-      [Optional] SecurityAttributes* lpThreadAttributes,
-      SIZE_T dwStackSize,
-      delegate*<void*, DWORD> lpStartAddress,
-      [Optional] void* lpParameter,
-      DWORD dwCreationFlags,
-      [Optional] void* lpAttributeList,
-      [Optional] out DWORD lpThreadId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateRemoteThreadEx(
+      [In] HANDLE hProcess,
+      [In, Optional] SecurityAttributes* lpThreadAttributes,
+      [In] SIZE_T dwStackSize,
+      [In] delegate*<void*, DWORD> lpStartAddress,
+      [In, Optional] void* lpParameter,
+      [In] DWORD dwCreationFlags,
+      [In, Optional] void* lpAttributeList,
+      [Out, Optional] out DWORD lpThreadId
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteProcessMemory(
-      HANDLE hProcess,
-      void* lpBaseAddress,
-      void* lpBuffer,
-      SIZE_T nSize,
-      out SIZE_T lpNumberOfBytesWritten
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteProcessMemory(
+      [In] HANDLE hProcess,
+      [In] void* lpBaseAddress,
+      [In] void* lpBuffer,
+      [In] SIZE_T nSize,
+      [Out] out SIZE_T lpNumberOfBytesWritten
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* VirtualAllocEx(
-      HANDLE hProcess,
-      [Optional] void* lpAddress,
-      SIZE_T dwSize,
-      DWORD flAllocationType,
-      DWORD flProtect
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* VirtualAllocEx(
+      [In] HANDLE hProcess,
+      [In, Optional] void* lpAddress,
+      [In] SIZE_T dwSize,
+      [In] DWORD flAllocationType,
+      [In] DWORD flProtect
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE OpenProcess(
-      DWORD dwDesiredAccess,
-      BOOL bInheritHandle,
-      DWORD dwProcessId
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE OpenProcess(
+      [In] DWORD dwDesiredAccess,
+      [In] BOOL bInheritHandle,
+      [In] DWORD dwProcessId
     );
 
     /// <summary>
@@ -655,11 +653,11 @@ public static partial class Kernel32
     /// To get extended error information, call <see cref="GetLastError"/>.
     /// </para>
     /// </returns>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL SetConsoleWindowInfo(
-      HANDLE hConsoleOutput,
-      BOOL bAbsolute,
-      SMALL_RECT* lpConsoleWindow
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL SetConsoleWindowInfo(
+      [In] HANDLE hConsoleOutput,
+      [In] BOOL bAbsolute,
+      [In] in SMALL_RECT lpConsoleWindow
     );
 
     /// <summary>
@@ -696,17 +694,17 @@ public static partial class Kernel32
     /// corner of the console screen buffer.
     /// </para>
     /// </remarks>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL GetConsoleScreenBufferInfo(
-       HANDLE hConsoleOutput,
-       out Console.ConsoleScreenBufferInfo lpConsoleScreenBufferInfo
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetConsoleScreenBufferInfo(
+       [In] HANDLE hConsoleOutput,
+       [Out] ConsoleScreenBufferInfo* lpConsoleScreenBufferInfo
      );
 
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HGLOBAL GlobalReAlloc(
-      HGLOBAL hMem,
-      SIZE_T dwBytes,
-      UINT uFlags
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HGLOBAL GlobalReAlloc(
+      [In] HGLOBAL hMem,
+      [In] SIZE_T dwBytes,
+      [In] UINT uFlags
     );
 
     /// <summary>
@@ -718,13 +716,13 @@ public static partial class Kernel32
     /// For a similar function designed solely for asynchronous operation, see <see cref="WriteFileEx"/>.
     /// </para>
     /// </summary>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteFile(
-      HANDLE hFile,
-      void* lpBuffer,
-      DWORD nNumberOfBytesToWrite,
-      [Optional] out DWORD lpNumberOfBytesWritten,
-      [Optional] ref Overlapped lpOverlapped
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteFile(
+      [In] HANDLE hFile,
+      [In] void* lpBuffer,
+      [In] DWORD nNumberOfBytesToWrite,
+      [Out, Optional] out DWORD lpNumberOfBytesWritten,
+      [In, Out, Optional] ref Overlapped lpOverlapped
     );
 
     /// <summary>
@@ -733,9 +731,9 @@ public static partial class Kernel32
     /// <param name="hObject">
     /// A valid handle to an open object.
     /// </param>
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL CloseHandle(
-      HANDLE hObject
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL CloseHandle(
+      [In] HANDLE hObject
     );
 
     /// <summary>
@@ -751,11 +749,9 @@ public static partial class Kernel32
     /// see Global and Local Functions.
     /// </para>
     /// </summary>
-    /// <param name="hMem"></param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static partial HGLOBAL GlobalFree(
-      HGLOBAL hMem
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HGLOBAL GlobalFree(
+      [In] HGLOBAL hMem
     );
 
     /// <summary>
@@ -773,11 +769,9 @@ public static partial class Kernel32
     /// see Global and Local Functions.
     /// </para>
     /// </summary>
-    /// <param name="hMem"></param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GlobalUnlock(
-      HGLOBAL hMem
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL GlobalUnlock(
+      [In] HGLOBAL hMem
     );
 
     /// <summary>
@@ -794,23 +788,15 @@ public static partial class Kernel32
     /// handle that can be used for transacted I/O, use the <see cref="CreateFileTransactedW"/> function.
     /// </para>
     /// </summary>
-    /// <param name="lpFileName"></param>
-    /// <param name="dwDesiredAccess"></param>
-    /// <param name="dwShareMode"></param>
-    /// <param name="lpSecurityAttributes"></param>
-    /// <param name="dwCreationDisposition"></param>
-    /// <param name="dwFlagsAndAttributes"></param>
-    /// <param name="hTemplateFile"></param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial HANDLE CreateFileW(
-      WCHAR* lpFileName,
-      DWORD dwDesiredAccess,
-      DWORD dwShareMode,
-      [Optional] SecurityAttributes* lpSecurityAttributes,
-      DWORD dwCreationDisposition,
-      DWORD dwFlagsAndAttributes,
-      [Optional] HANDLE hTemplateFile
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateFileW(
+      [In] WCHAR* lpFileName,
+      [In] DWORD dwDesiredAccess,
+      [In] DWORD dwShareMode,
+      [In, Optional] SecurityAttributes* lpSecurityAttributes,
+      [In] DWORD dwCreationDisposition,
+      [In] DWORD dwFlagsAndAttributes,
+      [In, Optional] HANDLE hTemplateFile
     );
 
     /// <summary>
@@ -825,11 +811,9 @@ public static partial class Kernel32
     /// should be used. For more information, see Global and Local Functions.
     /// </para>
     /// </summary>
-    /// <param name="hMem"></param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void* GlobalLock(
-      HGLOBAL hMem
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void* GlobalLock(
+      [In] HGLOBAL hMem
     );
 
     /// <summary>
@@ -845,13 +829,10 @@ public static partial class Kernel32
     /// For more information, see Global and Local Functions.
     /// </para>
     /// </summary>
-    /// <param name="uFlags"></param>
-    /// <param name="dwBytes"></param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static partial HGLOBAL GlobalAlloc(
-      UINT uFlags,
-      SIZE_T dwBytes
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HGLOBAL GlobalAlloc(
+      [In] UINT uFlags,
+      [In] SIZE_T dwBytes
     );
 
     /// <summary>
@@ -885,50 +866,50 @@ public static partial class Kernel32
     /// your error code does not conflict with any system-defined error codes.
     /// </para>
     /// </remarks>
-    [LibraryImport("kernel32.dll")]
-    public static partial void SetLastError(
-      DWORD dwErrCode
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern void SetLastError(
+      [In] DWORD dwErrCode
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetConsoleScreenBufferSize(
-      HANDLE hConsoleOutput,
-      COORD dwSize
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetConsoleScreenBufferSize(
+      [In] HANDLE hConsoleOutput,
+      [In] COORD dwSize
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GetConsoleSelectionInfo(
-      out Console.ConsoleSelectionInfo lpConsoleSelectionInfo
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetConsoleSelectionInfo(
+      [Out] out ConsoleSelectionInfo lpConsoleSelectionInfo
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HWND GetConsoleWindow();
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HWND GetConsoleWindow();
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GetNumberOfConsoleMouseButtons(
-      out DWORD lpNumberOfMouseButtons
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetNumberOfConsoleMouseButtons(
+      [Out] out DWORD lpNumberOfMouseButtons
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial COORD GetLargestConsoleWindowSize(
-      HANDLE hConsoleOutput
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern COORD GetLargestConsoleWindowSize(
+      [In] HANDLE hConsoleOutput
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GetCurrentConsoleFont(
-      HANDLE hConsoleOutput,
-      BOOL bMaximumWindow,
-      out Console.ConsoleFontInfo lpConsoleCurrentFont
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetCurrentConsoleFont(
+      [In] HANDLE hConsoleOutput,
+      [In] BOOL bMaximumWindow,
+      [Out] out ConsoleFontInfo lpConsoleCurrentFont
     );
 
     /// <summary>
     /// Retrieves extended information about the current console font.
     /// </summary>
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GetCurrentConsoleFontEx(
-      HANDLE hConsoleOutput,
-      BOOL bMaximumWindow,
-      ref Console.ConsoleFontInfoEx lpConsoleCurrentFontEx
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetCurrentConsoleFontEx(
+      [In] HANDLE hConsoleOutput,
+      [In] BOOL bMaximumWindow,
+      [Out] ConsoleFontInfoEx* lpConsoleCurrentFontEx
     );
 
     /// <summary>
@@ -946,12 +927,11 @@ public static partial class Kernel32
     /// <param name="lpConsoleCurrentFontEx">
     /// A pointer to a <see cref="ConsoleFontInfoEx"/> structure that contains the font information.
     /// </param>
-    /// <returns></returns>
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetCurrentConsoleFontEx(
-      HANDLE hConsoleOutput,
-      BOOL bMaximumWindow,
-      in Console.ConsoleFontInfoEx lpConsoleCurrentFontEx
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL SetCurrentConsoleFontEx(
+      [In] HANDLE hConsoleOutput,
+      [In] BOOL bMaximumWindow,
+      [In] in ConsoleFontInfoEx lpConsoleCurrentFontEx
     );
 
     /// <summary>
@@ -962,9 +942,9 @@ public static partial class Kernel32
     /// system date and time. The <paramref name="lpSystemTime"/> parameter must not
     /// be <c>NULL</c>. Using <c>NULL</c> will result in an access violation.
     /// </param>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void GetSystemTime(
-      out SystemTime lpSystemTime
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void GetSystemTime(
+      [Out] out SystemTime lpSystemTime
     );
 
     /// <summary>
@@ -975,122 +955,173 @@ public static partial class Kernel32
     /// A pointer to a <see cref="FileTime"/> structure to receive the current
     /// system date and time in UTC format.
     /// </param>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial void GetSystemTimeAsFileTime(
-      out FileTime lpSystemTimeAsFileTime
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe void GetSystemTimeAsFileTime(
+      [Out] out FileTime lpSystemTimeAsFileTime
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial HLOCAL LocalFree(
-      HLOCAL hMem
+    /// <summary>
+    /// Frees the specified local memory object and invalidates its handle.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HLOCAL LocalFree(
+      [In] HLOCAL hMem
     );
 
-    /// <include file="Docs/Kernel32/ReadConsoleInput.xml" path="/*"/>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL ReadConsoleInputW(
-      HANDLE hConsoleInput,
-      Console.InputEvent* lpBuffer, // out
-      DWORD nLength,
-      ref DWORD lpNumberOfEventsRead
+    /// <summary>
+    /// Reads data from a console input buffer and removes it from the buffer.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL ReadConsoleInputW(
+      [In] HANDLE hConsoleInput,
+      [Out] InputEvent* lpBuffer,
+      [In] DWORD nLength,
+      [Out] out DWORD lpNumberOfEventsRead
     );
 
-    /// <include file="Docs/Kernel32/WriteConsoleInput.xml" path="/*"/>
-    [LibraryImport("kernel32.dll")]
-    public static unsafe partial BOOL WriteConsoleInputW(
-      HANDLE hConsoleInput,
-      Console.InputEvent* lpBuffer,
-      DWORD nLength,
-      ref DWORD lpNumberOfEventsWritten
+    /// <summary>
+    /// Writes data directly to the console input buffer.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteConsoleInputW(
+      [In] HANDLE hConsoleInput,
+      [In] InputEvent* lpBuffer,
+      [In] DWORD nLength,
+      [Out] out DWORD lpNumberOfEventsWritten
     );
 
-    /// <include file="Docs/Kernel32/GetConsoleCP.xml" path="/*"/>
-    [LibraryImport("Kernel32.dll")]
-    public static partial UINT GetConsoleCP();
+    /// <summary>
+    /// Retrieves the input code page used by the console
+    /// associated with the calling process. A console uses its
+    /// input code page to translate keyboard input into the
+    /// corresponding character value.
+    /// </summary>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern UINT GetConsoleCP();
 
-    /// <include file="Docs/Kernel32/GetConsoleOutputCP.xml" path="/*"/>
-    [LibraryImport("Kernel32.dll")]
-    public static partial UINT GetConsoleOutputCP();
+    /// <summary>
+    /// Retrieves the output code page used by the console associated with the calling
+    /// process. A console uses its output code page to translate the
+    /// character values written by the various output functions into
+    /// the images displayed in the console window.
+    /// </summary>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern UINT GetConsoleOutputCP();
 
-    /// <include file="Docs/Kernel32/SetConsoleCP.xml" path="/*"/>
-    [LibraryImport("Kernel32.dll")]
-    public static partial BOOL SetConsoleCP(
-      UINT wCodePageID
+    /// <summary>
+    /// Sets the input code page used by the console associated with the
+    /// calling process. A console uses its input code page to
+    /// translate keyboard input into the corresponding character value.
+    /// </summary>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetConsoleCP(
+      [In] UINT wCodePageID
     );
 
-    /// <include file="Docs/Kernel32/SetConsoleOutputCP.xml" path="/*"/>
-    [LibraryImport("Kernel32.dll")]
-    public static partial BOOL SetConsoleOutputCP(
-        UINT wCodePageID);
-
-    /// <include file="Docs/Kernel32/GetStdHandle.xml" path="/*"/>
-    [LibraryImport("kernel32.dll")]
-    public static partial HANDLE GetStdHandle(
-        DWORD nStdHandle);
-
-    [LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true)]
-    public static unsafe partial SafeFileHandle CreateFileSafe(
-        WCHAR* lpFileName,
-        DWORD dwDesiredAccess,
-        DWORD dwShareMode,
-        [Optional] SecurityAttributes* lpSecurityAttributes,
-        DWORD dwCreationDisposition,
-        DWORD dwFlagsAndAttributes,
-        [Optional] HANDLE hTemplateFile);
-
-    [LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true)]
-    public static unsafe partial HANDLE CreateFile(
-      WCHAR* lpFileName,
-      DWORD dwDesiredAccess,
-      DWORD dwShareMode,
-      [Optional] SecurityAttributes* lpSecurityAttributes,
-      CreateFileFlags dwCreationDisposition,
-      DWORD dwFlagsAndAttributes,
-      [Optional] HANDLE hTemplateFile
+    /// <summary>
+    /// Sets the output code page used by the console associated
+    /// with the calling process. A console uses its output code
+    /// page to translate the character values written by the
+    /// various output functions into the images displayed in
+    /// the console window.
+    /// </summary>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetConsoleOutputCP(
+      [In] UINT wCodePageID
     );
 
-    /// <include file="Docs/Kernel32/WriteConsoleOutput.xml" path="/*"/>
-    [LibraryImport("kernel32.dll", SetLastError = true)]
-    public static unsafe partial BOOL WriteConsoleOutputW(
-      HANDLE hConsoleOutput,
-      Console.ConsoleChar* lpBuffer,
-      Console.SmallSize dwBufferSize,
-      COORD dwBufferCoord,
-      ref SMALL_RECT lpWriteRegion
+    /// <summary>
+    /// Retrieves a handle to the specified
+    /// standard device (standard input, standard output, or standard error).
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern HANDLE GetStdHandle(
+      [In] DWORD nStdHandle
     );
 
-    /// <include file="Docs/Kernel32/WriteConsoleOutput.xml" path="/*"/>
-    [LibraryImport("kernel32.dll", SetLastError = true)]
-    public static unsafe partial BOOL WriteConsoleOutputW(
-      SafeFileHandle hConsoleOutput,
-      Console.ConsoleChar* lpBuffer,
-      Console.SmallSize dwBufferSize,
-      COORD dwBufferCoord,
-      ref SMALL_RECT lpWriteRegion
+    /// <summary>
+    /// Creates or opens a file or I/O device.
+    /// The most commonly used I/O devices are as follows:
+    /// file, file stream, directory, physical disk, volume, console buffer, tape drive,
+    /// communications resource, mailslot, and pipe. The function returns a
+    /// handle that can be used to access the file or device for various
+    /// types of I/O depending on the file or device and the
+    /// flags and attributes specified.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe HANDLE CreateFileW(
+      [In] WCHAR* lpFileName,
+      [In] DWORD dwDesiredAccess,
+      [In] DWORD dwShareMode,
+      [In, Optional] SecurityAttributes* lpSecurityAttributes,
+      [In] CreateFileFlags dwCreationDisposition,
+      [In] DWORD dwFlagsAndAttributes,
+      [In, Optional] HANDLE hTemplateFile
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL GetConsoleMode(
-      HANDLE hConsoleInput,
-      out DWORD lpMode
+    /// <summary>
+    /// Writes character and color attribute data to a specified
+    /// rectangular block of character cells in a console screen buffer.
+    /// The data to be written is taken from a correspondingly
+    /// sized rectangular block at a specified location in the source buffer.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL WriteConsoleOutputW(
+      [In] HANDLE hConsoleOutput,
+      [In] ConsoleChar* lpBuffer,
+      [In] SmallSize dwBufferSize,
+      [In] Coord dwBufferCoord,
+      [In, Out] ref SmallRect lpWriteRegion
     );
 
-    [LibraryImport("kernel32.dll")]
-    public static partial BOOL SetConsoleMode(
-        HANDLE hConsoleInput,
-        DWORD dwMode);
+    /// <summary>
+    /// Retrieves the current input mode of a console's
+    /// input buffer or the current output mode of a console screen buffer.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe BOOL GetConsoleMode(
+      [In] HANDLE hConsoleInput,
+      [Out] out DWORD lpMode
+    );
 
-    /// <include file="Docs/Kernel32/GetLastError.xml" path="/*"/>
-    [LibraryImport("kernel32.dll")]
-    public static partial DWORD GetLastError();
+    /// <summary>
+    /// Sets the input mode of a console's input buffer or the output mode of a console screen buffer.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern BOOL SetConsoleMode(
+      [In] HANDLE hConsoleInput,
+      [In] DWORD dwMode
+    );
 
-    [LibraryImport("kernel32.dll", SetLastError = true)]
-    public static unsafe partial DWORD FormatMessageW(
-      DWORD dwFlags,
-      [Optional] IntPtr lpSource,
-      DWORD dwMessageId,
-      DWORD dwLanguageId,
-      WCHAR* lpBuffer, // out
-      DWORD nSize,
-      [Optional] IntPtr Arguments
+    /// <summary>
+    /// Retrieves the calling thread's last-error code value.
+    /// The last-error code is maintained on a per-thread basis.
+    /// Multiple threads do not overwrite each other's last-error code.
+    /// </summary>
+    /// <returns></returns>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern DWORD GetLastError();
+
+    /// <summary>
+    /// Formats a message string.
+    /// The function requires a message definition as input.
+    /// The message definition can come from a buffer passed into the function.
+    /// It can come from a message table resource in an already-loaded module.
+    /// Or the caller can ask the function to search the system's message table
+    /// resource(s) for the message definition. The function finds the message
+    /// definition in a message table resource based on a message identifier
+    /// and a language identifier. The function copies the formatted message
+    /// text to an output buffer, processing any embedded insert sequences
+    /// if requested.
+    /// </summary>
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern unsafe DWORD FormatMessageW(
+      [In] FormatMessageFlags dwFlags,
+      [In, Optional] IntPtr lpSource,
+      [In] DWORD dwMessageId,
+      [In] DWORD dwLanguageId,
+      [Out] WCHAR* lpBuffer,
+      [In] DWORD nSize,
+      [In, Optional] IntPtr Arguments
     );
 }

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.CompilerServices;
 
 namespace Win32.Gdi32;
 
@@ -100,7 +99,7 @@ public readonly struct Bitmap :
             0,
             (uint)bmpScreen.Height,
             lpbitmap,
-            ref Unsafe.AsRef<BitmapInfo>((BitmapInfo*)&bi),
+            (BitmapInfo*)&bi,
             DIBitsUsage.RGBColors);
         if (scanlinesCopied == 0)
         { throw new GdiException("Failed to get the bits from the bitmap"); }

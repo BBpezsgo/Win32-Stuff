@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Win32.Console;
 
@@ -39,13 +40,6 @@ public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     [SupportedOSPlatform("windows")]
     public ConsoleRenderer(short bufferWidth, short bufferHeight)
     {
-        /*
-        Console.OutputEncoding = System.Text.Encoding.Unicode;
-        _ = Kernel32.SetConsoleOutputCP(65001);
-        _ = Kernel32.SetConsoleCP(65001);
-        Console.OutputEncoding = System.Text.Encoding.Unicode;
-        */
-
         Handle = Kernel32.GetStdHandle(StdHandle.Output);
 
         if (Handle == Kernel32.InvalidHandle)
@@ -71,16 +65,13 @@ public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     [SupportedOSPlatform("windows")]
     public override unsafe void Render()
     {
-        fixed (ConsoleChar* consoleBufferPtr = ConsoleBuffer)
-        {
-            if (Kernel32.WriteConsoleOutputW(
-                Handle,
-                consoleBufferPtr,
-                Size,
-                default,
-                ref ConsoleRect) == FALSE)
-            { throw WindowsException.Get(); }
-        }
+        if (Kernel32.WriteConsoleOutputW(
+            Handle,
+            (ConsoleChar*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ConsoleBuffer.AsSpan())),
+            Size,
+            default,
+            ref ConsoleRect) == FALSE)
+        { throw WindowsException.Get(); }
     }
 
     /// <exception cref="WindowsException"/>

@@ -9,7 +9,7 @@ public readonly ref struct Span2D<T>
     public readonly int Height;
 
     public ref T this[int x, int y] => ref Span[x + (y * Width)];
-    public ref T this[Console.Coord point] => ref Span[point.X + (point.Y * Width)];
+    public ref T this[COORD point] => ref Span[point.X + (point.Y * Width)];
 
     public Span2D(Span<T> span, int width, int height)
     {
@@ -42,7 +42,7 @@ public readonly ref struct Span2D<T>
     public override string ToString() => $"( {Width}x{Height} {Span.ToString()} )";
 
     public bool IsVisible(Vector2 point) => point.X >= 0 && point.X < Width && point.Y >= 0 && point.Y < Height;
-    public bool IsVisible(Console.Coord point) => point.X >= 0 && point.X < Width && point.Y >= 0 && point.Y < Height;
+    public bool IsVisible(COORD point) => point.X >= 0 && point.X < Width && point.Y >= 0 && point.Y < Height;
 }
 
 public readonly ref struct ReadOnlySpan2D<T>

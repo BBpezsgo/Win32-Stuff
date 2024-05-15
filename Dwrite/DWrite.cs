@@ -4,7 +4,7 @@
 /// DirectWrite
 /// </summary>
 [SupportedOSPlatform("windows")]
-public static partial class DWrite
+public static class DWrite
 {
     /// <summary>
     /// Creates a DirectWrite factory object that is used for subsequent
@@ -23,8 +23,8 @@ public static partial class DWrite
     /// If this function succeeds, it returns <see cref="HResult.Ok"/>.
     /// Otherwise, it returns an <c>HRESULT</c> error code.
     /// </returns>
-    [LibraryImport("Dwrite.dll", SetLastError = true)]
-    public static unsafe partial HRESULT DWriteCreateFactory(
+    [DllImport("Dwrite.dll", SetLastError = true)]
+    public static extern unsafe HRESULT DWriteCreateFactory(
       FactoryType factoryType,
       REFIID iid,
       out void* factory
@@ -41,9 +41,9 @@ public static partial class DWrite
     /// <inheritdoc cref="DWriteCreateFactory(FactoryType, Guid, void**)"/>
     [RequiresUnreferencedCode("COM interop")]
     public static unsafe HRESULT DWriteCreateFactory<T>(
-        FactoryType factoryType,
-        REFIID iid,
-        out T? factory
+      FactoryType factoryType,
+      REFIID iid,
+      out T? factory
     )
     {
         HRESULT result = DWriteCreateFactory(factoryType, iid, out object _factory);
@@ -89,10 +89,10 @@ public static partial class DWrite
     public static extern unsafe HRESULT CreateTextFormat(
       [In] WCHAR* fontFamilyName,
       [MarshalAs(UnmanagedType.IUnknown)] IDWriteFontCollection fontCollection,
-            FontWeight fontWeight,
-            FontStyle fontStyle,
-            FontStretch fontStretch,
-            FLOAT fontSize,
+      FontWeight fontWeight,
+      FontStyle fontStyle,
+      FontStretch fontStretch,
+      FLOAT fontSize,
       [In] WCHAR* localeName,
       [Out, MarshalAs(UnmanagedType.IUnknown)] out IDWriteTextFormat textFormat
     );

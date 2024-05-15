@@ -1,19 +1,19 @@
 ﻿namespace Win32.COM;
 
 [SupportedOSPlatform("windows")]
-public static partial class Ole32
+public static class Ole32
 {
-    [LibraryImport("Ole32.dll", SetLastError = true)]
-    public static partial void CoUninitialize();
+    [DllImport("Ole32.dll", SetLastError = true)]
+    public static extern void CoUninitialize();
 
-    [LibraryImport("Ole32.dll", SetLastError = true)]
-    public static unsafe partial HRESULT CoInitializeEx(
+    [DllImport("Ole32.dll", SetLastError = true)]
+    public static extern unsafe HRESULT CoInitializeEx(
       [Optional] void* pvReserved,
-       COMInit dwCoInit
+      COMInit dwCoInit
     );
 
-    [LibraryImport("Ole32.dll", SetLastError = true)]
-    public static unsafe partial HRESULT CoCreateInstance(
+    [DllImport("Ole32.dll", SetLastError = true)]
+    public static extern unsafe HRESULT CoCreateInstance(
       REFCLSID rclsid,
       [Optional] void** pUnkOuter,
       DWORD dwClsContext,
