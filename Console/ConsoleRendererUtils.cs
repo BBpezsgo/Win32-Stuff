@@ -10,37 +10,37 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text(position.X, position.Y, text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text(x, y, text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, COORD position, ReadOnlySpan<byte> text, ushort attributes)
         => self.Text(position.X, position.Y, text, attributes);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<byte> text, ushort attributes)
         => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, attributes);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<byte> text, ushort attributes)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -58,43 +58,43 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text(position.X, position.Y, text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
         => self.Text(x, y, text, CharColor.Make(background, foreground));
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, COORD position, ReadOnlySpan<char> text, ushort attributes)
         => self.Text(position.X, position.Y, text, attributes);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, Vector2 position, ReadOnlySpan<char> text, ushort attributes)
         => self.Text((int)MathF.Round(position.X), (int)MathF.Round(position.Y), text, attributes);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, SmallRect rect, ReadOnlySpan<char> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, SmallRect rect, ReadOnlySpan<char> text, ushort attributes)
         => self.Text(rect.X, rect.Y, text[..Math.Min(text.Length, rect.Width)], attributes);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
+    public static void Text(this IRenderer<ConsoleChar> self, int x, int y, ReadOnlySpan<char> text, ushort attributes)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -112,7 +112,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text(this Renderer<ConsoleChar> self, ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Text(this IRenderer<ConsoleChar> self, ref int x, int y, ReadOnlySpan<char> text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -135,13 +135,13 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Dropdown(this Renderer<ConsoleChar> self, COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+    public static void Dropdown(this IRenderer<ConsoleChar> self, COORD coord, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
         => self.Dropdown(coord.X, coord.Y, dropdown, text, style);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Dropdown(this Renderer<ConsoleChar> self, int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
+    public static void Dropdown(this IRenderer<ConsoleChar> self, int x, int y, ConsoleDropdown dropdown, ReadOnlySpan<char> text, ConsoleDropdownStyle style)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -191,7 +191,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Textbox(this Renderer<ConsoleChar> self, SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
+    public static void Textbox(this IRenderer<ConsoleChar> self, SMALL_RECT rect, string text, byte foreground = CharColor.Silver, byte background = CharColor.Black)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
         if (rect.Top >= self.Height) return;
@@ -241,7 +241,7 @@ public static partial class RendererUtils
     /// This uses <see cref="ConsoleMouse"/>
     /// </para>
     /// </remarks>
-    public static bool Button(this Renderer<ConsoleChar> self, SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
+    public static bool Button(this IRenderer<ConsoleChar> self, SMALL_RECT rect, ReadOnlySpan<char> text, ConsoleButtonStyle style)
     {
         WORD attributes = style.Normal;
         bool clicked = false;
@@ -280,7 +280,7 @@ public static partial class RendererUtils
 
     #region SelectBox()
 
-    public static bool SelectBox<TItem>(this Renderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<TItem> selectBox, ConsoleSelectBoxStyle style)
+    public static bool SelectBox<TItem>(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleSelectBox<TItem> selectBox, ConsoleSelectBoxStyle style)
     {
         WORD labelAttributes = style.LabelNormal;
         WORD leftButtonAttributes = style.ButtonNormal;
@@ -414,7 +414,7 @@ public static partial class RendererUtils
     /// This uses <see cref="ConsoleMouse"/> and <see cref="ConsoleKeyboard"/>
     /// </para>
     /// </remarks>
-    public static void InputField(this Renderer<ConsoleChar> self, SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
+    public static void InputField(this IRenderer<ConsoleChar> self, SmallRect rect, ConsoleInputFieldStyle style, ConsoleInputField textField)
     {
         WORD attributes = style.Normal;
 
@@ -555,20 +555,20 @@ public static partial class RendererUtils
 
     #region Box()
 
-    /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
-    public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground)
+    /// <inheritdoc cref="Box(IRenderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+    public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground)
         => self.Box(box, CharColor.Make(background, foreground), in SideCharacters.BoxSides);
 
-    /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
-    public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, ushort attributes)
+    /// <inheritdoc cref="Box(IRenderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+    public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, ushort attributes)
         => self.Box(box, attributes, in SideCharacters.BoxSides);
 
-    /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
-    public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters)
+    /// <inheritdoc cref="Box(IRenderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+    public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, byte background, byte foreground, in SideCharacters<char> sideCharacters)
         => self.Box(box, CharColor.Make(background, foreground), in sideCharacters);
 
-    /// <inheritdoc cref="Box(Renderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
-    public static void Box(this Renderer<ConsoleChar> self, SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
+    /// <inheritdoc cref="Box(IRenderer{ConsoleChar}, SmallRect, ushort, in SideCharacters{char})"/>
+    public static void Box(this IRenderer<ConsoleChar> self, SMALL_RECT box, ushort attributes, in SideCharacters<char> sideCharacters)
     {
         int top = box.Top;
         int left = box.Left;
@@ -619,14 +619,14 @@ public static partial class RendererUtils
 
     #region Panel()
 
-    /// <inheritdoc cref="Panel(Renderer{ConsoleChar}, ConsolePanel, ushort, in SideCharacters{char})"/>
-    public static void Panel(this Renderer<ConsoleChar> self, ConsolePanel panel, ushort attributes)
+    /// <inheritdoc cref="Panel(IRenderer{ConsoleChar}, ConsolePanel, ushort, in SideCharacters{char})"/>
+    public static void Panel(this IRenderer<ConsoleChar> self, ConsolePanel panel, ushort attributes)
         => self.Panel(panel, attributes, in SideCharacters.PanelSides);
 
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Panel(this Renderer<ConsoleChar> self, ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
+    public static void Panel(this IRenderer<ConsoleChar> self, ConsolePanel panel, ushort attributes, in SideCharacters<char> sideCharacters)
     {
         if (!ConsoleMouse.WasUsed)
         {
@@ -707,7 +707,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void CorneredLine(this Renderer<ConsoleChar> self, COORD a, COORD b, ushort attributes)
+    public static void CorneredLine(this IRenderer<ConsoleChar> self, COORD a, COORD b, ushort attributes)
     {
         COORD min = COORD.Min(a, b);
         COORD max = COORD.Max(a, b);
@@ -735,10 +735,10 @@ public static partial class RendererUtils
 
     #region Bitfield
 
-    public static void Bitfield(this Renderer<ConsoleChar> renderer, Coord position, int[] bitfield)
+    public static void Bitfield(this IRenderer<ConsoleChar> renderer, Coord position, int[] bitfield)
         => renderer.Bitfield(position, bitfield, new ConsoleChar('1', CharColor.BrightBlue, CharColor.Black), new ConsoleChar('1', CharColor.Blue, CharColor.Black));
 
-    public static void Bitfield(this Renderer<ConsoleChar> renderer, Coord position, int bitfield)
+    public static void Bitfield(this IRenderer<ConsoleChar> renderer, Coord position, int bitfield)
         => renderer.Bitfield(position, bitfield, new ConsoleChar('1', CharColor.BrightBlue, CharColor.Black), new ConsoleChar('1', CharColor.Blue, CharColor.Black));
 
     #endregion

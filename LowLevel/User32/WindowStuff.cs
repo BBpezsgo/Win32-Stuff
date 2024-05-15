@@ -1819,7 +1819,7 @@ public static partial class User32
     [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     public static extern BOOL ShowWindow(
       [In] HWND hWnd,
-      [In] int nCmdShow
+      [In] Forms.ShowWindowFlags nCmdShow
     );
 
     /// <summary>

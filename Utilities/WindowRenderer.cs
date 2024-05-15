@@ -1,13 +1,14 @@
 ﻿using System.Buffers;
+using Win32.Console;
 using Win32.Gdi32;
 
 namespace Win32.Forms;
 
 [SupportedOSPlatform("windows")]
-public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
+public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IOnlySetterRenderer<GdiColor>, IDisposable
 {
-    public override short Width => (short)BufferWidth;
-    public override short Height => (short)BufferHeight;
+    public override int Width => (short)BufferWidth;
+    public override int Height => (short)BufferHeight;
 
     public int WindowWidth { get; }
     public int WindowHeight { get; }
@@ -44,23 +45,10 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
             Colors = default,
         };
 
-        fixed (byte* classNamePtr = "edit"u8)
-        {
-            Form = new Form(
-                    "Bruh",
-                    windowWidth, windowHeight,
-                    styles: WindowStyles.VISIBLE | WindowStyles.CAPTION | WindowStyles.CLIPSIBLINGS | WindowStyles.CLIPCHILDREN,
-                    exStyles: WindowStylesEx.APPWINDOW | WindowStylesEx.WINDOWEDGE
-                );
-
-            // (Window)Win32.LowLevel.User32.CreateWindowExA(
-            // Win32.LowLevel.WindowStyles.EX_APPWINDOW | Win32.LowLevel.WindowStyles.EX_WINDOWEDGE,
-            // classNamePtr,
-            // null,
-            // Win32.LowLevel.WindowStyles.VISIBLE | Win32.LowLevel.WindowStyles.CAPTION | Win32.LowLevel.WindowStyles.CLIPSIBLINGS | Win32.LowLevel.WindowStyles.CLIPCHILDREN,
-            // 0, 0,
-            // WindowWidth, WindowHeight);
-        }
+        Form = new Form(
+            "Bruh",
+            windowWidth, windowHeight
+        );
 
         DC = Form.GetClientDC();
 
@@ -69,11 +57,7 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IDisposable
         BufferHeight = height;
     }
 
-    public bool Tick()
-    {
-        Form.HandleNextEvent();
-        return Form != 0;
-    }
+    public void Set(int i, GdiColor pixel) => this[i] = pixel;
 
     public override void Render()
     {

@@ -21,6 +21,7 @@ public static class Terminal
             return stdinHandle;
         }
     }
+
     /// <exception cref="WindowsException"/>
     public static HWND OutputHandle
     {
@@ -35,6 +36,8 @@ public static class Terminal
             return stdoutHandle;
         }
     }
+
+    public static Forms.FormUnmanaged Form => new(Kernel32.GetConsoleWindow());
 
     /// <exception cref="WindowsException"/>
     public static uint InputFlags

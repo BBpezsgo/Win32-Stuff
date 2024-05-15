@@ -33,7 +33,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, char @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, char @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
     {
         COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
 
@@ -50,7 +50,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, byte @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, byte @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
     {
         COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
 
@@ -67,7 +67,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -81,7 +81,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -95,7 +95,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, char @char, BitmapFont<TPixel> font)
+    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, char @char, BitmapFont<TPixel> font)
     {
         COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
 
@@ -112,7 +112,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this Renderer<TPixel> self, int x, int y, byte @char, BitmapFont<TPixel> font)
+    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, byte @char, BitmapFont<TPixel> font)
     {
         COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
 
@@ -129,7 +129,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, BitmapFont<TPixel> font)
+    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, BitmapFont<TPixel> font)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -143,7 +143,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this Renderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, BitmapFont<TPixel> font)
+    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, BitmapFont<TPixel> font)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -169,7 +169,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void CorneredLine<TPixel>(this Renderer<TPixel> self, COORD a, COORD b, TPixel v)
+    public static void CorneredLine<TPixel>(this IRenderer<TPixel> self, COORD a, COORD b, TPixel v)
     {
         COORD min = COORD.Min(a, b);
         COORD max = COORD.Max(a, b);
@@ -197,13 +197,13 @@ public static partial class RendererUtils
 
     #region Bitfield
 
-    public static void Bitfield(this Renderer<char> renderer, Coord position, int[] bitfield)
+    public static void Bitfield(this IRenderer<char> renderer, Coord position, int[] bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
-    public static void Bitfield(this Renderer<char> renderer, Coord position, int bitfield)
+    public static void Bitfield(this IRenderer<char> renderer, Coord position, int bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
-    public static void Bitfield<TPixel>(this Renderer<TPixel> renderer, Coord position, int[] bitfield, TPixel one, TPixel zero)
+    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, int[] bitfield, TPixel one, TPixel zero)
     {
         for (int i = 0; i < bitfield.Length; i++)
         {
@@ -211,7 +211,7 @@ public static partial class RendererUtils
         }
     }
 
-    public static void Bitfield<TPixel>(this Renderer<TPixel> renderer, Coord position, int bitfield, TPixel one, TPixel zero)
+    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, int bitfield, TPixel one, TPixel zero)
     {
         for (int i = 0; i < 32; i++)
         {
@@ -224,7 +224,7 @@ public static partial class RendererUtils
     #region Triangle()
 
     public static void Triangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Coord a,
         Coord b,
         Coord c,
@@ -236,7 +236,7 @@ public static partial class RendererUtils
             color);
 
     public static void Triangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Span<float> depth,
         Coord a, float depthA,
         Coord b, float depthB,
@@ -250,7 +250,7 @@ public static partial class RendererUtils
             color);
 
     public static void Triangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         int x0, int y0,
         int x1, int y1,
         int x2, int y2,
@@ -307,7 +307,7 @@ public static partial class RendererUtils
     }
 
     public static void Triangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Span<float> depth,
         int x1, int y1, float w1,
         int x2, int y2, float w2,
@@ -441,7 +441,7 @@ public static partial class RendererUtils
     }
 
     public static void FillTriangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Span<float> depth,
         Coord a, Vector3 texA,
         Coord b, Vector3 texB,
@@ -455,7 +455,7 @@ public static partial class RendererUtils
             image);
 
     public static void FillTriangle<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Span<float> depth,
         int x1, int y1, float u1, float v1, float w1,
         int x2, int y2, float u2, float v2, float w2,
@@ -659,7 +659,7 @@ public static partial class RendererUtils
     #region Line()
 
     public static void Lines<T>(
-        this Renderer<T> renderer,
+        this IRenderer<T> renderer,
         ReadOnlySpan<Coord> points,
         T c,
         bool connectEnd = false)
@@ -694,7 +694,7 @@ public static partial class RendererUtils
     /// Source: <see href="https://stackoverflow.com/a/32252934">StackOverflow</see>
     /// </summary>
     public static void Line<TPixel>(
-        this Renderer<TPixel> renderer,
+        this IRenderer<TPixel> renderer,
         Coord a,
         Coord b,
         TPixel color)

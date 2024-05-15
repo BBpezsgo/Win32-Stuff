@@ -3,18 +3,18 @@ using Win32.Gdi32;
 
 namespace Win32.Console;
 
-public class AnsiRenderer : Renderer<ConsoleChar>
+public class AnsiRendererHD : Renderer<GdiColor>
 {
     public override int Width => BufferWidth;
     public override int Height => BufferHeight;
 
     short BufferWidth;
     short BufferHeight;
-    ConsoleChar[] ConsoleBuffer;
+    GdiColor[] ConsoleBuffer;
     readonly StringBuilder Builder;
 
     /// <exception cref="ArgumentOutOfRangeException"/>
-    public override ref ConsoleChar this[int i] => ref ConsoleBuffer[i];
+    public override ref GdiColor this[int i] => ref ConsoleBuffer[i];
 
     [UnsupportedOSPlatform("android")]
     [UnsupportedOSPlatform("browser")]
@@ -25,7 +25,7 @@ public class AnsiRenderer : Renderer<ConsoleChar>
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
+    public AnsiRendererHD() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
     { }
 
     [UnsupportedOSPlatform("android")]
@@ -36,12 +36,12 @@ public class AnsiRenderer : Renderer<ConsoleChar>
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer(short bufferWidth, short bufferHeight)
+    public AnsiRendererHD(short bufferWidth, short bufferHeight)
     {
         BufferWidth = bufferWidth;
         BufferHeight = bufferHeight;
 
-        ConsoleBuffer = new ConsoleChar[BufferWidth * BufferHeight];
+        ConsoleBuffer = new GdiColor[BufferWidth * BufferHeight];
 
         if (OperatingSystem.IsWindows())
         { Ansi.EnableVirtualTerminalSequences(); }
@@ -62,19 +62,14 @@ public class AnsiRenderer : Renderer<ConsoleChar>
     {
         Builder.Clear();
 
-        byte prevForegroundColor = default;
-        byte prevBackgroundColor = default;
-
         for (int y = 0; y < BufferHeight; y++)
         {
             for (int x = 0; x < BufferWidth; x++)
             {
-                Ansi.FromConsoleChar(
+                Ansi.SetBackgroundColor(
                     Builder,
-                    this[x, y],
-                    ref prevForegroundColor,
-                    ref prevBackgroundColor,
-                    x == 0 && y == 0);
+                    this[x, y]);
+                Builder.Append(' ');
             }
         }
 
@@ -102,6 +97,6 @@ public class AnsiRenderer : Renderer<ConsoleChar>
         BufferHeight = (short)height;
 
         if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
-        { ConsoleBuffer = new ConsoleChar[BufferWidth * BufferHeight]; }
+        { ConsoleBuffer = new GdiColor[BufferWidth * BufferHeight]; }
     }
 }

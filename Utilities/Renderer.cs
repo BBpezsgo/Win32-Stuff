@@ -2,12 +2,10 @@
 
 namespace Win32;
 
-public abstract class Renderer
+public abstract class Renderer : IRenderer
 {
-    public abstract short Width { get; }
-    public abstract short Height { get; }
-
-    public Console.SmallSize Size => new(Width, Height);
+    public abstract int Width { get; }
+    public abstract int Height { get; }
 
     public virtual bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
     public virtual bool IsVisible(float x, float y) => IsVisible((int)MathF.Round(x), (int)MathF.Round(y));
@@ -20,7 +18,7 @@ public abstract class Renderer
     public abstract void RefreshBufferSize();
 }
 
-public abstract class Renderer<TPixel> : Renderer
+public abstract class Renderer<TPixel> : Renderer, IRenderer<TPixel>
 {
     /// <exception cref="ArgumentOutOfRangeException"/>
     public abstract ref TPixel this[int i] { get; }
@@ -35,6 +33,8 @@ public abstract class Renderer<TPixel> : Renderer
     public virtual ref TPixel this[POINT p] => ref this[(p.Y * Width) + p.X];
     /// <e virtualxception cref="ArgumentOutOfRangeException"/>
     public virtual ref TPixel this[Vector2 p] => ref this[((int)MathF.Round(p.Y) * Width) + (int)MathF.Round(p.X)];
+
+    public void Set(int i, TPixel pixel) => this[i] = pixel;
 
     public virtual void Clear()
         => Fill(default!);
@@ -109,4 +109,47 @@ public abstract class Renderer<TPixel> : Renderer
             }
         }
     }
+}
+
+public abstract class BufferedRenderer<TPixel> : Renderer<TPixel>, IBufferedRenderer<TPixel>
+{
+    public abstract Span<TPixel> Buffer { get; }
+
+    #region Fill()
+
+    public override void Fill(TPixel value) => Buffer.Fill(value);
+
+    public override void Fill(SMALL_RECT rect, TPixel value)
+        => BufferUtils.Fill(Buffer, Width, Height, rect, value);
+
+    #endregion
+
+    #region Put()
+
+    public override void Put(int x, int y, ReadOnlySpan<TPixel> data, int dataWidth, int dataHeight)
+        => BufferUtils.Put(Buffer, Width, Height, x, y, data, dataWidth, dataHeight);
+
+    #endregion
+
+    #region Clear()
+
+    public override void Clear() => Buffer.Clear();
+
+    public override void Clear(SMALL_RECT rect)
+    {
+        for (int y = 0; y < rect.Height; y++)
+        {
+            int actualY = rect.Y + y;
+            if (actualY >= Height) break;
+            if (actualY < 0) continue;
+
+            int startIndex = (actualY * Width) + Math.Max((short)0, rect.Left);
+            int endIndex = (actualY * Width) + Math.Min(Width - 1, rect.Right);
+            int length = Math.Max(0, endIndex - startIndex);
+
+            Buffer.Slice(startIndex, length).Clear();
+        }
+    }
+
+    #endregion
 }
