@@ -110,7 +110,7 @@ public struct Rect :
         }
     }
 
-    public bool IsEmpty => top == default && left == default && bottom == default && right == default;
+    public readonly bool IsEmpty => top == default && left == default && bottom == default && right == default;
 
     public Rect(LONG x, LONG y, LONG width, LONG height)
     {
