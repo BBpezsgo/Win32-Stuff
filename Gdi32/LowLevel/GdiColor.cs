@@ -117,9 +117,11 @@ public readonly struct GdiColor :
     public static readonly GdiColor Cyan = new(0, 255, 255);
     public static readonly GdiColor Magenta = new(255, 0, 255);
     public static readonly GdiColor Black = new(0, 0, 0);
+    public static readonly GdiColor Gray = new(85, 85, 85);
+    public static readonly GdiColor Silver = new(170, 170, 170);
 
-    GdiColor(COLORREF v) => this.v = v;
-
+    public GdiColor(COLORREF v) => this.v = v;
+    public GdiColor(int v) => this.v = unchecked((COLORREF)v);
     public GdiColor(byte r, byte g, byte b) => v = GdiColor.Make(r, g, b);
     public GdiColor(int r, int g, int b) => v = GdiColor.Make((byte)r, (byte)g, (byte)b);
     public GdiColor(float r, float g, float b) => v = GdiColor.Make((byte)MathF.Round(Math.Clamp(r, 0f, 1f) * (float)byte.MaxValue), (byte)MathF.Round(Math.Clamp(g, 0f, 1f) * (float)byte.MaxValue), (byte)MathF.Round(Math.Clamp(b, 0f, 1f) * (float)byte.MaxValue));
@@ -197,6 +199,8 @@ public readonly struct GdiColor :
         int b = colorA.B - colorB.B;
         return (r * r) + (g * g) + (b * b);
     }
+
+    public static GdiColor ParseHex(string s) => new(int.Parse(s.Trim(), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
 
     public static GdiColor Parse(string s, IFormatProvider? provider)
     {

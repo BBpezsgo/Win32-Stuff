@@ -17,6 +17,8 @@ public struct Point :
     System.Numerics.IMultiplyOperators<POINT, int, POINT>,
     System.Numerics.IDivisionOperators<POINT, int, POINT>
 {
+    public static readonly Point Empty = new(0, 0);
+
     /// <summary>Specifies the x-coordinate of the point.</summary>
     public LONG X;
     /// <summary>Specifies the y-coordinate of the point.</summary>
