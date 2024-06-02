@@ -197,13 +197,13 @@ public static partial class RendererUtils
 
     #region Bitfield
 
-    public static void Bitfield(this IRenderer<char> renderer, Coord position, int[] bitfield)
+    public static void Bitfield(this IRenderer<char> renderer, Coord position, ReadOnlySpan<int> bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
     public static void Bitfield(this IRenderer<char> renderer, Coord position, int bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
-    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, int[] bitfield, TPixel one, TPixel zero)
+    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, ReadOnlySpan<int> bitfield, TPixel one, TPixel zero)
     {
         for (int i = 0; i < bitfield.Length; i++)
         {

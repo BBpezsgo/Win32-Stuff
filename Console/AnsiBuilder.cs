@@ -149,7 +149,7 @@ public class AnsiBuilder
         currentBgColor = savedBgColor;
         currentBold = savedBold;
         currentUnderline = savedUnderline;
-        currentItalics  = savedItalics;
+        currentItalics = savedItalics;
 
         return this;
     }
@@ -173,12 +173,6 @@ public class AnsiBuilder
     }
 
     public AnsiBuilder Append(char value)
-    {
-        Builder.Append(value);
-        return this;
-    }
-
-    public AnsiBuilder Append(char[]? value)
     {
         Builder.Append(value);
         return this;

@@ -193,6 +193,15 @@ public static class BitUtils
         return (segments[i] & (1 << bit)) != 0;
     }
 
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    public static bool GetBit(ReadOnlySpan<int> segments, int bit)
+    {
+        int i = bit / 32;
+        bit %= 32;
+
+        return (segments[i] & (1 << bit)) != 0;
+    }
+
     #endregion
 
     /// <exception cref="ArgumentOutOfRangeException"/>
@@ -201,6 +210,21 @@ public static class BitUtils
 
     /// <exception cref="ArgumentOutOfRangeException"/>
     public static void SetBit(int[] segments, int bit, bool value)
+    {
+        int i = bit / 32;
+        bit %= 32;
+
+        ref int segment = ref segments[i];
+        if (value) segment |= 1 << bit;
+        else segment &= ~(1 << bit);
+    }
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    public static void SetBit(Span<int> segments, int bit, int value)
+        => SetBit(segments, bit, value != 0);
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    public static void SetBit(Span<int> segments, int bit, bool value)
     {
         int i = bit / 32;
         bit %= 32;

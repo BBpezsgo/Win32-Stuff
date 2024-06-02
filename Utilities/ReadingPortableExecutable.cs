@@ -703,7 +703,7 @@ public class PEHeader
     /// <summary>
     /// Image Section headers. Number of sections is in the file header.
     /// </summary>
-    public readonly ImageSectionHeader[] ImageSectionHeaders;
+    public readonly ImmutableArray<ImageSectionHeader> ImageSectionHeaders;
 
     readonly Memory<byte> TotalBytes;
 
@@ -790,21 +790,22 @@ public class PEHeader
             OptionalHeader64 = Memory.FromBinaryReader<ImageOptionalHeader64>(reader);
         }
 
-        ImageSectionHeaders = new ImageSectionHeader[FileHeader.NumberOfSections];
-        for (int i = 0; i < ImageSectionHeaders.Length; i++)
+        ImageSectionHeader[] imageSectionHeaders = new ImageSectionHeader[FileHeader.NumberOfSections];
+        for (int i = 0; i < FileHeader.NumberOfSections; i++)
         {
-            ImageSectionHeaders[i] = Memory.FromBinaryReader<ImageSectionHeader>(reader, 40);
-            ImageSectionHeaders[i].ReadData(TotalBytes);
+            imageSectionHeaders[i] = Memory.FromBinaryReader<ImageSectionHeader>(reader, 40);
+            imageSectionHeaders[i].ReadData(TotalBytes);
         }
+        ImageSectionHeaders = ImmutableCollectionsMarshal.AsImmutableArray(imageSectionHeaders);
     }
 
     /// <exception cref="KeyNotFoundException"/>
-    unsafe public ref ImageSectionHeader GetSection(string sectionName)
+    unsafe public ref readonly ImageSectionHeader GetSection(string sectionName)
     {
         for (int i = 0; i < ImageSectionHeaders.Length; i++)
         {
             if (string.Equals(ImageSectionHeaders[i].Section, sectionName, StringComparison.OrdinalIgnoreCase))
-            { return ref ImageSectionHeaders[i]; }
+            { return ref ImageSectionHeaders.AsSpan()[i]; }
         }
         throw new KeyNotFoundException($"Section \"{sectionName}\" not found");
     }

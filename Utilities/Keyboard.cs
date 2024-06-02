@@ -51,8 +51,8 @@ public static class Keyboard
         return (AsciiToVirtualKeyMap[ascii], 0);
     }
 
-    public static readonly VirtualKeyCode[] AsciiToVirtualKeyMap = new VirtualKeyCode[]
-    {
+    public static readonly ImmutableArray<VirtualKeyCode> AsciiToVirtualKeyMap = ImmutableArray.Create<VirtualKeyCode>
+    (
          VirtualKeyCode.None, // (char)0x00
          VirtualKeyCode.None, // (char)0x01
          VirtualKeyCode.None, // (char)0x02
@@ -180,6 +180,6 @@ public static class Keyboard
          VirtualKeyCode.None, // '|'
          VirtualKeyCode.None, // '}'
          VirtualKeyCode.None, // '~'
-         VirtualKeyCode.None, // (char)0x7F
-    };
+         VirtualKeyCode.None  // (char)0x7F
+    );
 }

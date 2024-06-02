@@ -1,4 +1,6 @@
-﻿[assembly: SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+﻿
+
+[assembly: SuppressMessage("Design", "CA1003:Use generic event handler instances")]
 [assembly: SuppressMessage("Design", "CA1008:Enums should have zero value")]
 [assembly: SuppressMessage("Design", "CA1028:Enum Storage should be Int32")]
 [assembly: SuppressMessage("Design", "CA1032:Implement standard exception constructors")]
@@ -20,9 +22,11 @@
 [assembly: SuppressMessage("Interoperability", "SYSLIB1096:Convert to 'GeneratedComInterface'")]
 
 [assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization")]
+[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers")]
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression")]
 [assembly: SuppressMessage("Style", "IDE0290:Use primary constructor")]
 [assembly: SuppressMessage("Style", "IDE0300:Simplify collection initialization")]
+[assembly: SuppressMessage("Style", "IDE0303:Simplify collection initialization")]
 [assembly: SuppressMessage("Style", "IDE0305:Simplify collection initialization")]
 
 [assembly: SuppressMessage("Roslynator", "RCS1001:Add braces (when expression spans over multiple lines)")]

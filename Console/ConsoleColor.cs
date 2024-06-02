@@ -54,8 +54,8 @@ public static class CharColor
         _ => 0,
     };
 
-    static readonly GdiColor[] ColorValues = new GdiColor[0b_1_0000]
-    {
+    static readonly ImmutableArray<GdiColor> ColorValues = ImmutableArray.Create<GdiColor>
+    (
         new(0, 0, 0),          // 0b_0000
         new(0, 0, 128),        // 0b_0001
         new(0, 128, 0),        // 0b_0010
@@ -71,11 +71,11 @@ public static class CharColor
         new(255, 0, 0),        // 0b_1100
         new(255, 0, 255),      // 0b_1101
         new(255, 255, 0),      // 0b_1110
-        new(255, 255, 255),    // 0b_1111
-    };
+        new(255, 255, 255)    // 0b_1111
+    );
 
-    static readonly byte[] AnsiForegroundColorValues = new byte[0b_1_0000]
-    {
+    static readonly ImmutableArray<byte> AnsiForegroundColorValues = ImmutableArray.Create<byte>
+    (
         Ansi.ForegroundBlack,           // 0b_0000
         Ansi.ForegroundBlue,            // 0b_0001
         Ansi.ForegroundGreen,           // 0b_0010
@@ -91,12 +91,12 @@ public static class CharColor
         Ansi.BrightForegroundRed,       // 0b_1100
         Ansi.BrightForegroundMagenta,   // 0b_1101
         Ansi.BrightForegroundYellow,    // 0b_1110
-        Ansi.BrightForegroundWhite,     // 0b_1111
-    };
+        Ansi.BrightForegroundWhite     // 0b_1111
+    );
 
     [SuppressMessage("Style", "IDE0230:Use UTF-8 string literal")]
-    static readonly byte[] AnsiBackgroundColorValues = new byte[0b_1_0000]
-    {
+    static readonly ImmutableArray<byte> AnsiBackgroundColorValues = ImmutableArray.Create<byte>
+    (
         Ansi.BackgroundBlack,           // 0b_0000
         Ansi.BackgroundBlue,            // 0b_0001
         Ansi.BackgroundGreen,           // 0b_0010
@@ -112,8 +112,8 @@ public static class CharColor
         Ansi.BrightBackgroundRed,       // 0b_1100
         Ansi.BrightBackgroundMagenta,   // 0b_1101
         Ansi.BrightBackgroundYellow,    // 0b_1110
-        Ansi.BrightBackgroundWhite,     // 0b_1111
-    };
+        Ansi.BrightBackgroundWhite     // 0b_1111
+    );
 
     public static byte GetAnsiForegroundColor(byte color) => AnsiForegroundColorValues[color];
     public static byte GetAnsiBackgroundColor(byte color) => AnsiBackgroundColorValues[color];
@@ -130,8 +130,8 @@ public static class CharColor
 
     #region 4bit IRGB
 
-    public static readonly GdiColor[] Irgb4bitColors = new GdiColor[0b_1_0000]
-    {
+    public static readonly ImmutableArray<GdiColor> Irgb4bitColors = ImmutableArray.Create<GdiColor>
+    (
         new(0, 0, 0), // 0b_0000
         new(0, 0, 128), // 0b_0001
         new(0, 128, 0), // 0b_0010
@@ -147,8 +147,8 @@ public static class CharColor
         new(255, 0, 0), // 0b_1100
         new(255, 0, 255), // 0b_1101
         new(255, 255, 0), // 0b_1110
-        new(255, 255, 255), // 0b_1111
-    };
+        new(255, 255, 255) // 0b_1111
+    );
 
     public static GdiColor To24bitColor(byte irgb) => Irgb4bitColors[irgb];
 
@@ -250,12 +250,12 @@ public static class CharColor
         return result;
     }
 
-    static readonly (char Character, float Intensity)[] ShadeCharacters = new (char Character, float Intensity)[]
-    {
-        ( '░', .25f ),
-        ( '▒', .50f ),
-        ( '▓', .75f ),
-    };
+    static readonly ImmutableArray<(char Character, float Intensity)> ShadeCharacters = ImmutableArray.Create<(char Character, float Intensity)>
+    (
+        ('░', .25f),
+        ('▒', .50f),
+        ('▓', .75f)
+    );
 
     public static ConsoleChar ToCharacterShaded(GdiColor color)
     {
