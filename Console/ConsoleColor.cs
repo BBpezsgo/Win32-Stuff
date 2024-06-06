@@ -32,6 +32,7 @@ public static class CharColor
     internal const WORD MASK_COLOR = 0b_1111_1111;
 
     public static WORD Make(byte background, byte foreground) => unchecked((WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)));
+    public static (byte Foreground, byte Background) Deconstruct(ushort attributes) => ((byte)(attributes & MASK_FG), (byte)((attributes & MASK_BG) >> 4));
 
     public static byte Invert(byte color) => color switch
     {
@@ -54,7 +55,7 @@ public static class CharColor
         _ => 0,
     };
 
-    static readonly ImmutableArray<GdiColor> ColorValues = ImmutableArray.Create<GdiColor>
+    public static readonly ImmutableArray<GdiColor> IrgbToColor = ImmutableArray.Create<GdiColor>
     (
         new(0, 0, 0),          // 0b_0000
         new(0, 0, 128),        // 0b_0001
@@ -74,7 +75,7 @@ public static class CharColor
         new(255, 255, 255)    // 0b_1111
     );
 
-    static readonly ImmutableArray<byte> AnsiForegroundColorValues = ImmutableArray.Create<byte>
+    public static readonly ImmutableArray<byte> AnsiForegroundColorValues = ImmutableArray.Create<byte>
     (
         Ansi.ForegroundBlack,           // 0b_0000
         Ansi.ForegroundBlue,            // 0b_0001
@@ -95,7 +96,7 @@ public static class CharColor
     );
 
     [SuppressMessage("Style", "IDE0230:Use UTF-8 string literal")]
-    static readonly ImmutableArray<byte> AnsiBackgroundColorValues = ImmutableArray.Create<byte>
+    public static readonly ImmutableArray<byte> AnsiBackgroundColorValues = ImmutableArray.Create<byte>
     (
         Ansi.BackgroundBlack,           // 0b_0000
         Ansi.BackgroundBlue,            // 0b_0001
@@ -115,10 +116,51 @@ public static class CharColor
         Ansi.BrightBackgroundWhite     // 0b_1111
     );
 
+    public static readonly ImmutableArray<byte> IrgbToAnsi = ImmutableArray.Create<byte>
+    (
+        0,      // 0b_0000
+        4,      // 0b_0001
+        2,      // 0b_0010
+        6,      // 0b_0011
+        1,      // 0b_0100
+        5,      // 0b_0101
+        3,      // 0b_0110
+        7,      // 0b_0111
+        8,      // 0b_1000
+        12,     // 0b_1001
+        10,     // 0b_1010
+        14,     // 0b_1011
+        9,      // 0b_1100
+        13,     // 0b_1101
+        11,     // 0b_1110
+        15      // 0b_1111
+    );
+
+    public static readonly ImmutableArray<GdiColor> AnsiExtendedToColor = ImmutableArray.Create<GdiColor>
+    (
+        new(0, 0, 0),
+        new(128, 0, 0),
+        new(0, 128, 0),
+        new(128, 128, 0),
+        new(0, 0, 128),
+        new(128, 0, 128),
+        new(0, 128, 128),
+        new(192, 192, 192),
+
+        new(0, 0, 0),
+        new(128, 128, 128),
+        new(0, 255, 0),
+        new(255, 255, 0),
+        new(0, 0, 255),
+        new(255, 0, 255),
+        new(0, 255, 255),
+        new(255, 255, 255)
+    );
+
     public static byte GetAnsiForegroundColor(byte color) => AnsiForegroundColorValues[color];
     public static byte GetAnsiBackgroundColor(byte color) => AnsiBackgroundColorValues[color];
 
-    public static GdiColor GetColor(byte color) => ColorValues[color];
+    public static GdiColor GetColor(byte color) => IrgbToColor[color];
 
     [SuppressMessage("Security", "CA5394")]
     public static byte GetRandomColor()

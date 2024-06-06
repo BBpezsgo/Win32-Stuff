@@ -1,20 +1,21 @@
 ﻿using System.Text;
+using Win32.Gdi32;
 
 namespace Win32.Console;
 
-public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<ConsoleChar>
+public class AnsiRendererTrueColor : BufferedRenderer<ColoredChar>, IOnlySetterRenderer<AnsiChar>, IOnlySetterRenderer<ConsoleChar>, IOnlySetterRenderer<GdiColor>
 {
     public override int Width => BufferWidth;
     public override int Height => BufferHeight;
-    public override Span<AnsiChar> Buffer => ConsoleBuffer.AsSpan();
+    public override Span<ColoredChar> Buffer => ConsoleBuffer.AsSpan();
 
     short BufferWidth;
     short BufferHeight;
-    AnsiChar[] ConsoleBuffer;
+    ColoredChar[] ConsoleBuffer;
     readonly StringBuilder Builder;
 
     /// <exception cref="ArgumentOutOfRangeException"/>
-    public override ref AnsiChar this[int i] => ref ConsoleBuffer[i];
+    public override ref ColoredChar this[int i] => ref ConsoleBuffer[i];
 
     [UnsupportedOSPlatform("android")]
     [UnsupportedOSPlatform("browser")]
@@ -25,7 +26,7 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
+    public AnsiRendererTrueColor() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
     { }
 
     [UnsupportedOSPlatform("android")]
@@ -36,12 +37,12 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer(short bufferWidth, short bufferHeight)
+    public AnsiRendererTrueColor(short bufferWidth, short bufferHeight)
     {
         BufferWidth = bufferWidth;
         BufferHeight = bufferHeight;
 
-        ConsoleBuffer = new AnsiChar[BufferWidth * BufferHeight];
+        ConsoleBuffer = new ColoredChar[BufferWidth * BufferHeight];
 
         if (OperatingSystem.IsWindows())
         { Ansi.EnableVirtualTerminalSequences(); }
@@ -62,19 +63,28 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     {
         Builder.Clear();
 
-        byte prevForegroundColor = default;
-        byte prevBackgroundColor = default;
+        GdiColor bg = 0;
+        GdiColor fg = 0;
 
         for (int y = 0; y < BufferHeight; y++)
         {
             for (int x = 0; x < BufferWidth; x++)
             {
-                Ansi.FromConsoleChar(
-                    Builder,
-                    this[x, y],
-                    ref prevForegroundColor,
-                    ref prevBackgroundColor,
-                    x == 0 && y == 0);
+                ref ColoredChar c = ref this[x, y];
+
+                if (bg != c.Background)
+                {
+                    Ansi.SetBackgroundColor(Builder, c.Background);
+                    bg = c.Background;
+                }
+
+                if (fg != c.Foreground)
+                {
+                    Ansi.SetForegroundColor(Builder, c.Foreground);
+                    fg = c.Foreground;
+                }
+
+                Builder.Append(c.Char is '\0' ? ' ' : c.Char);
             }
         }
 
@@ -102,8 +112,10 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
         BufferHeight = (short)height;
 
         if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
-        { ConsoleBuffer = new AnsiChar[BufferWidth * BufferHeight]; }
+        { ConsoleBuffer = new ColoredChar[BufferWidth * BufferHeight]; }
     }
 
-    public void Set(int i, ConsoleChar pixel) => ConsoleBuffer[i] = pixel;
+    void IOnlySetterRenderer<ConsoleChar>.Set(int i, ConsoleChar pixel) => ConsoleBuffer[i] = pixel;
+    void IOnlySetterRenderer<AnsiChar>.Set(int i, AnsiChar pixel) => ConsoleBuffer[i] = pixel;
+    void IOnlySetterRenderer<GdiColor>.Set(int i, GdiColor pixel) => ConsoleBuffer[i] = new ColoredChar(' ', 0, pixel);
 }

@@ -6,6 +6,7 @@ public abstract class Renderer : IRenderer
 {
     public abstract int Width { get; }
     public abstract int Height { get; }
+    public Size Size => new(Width, Height);
 
     public virtual bool IsVisible(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
     public virtual bool IsVisible(float x, float y) => IsVisible((int)MathF.Round(x), (int)MathF.Round(y));

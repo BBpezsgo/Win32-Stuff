@@ -27,6 +27,8 @@ public class FormUnmanaged : Window
     [DebuggerBrowsable(Utils.GlobalDebuggerBrowsable)]
     public bool IsValid => User32.IsWindow(Handle) != FALSE;
 
+    public bool IsForeground => ForegroundWindow == this;
+
     public unsafe FormUnmanaged() { }
 
     public unsafe FormUnmanaged(HWND handle) : base(handle) { }

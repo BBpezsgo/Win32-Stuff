@@ -33,7 +33,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, char @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+    public static void Char<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, char @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
     {
         COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
 
@@ -50,7 +50,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, byte @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
+    public static void Char<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, byte @char, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int charWidth, int charHeight)
     {
         COORD charCoord = CharacterCoord(@char, fontSheetWidth, fontSheetHeight, charWidth, charHeight);
 
@@ -67,7 +67,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+    public static void Text<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -81,7 +81,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
+    public static void Text<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, ReadOnlySpan<TPixel> fontSheetBuffer, int fontSheetWidth, int fontSheetHeight, int fontWidth, int fontHeight)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -95,7 +95,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, char @char, BitmapFont<TPixel> font)
+    public static void Char<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, char @char, BitmapFont<TPixel> font)
     {
         COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
 
@@ -112,7 +112,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Char<TPixel>(this IRenderer<TPixel> self, int x, int y, byte @char, BitmapFont<TPixel> font)
+    public static void Char<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, byte @char, BitmapFont<TPixel> font)
     {
         COORD charCoord = CharacterCoord(@char, font.Width, font.Height, font.CharWidth, font.CharHeight);
 
@@ -129,7 +129,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, BitmapFont<TPixel> font)
+    public static void Text<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, ReadOnlySpan<char> text, BitmapFont<TPixel> font)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -143,7 +143,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void Text<TPixel>(this IRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, BitmapFont<TPixel> font)
+    public static void Text<TPixel>(this IOnlySetterRenderer<TPixel> self, int x, int y, ReadOnlySpan<byte> text, BitmapFont<TPixel> font)
     {
         if (text.IsEmpty) return;
         if (y < 0 || y >= self.Height) return;
@@ -169,7 +169,7 @@ public static partial class RendererUtils
     /// <remarks>
     /// <b>Note:</b> This checks if the coordinate is out of range
     /// </remarks>
-    public static void CorneredLine<TPixel>(this IRenderer<TPixel> self, COORD a, COORD b, TPixel v)
+    public static void CorneredLine<TPixel>(this IOnlySetterRenderer<TPixel> self, COORD a, COORD b, TPixel v)
     {
         COORD min = COORD.Min(a, b);
         COORD max = COORD.Max(a, b);
@@ -179,7 +179,7 @@ public static partial class RendererUtils
             for (int y = Math.Max((short)0, min.Y); y <= max.Y; y++)
             {
                 if (y >= self.Height) break;
-                self[min.X, y] = v;
+                self.Set(min.X, y, v);
             }
         }
 
@@ -188,7 +188,7 @@ public static partial class RendererUtils
             for (int x = Math.Max((short)0, min.X); x <= max.X; x++)
             {
                 if (x >= self.Width) break;
-                self[x, max.Y] = v;
+                self.Set(x, max.Y, v);
             }
         }
     }
@@ -197,13 +197,13 @@ public static partial class RendererUtils
 
     #region Bitfield
 
-    public static void Bitfield(this IRenderer<char> renderer, Coord position, ReadOnlySpan<int> bitfield)
+    public static void Bitfield(this IOnlySetterRenderer<char> renderer, Coord position, ReadOnlySpan<int> bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
-    public static void Bitfield(this IRenderer<char> renderer, Coord position, int bitfield)
+    public static void Bitfield(this IOnlySetterRenderer<char> renderer, Coord position, int bitfield)
         => renderer.Bitfield(position, bitfield, '1', '0');
 
-    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, ReadOnlySpan<int> bitfield, TPixel one, TPixel zero)
+    public static void Bitfield<TPixel>(this IOnlySetterRenderer<TPixel> renderer, Coord position, ReadOnlySpan<int> bitfield, TPixel one, TPixel zero)
     {
         for (int i = 0; i < bitfield.Length; i++)
         {
@@ -211,11 +211,11 @@ public static partial class RendererUtils
         }
     }
 
-    public static void Bitfield<TPixel>(this IRenderer<TPixel> renderer, Coord position, int bitfield, TPixel one, TPixel zero)
+    public static void Bitfield<TPixel>(this IOnlySetterRenderer<TPixel> renderer, Coord position, int bitfield, TPixel one, TPixel zero)
     {
         for (int i = 0; i < 32; i++)
         {
-            renderer[(position.Y * renderer.Width) + position.X + i] = (bitfield & (1 << i)) != 0 ? one : zero;
+            renderer.Set((position.Y * renderer.Width) + position.X + i, (bitfield & (1 << i)) != 0 ? one : zero);
         }
     }
 
@@ -224,7 +224,7 @@ public static partial class RendererUtils
     #region Triangle()
 
     public static void Triangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Coord a,
         Coord b,
         Coord c,
@@ -236,7 +236,7 @@ public static partial class RendererUtils
             color);
 
     public static void Triangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Span<float> depth,
         Coord a, float depthA,
         Coord b, float depthB,
@@ -250,7 +250,7 @@ public static partial class RendererUtils
             color);
 
     public static void Triangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         int x0, int y0,
         int x1, int y1,
         int x2, int y2,
@@ -289,13 +289,13 @@ public static partial class RendererUtils
                      x <= (xt < width ? xt : width - 1); x++)
                 {
                     if (!renderer.IsVisible(x, y)) continue;
-                    renderer[x + (y * width)] = color;
+                    renderer.Set(x + (y * width), color);
                 }
                 for (int x = xf < width ? Convert.ToInt32(xf) : width - 1;
                      x >= (xt > 0 ? xt : 0); x--)
                 {
                     if (!renderer.IsVisible(x, y)) continue;
-                    renderer[x + (y * width)] = color;
+                    renderer.Set(x + (y * width), color);
                 }
             }
             xf += dx_far;
@@ -307,7 +307,7 @@ public static partial class RendererUtils
     }
 
     public static void Triangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Span<float> depth,
         int x1, int y1, float w1,
         int x2, int y2, float w2,
@@ -385,7 +385,7 @@ public static partial class RendererUtils
                     if (renderer.IsVisible(j, i) &&
                         (depth.IsEmpty || w > depth[j + (i * renderer.Width)]))
                     {
-                        renderer[j, i] = color;
+                        renderer.Set(j, i, color);
                         if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = w;
                     }
 
@@ -430,7 +430,7 @@ public static partial class RendererUtils
                     if (renderer.IsVisible(j, i)
                         && (depth.IsEmpty || w > depth[j + (i * renderer.Width)]))
                     {
-                        renderer[j, i] = color;
+                        renderer.Set(j, i, color);
                         if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = w;
                     }
 
@@ -441,7 +441,7 @@ public static partial class RendererUtils
     }
 
     public static void FillTriangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Span<float> depth,
         Coord a, Vector3 texA,
         Coord b, Vector3 texB,
@@ -455,7 +455,7 @@ public static partial class RendererUtils
             image);
 
     public static void FillTriangle<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Span<float> depth,
         int x1, int y1, float u1, float v1, float w1,
         int x2, int y2, float u2, float v2, float w2,
@@ -563,7 +563,7 @@ public static partial class RendererUtils
                     if (renderer.IsVisible(j, i)
                         && (depth.IsEmpty || texW > depth[j + (i * renderer.Width)]))
                     {
-                        renderer[j, i] = NormalizedSample(image, texU / texW, texV / texW);
+                        renderer.Set(j, i, NormalizedSample(image, texU / texW, texV / texW));
                         if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = texW;
                     }
 
@@ -626,7 +626,203 @@ public static partial class RendererUtils
                     if (renderer.IsVisible(j, i) &&
                         (depth.IsEmpty || texW > depth[j + (i * renderer.Width)]))
                     {
-                        renderer[j, i] = NormalizedSample(image, texU / texW, texV / texW);
+                        renderer.Set(j, i, NormalizedSample(image, texU / texW, texV / texW));
+                        if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = texW;
+                    }
+
+                    t += tStep;
+                }
+            }
+        }
+    }
+
+    public static void FillTriangle<TPixel, TSourcePixel>(
+        this IOnlySetterRenderer<TPixel> renderer,
+        Span<float> depth,
+        Coord a, Vector3 texA,
+        Coord b, Vector3 texB,
+        Coord c, Vector3 texC,
+        ReadOnlySpan2D<TSourcePixel> image, Func<TSourcePixel, TPixel> converter)
+        => renderer.FillTriangle<TPixel, TSourcePixel>(
+            depth,
+            a.X, a.Y, texA.X, texA.Y, texA.Z,
+            b.X, b.Y, texB.X, texB.Y, texB.Z,
+            c.X, c.Y, texC.X, texC.Y, texC.Z,
+            image, converter);
+
+    public static void FillTriangle<TPixel, TSourcePixel>(
+        this IOnlySetterRenderer<TPixel> renderer,
+        Span<float> depth,
+        int x1, int y1, float u1, float v1, float w1,
+        int x2, int y2, float u2, float v2, float w2,
+        int x3, int y3, float u3, float v3, float w3,
+        ReadOnlySpan2D<TSourcePixel> image, Func<TSourcePixel, TPixel> converter)
+    {
+        // sort the points vertically
+        if (y2 < y1)
+        {
+            Swap(ref x1, ref x2);
+            Swap(ref y1, ref y2);
+            Swap(ref u1, ref u2);
+            Swap(ref v1, ref v2);
+            Swap(ref w1, ref w2);
+        }
+
+        if (y3 < y1)
+        {
+            Swap(ref x1, ref x3);
+            Swap(ref y1, ref y3);
+            Swap(ref u1, ref u3);
+            Swap(ref v1, ref v3);
+            Swap(ref w1, ref w3);
+        }
+
+        if (y2 > y3)
+        {
+            Swap(ref x2, ref x3);
+            Swap(ref y2, ref y3);
+            Swap(ref u2, ref u3);
+            Swap(ref v2, ref v3);
+            Swap(ref w2, ref w3);
+        }
+
+        int dy1 = y2 - y1;
+        int dx1 = x2 - x1;
+        float dv1 = v2 - v1;
+        float du1 = u2 - u1;
+        float dw1 = w2 - w1;
+
+        int dy2 = y3 - y1;
+        int dx2 = x3 - x1;
+        float dv2 = v3 - v1;
+        float du2 = u3 - u1;
+        float dw2 = w3 - w1;
+
+        float texU, texV, texW;
+
+        float daxStep = 0f;
+        float dbxStep = 0f;
+        float du1Step = 0f;
+        float dv1Step = 0f;
+        float du2Step = 0f;
+        float dv2Step = 0f;
+        float dw1Step = 0f;
+        float dw2Step = 0f;
+
+        if (dy1 != 0) daxStep = dx1 / MathF.Abs(dy1);
+        if (dy2 != 0) dbxStep = dx2 / MathF.Abs(dy2);
+
+        if (dy1 != 0) du1Step = du1 / MathF.Abs(dy1);
+        if (dy1 != 0) dv1Step = dv1 / MathF.Abs(dy1);
+        if (dy1 != 0) dw1Step = dw1 / MathF.Abs(dy1);
+
+        if (dy2 != 0) du2Step = du2 / MathF.Abs(dy2);
+        if (dy2 != 0) dv2Step = dv2 / MathF.Abs(dy2);
+        if (dy2 != 0) dw2Step = dw2 / MathF.Abs(dy2);
+
+        if (dy1 != 0)
+        {
+            for (int i = y1; i <= y2; i++)
+            {
+                int ax = x1 + (int)((i - y1) * daxStep);
+                int bx = x1 + (int)((i - y1) * dbxStep);
+
+                float texSu = u1 + ((i - y1) * du1Step);
+                float texSv = v1 + ((i - y1) * dv1Step);
+                float texSw = w1 + ((i - y1) * dw1Step);
+
+                float texEu = u1 + ((i - y1) * du2Step);
+                float texEv = v1 + ((i - y1) * dv2Step);
+                float texEw = w1 + ((i - y1) * dw2Step);
+
+                if (ax > bx)
+                {
+                    Swap(ref ax, ref bx);
+                    Swap(ref texSu, ref texEu);
+                    Swap(ref texSv, ref texEv);
+                    Swap(ref texSw, ref texEw);
+                }
+
+                // texU = texSu;
+                // texV = texSv;
+                // texW = texSw;
+
+                float tStep = 1f / (float)(bx - ax);
+                float t = 0f;
+
+                for (int j = ax; j < bx; j++)
+                {
+                    texU = ((1f - t) * texSu) + (t * texEu);
+                    texV = ((1f - t) * texSv) + (t * texEv);
+                    texW = ((1f - t) * texSw) + (t * texEw);
+
+                    if (renderer.IsVisible(j, i)
+                        && (depth.IsEmpty || texW > depth[j + (i * renderer.Width)]))
+                    {
+                        renderer.Set(j, i, converter.Invoke(NormalizedSample(image, texU / texW, texV / texW)));
+                        if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = texW;
+                    }
+
+                    t += tStep;
+                }
+            }
+        }
+
+        dy1 = y3 - y2;
+        dx1 = x3 - x2;
+        dv1 = v3 - v2;
+        du1 = u3 - u2;
+        dw1 = w3 - w2;
+
+        if (dy1 != 0) daxStep = dx1 / MathF.Abs(dy1);
+        if (dy2 != 0) dbxStep = dx2 / MathF.Abs(dy2);
+
+        du1Step = 0f;
+        dv1Step = 0f;
+        if (dy1 != 0) du1Step = du1 / MathF.Abs(dy1);
+        if (dy1 != 0) dv1Step = dv1 / MathF.Abs(dy1);
+        if (dy1 != 0) dw1Step = dw1 / MathF.Abs(dy1);
+
+        if (dy1 != 0)
+        {
+            for (int i = y2; i <= y3; i++)
+            {
+                int ax = x2 + (int)((i - y2) * daxStep);
+                int bx = x1 + (int)((i - y1) * dbxStep);
+
+                float texSu = u2 + ((i - y2) * du1Step);
+                float texSv = v2 + ((i - y2) * dv1Step);
+                float texSw = w2 + ((i - y2) * dw1Step);
+
+                float texEu = u1 + ((i - y1) * du2Step);
+                float texEv = v1 + ((i - y1) * dv2Step);
+                float texEw = w1 + ((i - y1) * dw2Step);
+
+                if (ax > bx)
+                {
+                    Swap(ref ax, ref bx);
+                    Swap(ref texSu, ref texEu);
+                    Swap(ref texSv, ref texEv);
+                    Swap(ref texSw, ref texEw);
+                }
+
+                // texU = texSu;
+                // texV = texSv;
+                // texW = texSw;
+
+                float tStep = 1f / (float)(bx - ax);
+                float t = 0f;
+
+                for (int j = ax; j < bx; j++)
+                {
+                    texU = ((1f - t) * texSu) + (t * texEu);
+                    texV = ((1f - t) * texSv) + (t * texEv);
+                    texW = ((1f - t) * texSw) + (t * texEw);
+
+                    if (renderer.IsVisible(j, i) &&
+                        (depth.IsEmpty || texW > depth[j + (i * renderer.Width)]))
+                    {
+                        renderer.Set(j, i, converter.Invoke(NormalizedSample(image, texU / texW, texV / texW)));
                         if (!depth.IsEmpty) depth[j + (i * renderer.Width)] = texW;
                     }
 
@@ -659,7 +855,7 @@ public static partial class RendererUtils
     #region Line()
 
     public static void Lines<T>(
-        this IRenderer<T> renderer,
+        this IOnlySetterRenderer<T> renderer,
         ReadOnlySpan<Coord> points,
         T c,
         bool connectEnd = false)
@@ -694,7 +890,7 @@ public static partial class RendererUtils
     /// Source: <see href="https://stackoverflow.com/a/32252934">StackOverflow</see>
     /// </summary>
     public static void Line<TPixel>(
-        this IRenderer<TPixel> renderer,
+        this IOnlySetterRenderer<TPixel> renderer,
         Coord a,
         Coord b,
         TPixel color)
@@ -718,7 +914,7 @@ public static partial class RendererUtils
         {
             for (int i = 0; i < d; i++)
             {
-                renderer[x, y] = color;
+                renderer.Set(x, y, color);
 
                 x += sx;
                 r += dy;
@@ -734,7 +930,7 @@ public static partial class RendererUtils
         {
             for (int i = 0; i < d; i++)
             {
-                renderer[x, y] = color;
+                renderer.Set(x, y, color);
 
                 y += sy;
                 r += dx;

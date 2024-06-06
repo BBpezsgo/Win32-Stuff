@@ -236,11 +236,17 @@ public static class Ansi
     /// </summary>
     public static GdiColor FromAnsi256(int number)
     {
-        int index_R = (number - 16) / 36;
+        if (number < 16)
+        {
+            return CharColor.AnsiExtendedToColor[number];
+        }
+        number -= 16;
+
+        int index_R = number / 36;
         int r = (index_R > 0) ? (55 + (index_R * 40)) : 0;
-        int index_G = (number - 16) % 36 / 6;
+        int index_G = number % 36 / 6;
         int g = (index_G > 0) ? (55 + (index_G * 40)) : 0;
-        int index_B = (number - 16) % 6;
+        int index_B = number % 6;
         int b = (index_B > 0) ? (55 + (index_B * 40)) : 0;
         return new GdiColor((byte)r, (byte)g, (byte)b);
     }
@@ -330,6 +336,46 @@ public static class Ansi
         {
             Ansi.SetGraphics(builder, backgroundColor);
             previousBackgroundColor = backgroundColor;
+        }
+
+        if (consoleChar.Char == '\0')
+        { builder.Append(' '); }
+        else
+        { builder.Append(consoleChar.Char); }
+
+        return builder;
+    }
+
+    public static StringBuilder FromConsoleChar(StringBuilder builder, AnsiChar consoleChar)
+    {
+        Ansi.SetForegroundColor(builder, consoleChar.Foreground);
+        Ansi.SetBackgroundColor(builder, consoleChar.Background);
+
+        if (consoleChar.Char == '\0')
+        { builder.Append(' '); }
+        else
+        { builder.Append(consoleChar.Char); }
+
+        return builder;
+    }
+
+    public static StringBuilder FromConsoleChar(
+        StringBuilder builder,
+        AnsiChar consoleChar,
+        ref byte previousForegroundColor,
+        ref byte previousBackgroundColor,
+        bool force)
+    {
+        if (force || previousForegroundColor != consoleChar.Foreground)
+        {
+            Ansi.SetForegroundColor(builder, consoleChar.Foreground);
+            previousForegroundColor = consoleChar.Foreground;
+        }
+
+        if (force || previousBackgroundColor != consoleChar.Background)
+        {
+            Ansi.SetBackgroundColor(builder, consoleChar.Background);
+            previousBackgroundColor = consoleChar.Background;
         }
 
         if (consoleChar.Char == '\0')

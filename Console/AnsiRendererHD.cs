@@ -3,7 +3,7 @@ using Win32.Gdi32;
 
 namespace Win32.Console;
 
-public class AnsiRendererHD : Renderer<GdiColor>
+public class AnsiRendererHD : Renderer<GdiColor>, IOnlySetterRenderer<ConsoleChar>
 {
     public override int Width => BufferWidth;
     public override int Height => BufferHeight;
@@ -99,4 +99,6 @@ public class AnsiRendererHD : Renderer<GdiColor>
         if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
         { ConsoleBuffer = new GdiColor[BufferWidth * BufferHeight]; }
     }
+
+    public void Set(int i, ConsoleChar pixel) => this[i] = CharColor.FromCharacter(pixel);
 }
