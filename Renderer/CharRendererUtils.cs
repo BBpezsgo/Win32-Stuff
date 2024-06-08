@@ -3,7 +3,7 @@ using Win32.Console;
 
 namespace Win32;
 
-public static partial class RendererUtils
+public static partial class RendererExtensions
 {
     #region Text
 

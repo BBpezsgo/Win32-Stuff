@@ -5,36 +5,34 @@ using Win32.Gdi32;
 namespace Win32.Forms;
 
 [SupportedOSPlatform("windows")]
-public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IOnlySetterRenderer<GdiColor>, IDisposable
+public sealed unsafe class WindowRenderer : IRenderer<uint>, IOnlySetterRenderer<GdiColor>, IDisposable
 {
-    public override int Width => (short)BufferWidth;
-    public override int Height => (short)BufferHeight;
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
     public int WindowWidth { get; }
     public int WindowHeight { get; }
 
     public Form Form { get; }
-    public override Span<uint> Buffer => MemoryBuffer.Memory.Span;
+    public Memory<uint> Buffer => _buffer.Memory;
 
-    public override ref uint this[int i] => ref MemoryBuffer.Memory.Span[i];
+    public ref uint this[int i] => ref _buffer.Memory.Span[i];
 
     readonly BitmapInfo BitmapInfo;
-    int BufferWidth;
-    int BufferHeight;
-    IMemoryOwner<uint> MemoryBuffer;
+    IMemoryOwner<uint> _buffer;
     bool IsDisposed;
     readonly DC DC;
 
     public WindowRenderer(int width, int height, int windowWidth, int windowHeight)
     {
-        BufferWidth = width;
-        BufferHeight = height;
+        Width = width;
+        Height = height;
         WindowWidth = windowWidth;
         WindowHeight = windowHeight;
 
         BitmapInfoHeader bitmapInfoHeader = BitmapInfoHeader.Create();
-        bitmapInfoHeader.Width = BufferWidth;
-        bitmapInfoHeader.Height = -BufferHeight;
+        bitmapInfoHeader.Width = Width;
+        bitmapInfoHeader.Height = -Height;
         bitmapInfoHeader.Planes = 1;
         bitmapInfoHeader.BitCount = 32;
         bitmapInfoHeader.Compression = BitmapCompression.RGB;
@@ -52,19 +50,20 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IOnlySetterR
 
         DC = Form.GetClientDC();
 
-        MemoryBuffer = MemoryPool<uint>.Shared.Rent(width * height);
-        BufferWidth = width;
-        BufferHeight = height;
+        _buffer = MemoryPool<uint>.Shared.Rent(width * height);
+        Width = width;
+        Height = height;
     }
 
-    public void Set(int i, GdiColor pixel) => this[i] = pixel;
+    public void Set(int i, GdiColor pixel) => Buffer.Span[i] = pixel;
+    public void Set(int i, uint pixel) => Buffer.Span[i] = pixel;
 
-    public override void Render()
+    public void Render()
     {
         fixed (BitmapInfo* pBmi = &BitmapInfo)
         {
-            using MemoryHandle bufferPtr = MemoryBuffer.Memory.Pin();
-            DC.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, BufferWidth, BufferHeight, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
+            using MemoryHandle bufferPtr = _buffer.Memory.Pin();
+            DC.StretchDIBits(0, 0, WindowWidth, WindowHeight, 0, 0, Width, Height, bufferPtr.Pointer, pBmi, 0, 0x00CC0020);
         }
     }
 
@@ -79,7 +78,7 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IOnlySetterR
                 DC.Dispose();
                 Form.Dispose();
             }
-            MemoryBuffer.Dispose();
+            _buffer.Dispose();
         }
 
         IsDisposed = true;
@@ -92,17 +91,17 @@ public sealed unsafe class WindowRenderer : BufferedRenderer<uint>, IOnlySetterR
         GC.SuppressFinalize(this);
     }
 
-    public override void RefreshBufferSize()
+    public void RefreshBufferSize()
     {
         int newWidth = WindowWidth;
         int newHeight = WindowHeight;
 
-        if (newWidth == BufferWidth && newHeight == BufferHeight) return;
+        if (newWidth == Width && newHeight == Height) return;
 
-        MemoryBuffer.Dispose();
+        _buffer.Dispose();
 
-        MemoryBuffer = MemoryPool<uint>.Shared.Rent(newWidth * newHeight);
-        BufferWidth = newWidth;
-        BufferHeight = newHeight;
+        _buffer = MemoryPool<uint>.Shared.Rent(newWidth * newHeight);
+        Width = newWidth;
+        Height = newHeight;
     }
 }

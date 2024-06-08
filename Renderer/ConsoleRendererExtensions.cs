@@ -1,8 +1,8 @@
 ﻿using Win32.Console;
 
-namespace Win32;
+namespace Win32.Console;
 
-public static partial class RendererUtils
+public static partial class RendererExtensions
 {
     #region Bitfield
 

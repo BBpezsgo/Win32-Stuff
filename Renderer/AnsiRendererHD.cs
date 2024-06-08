@@ -1,20 +1,11 @@
 ﻿using System.Text;
+using Win32.Gdi32;
 
 namespace Win32.Console;
 
-public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<ConsoleChar>
+public class AnsiRendererHD : BufferedRenderer<GdiColor>, IOnlySetterRenderer<ConsoleChar>
 {
-    public override int Width => BufferWidth;
-    public override int Height => BufferHeight;
-    public override Span<AnsiChar> Buffer => ConsoleBuffer.AsSpan();
-
-    short BufferWidth;
-    short BufferHeight;
-    AnsiChar[] ConsoleBuffer;
     readonly StringBuilder Builder;
-
-    /// <exception cref="ArgumentOutOfRangeException"/>
-    public override ref AnsiChar this[int i] => ref ConsoleBuffer[i];
 
     [UnsupportedOSPlatform("android")]
     [UnsupportedOSPlatform("browser")]
@@ -25,7 +16,7 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
+    public AnsiRendererHD() : this((short)System.Console.WindowWidth, (short)System.Console.WindowHeight)
     { }
 
     [UnsupportedOSPlatform("android")]
@@ -36,18 +27,13 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRenderer(short bufferWidth, short bufferHeight)
+    public AnsiRendererHD(short bufferWidth, short bufferHeight) : base(bufferWidth, bufferHeight)
     {
-        BufferWidth = bufferWidth;
-        BufferHeight = bufferHeight;
-
-        ConsoleBuffer = new AnsiChar[BufferWidth * BufferHeight];
-
         if (OperatingSystem.IsWindows())
         { Ansi.EnableVirtualTerminalSequences(); }
         System.Console.CursorVisible = false;
 
-        Builder = new StringBuilder(BufferWidth * BufferHeight);
+        Builder = new StringBuilder(_width * _height);
     }
 
     [UnsupportedOSPlatform("android")]
@@ -62,19 +48,14 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
     {
         Builder.Clear();
 
-        byte prevForegroundColor = default;
-        byte prevBackgroundColor = default;
-
-        for (int y = 0; y < BufferHeight; y++)
+        for (int y = 0; y < _height; y++)
         {
-            for (int x = 0; x < BufferWidth; x++)
+            for (int x = 0; x < _width; x++)
             {
-                Ansi.FromConsoleChar(
+                Ansi.SetBackgroundColor(
                     Builder,
-                    this[x, y],
-                    ref prevForegroundColor,
-                    ref prevBackgroundColor,
-                    x == 0 && y == 0);
+                    this[x, y]);
+                Builder.Append(' ');
             }
         }
 
@@ -98,12 +79,12 @@ public class AnsiRenderer : BufferedRenderer<AnsiChar>, IOnlySetterRenderer<Cons
 
     public void RefreshBufferSize(int width, int height)
     {
-        BufferWidth = (short)width;
-        BufferHeight = (short)height;
+        _width = (short)width;
+        _height = (short)height;
 
-        if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
-        { ConsoleBuffer = new AnsiChar[BufferWidth * BufferHeight]; }
+        if (_buffer.Length != _width * _height)
+        { _buffer = new GdiColor[_width * _height]; }
     }
 
-    public void Set(int i, ConsoleChar pixel) => ConsoleBuffer[i] = pixel;
+    public void Set(int i, ConsoleChar pixel) => this[i] = CharColor.FromCharacter(pixel);
 }

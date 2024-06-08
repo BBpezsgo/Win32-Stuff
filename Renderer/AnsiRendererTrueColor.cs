@@ -5,17 +5,7 @@ namespace Win32.Console;
 
 public class AnsiRendererTrueColor : BufferedRenderer<ColoredChar>, IOnlySetterRenderer<AnsiChar>, IOnlySetterRenderer<ConsoleChar>, IOnlySetterRenderer<GdiColor>
 {
-    public override int Width => BufferWidth;
-    public override int Height => BufferHeight;
-    public override Span<ColoredChar> Buffer => ConsoleBuffer.AsSpan();
-
-    short BufferWidth;
-    short BufferHeight;
-    ColoredChar[] ConsoleBuffer;
     readonly StringBuilder Builder;
-
-    /// <exception cref="ArgumentOutOfRangeException"/>
-    public override ref ColoredChar this[int i] => ref ConsoleBuffer[i];
 
     [UnsupportedOSPlatform("android")]
     [UnsupportedOSPlatform("browser")]
@@ -37,18 +27,13 @@ public class AnsiRendererTrueColor : BufferedRenderer<ColoredChar>, IOnlySetterR
     /// <exception cref="IOException"/>
     /// <exception cref="PlatformNotSupportedException"/>
     /// <exception cref="WindowsException"/>
-    public AnsiRendererTrueColor(short bufferWidth, short bufferHeight)
+    public AnsiRendererTrueColor(short bufferWidth, short bufferHeight) : base(bufferWidth, bufferHeight)
     {
-        BufferWidth = bufferWidth;
-        BufferHeight = bufferHeight;
-
-        ConsoleBuffer = new ColoredChar[BufferWidth * BufferHeight];
-
         if (OperatingSystem.IsWindows())
         { Ansi.EnableVirtualTerminalSequences(); }
         System.Console.CursorVisible = false;
 
-        Builder = new StringBuilder(BufferWidth * BufferHeight);
+        Builder = new StringBuilder(_width * _height);
     }
 
     [UnsupportedOSPlatform("android")]
@@ -66,9 +51,9 @@ public class AnsiRendererTrueColor : BufferedRenderer<ColoredChar>, IOnlySetterR
         GdiColor bg = 0;
         GdiColor fg = 0;
 
-        for (int y = 0; y < BufferHeight; y++)
+        for (int y = 0; y < _height; y++)
         {
-            for (int x = 0; x < BufferWidth; x++)
+            for (int x = 0; x < _width; x++)
             {
                 ref ColoredChar c = ref this[x, y];
 
@@ -108,14 +93,14 @@ public class AnsiRendererTrueColor : BufferedRenderer<ColoredChar>, IOnlySetterR
 
     public void RefreshBufferSize(int width, int height)
     {
-        BufferWidth = (short)width;
-        BufferHeight = (short)height;
+        _width = (short)width;
+        _height = (short)height;
 
-        if (ConsoleBuffer.Length != BufferWidth * BufferHeight)
-        { ConsoleBuffer = new ColoredChar[BufferWidth * BufferHeight]; }
+        if (_buffer.Length != _width * _height)
+        { _buffer = new ColoredChar[_width * _height]; }
     }
 
-    void IOnlySetterRenderer<ConsoleChar>.Set(int i, ConsoleChar pixel) => ConsoleBuffer[i] = pixel;
-    void IOnlySetterRenderer<AnsiChar>.Set(int i, AnsiChar pixel) => ConsoleBuffer[i] = pixel;
-    void IOnlySetterRenderer<GdiColor>.Set(int i, GdiColor pixel) => ConsoleBuffer[i] = new ColoredChar(' ', 0, pixel);
+    void IOnlySetterRenderer<ConsoleChar>.Set(int i, ConsoleChar pixel) => _buffer[i] = pixel;
+    void IOnlySetterRenderer<AnsiChar>.Set(int i, AnsiChar pixel) => _buffer[i] = pixel;
+    void IOnlySetterRenderer<GdiColor>.Set(int i, GdiColor pixel) => _buffer[i] = new ColoredChar(' ', 0, pixel);
 }
