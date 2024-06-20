@@ -1,8 +1,6 @@
-﻿using Win32.Console;
+﻿namespace Win32.Console;
 
-namespace Win32.Console;
-
-public static partial class RendererExtensions
+public static class ConsoleRendererExtensions
 {
     #region Bitfield
 
