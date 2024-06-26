@@ -30,4 +30,8 @@
     <None Remove="x64\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Math\Math.csproj" />
+  </ItemGroup>
+
 </Project>

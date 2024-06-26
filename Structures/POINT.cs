@@ -47,9 +47,11 @@ public struct Point :
     public static implicit operator ValueTuple<LONG, LONG>(POINT v) => new(v.X, v.Y);
     public static implicit operator System.Drawing.Point(POINT v) => new(v.X, v.Y);
     public static implicit operator System.Numerics.Vector2(POINT v) => new(v.X, v.Y);
+    public static implicit operator Maths.Vector2Int(POINT v) => new(v.X, v.Y);
 
     public static implicit operator POINT(ValueTuple<LONG, LONG> v) => new(v.Item1, v.Item2);
     public static implicit operator POINT(System.Drawing.Point v) => new(v.X, v.Y);
+    public static implicit operator POINT(Maths.Vector2Int v) => new(v.X, v.Y);
 
     /// <exception cref="OverflowException"/>
     public static explicit operator checked POINT(System.Numerics.Vector2 v) => new(checked((LONG)v.X), checked((LONG)v.Y));

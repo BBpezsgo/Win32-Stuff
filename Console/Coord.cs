@@ -58,22 +58,28 @@ public struct Coord :
     public static implicit operator POINT(COORD size) => new(size.X, size.Y);
     public static implicit operator System.Drawing.Point(COORD size) => new(size.X, size.Y);
     public static implicit operator System.Numerics.Vector2(COORD size) => new(size.X, size.Y);
-
+    public static implicit operator Maths.Vector2Int(COORD v) => new(v.X, v.Y);
     public static implicit operator COORD(ValueTuple<SHORT, SHORT> size) => new(size.Item1, size.Item2);
 
     /// <exception cref="OverflowException"/>
     public static explicit operator checked COORD(ValueTuple<LONG, LONG> size) => new(checked((SHORT)size.Item1), checked((SHORT)size.Item2));
+    public static explicit operator COORD(ValueTuple<LONG, LONG> size) => new((SHORT)size.Item1, (SHORT)size.Item2);
+
     /// <exception cref="OverflowException"/>
     public static explicit operator checked COORD(POINT size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
+    public static explicit operator COORD(POINT size) => new((SHORT)size.X, (SHORT)size.Y);
+
     /// <exception cref="OverflowException"/>
     public static explicit operator checked COORD(System.Drawing.Point size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
+    public static explicit operator COORD(System.Drawing.Point size) => new((SHORT)size.X, (SHORT)size.Y);
+
     /// <exception cref="OverflowException"/>
     public static explicit operator checked COORD(System.Numerics.Vector2 size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
-
-    public static explicit operator COORD(ValueTuple<LONG, LONG> size) => new((SHORT)size.Item1, (SHORT)size.Item2);
-    public static explicit operator COORD(POINT size) => new((SHORT)size.X, (SHORT)size.Y);
-    public static explicit operator COORD(System.Drawing.Point size) => new((SHORT)size.X, (SHORT)size.Y);
     public static explicit operator COORD(System.Numerics.Vector2 size) => new((SHORT)size.X, (SHORT)size.Y);
+
+    /// <exception cref="OverflowException"/>
+    public static explicit operator checked COORD(Maths.Vector2Int size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
+    public static explicit operator COORD(Maths.Vector2Int size) => new((SHORT)size.X, (SHORT)size.Y);
 
     public static COORD Max(COORD a, COORD b) => new(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y));
     public static COORD Min(COORD a, COORD b) => new(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y));

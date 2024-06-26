@@ -126,16 +126,20 @@ public readonly struct GdiColor :
     public GdiColor(int r, int g, int b) => v = GdiColor.Make((byte)r, (byte)g, (byte)b);
     public GdiColor(float r, float g, float b) => v = GdiColor.Make((byte)MathF.Round(Math.Clamp(r, 0f, 1f) * (float)byte.MaxValue), (byte)MathF.Round(Math.Clamp(g, 0f, 1f) * (float)byte.MaxValue), (byte)MathF.Round(Math.Clamp(b, 0f, 1f) * (float)byte.MaxValue));
 
-    public static implicit operator GdiColor(COLORREF v) => new(v);
     public static implicit operator COLORREF(GdiColor v) => v.v;
-
-    public static implicit operator GdiColor(int v) => new(unchecked((COLORREF)v));
+    public static implicit operator Maths.TransparentColor(GdiColor v) => new(v.R / 255f, v.G / 255f, v.B / 255f, 1f);
+    public static implicit operator Maths.ColorF(GdiColor v) => new(v.R / 255f, v.G / 255f, v.B / 255f);
+    public static implicit operator System.Drawing.Color(GdiColor v) => System.Drawing.Color.FromArgb(v.R, v.G, v.B);
     public static implicit operator int(GdiColor v) => unchecked((int)v.v);
 
+    public static implicit operator GdiColor(int v) => new(unchecked((COLORREF)v));
     public static implicit operator GdiColor(ValueTuple<byte, byte, byte> v) => new(GdiColor.Make(v.Item1, v.Item2, v.Item3));
-    public static implicit operator System.Drawing.Color(GdiColor v) => System.Drawing.Color.FromArgb(v.R, v.G, v.B);
+    public static implicit operator GdiColor(COLORREF v) => new(v);
     public static implicit operator GdiColor(System.Drawing.Color v) => new(v.R, v.G, v.B);
+
     public static explicit operator GdiColor(Vector3 v) => new(v.X, v.Y, v.Z);
+    public static explicit operator GdiColor(Maths.ColorF v) => new(v.R, v.G, v.B);
+    public static explicit operator GdiColor(Maths.TransparentColor v) => new(v.R, v.G, v.B);
 
     public static bool operator ==(GdiColor left, GdiColor right) => left.Equals(right);
     public static bool operator !=(GdiColor left, GdiColor right) => !left.Equals(right);

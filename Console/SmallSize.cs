@@ -37,11 +37,11 @@ public struct SmallSize :
     public static implicit operator System.Drawing.SizeF(SmallSize size) => new(size.Width, size.Height);
     public static implicit operator System.Numerics.Vector2(SmallSize size) => new(size.Width, size.Height);
     public static implicit operator SIZE(SmallSize size) => new(size.Width, size.Height);
+    public static implicit operator Maths.Vector2Int(SmallSize size) => new(size.Width, size.Height);
+    public static implicit operator COORD(SmallSize size) => new(size.Width, size.Height);
 
     public static implicit operator SmallSize(ValueTuple<SHORT, SHORT> size) => new(size.Item1, size.Item2);
-
-    public static explicit operator Coord(SmallSize size) => new(size.Width, size.Height);
-    public static explicit operator SmallSize(Coord size) => new(size.X, size.Y);
+    public static implicit operator SmallSize(COORD size) => new(size.X, size.Y);
 
     /// <exception cref="OverflowException"/>
     public static explicit operator checked SmallSize(ValueTuple<LONG, LONG> size) => new(checked((SHORT)size.Item1), checked((SHORT)size.Item2));
@@ -62,6 +62,10 @@ public struct SmallSize :
     /// <exception cref="OverflowException"/>
     public static explicit operator checked SmallSize(System.Numerics.Vector2 size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
     public static explicit operator SmallSize(System.Numerics.Vector2 size) => new((SHORT)size.X, (SHORT)size.Y);
+
+    /// <exception cref="OverflowException"/>
+    public static explicit operator checked SmallSize(Maths.Vector2Int size) => new(checked((SHORT)size.X), checked((SHORT)size.Y));
+    public static explicit operator SmallSize(Maths.Vector2Int size) => new((SHORT)size.X, (SHORT)size.Y);
 
     public readonly void Deconstruct(out SHORT width, out SHORT height)
     {

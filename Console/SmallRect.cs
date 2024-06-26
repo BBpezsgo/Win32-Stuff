@@ -319,4 +319,7 @@ public struct SmallRect :
         result.right = Math.Max(result.right, other.right);
         return result;
     }
+
+    public static implicit operator SMALL_RECT(Maths.RectInt v) => new(v.X, v.Y, v.Width, v.Height);
+    public static implicit operator Maths.RectInt(SMALL_RECT v) => new(v.X, v.Y, v.Width, v.Height);
 }

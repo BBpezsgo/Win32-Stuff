@@ -216,4 +216,12 @@ public struct Rect :
         position = Position;
         size = Size;
     }
+
+    public static implicit operator RECT(Maths.RectInt v) => new(v.X, v.Y, v.Width, v.Height);
+    public static implicit operator Maths.RectInt(RECT v) => new(v.X, v.Y, v.Width, v.Height);
+}
+
+public static class RectExtensions
+{
+    public static RECT Round(this Maths.RectF rect) => new((LONG)MathF.Round(rect.X), (LONG)MathF.Round(rect.Y), (LONG)MathF.Round(rect.Width), (LONG)MathF.Round(rect.Height));
 }

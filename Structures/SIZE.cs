@@ -41,9 +41,11 @@ public struct Size :
     public static implicit operator System.Drawing.Size(SIZE size) => new(size.Width, size.Height);
     public static implicit operator System.Drawing.SizeF(SIZE size) => new(size.Width, size.Height);
     public static implicit operator System.Numerics.Vector2(SIZE size) => new(size.Width, size.Height);
+    public static implicit operator Maths.Vector2Int(SIZE size) => new(size.Width, size.Height);
 
     public static implicit operator SIZE(ValueTuple<LONG, LONG> size) => new(size.Item1, size.Item2);
     public static implicit operator SIZE(System.Drawing.Size size) => new(size.Width, size.Height);
+    public static implicit operator SIZE(Maths.Vector2Int size) => new(size.X, size.Y);
 
     /// <exception cref="OverflowException"/>
     public static explicit operator checked SIZE(System.Drawing.SizeF size) => new(checked((LONG)size.Width), checked((LONG)size.Height));
