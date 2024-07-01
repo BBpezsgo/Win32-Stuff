@@ -5,6 +5,8 @@ public static class ConsoleKeyboard
     static readonly int[] Accumulated = new int[8];
     static readonly int[] ClearAccumulated = new int[8];
 
+    public static ReadOnlySpan<int> Data => Accumulated;
+
     static int[] Pressing = new int[8];
     static int[] Holding = new int[8];
     static int[] Releasing = new int[8];

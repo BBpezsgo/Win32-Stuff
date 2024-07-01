@@ -19,7 +19,7 @@ public abstract class BufferedRenderer<TPixel> : IRenderer<TPixel>
     public ref TPixel this[POINT p] => ref this[(p.Y * Width) + p.X];
     public ref TPixel this[Vector2 p] => ref this[((int)MathF.Round(p.Y) * Width) + (int)MathF.Round(p.X)];
 
-    protected BufferedRenderer(short bufferWidth, short bufferHeight)
+    protected BufferedRenderer(int bufferWidth, int bufferHeight)
     {
         _width = bufferWidth;
         _height = bufferHeight;

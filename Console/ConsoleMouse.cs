@@ -31,6 +31,8 @@ public static class ConsoleMouse
 
     static int scroll;
 
+    public static uint Data => Accumulated.states;
+
     public static COORD RecordedConsolePosition => recordedConsolePosition;
     public static COORD LeftPressedAt => leftPressedAt;
     public static bool WasUsed { get; private set; }

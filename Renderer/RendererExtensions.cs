@@ -219,6 +219,28 @@ public static partial class RendererExtensions
         }
     }
 
+    public static void Bitfield(this IOnlySetterRenderer<char> renderer, Coord position, ReadOnlySpan<uint> bitfield)
+        => renderer.Bitfield(position, bitfield, '1', '0');
+
+    public static void Bitfield(this IOnlySetterRenderer<char> renderer, Coord position, uint bitfield)
+        => renderer.Bitfield(position, bitfield, '1', '0');
+
+    public static void Bitfield<TPixel>(this IOnlySetterRenderer<TPixel> renderer, Coord position, ReadOnlySpan<uint> bitfield, TPixel one, TPixel zero)
+    {
+        for (int i = 0; i < bitfield.Length; i++)
+        {
+            Bitfield(renderer, new Coord(position.X + (i * 32), position.Y), bitfield[i], one, zero);
+        }
+    }
+
+    public static void Bitfield<TPixel>(this IOnlySetterRenderer<TPixel> renderer, Coord position, uint bitfield, TPixel one, TPixel zero)
+    {
+        for (int i = 0; i < 32; i++)
+        {
+            renderer.Set((position.Y * renderer.Width) + position.X + i, (bitfield & (1 << i)) != 0 ? one : zero);
+        }
+    }
+
     #endregion
 
     #region Triangle()
