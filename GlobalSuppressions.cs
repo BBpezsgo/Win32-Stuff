@@ -1,7 +1,4 @@
-﻿
-
-
-[assembly: SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+﻿[assembly: SuppressMessage("Design", "CA1003:Use generic event handler instances")]
 [assembly: SuppressMessage("Design", "CA1008:Enums should have zero value")]
 [assembly: SuppressMessage("Design", "CA1028:Enum Storage should be Int32")]
 [assembly: SuppressMessage("Design", "CA1032:Implement standard exception constructors")]
@@ -36,3 +33,5 @@
 [assembly: SuppressMessage("Roslynator", "RCS1139:Add summary element to documentation comment")]
 [assembly: SuppressMessage("Roslynator", "RCS1194:Implement exception constructors")]
 [assembly: SuppressMessage("Roslynator", "RCS1135:Declare enum member with zero value (when enum has FlagsAttribute)")]
+
+[assembly: ExcludeFromCodeCoverage]
