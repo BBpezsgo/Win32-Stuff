@@ -72,5 +72,24 @@ public readonly struct KeyEvent
         ControlKeyState = controlKeyState;
     }
 
+    public static explicit operator KeyEvent(ConsoleKeyInfo keyInfo)
+    {
+        return new KeyEvent(
+            1,
+            1,
+            (VirtualKeyCode)keyInfo.Key,
+            (ushort)keyInfo.Key,
+            keyInfo.KeyChar,
+            keyInfo.Modifiers switch
+            {
+                ConsoleModifiers.None => default,
+                ConsoleModifiers.Alt => ControlKeyState.LeftAlt | ControlKeyState.RightAlt,
+                ConsoleModifiers.Shift => ControlKeyState.Shift,
+                ConsoleModifiers.Control => ControlKeyState.LeftCtrl | ControlKeyState.RightCtrl,
+                _ => throw new UnreachableException(),
+            }
+        );
+    }
+
     public override string ToString() => $"{{ '{UnicodeChar.ToString().Replace("\0", "\\0", StringComparison.Ordinal).Replace("\t", "\\t", StringComparison.Ordinal).Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal)}' ({AsciiChar}) {RepeatCount}x, Down: {IsDown}, VKeyCode: {VirtualKeyCode}, VScanCode: {VirtualScanCode}, Ctrl: {ControlKeyState} }}";
 }

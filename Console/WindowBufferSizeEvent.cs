@@ -6,7 +6,12 @@
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct WindowBufferSizeEvent
 {
-    public readonly Coord Size;
+    public readonly COORD Size;
+
+    public WindowBufferSizeEvent(COORD size)
+    {
+        Size = size;
+    }
 
     public readonly SHORT Width => Size.X;
     public readonly SHORT Height => Size.Y;
