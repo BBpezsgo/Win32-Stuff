@@ -43,12 +43,19 @@ public class ConsoleRenderer : BufferedRenderer<ConsoleChar>
     }
 
     /// <exception cref="WindowsException"/>
-    [SupportedOSPlatform("windows")]
     public override void RefreshBufferSize()
     {
-        ConsoleScreenBufferInfo info = Terminal.ScreenBufferInfo;
-        _width = info.Window.Width;
-        _height = info.Window.Height;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            ConsoleScreenBufferInfo info = Terminal.ScreenBufferInfo;
+            _width = info.Window.Width;
+            _height = info.Window.Height;
+        }
+        else
+        {
+            _width = System.Console.WindowWidth;
+            _height = System.Console.WindowHeight;
+        }
 
         if (_buffer.Length != _width * _height)
         { _buffer = new ConsoleChar[_width * _height]; }

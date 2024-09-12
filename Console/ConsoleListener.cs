@@ -13,68 +13,97 @@ public static class ConsoleListener
     static bool Run;
     static HANDLE Handle;
 
+    static COORD _lastSize;
+
     const int MaxRecordReads = 1;
 
     /// <exception cref="WindowsException"/>
     /// <exception cref="OutOfMemoryException"/>
-    [SupportedOSPlatform("windows")]
     public static void Start()
     {
         if (Run) return;
 
         Run = true;
-        Handle = Kernel32.GetStdHandle(StdHandle.Input);
 
-        if (Handle == Kernel32.InvalidHandle)
-        { throw WindowsException.Get(); }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Handle = Kernel32.GetStdHandle(StdHandle.Input);
+
+            if (Handle == Kernel32.InvalidHandle)
+            { throw WindowsException.Get(); }
+        }
+        else
+        {
+            _lastSize = new COORD(System.Console.WindowWidth, System.Console.WindowHeight);
+        }
 
         new System.Threading.Thread(ThreadJob) { Name = "ConsoleListener" }.Start();
     }
 
     /// <exception cref="WindowsException"/>
-    [SupportedOSPlatform("windows")]
     static unsafe void ThreadJob()
     {
-        InputEvent[] records = new InputEvent[MaxRecordReads];
-
-        while (Run)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            uint numRead = 0;
+            InputEvent[] records = new InputEvent[MaxRecordReads];
 
-            Array.Clear(records);
-
-            fixed (InputEvent* recordsPtr = records)
+            while (Run)
             {
-                if (Kernel32.ReadConsoleInputW(Handle, recordsPtr, MaxRecordReads, out numRead) == 0)
-                { throw WindowsException.Get(); }
-            }
+                uint numRead = 0;
 
-            if (!Run) break;
+                Array.Clear(records);
 
-            for (int i = 0; i < numRead; i++)
-            {
-                switch (records[i].EventType)
+                fixed (InputEvent* recordsPtr = records)
                 {
-                    case EventType.Mouse:
-                        MouseEvent?.Invoke(records[i].MouseEvent);
-                        break;
-                    case EventType.Key:
-                        KeyEvent?.Invoke(records[i].KeyEvent);
-                        break;
-                    case EventType.WindowBufferSize:
-                        WindowBufferSizeEvent?.Invoke(records[i].WindowBufferSizeEvent);
-                        break;
+                    if (Kernel32.ReadConsoleInputW(Handle, recordsPtr, MaxRecordReads, out numRead) == 0)
+                    { throw WindowsException.Get(); }
+                }
+
+                if (!Run) break;
+
+                for (int i = 0; i < numRead; i++)
+                {
+                    switch (records[i].EventType)
+                    {
+                        case EventType.Mouse:
+                            MouseEvent?.Invoke(records[i].MouseEvent);
+                            break;
+                        case EventType.Key:
+                            KeyEvent?.Invoke(records[i].KeyEvent);
+                            break;
+                        case EventType.WindowBufferSize:
+                            WindowBufferSizeEvent?.Invoke(records[i].WindowBufferSizeEvent);
+                            break;
+                    }
                 }
             }
-        }
 
-        {
-            uint numWritten = 0;
-            fixed (InputEvent* recordsPtr = records)
             {
-                _ = Kernel32.WriteConsoleInputW(Handle, recordsPtr, 1, out numWritten);
+                uint numWritten = 0;
+                fixed (InputEvent* recordsPtr = records)
+                {
+                    _ = Kernel32.WriteConsoleInputW(Handle, recordsPtr, 1, out numWritten);
+                }
+                System.Console.CursorVisible = true;
             }
-            System.Console.CursorVisible = true;
+        }
+        else
+        {
+            while (Run)
+            {
+                ConsoleKeyInfo key = System.Console.ReadKey();
+                if (!Run) break;
+
+                COORD size = new(System.Console.WindowWidth, System.Console.WindowHeight);
+
+                if (size != _lastSize)
+                {
+                    _lastSize = size;
+                    WindowBufferSizeEvent?.Invoke(new WindowBufferSizeEvent(size));
+                }
+
+                KeyEvent?.Invoke((KeyEvent)key);
+            }
         }
     }
 
