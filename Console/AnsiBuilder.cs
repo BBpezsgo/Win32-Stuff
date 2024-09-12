@@ -166,6 +166,38 @@ public class AnsiBuilder
         return this;
     }
 
+
+    public AnsiBuilder AppendJoin<T>(string? separator, IEnumerable<T> values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+    public AnsiBuilder AppendJoin(char separator, params string?[] values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+    public AnsiBuilder AppendJoin<T>(char separator, IEnumerable<T> values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+    public AnsiBuilder AppendJoin(string? separator, params string?[] values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+    public AnsiBuilder AppendJoin(string? separator, params object?[] values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+    public AnsiBuilder AppendJoin(char separator, params object?[] values)
+    {
+        Builder.AppendJoin(separator, values);
+        return this;
+    }
+
     public AnsiBuilder Append(StringBuilder? value)
     {
         Builder.Append(value);
@@ -193,4 +225,18 @@ public class AnsiBuilder
     }
 
     #endregion
+
+    public void SetForegroundColor(AnsiColor color)
+    {
+        GdiColor gdiColor = color.ToGdiColor();
+        if (gdiColor == currentFgColor) return;
+        Ansi.SetGraphics(Builder, (uint)color + 30);
+    }
+    public void SetBackgroundColor(AnsiColor color)
+    {
+        GdiColor gdiColor = color.ToGdiColor();
+        if (gdiColor == currentBgColor) return;
+        Ansi.SetGraphics(Builder, (uint)color + 40);
+    }
+    public void SetGraphics(uint mode) => Ansi.SetGraphics(Builder, mode);
 }
