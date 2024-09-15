@@ -64,7 +64,7 @@ public class ListBox : Control
     {
         int textLength = (int)SendMessage(ListBoxMessages.GETTEXTLEN, (nuint)index, default);
         if (textLength == ERR) throw new ArgumentOutOfRangeException(nameof(index), index, "Invalid index");
-        char[] res = new char[textLength + 1];
+        Span<char> res = new char[textLength + 1];
         fixed (char* resPtr = res)
         {
             int res2 = (int)SendMessage(ListBoxMessages.GETTEXT, (nuint)index, (nint)resPtr);

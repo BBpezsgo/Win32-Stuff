@@ -43,13 +43,13 @@ public static class ConsoleListener
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            InputEvent[] records = new InputEvent[MaxRecordReads];
+            Span<InputEvent> records = stackalloc InputEvent[MaxRecordReads];
 
             while (Run)
             {
                 uint numRead = 0;
 
-                Array.Clear(records);
+                records.Clear();
 
                 fixed (InputEvent* recordsPtr = records)
                 {
