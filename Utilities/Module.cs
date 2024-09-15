@@ -12,7 +12,7 @@ public readonly struct Module :
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly HMODULE ModuleHandle;
 
-    internal Module(HANDLE processHandle, HMODULE moduleHandle)
+    public Module(HANDLE processHandle, HMODULE moduleHandle)
     {
         ProcessHandle = processHandle;
         ModuleHandle = moduleHandle;

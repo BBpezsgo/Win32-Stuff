@@ -1,6 +1,5 @@
 ﻿namespace Win32.Forms;
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
 public static class ButtonControlMessage
 {
     public const uint First = 0x1600;      // Button control messages

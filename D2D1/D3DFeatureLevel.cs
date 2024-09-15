@@ -1,6 +1,5 @@
 ﻿namespace Win32.D2D1;
 
-[SuppressMessage("Naming", "CA1707")]
 public enum D3DFeatureLevel : DWORD
 {
     _1_0_CORE = 0x1000,

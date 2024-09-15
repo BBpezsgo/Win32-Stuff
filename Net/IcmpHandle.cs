@@ -107,5 +107,5 @@ public readonly struct IcmpHandle : IDisposable, IEquatable<IcmpHandle>
     public override int GetHashCode() => Handle.GetHashCode();
 
     public static bool operator ==(IcmpHandle left, IcmpHandle right) => left.Equals(right);
-    public static bool operator !=(IcmpHandle left, IcmpHandle right) => !left .Equals( right);
+    public static bool operator !=(IcmpHandle left, IcmpHandle right) => !left.Equals(right);
 }

@@ -12,6 +12,7 @@ public static class MCI
        HANDLE hwndCallback
     );
 
+    [SuppressMessage("Style", "IDE1006")]
     public static unsafe MCIERROR mciSendStringW(
        string lpszCommand,
        StringBuilder lpszReturnString,

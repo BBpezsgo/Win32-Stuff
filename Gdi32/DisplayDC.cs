@@ -1,6 +1,6 @@
-﻿namespace Win32.Gdi32;
+﻿using Win32.Forms;
 
-using Forms;
+namespace Win32.Gdi32;
 
 /// <summary>Display Device Context</summary>
 [SupportedOSPlatform("windows")]

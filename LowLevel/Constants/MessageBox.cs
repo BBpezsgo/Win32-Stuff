@@ -1,6 +1,5 @@
 ﻿namespace Win32;
 
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum MessageBoxButton : uint
 {
     /// <summary>
@@ -44,7 +43,6 @@ public enum MessageBoxButton : uint
     Help = 0x00004000,
 }
 
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum MessageBoxIcon : uint
 {
     /// <summary>
@@ -78,7 +76,6 @@ public enum MessageBoxIcon : uint
     Information = 0x00000040,
 }
 
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum MessageBoxDefaultButton : uint
 {
     /// <summary>
@@ -104,7 +101,6 @@ public enum MessageBoxDefaultButton : uint
     Button4 = 0x00000300,
 }
 
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum MessageBoxModality : uint
 {
     /// <summary>

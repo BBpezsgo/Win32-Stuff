@@ -1,6 +1,6 @@
-namespace Win32;
+using Win32.Forms;
 
-using Forms;
+namespace Win32;
 
 public static class Mouse
 {

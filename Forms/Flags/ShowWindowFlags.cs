@@ -1,7 +1,4 @@
-﻿#pragma warning disable RCS1234 // Duplicate enum value
-#pragma warning disable CA1027 // Mark enums with FlagsAttribute
-
-namespace Win32.Forms;
+﻿namespace Win32.Forms;
 
 public enum ShowWindowFlags : int
 {

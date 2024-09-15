@@ -19,7 +19,6 @@ public enum ShiftKeys : byte
     /// The Hankaku key is pressed
     /// </summary>
     Hankaku = 0x8,
-#pragma warning disable CA1700 // Do not name enum values 'Reserved'
     /// <summary>
     /// Reserved (defined by the keyboard layout driver).
     /// </summary>
@@ -28,7 +27,6 @@ public enum ShiftKeys : byte
     /// Reserved (defined by the keyboard layout driver).
     /// </summary>
     Reserved2 = 0x20,
-#pragma warning restore CA1700 // Do not name enum values 'Reserved'
 }
 
 public static class Keyboard

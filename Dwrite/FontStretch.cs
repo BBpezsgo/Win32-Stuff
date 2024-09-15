@@ -5,7 +5,6 @@
 /// as specified by a font designer for the glyphs in a font.
 /// Values less than 1 or greater than 9 are considered to be invalid, and they are rejected by font API functions.
 /// </summary>
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum FontStretch
 {
     /// <summary>

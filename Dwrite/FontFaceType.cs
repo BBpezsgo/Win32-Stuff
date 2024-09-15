@@ -5,7 +5,6 @@
 /// Font formats that consist of multiple files, e.g. Type 1 .PFM and .PFB, have
 /// a single enum entry.
 /// </summary>
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum FontFaceType
 {
     /// <summary>

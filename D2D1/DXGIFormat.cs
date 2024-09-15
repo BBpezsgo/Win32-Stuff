@@ -1,6 +1,5 @@
 ﻿namespace Win32.D2D1;
 
-[SuppressMessage("Naming", "CA1707")]
 public enum DXGIFormat : UINT
 {
     UNKNOWN = 0,

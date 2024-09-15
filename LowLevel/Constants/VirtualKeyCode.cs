@@ -1,6 +1,5 @@
 ﻿namespace Win32;
 
-[SuppressMessage("Roslynator", "RCS1234")]
 public enum VirtualKeyCode : WORD
 {
     None = 0x00,

@@ -1,6 +1,5 @@
 ﻿namespace Win32.Gdi32;
 
-#pragma warning disable CA1034 // Nested types should not be visible
 [StructLayout(LayoutKind.Sequential)]
 public struct DevMode
 {

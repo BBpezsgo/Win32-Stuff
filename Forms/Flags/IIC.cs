@@ -39,9 +39,7 @@ public enum IIC : DWORD
     /// Load animate control, header, hot key, list-view, progress bar, status bar,
     /// tab, tooltip, toolbar, trackbar, tree-view, and up-down control classes.
     /// </summary>
-#pragma warning disable RCS1191
     Win95Classes = 0x000000FF,
-#pragma warning restore RCS1191 
     /// <summary>
     /// Load date and time picker control class.
     /// </summary>

@@ -1,9 +1,7 @@
 ﻿namespace Win32;
 
 [Flags]
-#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
 public enum FormatMessageFlags : DWORD
-#pragma warning restore CA2217
 {
     /// <summary>
     /// <para>
@@ -94,9 +92,7 @@ public enum FormatMessageFlags : DWORD
     /// The function stores line breaks that are in the
     /// message definition text into the output buffer.
     /// </summary>
-#pragma warning disable CA1707 // Identifiers should not contain underscores
     _ = 0,
-#pragma warning restore CA1707
 
     /// <summary>
     /// The function ignores regular line breaks in the
@@ -104,7 +100,5 @@ public enum FormatMessageFlags : DWORD
     /// line breaks in the message definition text into the
     /// output buffer. The function generates no new line breaks.
     /// </summary>
-#pragma warning disable RCS1157 // Composite enum value contains undefined flag
     MaxWidthMask = 0x000000FF,
-#pragma warning restore RCS1157
 }

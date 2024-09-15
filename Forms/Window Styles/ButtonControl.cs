@@ -1,6 +1,5 @@
 ﻿namespace Win32.Forms;
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
 public static class ButtonControlStyles
 {
     public const DWORD SPLITBUTTON = 0x0000000C;

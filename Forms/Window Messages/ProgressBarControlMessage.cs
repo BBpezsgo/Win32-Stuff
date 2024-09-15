@@ -1,6 +1,5 @@
 ﻿namespace Win32.Forms;
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
 public static class ProgressBarControlMessage
 {
     public const uint SMOOTH = 0x01;

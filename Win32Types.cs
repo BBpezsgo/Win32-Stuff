@@ -110,8 +110,6 @@ public static class Constants
     public const BOOL FALSE = 0;
     public const BOOL TRUE = 1;
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
     public static readonly IID CLSID_WICImagingFactory = new(0x317d06e8, 0x5f24, 0x433d, 0xbd, 0xf7, 0x79, 0xce, 0x68, 0xd8, 0xab, 0xc2);
     public static readonly IID BHID_ThumbnailHandler = new(0x7b2e650a, 0x8e20, 0x4f4a, 0xb0, 0x9e, 0x65, 0x97, 0xaf, 0xc7, 0x2f, 0xb0);
-#pragma warning restore CA1707 // Identifiers should not contain underscores
 }

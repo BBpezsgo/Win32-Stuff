@@ -27,9 +27,9 @@ public static class CharColor
     public const byte Gray = 0b_1000;
     public const byte White = 0b_1111;
 
-    internal const WORD MASK_FG = 0b_0000_1111;
-    internal const WORD MASK_BG = 0b_1111_0000;
-    internal const WORD MASK_COLOR = 0b_1111_1111;
+    public const WORD MASK_FG = 0b_0000_1111;
+    public const WORD MASK_BG = 0b_1111_0000;
+    public const WORD MASK_COLOR = 0b_1111_1111;
 
     public static WORD Make(byte background, byte foreground) => unchecked((WORD)((foreground & MASK_FG) | ((background << 4) & MASK_BG)));
     public static (byte Foreground, byte Background) Deconstruct(ushort attributes) => ((byte)(attributes & MASK_FG), (byte)((attributes & MASK_BG) >> 4));
@@ -95,7 +95,6 @@ public static class CharColor
         Ansi.BrightForegroundWhite     // 0b_1111
     );
 
-    [SuppressMessage("Style", "IDE0230:Use UTF-8 string literal")]
     public static readonly ImmutableArray<byte> AnsiBackgroundColorValues = ImmutableArray.Create<byte>
     (
         Ansi.BackgroundBlack,           // 0b_0000
@@ -162,7 +161,6 @@ public static class CharColor
 
     public static GdiColor GetColor(byte color) => IrgbToColor[color];
 
-    [SuppressMessage("Security", "CA5394")]
     public static byte GetRandomColor()
     {
         Span<byte> result = stackalloc byte[1];
@@ -380,7 +378,6 @@ public static class CharColor
         return GdiColor.Lerp(bg, fg, shade / 255f);
     }
 
-    [SuppressMessage("Naming", "CA1707")]
     public static byte To4bitIRGB_BruteForce(GdiColor color, int threshold = 1)
     {
         byte closest = 0b_0000;

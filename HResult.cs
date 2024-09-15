@@ -168,7 +168,6 @@ public readonly struct HResult : IEquatable<HResult>
     /// verification carries a performance penalty.
     /// You should not routinely use <see cref="MAKE_HRESULT"/> for successful results.
     /// </remarks>
-    [SuppressMessage("Roslynator", "RCS1213:Remove unused member declaration")]
     static HRESULT MAKE_HRESULT(ULONG sev, ULONG fac, ULONG code) => (HRESULT)((sev << 31) | (fac << 16) | code);
 
     /// <summary>

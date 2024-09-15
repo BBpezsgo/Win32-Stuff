@@ -42,10 +42,9 @@ public static class Shell32
     {
         HRESULT result;
         object? _ppv;
-        if (pbc is null)
-        { result = Shell32.SHCreateItemFromParsingName(pszPath, (void**)null, typeof(T).GUID, out _ppv); }
-        else
-        { result = Shell32.SHCreateItemFromParsingName(pszPath, pbc, typeof(T).GUID, out _ppv); }
+        result = pbc is null
+            ? Shell32.SHCreateItemFromParsingName(pszPath, (void**)null, typeof(T).GUID, out _ppv)
+            : Shell32.SHCreateItemFromParsingName(pszPath, pbc, typeof(T).GUID, out _ppv);
         ppv = (T?)_ppv;
         return result;
     }

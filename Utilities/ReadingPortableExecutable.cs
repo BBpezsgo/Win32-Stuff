@@ -419,7 +419,7 @@ public struct ImageSectionHeader
         _data = total.Slice((int)PointerToRawData, (int)SizeOfRawData);
     }
 
-    public unsafe readonly Span<T> DataAs<T>()
+    public readonly unsafe Span<T> DataAs<T>()
         where T : unmanaged
     {
         using MemoryHandle pin = _data.Pin();
@@ -501,8 +501,6 @@ public enum DLLCharacteristics : ushort
 /// Source: <see href="https://gist.github.com/augustoproiete/b51f29f74f5f5b2c59c39e47a8afc3a3"/>
 /// </remarks>
 [Flags]
-[SuppressMessage("Roslynator", "RCS1191")]
-[SuppressMessage("Roslynator", "RCS1234")]
 public enum DataSectionFlags : uint
 {
     /// <summary>
@@ -800,7 +798,7 @@ public class PEHeader
     }
 
     /// <exception cref="KeyNotFoundException"/>
-    unsafe public ref readonly ImageSectionHeader GetSection(string sectionName)
+    public unsafe ref readonly ImageSectionHeader GetSection(string sectionName)
     {
         for (int i = 0; i < ImageSectionHeaders.Length; i++)
         {
@@ -810,7 +808,7 @@ public class PEHeader
         throw new KeyNotFoundException($"Section \"{sectionName}\" not found");
     }
 
-    unsafe public bool TryGetSection(string sectionName, ref ImageSectionHeader imageSectionHeader)
+    public unsafe bool TryGetSection(string sectionName, ref ImageSectionHeader imageSectionHeader)
     {
         for (int i = 0; i < ImageSectionHeaders.Length; i++)
         {
@@ -823,7 +821,7 @@ public class PEHeader
         return false;
     }
 
-    unsafe public bool HasSection(string sectionName)
+    public unsafe bool HasSection(string sectionName)
     {
         for (int i = 0; i < ImageSectionHeaders.Length; i++)
         {
@@ -834,7 +832,7 @@ public class PEHeader
     }
 
     /// <exception cref="KeyNotFoundException"/>
-    unsafe public void ValidateShellcode()
+    public unsafe void ValidateShellcode()
     {
         if (!HasSection(".text"))
         { throw new KeyNotFoundException("Section \".text\" not found"); }
@@ -890,7 +888,7 @@ public class PEHeader
     /// <exception cref="ArgumentException"/>
     /// <exception cref="ArgumentOutOfRangeException"/>
     [SupportedOSPlatform("windows")]
-    unsafe public Thread ExecuteShellcode(void* arg)
+    public unsafe Thread ExecuteShellcode(void* arg)
     {
         Memory<byte> shellcode = GetSection(".text").RawData;
 

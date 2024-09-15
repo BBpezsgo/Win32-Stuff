@@ -1,7 +1,4 @@
-﻿#pragma warning disable RCS1085 // Use auto-implemented property
-#pragma warning disable IDE0032 // Use auto property
-
-global using RECT = Win32.Rect;
+﻿global using RECT = Win32.Rect;
 using System.Runtime.CompilerServices;
 
 namespace Win32;
@@ -24,8 +21,10 @@ public struct Rect :
     System.Numerics.IEqualityOperators<RECT, RECT, bool>
 {
     /// <summary>The x-coordinate of the upper-left corner of the rectangle.</summary>
+    [SuppressMessage("Style", "IDE0032")]
     LONG left;
     /// <summary>The y-coordinate of the upper-left corner of the rectangle.</summary>
+    [SuppressMessage("Style", "IDE0032")]
     LONG top;
     /// <summary>The x-coordinate of the lower-right corner of the rectangle.</summary>
     LONG right;

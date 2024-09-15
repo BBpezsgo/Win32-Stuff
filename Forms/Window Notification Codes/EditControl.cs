@@ -1,6 +1,5 @@
 ﻿namespace Win32.Forms;
 
-[SuppressMessage("Naming", "CA1707")]
 public static class EditControlNotification
 {
     public const ushort SETFOCUS = 0x0100;

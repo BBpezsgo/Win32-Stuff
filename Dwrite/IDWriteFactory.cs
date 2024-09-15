@@ -396,7 +396,7 @@ public unsafe interface IDWriteFactory
     abstract HRESULT CreateGlyphRunAnalysis(
 #pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
         [In] GlyphRun* glyphRun,
-#pragma warning restore CS8500 
+#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
         FLOAT pixelsPerDip,
         [In] Matrix* transform,
         RenderingMode renderingMode,

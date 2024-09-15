@@ -2,7 +2,6 @@
 
 namespace Win32.Forms;
 
-[SuppressMessage("Design", "CA1027")]
 public enum MenuItemType : uint
 {
     Text = MFT.String,

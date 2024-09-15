@@ -1,6 +1,5 @@
 ﻿namespace Win32.Forms;
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
 public static partial class WindowMessage
 {
     public const uint WM_NULL = 0x0000;

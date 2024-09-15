@@ -6,7 +6,6 @@ namespace Win32;
 
 [SupportedOSPlatform("windows")]
 [DebuggerDisplay($"{{{nameof(DebuggerDisplay)}(),nq}}")]
-[SuppressMessage("Naming", "CA1707")]
 public readonly struct Thread_ :
     IDisposable,
     IEquatable<Thread>,

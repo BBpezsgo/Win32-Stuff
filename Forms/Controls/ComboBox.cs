@@ -116,7 +116,7 @@ public partial class ComboBox : Control
             case ComboBoxControlNotification.SELCHANGE: OnSelectionChanged?.Invoke(this); break;
             case ComboBoxControlNotification.SELENDCANCEL: OnSelectionCanceled?.Invoke(this); break;
             case ComboBoxControlNotification.SELENDOK: OnSelectionOk?.Invoke(this); break;
-            case ComboBoxControlNotification.SETFOCUS: OnSetFocus?.Invoke(this);  break;
+            case ComboBoxControlNotification.SETFOCUS: OnSetFocus?.Invoke(this); break;
         }
     }
 }

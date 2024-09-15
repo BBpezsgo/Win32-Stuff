@@ -52,7 +52,6 @@ public sealed class Form : FormUnmanaged, IDisposable
     public event WindowEvent<Form, MouseWheelEventArgs>? OnMouseWheel;
     public event WindowEvent<Form, MouseWheelEventArgs>? OnMouseHWheel;
 
-    [SuppressMessage("Security", "CA5394")]
     static string GenerateClassName()
     {
         StringBuilder result = new("BruhWindow");

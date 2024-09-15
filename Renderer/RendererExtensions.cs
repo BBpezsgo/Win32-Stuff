@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
+using Win32.Console;
 
 namespace Win32;
-
-using Coord = COORD;
 
 public static partial class RendererExtensions
 {

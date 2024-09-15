@@ -1,7 +1,6 @@
 ﻿namespace Win32.Forms;
 
 [Flags]
-[SuppressMessage("Roslynator", "RCS1234")]
 public enum TrackPopupMenuFlags : UINT
 {
     /// <summary>

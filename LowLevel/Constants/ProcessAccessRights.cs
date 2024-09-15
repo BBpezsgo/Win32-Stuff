@@ -1,7 +1,6 @@
 ﻿namespace Win32;
 
 [Flags]
-[SuppressMessage("Usage", "CA2217")]
 public enum ProcessAccessRights : DWORD
 {
     /// <summary>
@@ -60,7 +59,5 @@ public enum ProcessAccessRights : DWORD
     /// <summary>
     /// All possible access rights for a process object.Windows Server 2003 and Windows XP: The size of the PROCESS_ALL_ACCESS flag increased on Windows Server 2008 and Windows Vista. If an application compiled for Windows Server 2008 and Windows Vista is run on Windows Server 2003 or Windows XP, the PROCESS_ALL_ACCESS flag is too large and the function specifying this flag fails with ERROR_ACCESS_DENIED. To avoid this problem, specify the minimum set of access rights required for the operation. If PROCESS_ALL_ACCESS must be used, set _WIN32_WINNT to the minimum operating system targeted by your application (for example, #define _WIN32_WINNT _WIN32_WINNT_WINXP). For more information, see Using the Windows Headers.
     /// </summary>
-#pragma warning disable RCS1157
     AllAccess = 0x000F0000 | Synchronize | 0xFFFF,
-#pragma warning restore RCS1157
 }

@@ -3,7 +3,6 @@
 /// <summary>
 /// Represents a method of rendering glyphs.
 /// </summary>
-[SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute")]
 public enum RenderingMode
 {
     /// <summary>

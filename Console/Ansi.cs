@@ -57,7 +57,7 @@ public static class Ansi
     // /// <summary>
     // /// moves cursor to line #, column #
     // /// </summary>
-    // public const string = $"{ESC}[{line};{column}f	
+    // public const string = $"{ESC}[{line};{column}f
     /// <summary>
     /// moves cursor up # lines
     /// </summary>

@@ -4,7 +4,6 @@
 /// Describes the minimum DirectX support required for hardware rendering by a
 /// render target.
 /// </summary>
-[SuppressMessage("Naming", "CA1707")]
 public enum FeatureLevel : DWORD
 {
     /// <summary>

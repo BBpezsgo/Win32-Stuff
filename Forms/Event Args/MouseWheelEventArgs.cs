@@ -2,10 +2,10 @@
 
 public readonly struct MouseWheelEventArgs
 {
-    public ushort X { get;  }
-    public ushort Y { get;  }
-    public MouseEventFlags Flags { get;  }
-    public short Delta { get;  }
+    public ushort X { get; }
+    public ushort Y { get; }
+    public MouseEventFlags Flags { get; }
+    public short Delta { get; }
 
     public MouseWheelEventArgs(nuint wParam, nint lParam)
     {

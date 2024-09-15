@@ -36,12 +36,7 @@ public readonly struct ConsoleImage
         Data = new ConsoleChar[l];
         for (int i = 0; i < l; i++)
         {
-#pragma warning disable IDE0017 // Simplify object initialization
-            ConsoleChar c = new();
-#pragma warning restore IDE0017
-            c.Char = reader.ReadChar();
-            c.Attributes = reader.ReadUInt16();
-            Data[i] = c;
+            Data[i] = new ConsoleChar(reader.ReadChar(), reader.ReadUInt16());
         }
     }
 
@@ -163,9 +158,7 @@ public readonly struct ConsoleImage
                         rowWidth += 2;
                         break;
                     default:
-#pragma warning disable CA1305
                         builder.Append($"\\x0{Convert.ToString(c, 16).PadLeft(2, '0')}");
-#pragma warning restore CA1305
                         rowWidth += 5;
                         break;
                 }
@@ -182,9 +175,7 @@ public readonly struct ConsoleImage
                 builder.Append("\r\n");
             }
 
-#pragma warning disable CA1305
             builder.Append($"0x{Convert.ToString(data[i], 16)}, ");
-#pragma warning restore CA1305
         }
         builder.Append("}\r\n");
         */

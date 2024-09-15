@@ -2,5 +2,4 @@
 
 [Guid("00000120-a8f2-4877-ba0a-fd2b6645fb94")]
 [SupportedOSPlatform("windows")]
-[SuppressMessage("Design", "CA1040")]
 public interface IWICBitmapSource;

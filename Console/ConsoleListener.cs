@@ -4,11 +4,9 @@ public delegate void ConsoleEvent<T>(T e);
 
 public static class ConsoleListener
 {
-#pragma warning disable CA1003 // Use generic event handler instances
     public static event ConsoleEvent<MouseEvent>? MouseEvent;
     public static event ConsoleEvent<KeyEvent>? KeyEvent;
     public static event ConsoleEvent<WindowBufferSizeEvent>? WindowBufferSizeEvent;
-#pragma warning restore CA1003 // Use generic event handler instances
 
     static bool Run;
     static HANDLE Handle;
